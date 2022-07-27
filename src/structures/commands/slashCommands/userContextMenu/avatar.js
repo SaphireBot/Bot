@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 import('dotenv/config')
 
 export default {
-    name: 'Ver avatar',
+    name: 'Avatar',
     dm_permission: false,
     type: 2,
     async execute({ interaction: interaction, client: client, emojis: e }) {
