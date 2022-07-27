@@ -1,0 +1,749 @@
+[
+    {
+        "question": "Quem pintou a Mona Lisa?",
+        "answers": [
+            "da vinci",
+            "leonardo da Vinci"
+        ]
+    },
+    {
+        "question": "Em média, quantos litros de sangue uma pessoa adulta tem?",
+        "answers": [
+            "5",
+            "5l",
+            "5 litros",
+            "cinco",
+            "cinco litros",
+            "five litros"
+        ]
+    },
+    {
+        "question": "Qual o nome do presidente do Brasil que ficou conhecido como Jango",
+        "answers": [
+            "joão goulart"
+        ]
+    },
+    {
+        "question": "Nos contos de fadas, qual animal que, quando é beijado, vira um príncipe?",
+        "answers": [
+            "sapo",
+            "frog"
+        ]
+    },
+    {
+        "question": "Qual é a capital da Argentina?",
+        "answers": [
+            "buenos aires"
+        ]
+    },
+    {
+        "question": "Quantos fusos horários existem no Brasil?",
+        "answers": [
+            "4",
+            "quatro"
+        ]
+    },
+    {
+        "question": "Em qual cidade dos Estados Unidos fica a famosa Estátua da Liberdade?",
+        "answers": [
+            "nova york",
+            "new york",
+            "nova iorque"
+        ]
+    },
+    {
+        "question": "Qual é o estado brasileiro pelo qual passa o Rio Tietê?",
+        "answers": [
+            "são paulo",
+            "sao paulo",
+            "sp"
+        ]
+    },
+    {
+        "question": "Qual animal dorme de cabeça para baixo?",
+        "answers": [
+            "morcego",
+            "bat"
+        ]
+    },
+    {
+        "question": "Qual elemento químico é representado pela sigla Ag na tabela periódica?",
+        "answers": [
+            "prata",
+            "silver"
+        ]
+    },
+    {
+        "question": "Qual ave é capaz de bater as asas até 200 vezes por segundo?",
+        "answers": [
+            "beija-flor",
+            "beija flor"
+        ]
+    },
+    {
+        "question": "Qual é o único mamífero terrestre que não consegue pular? ",
+        "answers": [
+            "elefante",
+            "elephant"
+        ]
+    },
+    {
+        "question": "Qual personagem da novela Carrossel é apaixonado pela Maria Joaquina?",
+        "answers": [
+            "cirilo",
+            "nego ney"
+        ]
+    },
+    {
+        "question": "Qual é o único mamífero que voa?",
+        "answers": [
+            "morcego",
+            "bat"
+        ]
+    },
+    {
+        "question": "Qual é o maior animal do mundo?",
+        "answers": [
+            "blue wale",
+            "baleia azul",
+            "baleia-azul"
+        ]
+    },
+    {
+        "question": "Qual a montanha mais alta do mundo?",
+        "answers": [
+            "monte everest",
+            "everest"
+        ]
+    },
+    {
+        "question": "Qual a montanha mais alta do brasil?",
+        "answers": [
+            "pico da neblina"
+        ]
+    },
+    {
+        "question": "Qual o maior tubarão do oceano?",
+        "answers": [
+            "tubarão baleia",
+            "tubarão-baleia"
+        ]
+    },
+    {
+        "question": "Qual o menor osso do corpo humano?",
+        "answers": [
+            "estribo"
+        ]
+    },
+    {
+        "question": "Que país é amplamente conhecido pela origem do sushi?",
+        "answers": [
+            "japão",
+            "japan"
+        ]
+    },
+    {
+        "question": "Qual peça do xadrez só pode se mover diagonalmente?",
+        "answers": [
+            "bispo"
+        ]
+    },
+    {
+        "question": "Qual super vilão é o principal antagonista no filme \"Vingadores Guerra Infinita\" da Marvel?",
+        "answers": [
+            "thanos"
+        ]
+    },
+    {
+        "question": "Quais são os micro-organismos usados pra produzir o iogurte?",
+        "answers": [
+            "lactobacilos",
+            "lactobacillus"
+        ]
+    },
+    {
+        "question": "Qual é o simbolo do elemento químico Hidrogênio na tabela periódica?",
+        "answers": [
+            "h"
+        ]
+    },
+    {
+        "question": "Qual a capital do Egito?",
+        "answers": [
+            "cairo"
+        ]
+    },
+    {
+        "question": "Qual a montanha mais alta do brasil?",
+        "answers": [
+            "pico da neblina"
+        ]
+    },
+    {
+        "question": "Qual é o nome da maior empresa de tecnologia da Coréia do Sul?",
+        "answers": [
+            "samsung"
+        ]
+    },
+    {
+        "question": "Qual é a cor da pedra preciosa Safira?",
+        "answers": [
+            "azul",
+            "blue"
+        ]
+    },
+    {
+        "question": "Quantos dias são necessários para a Terra orbitar o sol?",
+        "answers": [
+            "365"
+        ]
+    },
+    {
+        "question": "Qual o nome do maior site/ferramenta de pesquisa do mundo?",
+        "answers": [
+            "google"
+        ]
+    },
+    {
+        "question": "Núcleo, citoplasma e membrana fazem parte da composição de que tipo de estrutura?",
+        "answers": [
+            "célula",
+            "células"
+        ]
+    },
+    {
+        "question": "Qual é o nome do primeiro presidente negro dos Estados Unidos?",
+        "answers": [
+            "barack obama",
+            "obama"
+        ]
+    },
+    {
+        "question": "Qual cidade foi dividida por um muro entre 1961 e 1989, derrubado por sua população?",
+        "answers": [
+            "berlim"
+        ]
+    },
+    {
+        "question": "Qual é a capital do Brasil?",
+        "answers": [
+            "brasília",
+            "brasilia"
+        ]
+    },
+    {
+        "question": "Qual oceano separa a América da África e da Europa?",
+        "answers": [
+            "atlântico",
+            "atlantico"
+        ]
+    },
+    {
+        "question": "Qual fruta envenenada a Branca de Neve comeu na história?",
+        "answers": [
+            "maçã",
+            "apple"
+        ]
+    },
+    {
+        "question": "Quem criou os personagens Mickey e Minnie Mouse?",
+        "answers": [
+            "walt disney",
+            "disney"
+        ]
+    },
+    {
+        "question": "Qual artista é conhecido como o Rei do Pop?",
+        "answers": [
+            "michael jackson"
+        ]
+    },
+    {
+        "question": "Qual é meu nome?",
+        "answers": [
+            "saphire",
+            "saphire moon"
+        ]
+    },
+    {
+        "question": "Qual é o maior país do mundo?",
+        "answers": [
+            "rússia"
+        ]
+    },
+    {
+        "question": "Qual é o país mais populoso do mundo?",
+        "answers": [
+            "china"
+        ]
+    },
+    {
+        "question": "Quem descobriu o Brasil?",
+        "answers": [
+            "pedro álvares cabral"
+        ]
+    },
+    {
+        "question": "Em que ano o brasil foi supostamente descoberto?",
+        "answers": [
+            "1500"
+        ]
+    },
+    {
+        "question": "Qual a matéria prima do vidro?",
+        "answers": [
+            "areia"
+        ]
+    },
+    {
+        "question": "Qual foi o nome do primeiro avião inventado?",
+        "answers": [
+            "14bis",
+            "14-bis",
+            "14 bis"
+        ]
+    },
+    {
+        "question": "Qual o nome do jogador de futebol eleito pela comunidade brasileira como \"Rei\"?",
+        "answers": [
+            "pelé"
+        ]
+    },
+    {
+        "question": "Qual a cor do céu?",
+        "answers": [
+            "blue",
+            "azul"
+        ]
+    },
+    {
+        "question": "How many letters are there in the alphabet?",
+        "answers": [
+            "26",
+            "twenty-six",
+            "twenty six",
+            "twentysix"
+        ]
+    },
+    {
+        "question": "Qual filme é conhecido por causa de um Navio que afundou?",
+        "answers": [
+            "titanic"
+        ]
+    },
+    {
+        "question": "Qual a composição química da água?",
+        "answers": [
+            "h2o"
+        ]
+    },
+    {
+        "question": "De qual Anime o nome Uchiha Sasuke, é utilizado?",
+        "answers": [
+            "naruto"
+        ]
+    },
+    {
+        "question": "Na mitologia grega, quem ​é ​considerado ​o ​deus ​dos ​mares ​e ​oceanos?",
+        "answers": [
+            "poseidon"
+        ]
+    },
+    {
+        "question": "Qual é o maior serviço de streaming de música usado atualmente?",
+        "answers": [
+            "spotify"
+        ]
+    },
+    {
+        "question": "Atualmente, qual é o jogo online multiplayer mais jogado no mundo?",
+        "answers": [
+            "lol",
+            "league of legends"
+        ]
+    },
+    {
+        "question": "Em inglês, o que significa (Cloud)?",
+        "answers": [
+            "nuvem"
+        ]
+    },
+    {
+        "question": "Quem foi o primeiro homem a ir para o espaço?",
+        "answers": [
+            "yuri gagarin"
+        ]
+    },
+    {
+        "question": "Quantos zeros tem 1 bilhão?",
+        "answers": [
+            "9"
+        ]
+    },
+    {
+        "question": "Qual ​a ​nacionalidade ​do ​jogador ​de ​futebol ​Cristiano ​Ronaldo?",
+        "answers": [
+            "português"
+        ]
+    },
+    {
+        "question": "Qual Galáxia é a mais perto da nossa?",
+        "answers": [
+            "andrômeda"
+        ]
+    },
+    {
+        "question": "Saturno tem quantas luas?",
+        "answers": [
+            "82"
+        ]
+    },
+    {
+        "question": "Em que ano o homem pisou na lua pela primeira vez?",
+        "answers": [
+            "1969"
+        ]
+    },
+    {
+        "question": "Qual é o verdadeiro nome do criador da Saphire?",
+        "answers": [
+            "rodrigo",
+            "rôdigo"
+        ]
+    },
+    {
+        "question": "Qual é o único animal mamífero que bota ovo?",
+        "answers": [
+            "ornitorrinco"
+        ]
+    },
+    {
+        "question": "De quem é a famosa frase 'Penso, logo existo'?",
+        "answers": [
+            "descartes"
+        ]
+    },
+    {
+        "question": "Quanto tempo a luz do Sol demora para chegar à Terra?",
+        "answers": [
+            "8 minutos",
+            "eight minutes"
+        ]
+    },
+    {
+        "question": "Qual país inventou o chuveiro elétrico?",
+        "answers": [
+            "brasil",
+            "brazil",
+            "br"
+        ]
+    },
+    {
+        "question": "Qual o livro mais vendido no mundo? Exceto a biblía.",
+        "answers": [
+            "dom quixote"
+        ]
+    },
+    {
+        "question": "Quantas casas decimais tem o número PI?",
+        "answers": [
+            "infinitas"
+        ]
+    },
+    {
+        "question": "Atualmente, quantos elementos químicos a tabela periódica possui?",
+        "answers": [
+            "118"
+        ]
+    },
+    {
+        "question": "O que a palavra *LEGEND* significa em português?",
+        "answers": [
+            "lenda"
+        ]
+    },
+    {
+        "question": "Qual o número mínimo de jogadores numa partida de futebol?",
+        "answers": [
+            "7"
+        ]
+    },
+    {
+        "question": "Qual o evento de compras mais esperado em novembro?",
+        "answers": [
+            "black friday"
+        ]
+    },
+    {
+        "question": "Qual o principal feriado comemorado em Dezembro?",
+        "answers": [
+            "natal"
+        ]
+    },
+    {
+        "question": "Qual a tradução da Frase: 'Make it simple'",
+        "answers": [
+            "faça isso simples"
+        ]
+    },
+    {
+        "question": "Tubarões nunca param de nadar.\nV - Verdadeiro\nF - Falso",
+        "answers": [
+            "v",
+            "verdade",
+            "verdadeiro"
+        ]
+    },
+    {
+        "question": "Após a Abelha ferroar, ela morre nos próximos 5 Minutos.\nV - Verdadeiro\nF - Falso",
+        "answers": [
+            "v",
+            "verdade",
+            "verdadeiro"
+        ]
+    },
+    {
+        "question": "Em qual local da Ásia o português é a língua oficial?",
+        "answers": [
+            "macau"
+        ]
+    },
+    {
+        "question": "'Twenty past six'. Que horas são em inglês?",
+        "answers": [
+            "06:20",
+            "seis e vinte",
+            "6:20"
+        ]
+    },
+    {
+        "question": "Como é a conjugação do verbo caber na 1.ª pessoa do singular do presente do indicativo?",
+        "answers": [
+            "eu caibo",
+            "caibo"
+        ]
+    },
+    {
+        "question": "Qual é o maior país transcontinental?",
+        "answers": [
+            "rússia"
+        ]
+    },
+    {
+        "question": "Quantos dedos tem uma pessoa?",
+        "answers": [
+            "20"
+        ]
+    },
+    {
+        "question": "Em que ano Brasília foi fundada?",
+        "answers": [
+            "1960"
+        ]
+    },
+    {
+        "question": "Que alimento os pandas normalmente comem?",
+        "answers": [
+            "bambu"
+        ]
+    },
+    {
+        "question": "Que alimento os pandas normalmente comem?",
+        "answers": [
+            "bambu"
+        ]
+    },
+    {
+        "question": "Qual o menor país do mundo?",
+        "answers": [
+            "vaticano"
+        ]
+    },
+    {
+        "question": "Em que período da pré-história foi descoberto o fogo?",
+        "answers": [
+            "paleolítico",
+            "período paleolítico"
+        ]
+    },
+    {
+        "question": "Qual o nome do país que tem posse da Torre Eiffel?",
+        "answers": [
+            "França"
+        ]
+    },
+    {
+        "question": "Qual o valor de: -1-1?",
+        "answers": [
+            "-2"
+        ]
+    },
+    {
+        "question": "Qual é a representação química do dióxido de carbono?",
+        "answers": [
+            "co2"
+        ]
+    },
+    {
+        "question": "Quem foi a primeira ginasta brasileira a ser campeã olímpica?",
+        "answers": [
+            "rebeca andrade"
+        ]
+    },
+    {
+        "question": "Qual foi a primeira ginasta brasileira a ser campeã olímpica?",
+        "answers": [
+            "rebeca andrade"
+        ]
+    },
+    {
+        "question": "Em que ano a seleção Brasileira de futebol ganhou o primeiro título?",
+        "answers": [
+            "1958"
+        ]
+    },
+    {
+        "question": "Em que ano a rede Globo lançou o realitu show popularmente conhecido como \"Big Brother Brasil\"?",
+        "answers": [
+            "2002"
+        ]
+    },
+    {
+        "question": "Qual é o primeiro nome de Einstein?",
+        "answers": [
+            "Albert"
+        ]
+    },
+    {
+        "question": "Qual é a plataforma de trem usada para ir para Hogwarts?",
+        "answers": [
+            "9 3/4",
+            "9 ¾"
+        ]
+    },
+    {
+        "question": "Qual é o nome do primeiro filme da Disney?",
+        "answers": [
+            "branca de neve e os sete anões",
+            "branca de neve"
+        ]
+    },
+    {
+        "question": "Quantos animais Moisés colocou na arca?",
+        "answers": [
+            "nenhum",
+            "0"
+        ]
+    },
+    {
+        "question": "Qual é o nome do principal vilão da saga de filmes \"Harry Potter\"?",
+        "answers": [
+            "lord voldemort",
+            "voldemort"
+        ]
+    },
+    {
+        "question": "Quem foi Tarsila do Amaral?",
+        "answers": [
+            "pintora"
+        ]
+    },
+    {
+        "question": "Qual país é destruído no filme \"Vingadores e a era de Ultron\"?",
+        "answers": [
+            "sokovia"
+        ]
+    },
+    {
+        "question": "Viúva-negra se sacrificou para conseguir qual jóia?",
+        "answers": [
+            "da alma",
+            "alma"
+        ]
+    },
+    {
+        "question": "Qual o nome do famoso personagem cujo símbolo é um animal que inspirou a criação do radar?",
+        "answers": [
+            "batman"
+        ]
+    },
+    {
+        "question": "Qual foi o país que ganhou a Copa do Mundo de 2018",
+        "answers": [
+            "França"
+        ]
+    },
+    {
+        "question": "Qual o nome do gato do filme de desenho animado onde existe um canário chamado \"Piu-Piu\"?",
+        "answers": [
+            "frajola"
+        ]
+    },
+    {
+        "question": "Qual o feriado é comemorado no dia 15 de novembro?",
+        "answers": [
+            "proclamação da república"
+        ]
+    },
+    {
+        "question": "Qual foi o matemático e geógrafo que calculou o perímetro da Terra em 240 a.C?",
+        "answers": [
+            "erastótenes"
+        ]
+    },
+    {
+        "question": "Qual é a única palavra do português, na qual o \"S\" do plural não fica no final?",
+        "answers": [
+            "qualquer",
+            "quaisquer"
+        ]
+    },
+    {
+        "question": "Qual é a língua oficial dos Estados Unidos da América?",
+        "answers": [
+            "inglês"
+        ]
+    },
+    {
+        "question": "Qual desses é um prato típico da Alemanha? \na) Paella\nb) Chucrute\nc) Croissant \nd) Umbu",
+        "answers": [
+            "b"
+        ]
+    },
+    {
+        "question": "Quantos países têm a língua portuguesa como língua oficial?",
+        "answers": [
+            "10",
+            "dez",
+            "ten"
+        ]
+    },
+    {
+        "question": "Quantos países fazem parte da América Latina?",
+        "answers": [
+            "20",
+            "vinte",
+            "twenty"
+        ]
+    },
+    {
+        "question": "Qual inseto transmite a Doença de Chagas?",
+        "answers": [
+            "bicho barbeiro",
+            "bicho-barbeiro",
+            "barbeiro"
+        ]
+    },
+    {
+        "question": "Qual o maior osso do corpo humano?",
+        "answers": [
+            "fêmur"
+        ]
+    },
+    {
+        "question": "Qual o maior órgão do corpo humano?",
+        "answers": [
+            "pele"
+        ]
+    }
+]
