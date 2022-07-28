@@ -12,7 +12,7 @@ const ConfigurationBase = {
     LoteriaChannel: "987408234564452393",
     letterChannelReport: "980997922403541012",
     BugsChannelId: "980997977906745374",
-    LogChannelId: "980998008080572426",
+    LogChannelId: "993893182951673860",
     PackageInvite: "https://discord.gg/UArp6eyvwu",
     SupportServerLink: "https://discord.gg/EyAUDpQaW9",
     MoonServerLink: "https://discord.gg/2EMVCbJxuC",

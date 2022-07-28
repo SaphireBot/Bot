@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import Mongoose from 'mongoose'
+import Cache from './CacheManager.js'
 import 'dotenv/config'
 import { Config as config } from '../../util/Constants.js'
 import { Models, SaphireClient as client } from '../index.js'
@@ -9,7 +10,6 @@ const { connect } = Mongoose
 /**
  * Classe central da Database
  */
-
 class Database extends Models {
     constructor() {
         super()
@@ -18,8 +18,8 @@ class Database extends Models {
         this.Characters = JSON.parse(fs.readFileSync('./src/JSON/characters.json'))
         this.Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
         this.Logomarca = JSON.parse(fs.readFileSync('./src/JSON/logomarca.json'))
-        this.Cache = JSON.parse(fs.readFileSync('./cache.json'))
         this.Quiz = JSON.parse(fs.readFileSync('./src/JSON/quiz.json'))
+        this.Cache = Cache
         this.Names = {
             Rody: "451619591320371213",
             Gowther: "315297741406339083",
@@ -34,6 +34,7 @@ class Database extends Models {
     }
 
     MongoConnect = async (client) => {
+
         try {
             await connect(process.env.MONGODB_LINK_CONNECTION, {
                 useNewUrlParser: true,
@@ -300,21 +301,15 @@ class Database extends Models {
         return
     }
 
-    registerServer = async (guild) => {
+    registerServer = async guild => {
 
         if (!guild || !guild?.id) return
-
-        const clientData = await this.Client.findOne({ id: client.user.id }, 'Blacklist.Guilds')
-        if (clientData?.Blacklist?.Guilds.includes(guild.id)) return
 
         const g = await this.Guild.findOne({ id: guild.id })
 
         if (g || g?.id === guild.id) return
 
-        new this.Guild({ id: guild.id }).save()
-
         const emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json'))
-        await client?.channels?.cache?.get(config.LogChannelId)?.send(`${emojis.Database} | DATABASE | O servidor **${guild.name}** foi registrado com sucesso!`).catch(() => { })
 
         await this.Guild.updateOne(
             { id: guild.id },
@@ -331,7 +326,31 @@ class Database extends Models {
             { upsert: true }
         )
 
-        return true
+        const channel = await client.channels.fetch(config.LogChannelId)
+        const fetchWebhook = await channel.fetchWebhooks()
+        const webhook = fetchWebhook.find(web => web.name === 'Saphire Database Logs')
+
+        if (!webhook) return
+
+        const owner = await guild.fetchOwner()
+
+        return await webhook.send({
+            embeds: [{
+                color: client.green,
+                title: `${emojis.Loud} Servidor Adicionado`,
+                fields: [
+                    {
+                        name: 'Status',
+                        value: `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`
+                    },
+                    {
+                        name: 'Register',
+                        value: `O servidor ${guild.name} foi registrado com sucesso!`
+                    }
+                ]
+            }]
+        }).catch(console.log)
+
     }
 
     registerClient = async (clientId) => {

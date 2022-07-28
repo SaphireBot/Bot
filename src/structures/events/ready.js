@@ -9,6 +9,7 @@ client.once('ready', async () => {
     const shardId = client.shard.ids.at(-1)
 
     Database.registerClient(client.user.id)
+    await Database.Cache.GameChannels.deleteAll()
 
     const data = await Database.Client.findOne({ id: client.user.id }, 'Rebooting')
 
