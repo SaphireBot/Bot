@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import { Database, Modals, SaphireClient as client } from '../../classes/index.js'
-import { Config as config } from '../../util/Constants.js'
+import * as Constants from '../../util/Constants.js'
 
 export default class Base {
     constructor() {
@@ -8,6 +8,7 @@ export default class Base {
         this.modals = Modals.modals
         this.client = client
         this.Database = Database
-        this.config = config
+        this.config = Constants.Config
+        this.Constants = Constants
     }
 }

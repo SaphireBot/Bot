@@ -99,7 +99,6 @@ const BitColors = {
 }
 
 const Languages = {
-    "pt-BR": "Português",
     af: "Africano",
     am: "Amárico",
     ar: "Arábico",
@@ -322,7 +321,7 @@ const PermissionsTranslate = {
     ViewAuditLog: "Ver o registro de auditoria",
     ViewChannel: "Ver canais",
     ViewGuildInsights: "Ver Análises do servidor"
-  }
+}
 
 export {
     ConfigurationBase as Config,

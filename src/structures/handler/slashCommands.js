@@ -8,7 +8,6 @@ export default async (client) => {
 
     const commands = []
     const adminCommands = [] // Ideia dada por Gorniaky - 395669252121821227
-
     const folders = readdirSync('./src/structures/commands/slashCommands/')
 
     for (let dir of folders) {
@@ -19,6 +18,7 @@ export default async (client) => {
 
             const query = await import(`../commands/slashCommands/${dir}/${file}`)
             const pull = query.default
+            
             if (pull && pull.name) {
                 client.slashCommands.set(pull.name, pull);
                 pull.admin || pull.staff ? adminCommands.push(pull) : commands.push(pull);
