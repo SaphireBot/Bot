@@ -5,6 +5,13 @@ export default {
     type: 1,
     options: [],
     async execute({ interaction, client, Database }) {
-        return await interaction.reply({ content: 'ok' })
+
+        const isVip = await interaction.user.isVip()
+
+        console.log(isVip)
+
+        return isVip
+            ? await interaction.reply({ content: 'tem vip' })
+            : await interaction.reply({ content: 'não' })
     }
 }

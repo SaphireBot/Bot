@@ -18,7 +18,7 @@ export default {
 
         const Embed = {
             color: 0x4295FB,
-            author: { name: 'Google Tradutor', iconURL: 'https://imgur.com/9kWn6Qp.png' },
+            author: { name: 'Google Tradutor', iconURL: 'https://media.discordapp.net/attachments/893361065084198954/1002389116329144440/unknown.png?width=484&height=484' },
             fields: [{
                 name: 'Texto',
                 value: `\`\`\`txt\n${text}\n\`\`\``
