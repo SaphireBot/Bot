@@ -13,7 +13,6 @@ User.prototype.isVip = async function () {
     if (userData?.Vip?.Permanent) return true
 
     return Date.Timeout(TimeRemaing, Date.now() - DateNow) || undefined
-
 }
 
 User.prototype.isMod = async function () {
