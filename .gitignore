@@ -2,4 +2,3 @@ node_modules
 .env
 cache.json
 cache.sqlite
-package-lock.json
