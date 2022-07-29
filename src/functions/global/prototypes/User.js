@@ -1,5 +1,6 @@
 import { User } from 'discord.js'
-import { Database } from '../../../classes/index.js'
+import { Database, SaphireClient as client } from '../../../classes/index.js'
+import { Config as config } from '../../../util/Constants.js'
 
 User.prototype.isVip = async function () {
 
@@ -13,4 +14,10 @@ User.prototype.isVip = async function () {
 
     return Date.Timeout(TimeRemaing, Date.now() - DateNow) || undefined
 
+}
+
+User.prototype.isMod = async function () {
+    const clientData = await Database.Client.findOne({ id: client.user.id }, 'Moderadores Administradores') || []
+    const staff = [...clientData?.Administradores, ...clientData?.Moderadores, config.ownerId]
+    return staff.includes(this.id)
 }
