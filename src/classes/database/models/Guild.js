@@ -5,6 +5,7 @@ export default model("Guild", new Schema({
     id: { type: String, unique: true },
     Prefix: String,
     LogChannel: String,
+    Giveaways: Array,
     IdeiaChannel: String,
     Moeda: String,
     ReportChannel: String,

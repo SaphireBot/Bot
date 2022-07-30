@@ -334,7 +334,7 @@ export default class Autocomplete extends Base {
     }
 
     utilColors(value) {
-        const colors = Object.keys(util.Colors)
+        const colors = Object.keys(util.Colors || {})
         const fill = colors.filter(data => util.ColorsTranslate[data].toLowerCase().includes(value.toLowerCase()))
         const mapped = fill.map(data => ({ name: util.ColorsTranslate[data], value: data }))
         return this.respond(mapped)

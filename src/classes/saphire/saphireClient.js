@@ -6,6 +6,8 @@ import slashCommand from '../../structures/handler/slashCommands.js'
 import { Database } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
 import TopGGAutoposter from 'topgg-autoposter'
+import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
+
 const { AutoPost } = TopGGAutoposter
 
 /**
@@ -72,7 +74,7 @@ class SaphireClient extends Client {
      */
     async start() {
         import('../../functions/global/prototypes.js')
-        await import('../../structures/events/index.js')
+        import('../../structures/events/index.js')
         await super.login()
 
         this.shardId = this.shard.ids.at(-1) || 0
@@ -82,8 +84,9 @@ class SaphireClient extends Client {
         automaticSystems()
 
         if (this.shardId === 0) Database.clearCache()
-        console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | Event Ready | OK!`)
-        return
+        await Database.Cache.Giveaways.delete(`${this.shardId}`)
+        GiveawayManager.setGiveaways()
+        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | Event Ready | OK!`)
     }
 
     /**

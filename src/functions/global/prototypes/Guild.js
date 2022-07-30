@@ -3,7 +3,7 @@ import { Database } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
 Guild.prototype.clientHasPermission = function (Permission) {
-    return this.me.permissions.has(Permission)
+    return this.members.me.permissions.has(Permission)
 }
 
 Guild.prototype.getCoin = async function () {

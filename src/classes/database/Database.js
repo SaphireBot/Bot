@@ -320,7 +320,8 @@ class Database extends Models {
                     LockdownChannels: 1,
                     CommandBlocks: 1,
                     AfkSystem: 1,
-                    Autorole: 1
+                    Autorole: 1,
+                    Giveaways: 1
                 }
             },
             { upsert: true }
