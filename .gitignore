@@ -107,6 +107,9 @@ dist
 .temp
 .cache
 
+# Discloud
+discloud.config
+
 # Docusaurus cache and generated files
 .docusaurus
 
