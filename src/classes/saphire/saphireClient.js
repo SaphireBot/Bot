@@ -31,7 +31,7 @@ class SaphireClient extends Client {
         /**
          * @returns GREEN - Hexadecimal
          */
-        this.green = 0x57f287
+        this.green = 0x57F287
 
         /**
          * @returns Prefixo padrão "-"
@@ -83,8 +83,7 @@ class SaphireClient extends Client {
         const slashCommandsResponse = await slashCommand(this)
         automaticSystems()
 
-        if (this.shardId === 0) Database.clearCache()
-        await Database.Cache.Giveaways.delete(`${this.shardId}`)
+        await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | Event Ready | OK!`)
     }

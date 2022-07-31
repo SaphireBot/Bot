@@ -1,5 +1,9 @@
+import {
+    Database,
+    SaphireClient as client,
+    GiveawayManager
+} from '../../../../../classes/index.js'
 import { Emojis as e } from '../../../../../util/util.js'
-import { Database, SaphireClient as client } from '../../../../../classes/index.js'
 import { Colors } from '../../../../../util/Constants.js'
 import moment from 'moment'
 
@@ -128,7 +132,7 @@ export default async interaction => {
     await interaction.deferReply()
 
     const Message = await intChannel.send({ content: `${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉` })
-    Message.react('🎉').catch(() => { })
+    Message.react('🎉')
 
     const collector = Message.createReactionCollector({
         filter: (_, u) => u.id === user.id,
@@ -147,7 +151,7 @@ export default async interaction => {
             return msg.react(emoji)
                 .then(() => registerGiveaway(msg, emoji, emojiData, Message))
                 .catch(err => {
-                    Database.deleteGiveaway(msg.id)
+                    Database.deleteGiveaway(msg.id, guild.id)
                     return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
                 })
         })
@@ -157,7 +161,7 @@ export default async interaction => {
             return msg.react('🎉')
                 .then(() => registerGiveaway(msg, emoji, emojiData, Message))
                 .catch(err => {
-                    Database.deleteGiveaway(msg.id)
+                    Database.deleteGiveaway(msg.id, guild.id)
                     return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
                 })
         })
@@ -166,20 +170,32 @@ export default async interaction => {
 
     async function registerGiveaway(msg, emoji = '🎉', emojiData = '🎉', Message) {
 
-        // new Database.Giveaway({ // new Class Model
-        //     MessageID: msg.id, // Id da Mensagem
-        //     GuildId: guild.id, // Id do Servidor
-        //     Prize: Prize, // Prêmio do sorteio
-        //     Winners: WinnersAmount, // Quantos vencedores
-        //     Emoji: emojiData, // Quantos vencedores
-        //     TimeMs: TimeMs, // Tempo do Sorteio
-        //     DateNow: Date.now(), // Agora
-        //     ChannelId: Channel.id, // Id do Canal
-        //     Actived: true, // Ativado
-        //     MessageLink: msg.url, // Link da mensagem
-        //     Sponsor: user.id, // Quem fez o sorteio
-        //     TimeEnding: Date.GetTimeout(TimeMs, 0, 'R') // Hora que termina o sorteio
-        // }).save()
+        const giveawayData = { // new Class Model
+            MessageID: msg.id, // Id da Mensagem
+            GuildId: guild.id, // Id do Servidor
+            Prize: Prize, // Prêmio do sorteio
+            Winners: WinnersAmount, // Quantos vencedores
+            Emoji: emojiData, // Quantos vencedores
+            TimeMs: TimeMs, // Tempo do Sorteio
+            DateNow: Date.now(), // Agora
+            ChannelId: Channel.id, // Id do Canal
+            Actived: true, // Ativado
+            MessageLink: msg.url, // Link da mensagem
+            Sponsor: user.id, // Quem fez o sorteio
+        }
+
+        await Database.Guild.updateOne(
+            { id: guild.id },
+            { $push: { Giveaways: giveawayData } },
+            { upsert: true }
+        )
+
+        await Database.Cache.Giveaways.push(
+            `${client.shardId}.Giveaways.${guild.id}`,
+            giveawayData
+        )
+
+        GiveawayManager.filterAndManager()
 
         const embed = {
             color: color || 0x0099ff,
@@ -208,7 +224,7 @@ export default async interaction => {
                 }
             ],
             image: { url: imageURL || null },
-            footer: { text: `Giveaway ID: ${msg?.id} | Resultado` }
+            footer: { text: `Giveaway ID: ${msg?.id}` }
         }
 
         if (Requisitos)
@@ -219,16 +235,16 @@ export default async interaction => {
 
         return msg.edit({ embeds: [embed] })
             .then(async () => {
-                Message.delete().catch(() => { })
+                Message.delete()
                 return await interaction.editReply({
                     content: `${e.Check} | Sorteio criado com sucesso! Você pode vê-lo no canal ${msg.channel}`,
                     ephemeral: true
-                }).catch(() => { })
+                })
             })
             .catch(async err => {
 
-                Database.deleteGiveaway(msg.id)
-                msg.delete().catch(() => { })
+                Database.deleteGiveaway(msg.id, guild.id)
+                msg.delete()
 
                 if (err.code === 50035)
                     return await interaction.followUp({

@@ -9,6 +9,7 @@ import SlashCommand from '../structures/classes/SlashCommand.js'
 import ButtonInteraction from '../structures/classes/ButtonInteraction.js'
 import ModalInteraction from '../structures/classes/ModalInteraction.js'
 import Reminder from '../classes/modules/Reminder.js'
+import GiveawayManager from '../functions/update/giveaway/GiveawayManager.js'
 
 export {
     Models,
@@ -21,5 +22,6 @@ export {
     SlashCommand,
     ButtonInteraction,
     ModalInteraction,
-    Reminder
+    Reminder,
+    GiveawayManager
 }

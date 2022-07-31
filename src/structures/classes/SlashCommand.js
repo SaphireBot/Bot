@@ -18,12 +18,12 @@ export default class SlashCommand extends Base {
         this.clientData = clientData
 
         const command = this.client.slashCommands.get(this.interaction.commandName);
-       
-        if (!command) 
-        return await interaction.reply({
-            content: `${this.emojis.Deny} | Comando não registrado.`,
-            ephemeral: true
-        })
+
+        if (!command)
+            return await interaction.reply({
+                content: `${this.emojis.Deny} | Comando não registrado.`,
+                ephemeral: true
+            })
 
         const admins = [...clientData.Administradores, this.config.ownerId]
         const staff = [...clientData.Administradores, ...clientData.Moderadores, this.config.ownerId, '327496267007787008']
@@ -51,6 +51,15 @@ export default class SlashCommand extends Base {
         const { guild, emojis: e, Database, interaction, user, channel, client } = this
 
         const guildData = await Database.Guild.findOne({ id: guild?.id })
+
+        if (!guildData) {
+            await Database.registerServer(guild)
+
+            return await interaction.reply({
+                content: `${e.Database} | DATABASE | Registro do servidor no banco de dados efetuado com sucesso.`
+            })
+        }
+
         const clientData = await Database.Client.findOne({ id: client.user.id })
 
         if (clientData.Rebooting?.ON)

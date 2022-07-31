@@ -39,7 +39,7 @@ client.on('channelDelete', async channel => {
         case guild[`Blockchannels.Bots.${channel.id}`]: DeletedChannel(`Blockchannels.Bots.${channel.id}`, 'Bloqueio de Comandos'); break;
         case guild[`Blockchannels.${channel.id}`]: DeletedChannel(`Blockchannels.${channel.id}`, 'Bloqueio de Comandos'); break;
         case guild['ConfessChannel']: DeletedChannel('ConfessChannel', 'Canal de Confissão'); break;
-        case guild['GiveawayChannel']: Database.deleteGiveaway(channel.guild.id, true); DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
+        case guild['GiveawayChannel']: Database.deleteGiveaway('', channel.guild.id, true); DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
         default: break;
     }
 

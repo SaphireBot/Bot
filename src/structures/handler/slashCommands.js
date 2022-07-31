@@ -45,7 +45,7 @@ export default async (client) => {
             client.user.setActivity(`${client.slashCommands.size} comandos em ${client.guilds.cache.size} servidores`, { type: 'PLAYING' });
             client.user.setStatus('idle');
 
-            return `${client.slashCommands.size} Slash Commands Registrados`
+            return `${client.slashCommands.size} Slash Commands Loaded`
         } catch (error) {
             console.error(error);
             return 'Erro ao registrar os Slash Commands'

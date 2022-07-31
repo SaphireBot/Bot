@@ -41,7 +41,7 @@ class Database extends Models {
                 useUnifiedTopology: true,
             })
 
-            return 'Database Connection'
+            return 'Database Connected'
         } catch (err) {
             console.log('Mongoose Database | FAIL!\n--> ' + err)
             client.destroy()
@@ -162,13 +162,18 @@ class Database extends Models {
         )
     }
 
-    deleteGiveaway = async (DataId, All = false) => {
-
-        if (!DataId) return
+    deleteGiveaway = async (DataId, GuildId, All = false) => {
 
         return All
-            ? await this.Giveaway.deleteMany({ GuildId: DataId })
-            : await this.Giveaway.deleteOne({ MessageID: DataId })
+            ? await this.Guild.updateOne(
+                { id: GuildId },
+                { $unset: { Giveaways: 1 } }
+            )
+            : await this.Guild.updateOne(
+                { id: GuildId },
+                { $pull: { Giveaways: { MessageID: DataId } } },
+                { MessageID: DataId }
+            )
 
     }
 
@@ -359,13 +364,6 @@ class Database extends Models {
         const data = await this.Client.findOne({ id: clientId })
         if (data) return
         return new this.Client({ id: clientId }).save()
-    }
-
-    async clearCache() {
-        return await this.Client.updateOne(
-            { id: client.user.id },
-            { $unset: { Cache: 1 } }
-        )
     }
 }
 
