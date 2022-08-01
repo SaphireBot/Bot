@@ -87,3 +87,53 @@ String.prototype.random = function (times = 0, repeat = false) {
 
     return this[~~(Math.random() * this.length)]
 }
+
+String.prototype.captalize = function formatString() {
+
+    let string = this
+
+    if (typeof string !== 'string') return null
+
+    let tras = false
+
+    if (string.includes('-')) {
+        tras = true
+        string = string.replace(/-/g, ' ')
+    }
+
+    let format = string.split(/ +/g)
+    let result = ''
+
+    for (let word of format)
+        if (word.length > 2 || !['de', 'do', 'da'].includes(word))
+            if (tras)
+                result += word[0].toUpperCase() + word.substring(1) + ' '
+            else result += word[0].toUpperCase() + word.substring(1) + ' '
+        else result += word + ' '
+
+    if (tras) {
+        result = result.replace(/ /g, '-')
+        tras = false
+    }
+
+    return result.slice(0, -1)
+}
+
+String.prototype.limit = function (param) {
+
+    const limit = {
+        MessageEmbedTitle: 256,
+        MessageEmbedDescription: 4096,
+        MessageEmbedFields: 25,
+        MessageEmbedFieldName: 256,
+        MessageEmbedFieldValue: 1024,
+        MessageEmbedFooter: 2048,
+        MessageEmbedAuthorName: 256,
+        MessageContent: 4096,
+    }[param] || this.length
+
+    if (this.length > limit)
+        return `${this.slice(0, limit - 3)}...`
+
+    return this.slice(0, limit)
+}

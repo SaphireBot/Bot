@@ -1,7 +1,7 @@
 import { GuildMember, PermissionFlagsBits } from 'discord.js'
 
 GuildMember.prototype.memberPermissions = function (Permission) {
-    return this.permissions.has(Permission)
+    return this.permissions.has(Permission) || this.permissions.has('Administrator')
 }
 
 GuildMember.prototype.isManageableBy = function (member) {
