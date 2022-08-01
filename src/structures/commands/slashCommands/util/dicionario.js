@@ -45,8 +45,7 @@ export default {
 
             result.meanings.map((res, i) => {
 
-                if (res.length > 1024)
-                    res = res.limit('MessageEmbedFieldValue')
+                if (res.length > 1024) res = res.limit('MessageEmbedFieldValue')
 
                 embed.fields.push({
                     name: `${e.saphireLendo} Significado ${i + 1}`,
