@@ -5,16 +5,8 @@ export default {
     description: 'test',
     dm_permission: false,
     type: 1,
-    options: [
-        {
-            name: 'word',
-            description: 'aa',
-            required: true,
-            type: 3,
-            max_length: 5,
-            min_length: 5
-        }
-    ],
+    admin: true,
+    options: [],
     async execute({ interaction, client, Database }) {
 
         const query = interaction.options.getString('word')
