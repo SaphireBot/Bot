@@ -517,6 +517,30 @@ export default new class Modals {
         ]
     }
 
+    wordleGameNewTry = (messageId, length) => {
+        return {
+            title: "Wordle Game",
+            custom_id: 'wordleGame',
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: messageId,
+                            label: "Nova Tentativa",
+                            style: 1,
+                            required: true,
+                            min_length: length,
+                            max_length: length,
+                            placeholder: "Escreva aqui"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     editProfileModal = {
         title: "Edit Profile Information",
         custom_id: "editProfile",

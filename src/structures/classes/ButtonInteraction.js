@@ -19,6 +19,8 @@ export default class ButtonInteraction extends Base {
 
     execute() {
 
+        if (/\d{18,}/.test(this.customId) && this.interaction.message.author.id === this.client.user.id) return this.wordleGame()
+
         switch (this.customId) {
             case 'editProfile': this.editProfile(); break;
             case 'newProof': this.newProof(); break;
@@ -29,6 +31,22 @@ export default class ButtonInteraction extends Base {
         }
 
         return
+    }
+
+    async wordleGame() {
+
+        const { message, user } = this.interaction
+        const wordleGameData = await this.Database.Cache.WordleGame.get(this.customId)
+        const embed = message.embeds[0]?.data
+
+        if (!embed) return message.delete().catch(() => { })
+
+        embed.color = this.client.red
+        embed.description = `${this.emojis.Deny} | Jogo não encontrado.`
+
+        if (!wordleGameData || user.id !== wordleGameData?.UserId) return message.edit({ components: [], embeds: [embed] }).catch(() => { })
+
+        return await this.interaction.showModal(this.modals.wordleGameNewTry(this.customId, wordleGameData.Length))
     }
 
     async newProof(close = false) {

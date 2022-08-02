@@ -43,21 +43,19 @@ export default {
                     value: result.etymology.limit('MessageEmbedFieldValue')
                 })
 
-            result.meanings.map((res, i) => {
-
-                if (res.length > 1024) res = res.limit('MessageEmbedFieldValue')
-
+            result.meanings.map((res, i) =>
                 embed.fields.push({
                     name: `${e.saphireLendo} Significado ${i + 1}`,
                     value: '> ' + res
                         ?.replace(/\[|\]/g, '`')
+                        ?.limit('MessageEmbedFieldValue')
                         || 'Resultado indefinido'
-                })
-            })
+                }))
 
             if (embed.fields.length > 25) embed.fields.length = 25
 
             return respondQuery()
+
         } catch (err) {
             return await interaction.editReply({ content: `${e.Deny} | Nenhum significado foi encontrado.` })
         }
@@ -83,7 +81,6 @@ export default {
                         return await interaction.deleteReply().catch(() => { })
                     })
                     .catch(async err => {
-
                         webHook.delete().catch(() => { })
                         return await interaction.editReply({
                             content: `${e.Warn} | Erro ao enviar a mensagem.\n> \`${err}\``

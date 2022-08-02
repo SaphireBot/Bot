@@ -19,9 +19,7 @@ const ClientOptions = {
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessageTyping,
-        GatewayIntentBits.GuildScheduledEvents,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.GuildScheduledEvents
     ],
     allowedMentions: { parse: ['users'] },
     partials: [
