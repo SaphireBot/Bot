@@ -41,10 +41,12 @@ export default class ButtonInteraction extends Base {
 
         if (!embed) return message.delete().catch(() => { })
 
+        if (user.id !== wordleGameData?.UserId) return
+
         embed.color = this.client.red
         embed.description = `${this.emojis.Deny} | Jogo não encontrado.`
 
-        if (!wordleGameData || user.id !== wordleGameData?.UserId) return message.edit({ components: [], embeds: [embed] }).catch(() => { })
+        if (!wordleGameData) return message.edit({ components: [], embeds: [embed] }).catch(() => { })
 
         return await this.interaction.showModal(this.modals.wordleGameNewTry(this.customId, wordleGameData.Length))
     }

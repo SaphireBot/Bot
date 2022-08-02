@@ -3,6 +3,7 @@ import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+import dicio from 'dicionario.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -44,12 +45,20 @@ export default class ModalInteraction extends Base {
     wordleGame = async ({ interaction, fields, user } = this) => {
 
         const { channel } = interaction
-
+        const query = fields.getTextInputValue('wordleGame')
+        const data = await this.Database.Cache.WordleGame.get(this.customId)
         const message = await channel.messages.fetch(this.customId)
 
-        await interaction.reply({ content: 'ok' })
-        // TODO: Continuar todo o resto aqui
-        return console.log(message.embeds[0]?.data)
+        return dicio.significado(query?.toLowerCase())
+            .then(() => continueGame())
+            .catch(async () => await interaction.reply({
+                content: `${e.Deny} | Esta palavra não existe.`,
+                ephemeral: true
+            }))
+
+        async function continueGame() {
+            return await interaction.reply({ content: `${e.Check} | ok.` })
+        }
     }
 
     editProfile = async ({ interaction, fields, user } = this) => {

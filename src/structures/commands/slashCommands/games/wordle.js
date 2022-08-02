@@ -38,21 +38,30 @@ export default {
         const length = optionGiven >= 1 || optionGiven <= 7 ? optionGiven : 4
         const wordsInLength = allWords.filter(word => word.length === length)
 
-        const Try = {
-            One: new Array(length),
-            Two: new Array(length),
-            Three: new Array(length),
-            Four: new Array(length),
-            Five: new Array(length),
-            Six: new Array(length)
-        }
-
-        const allArray = Object.values(Try)
-
         const msg = await interaction.reply({
             content: `${e.Loading} | Construindo novo Wordle Game...`,
             fetchReply: true
         })
+
+        const Try = {
+            One: [],
+            Two: [],
+            Three: [],
+            Four: [],
+            Five: [],
+            Six: []
+        }
+
+        for (let i = 0; i < length; i++) {
+            Try.One.push('')
+            Try.Two.push('')
+            Try.Three.push('')
+            Try.Four.push('')
+            Try.Five.push('')
+            Try.Six.push('')
+        }
+
+        const allArray = Object.values(Try)
 
         const gameData = {
             Word: wordsInLength.random(),
@@ -78,12 +87,8 @@ export default {
 
         let description = ''
 
-        for (let x = 0; x < allArray.length; x++) {
-            for (let i = 0; i < length; i++) {
-                let array = []
-                array.push(e.WordleGameRaw)
-                description += array.join('')
-            }
+        for (let array of allArray) {
+            description += array.map(value => e.WordleGameRaw).join('')
             description += '\n'
         }
 
