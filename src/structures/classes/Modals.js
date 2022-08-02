@@ -520,14 +520,14 @@ export default new class Modals {
     wordleGameNewTry = (messageId, length) => {
         return {
             title: "Wordle Game",
-            custom_id: 'wordleGame',
+            custom_id: messageId,
             components: [
                 {
                     type: 1,
                     components: [
                         {
                             type: 4,
-                            custom_id: messageId,
+                            custom_id: 'wordleGame',
                             label: "Nova Tentativa",
                             style: 1,
                             required: true,

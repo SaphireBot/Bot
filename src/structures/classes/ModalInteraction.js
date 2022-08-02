@@ -18,9 +18,8 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Prefix')
+        if (/\d{18,}/.test(this.customId)) return this.wordleGame(this)
 
-        this.prefix = guildData?.Prefix || this.client.prefix
         this.member = this.guild.members.cache.get(this.user.id)
 
         const flags = this.Database.Flags.get('Flags') || []
@@ -40,6 +39,17 @@ export default class ModalInteraction extends Base {
         }
 
         return
+    }
+
+    wordleGame = async ({ interaction, fields, user } = this) => {
+
+        const { channel } = interaction
+
+        const message = await channel.messages.fetch(this.customId)
+
+        await interaction.reply({ content: 'ok' })
+        // TODO: Continuar todo o resto aqui
+        return console.log(message.embeds[0]?.data)
     }
 
     editProfile = async ({ interaction, fields, user } = this) => {
@@ -258,7 +268,7 @@ export default class ModalInteraction extends Base {
 
     }
 
-    newLetter = async ({ interaction, client, fields, user, guild, prefix } = this) => {
+    newLetter = async ({ interaction, client, fields, user, guild } = this) => {
 
         let usernameData = fields.getTextInputValue('username')
         let anonymous = fields.getTextInputValue('anonymous')
@@ -300,7 +310,7 @@ export default class ModalInteraction extends Base {
 
         if (isBlock)
             return await interaction.reply({
-                content: `❌ | Este usuário bloqueou o envio de cartas. Você vai precisar pedir para que ${userLetted.tag} libere o envio usando o comando '${prefix}carta block'`,
+                content: `❌ | Este usuário bloqueou o envio de cartas. Você vai precisar pedir para que ${userLetted.tag} libere o envio usando o comando '/carta block'`,
                 ephemeral: true
             })
 
@@ -373,7 +383,7 @@ export default class ModalInteraction extends Base {
 
     }
 
-    lettersReport = async ({ interaction, client, fields, user, prefix } = this) => {
+    lettersReport = async ({ interaction, client, fields, user } = this) => {
 
         let letterId = fields.getTextInputValue('letterId'),
             reason = fields.getTextInputValue('reason')
@@ -405,7 +415,7 @@ export default class ModalInteraction extends Base {
         })
 
         return await interaction.reply({
-            content: `✅ | Seu reporte foi enviado com sucesso! Caso você não queira receber mais cartas através da Saphire, use o comando \'${prefix}carta block\'. A Staff da ${client.user.username} analisará o ocorrido e punirá o responsável a altura.`,
+            content: `✅ | Seu reporte foi enviado com sucesso! Caso você não queira receber mais cartas através da Saphire, use o comando \'/carta block\'. A Staff da ${client.user.username} analisará o ocorrido e punirá o responsável a altura.`,
             ephemeral: true
         })
     }
