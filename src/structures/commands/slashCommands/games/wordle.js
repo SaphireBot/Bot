@@ -36,7 +36,11 @@ export default {
         const { options, user } = interaction
         const optionGiven = options.getInteger('letras') || 4
         const length = optionGiven >= 1 || optionGiven <= 7 ? optionGiven : 4
-        const wordsInLength = allWords.filter(word => word.length === length)
+        const wordsInLength = allWords.filter(word =>
+            word.length === length
+            &&
+            /^[a-z]+$/i.test(word.toLowerCase())
+        )
 
         const msg = await interaction.reply({
             content: `${e.Loading} | Construindo novo Wordle Game...`,

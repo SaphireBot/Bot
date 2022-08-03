@@ -6,12 +6,12 @@ import { Emojis as e } from '../../../util/util.js'
 
 export default async (giveaway, guild, channel) => {
 
-    if (!guild || !channel)
+    if (!giveaway || !guild || !channel)
         return Database.deleteGiveaway(giveaway.MessageID, guild.id)
 
     const { MessageID } = giveaway
     const emoji = giveaway.Emoji || '🎉'
-    const message = await channel?.messages?.fetch(MessageID)
+    const message = await channel?.messages?.fetch(MessageID).catch(() => { })
     const reaction = message?.reactions?.cache?.get(emoji)
 
     if (!reaction || !message || !emoji)

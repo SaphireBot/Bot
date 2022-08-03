@@ -32,12 +32,12 @@ export default model("Client", new Schema({
             winner: String
         }
     },
-    Rebooting: {
-        ON: Boolean,
-        Features: String,
-        ChannelId: String,
-        MessageId: String
-    },
+    // Rebooting: {
+    //     ON: Boolean,
+    //     Features: String,
+    //     ChannelId: String,
+    //     MessageId: String
+    // },
     Titles: {
         BugHunter: Array,
         OfficialDesigner: Array,

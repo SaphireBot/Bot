@@ -3,7 +3,6 @@ import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
-import dicio from 'dicionario.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -19,12 +18,9 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
-        if (/\d{18,}/.test(this.customId)) return this.wordleGame(this)
+        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame.modal.js').then(data => data.default(this))
 
         this.member = this.guild.members.cache.get(this.user.id)
-
-        const flags = this.Database.Flags.get('Flags') || []
-        if (flags.find(data => data.country[0] === this.customId)) return this.editFlag(this)
 
         switch (this.customId) {
             case 'BugModalReport': this.BugModalReport(this); break;
@@ -39,26 +35,10 @@ export default class ModalInteraction extends Base {
                 break;
         }
 
+        const flags = this.Database.Flags.get('Flags') || []
+        if (flags.find(data => data.country[0] === this.customId)) return this.editFlag(this)
+
         return
-    }
-
-    wordleGame = async ({ interaction, fields, user } = this) => {
-
-        const { channel } = interaction
-        const query = fields.getTextInputValue('wordleGame')
-        const data = await this.Database.Cache.WordleGame.get(this.customId)
-        const message = await channel.messages.fetch(this.customId)
-
-        return dicio.significado(query?.toLowerCase())
-            .then(() => continueGame())
-            .catch(async () => await interaction.reply({
-                content: `${e.Deny} | Esta palavra não existe.`,
-                ephemeral: true
-            }))
-
-        async function continueGame() {
-            return await interaction.reply({ content: `${e.Check} | ok.` })
-        }
     }
 
     editProfile = async ({ interaction, fields, user } = this) => {
