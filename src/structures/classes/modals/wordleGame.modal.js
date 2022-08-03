@@ -1,9 +1,16 @@
 import dicio from 'dicionario.js'
 
-export default async ({ interaction, fields, Database, emojis: e, client }) => {
+export default async ({ interaction, fields, Database, client, emojis: e }) => {
+
+    const query = fields.getTextInputValue('wordleGame')?.toLowerCase()
+
+    if (!/^[a-z]+$/i.test(query))
+        return await interaction.reply({
+            content: `${e.Deny} | Palavra com acentos e "ç" são invalidas.`,
+            ephemeral: true
+        })
 
     const { channel, customId } = interaction
-    const query = fields.getTextInputValue('wordleGame')?.toLowerCase()
     const data = await Database.Cache.WordleGame.get(customId)
     const message = await channel.messages.fetch(customId)
     const embed = message.embeds[0]?.data
@@ -17,24 +24,20 @@ export default async ({ interaction, fields, Database, emojis: e, client }) => {
     }
 
     return dicio.significado(query?.toLowerCase())
-        .then(() => continueGame())
-        .catch(async (err) => {
-            console.log(err)
-            await interaction.reply({
+        .then(() => editPlace())
+        .catch(async () => {
+            return await interaction.reply({
                 content: `${e.Deny} | Esta palavra não existe.`,
                 ephemeral: true
             })
-
         }).catch(() => deleteGameFromCache())
 
-    async function continueGame() {
+    async function editPlace() {
+
         const place = getPlace()
-        return editPlace(place, query === data.Word)
-    }
-
-    async function editPlace(place, isWin) {
-
         const word = data.Word
+        const isWin = query === word
+
         data.Try[place] = query.split('')
 
         for (let i in data.Try[place])
@@ -65,21 +68,26 @@ export default async ({ interaction, fields, Database, emojis: e, client }) => {
 
         embed.description = description
 
-        embed.color = isWin
-            ? client.green
-            : place === 'Six'
-                ? client.red
-                : embed.color
+        const editData = { embeds: [embed] }
 
-        if (isWin || place === 'Six') deleteGameFromCache()
+        if (place === 'Six') {
+            embed.color = client.red
+            embed.title = `Wordle Game - PERDEU`
+            embed.footer = { text: `Palavra: ${word}` }
+            editData.components = []
+            deleteGameFromCache()
+        }
 
-        const editData = isWin || place === 'Six'
-            ? { embeds: [embed], components: [] }
-            : { embeds: [embed] }
+        if (isWin) {
+            embed.color = client.green
+            embed.title = `Wordle Game - GANHOU`
+            editData.components = []
+            deleteGameFromCache()
+        }
 
-        await interaction.deferReply()
+        await interaction.deferReply().catch(() => { })
         message.edit(editData).catch(() => deleteGameFromCache())
-        return await interaction.deleteReply()
+        return await interaction.deleteReply().catch(() => deleteGameFromCache())
     }
 
     function getPlace() {

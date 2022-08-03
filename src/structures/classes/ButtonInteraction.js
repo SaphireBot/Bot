@@ -15,17 +15,19 @@ export default class ButtonInteraction extends Base {
         this.user = interaction.user
         this.channel = interaction.channel
         this.guild = interaction.guild
+        this.commandName = interaction.message.interaction.commandName
     }
 
     execute() {
 
-        if (/\d{18,}/.test(this.customId) && this.interaction.message.author.id === this.client.user.id) return this.wordleGame()
+        if (/\d{18,}/.test(this.customId) && this.commandName === 'wordle') return this.wordleGame()
 
         switch (this.customId) {
             case 'editProfile': this.editProfile(); break;
             case 'newProof': this.newProof(); break;
             case 'closeProof': this.newProof(true); break;
             case 'getVotePrize': this.topGGVote(); break;
+            case 'WordleGameInfo': import('./modals/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
             default:
                 break;
         }
@@ -39,14 +41,13 @@ export default class ButtonInteraction extends Base {
         const wordleGameData = await this.Database.Cache.WordleGame.get(this.customId)
         const embed = message.embeds[0]?.data
 
-        if (!embed) return message.delete().catch(() => { })
+        if (!embed || !wordleGameData)
+            return message.edit({
+                content: `${this.emojis.Deny} | Jogo inválido.`,
+                components: [], embeds: [],
+            }).catch(() => { })
 
         if (user.id !== wordleGameData?.UserId) return
-
-        embed.color = this.client.red
-        embed.description = `${this.emojis.Deny} | Jogo não encontrado.`
-
-        if (!wordleGameData) return message.edit({ components: [], embeds: [embed] }).catch(() => { })
 
         return await this.interaction.showModal(this.modals.wordleGameNewTry(this.customId, wordleGameData.Length))
     }

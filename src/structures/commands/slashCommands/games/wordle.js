@@ -77,18 +77,6 @@ export default {
 
         await Database.Cache.WordleGame.set(msg.id, gameData)
 
-        const button = {
-            type: 1,
-            components: [
-                {
-                    type: 2,
-                    label: 'Tentar Palavra',
-                    custom_id: msg.id,
-                    style: 2
-                }
-            ]
-        }
-
         let description = ''
 
         for (let array of allArray) {
@@ -102,12 +90,30 @@ export default {
             description
         }
 
+        const button = {
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Tentar Palavra',
+                    custom_id: msg.id,
+                    style: 3
+                },
+                {
+                    type: 2,
+                    emoji: e.Info,
+                    custom_id: 'WordleGameInfo',
+                    style: 1
+                }
+            ]
+        }
+
         setTimeout(async () => {
             return await interaction.editReply({
                 content: null,
                 embeds: [embed],
                 components: [button]
             })
-        }, 2000)
+        }, 1000)
     }
 }
