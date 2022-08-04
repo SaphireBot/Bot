@@ -10,15 +10,15 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
             ephemeral: true
         })
 
-    const { channel, customId } = interaction
+    const { user, channel, customId } = interaction
     const data = await Database.Cache.WordleGame.get(customId)
     const message = await channel.messages.fetch(customId)
     const embed = message.embeds[0]?.data
 
-    if (!message || !embed) {
+    if (!data || !message || !embed) {
         await Database.Cache.WordleGame.delete(customId)
         return await interaction.reply({
-            content: `${e.Deny} | Jogo inválido.`,
+            content: `${e.Deny} | Jogo inválido ou já terminado.`,
             ephemeral: true
         }).catch(() => deleteGameFromCache())
     }
@@ -98,6 +98,7 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
     }
 
     async function deleteGameFromCache() {
-        return await Database.Cache.WordleGame.delete(customId)
+        await Database.Cache.WordleGame.delete(customId)
+        return await Database.Cache.WordleGame.pull('inGame', data => data.messageId === customId)
     }
 }

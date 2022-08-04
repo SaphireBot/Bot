@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-
 export default {
     name: 'wordle',
     description: '[games] O famoso jogo Wordle, só que no Discord.',
@@ -28,92 +26,40 @@ export default {
                     value: 7
                 }
             ]
+        },
+        {
+            name: 'add_players',
+            description: 'Adicione jogadores para jogar esta partida com você.',
+            type: 3
         }
     ],
-    async execute({ interaction, Database, client, emojis: e }) {
+    async execute({ interaction, Database, emojis: e }) {
 
-        const allWords = JSON.parse(fs.readFileSync('./src/JSON/frases.json')).Mix
-        const { options, user } = interaction
-        const optionGiven = options.getInteger('letras') || 4
-        const length = optionGiven >= 1 || optionGiven <= 7 ? optionGiven : 4
-        const wordsInLength = allWords.filter(word =>
-            word.length === length
-            &&
-            /^[a-z]+$/i.test(word.toLowerCase())
-        )
+        const playersInGame = await Database.Cache.WordleGame.get('inGame')
 
-        const msg = await interaction.reply({
-            content: `${e.Loading} | Construindo novo Wordle Game...`,
-            fetchReply: true
-        })
+        const { options } = interaction
 
-        const Try = {
-            One: [],
-            Two: [],
-            Three: [],
-            Four: [],
-            Five: [],
-            Six: []
-        }
+        const addPlayers = options.getString('add_players')?.match(/\d{17,}/g) || null
+        if (addPlayers) return import('../../functions/wordle/addPlayers.wordle.js').then(add => add.default(addPlayers, interaction))
 
-        for (let i = 0; i < length; i++) {
-            Try.One.push('')
-            Try.Two.push('')
-            Try.Three.push('')
-            Try.Four.push('')
-            Try.Five.push('')
-            Try.Six.push('')
-        }
-
-        const allArray = Object.values(Try)
-
-        const gameData = {
-            Word: wordsInLength.random(),
-            UserId: user.id,
-            MessageId: msg.id,
-            Length: length,
-            Try
-        }
-
-        await Database.Cache.WordleGame.set(msg.id, gameData)
-
-        let description = ''
-
-        for (let array of allArray) {
-            description += array.map(value => e.WordleGameRaw).join('')
-            description += '\n'
-        }
-
-        const embed = {
-            color: client.blue,
-            title: `${client.user.username}'s Wordle Game`,
-            description
-        }
-
-        const button = {
-            type: 1,
-            components: [
-                {
-                    type: 2,
-                    label: 'Tentar Palavra',
-                    custom_id: msg.id,
-                    style: 3
-                },
-                {
-                    type: 2,
-                    emoji: e.Info,
-                    custom_id: 'WordleGameInfo',
-                    style: 1
-                }
-            ]
-        }
-
-        setTimeout(async () => {
-            return await interaction.editReply({
-                content: null,
-                embeds: [embed],
-                components: [button]
+        if (playersInGame?.some(data => data.userId === interaction.user.id))
+            return await interaction.reply({
+                content: `${e.Deny} | Você já tem um jogo aberto. Desista dele antes de começar outro.`,
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Desistir do jogo aberto',
+                                custom_id: 'giveup-ephemeral',
+                                style: 4
+                            }
+                        ]
+                    }
+                ]
             })
-        }, 1000)
+
+        return import('../../functions/wordle/create.wordle.js').then(create => create.default(interaction))
     }
 }

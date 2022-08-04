@@ -15,12 +15,13 @@ export default class ButtonInteraction extends Base {
         this.user = interaction.user
         this.channel = interaction.channel
         this.guild = interaction.guild
-        this.commandName = interaction.message.interaction.commandName
+        this.commandName = interaction.message.interaction?.commandName
     }
 
-    execute() {
+    async execute() {
 
         if (/\d{18,}/.test(this.customId) && this.commandName === 'wordle') return this.wordleGame()
+        if (['giveup-ephemeral', 'giveup'].includes(this.customId) && this.commandName === 'wordle') return this.wordleGame(true)
 
         switch (this.customId) {
             case 'editProfile': this.editProfile(); break;
@@ -29,27 +30,76 @@ export default class ButtonInteraction extends Base {
             case 'getVotePrize': this.topGGVote(); break;
             case 'WordleGameInfo': import('./modals/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
             default:
+                await this.interaction.reply({
+                    content: `${this.emojis.QuestionMark} | Interação Desconhecida.`,
+                    ephemeral: true
+                })
                 break;
         }
 
         return
     }
 
-    async wordleGame() {
+    async wordleGame(giveup) {
 
         const { message, user } = this.interaction
-        const wordleGameData = await this.Database.Cache.WordleGame.get(this.customId)
+
+        if (this.customId === 'giveup-ephemeral') {
+
+            const data = await this.Database.Cache.WordleGame.get('inGame')
+            const game = data.find(value => value.userId === user.id)
+
+            if (!game)
+                return await message.edit({
+                    content: `${this.emojis.Deny} | Jogo inexistente.`,
+                    components: []
+                })
+
+            const deleted = await this.Database.Cache.WordleGame.delete(game.messageId)
+            await this.Database.Cache.WordleGame.pull('inGame', data => data.userId === user.id)
+
+            if (deleted)
+                return await message.edit({
+                    content: `${this.emojis.Check} | Jogo deletado com sucesso.`,
+                    components: []
+                })
+            else
+                return await message.edit({
+                    content: `${this.emojis.Info} | Jogo não encontrado no banco de dados.`,
+                    components: []
+                })
+        }
+
+        const wordleGameData = await this.Database.Cache.WordleGame.get(message.id)
         const embed = message.embeds[0]?.data
 
         if (!embed || !wordleGameData)
             return message.edit({
                 content: `${this.emojis.Deny} | Jogo inválido.`,
-                components: [], embeds: [],
+                components: [], embeds: []
             }).catch(() => { })
 
-        if (user.id !== wordleGameData?.UserId) return
+        if (!wordleGameData?.Players.includes(user.id)) return await interaction.deferReply()
 
-        return await this.interaction.showModal(this.modals.wordleGameNewTry(this.customId, wordleGameData.Length))
+        if (giveup) {
+
+            const playersInGame = await this.Database.Cache.WordleGame.get('inGame')
+            const game = playersInGame.find(data => data.messageId === message.id)
+
+            if (game.userId !== this.user.id)
+                return await this.interaction.reply({
+                    content: `${this.emojis.Deny} | Apenas <@${game.userId}> pode desistir desse jogo.`,
+                    ephemeral: true
+                })
+
+            embed.description = `${this.emojis.Deny} | Poxa... Achei que você ia conseguir...\n${this.emojis.Info} | A palavra escondida era \`${wordleGameData.Word}\``
+            embed.color = this.client.red
+            await this.Database.Cache.WordleGame.delete(message.id)
+            await this.Database.Cache.WordleGame.pull('inGame', data => data.userId === user.id)
+            return message.edit({ embeds: [embed], components: [] }).catch(() => { })
+        }
+
+        return await this.interaction.showModal(this.modals.wordleGameNewTry(message.id, wordleGameData.Length))
     }
 
     async newProof(close = false) {
