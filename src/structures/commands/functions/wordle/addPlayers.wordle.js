@@ -6,20 +6,16 @@ import { Emojis as e } from '../../../../util/util.js'
 export default async (query, interaction) => {
 
     const { user, guild } = interaction
-
     const playersInGame = await Database.Cache.WordleGame.get('inGame')
     const gameUser = playersInGame.find(value => value.userId === user.id)
 
     return guild.members.fetch({ user: query })
         .then(members => addPlayersToGame(members))
-        .catch(async err => {
-            return console.log(err)
-            await interaction.reply({ content: `${e.Deny} | Nenhum usuário foi achado.`, ephemeral: true })
-        })
+        .catch(async () => await interaction.reply({ content: `${e.Deny} | Nenhum usuário foi achado.`, ephemeral: true }))
 
     async function addPlayersToGame(result) {
 
-        const resultMembers = [...new Set(result?.toJSON()?.map(u => u.id))].filter(u => u.id !== user.id)
+        const resultMembers = [...new Set(result?.toJSON()?.map(u => u.id))].filter(userId => userId !== user.id)
 
         if (!resultMembers || resultMembers.length === 0)
             return await interaction.reply({

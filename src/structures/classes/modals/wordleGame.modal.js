@@ -10,7 +10,7 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
             ephemeral: true
         })
 
-    const { user, channel, customId } = interaction
+    const { channel, customId } = interaction
     const data = await Database.Cache.WordleGame.get(customId)
     const message = await channel.messages.fetch(customId)
     const embed = message.embeds[0]?.data
@@ -25,7 +25,8 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
 
     return dicio.significado(query?.toLowerCase())
         .then(() => editPlace())
-        .catch(async () => {
+        .catch(async err => {
+            console.log(err)
             return await interaction.reply({
                 content: `${e.Deny} | Esta palavra não existe.`,
                 ephemeral: true
@@ -39,6 +40,7 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
         const isWin = query === word
 
         data.Try[place] = query.split('')
+        data.Players = [...new Set(data.Players)]
 
         for (let i in data.Try[place])
             if (data.Try[place][i] === word[i])
@@ -67,6 +69,16 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
         }
 
         embed.description = description
+
+        if (data.Players.length > 1) {
+
+            if (!embed.fields[0]) embed.fields = []
+
+            embed.fields[0] = {
+                name: `👥 Jogadores (${data.Players.length})`,
+                value: `${[...new Set(data.Players)].slice(0, 10).map(userId => `<@${userId}>`).join('\n')}`
+            }
+        }
 
         const editData = { embeds: [embed] }
 

@@ -2,9 +2,9 @@ import {
     Database,
     SaphireClient as client,
     GiveawayManager
-} from '../../../../../classes/index.js'
-import { Emojis as e } from '../../../../../util/util.js'
-import { Colors } from '../../../../../util/Constants.js'
+} from '../../../../classes/index.js'
+import { Emojis as e } from '../../../../util/util.js'
+import { Colors } from '../../../../util/Constants.js'
 import moment from 'moment'
 
 export default async interaction => {

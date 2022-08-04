@@ -7,7 +7,7 @@ import {
 
 export default async (interaction, playersAvailable = []) => {
 
-    const { options, user } = interaction
+    const { options, user, guild } = interaction
 
     const allWords = JSON.parse(fs.readFileSync('./src/JSON/frases.json')).Mix
     const optionGiven = options.getInteger('letras') || 4
@@ -23,23 +23,10 @@ export default async (interaction, playersAvailable = []) => {
         fetchReply: true
     })
 
-    const Try = {
-        One: [],
-        Two: [],
-        Three: [],
-        Four: [],
-        Five: [],
-        Six: []
-    }
+    const Try = {}
 
-    for (let i = 0; i < length; i++) {
-        Try.One.push('')
-        Try.Two.push('')
-        Try.Three.push('')
-        Try.Four.push('')
-        Try.Five.push('')
-        Try.Six.push('')
-    }
+    for (let position of ['One', 'Two', 'Three', 'Four', 'Five', 'Six'])
+        Try[position] = new Array(length).fill('')
 
     const allArray = Object.values(Try)
 
@@ -60,15 +47,22 @@ export default async (interaction, playersAvailable = []) => {
     let description = ''
 
     for (let array of allArray) {
-        description += array.map(value => e.WordleGameRaw).join('')
+        description += array.fill(e.WordleGameRaw).join('')
         description += '\n'
     }
 
     const embed = {
         color: client.blue,
-        title: `${client.user.username}'s Wordle Game`,
-        description
+        title: `${e['+w']} ${client.user.username}'s Wordle Game`,
+        description,
+        fields: []
     }
+
+    if (gameData.Players.length > 1)
+        embed.fields[0] = {
+            name: `👥 Jogadores (${gameData.Players.length})`,
+            value: `${gameData.Players.slice(0, 10).map(userId => `<@${userId}>`).join('\n')}`
+        }
 
     const button = {
         type: 1,

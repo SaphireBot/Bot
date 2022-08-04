@@ -1,5 +1,5 @@
 import { Permissions } from '../../../../util/Constants.js'
-import createGiveaway from './giveaway/create.giveaway.js'
+import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 
 export default {
     name: 'giveaway',
