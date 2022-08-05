@@ -28,7 +28,7 @@ export default class ButtonInteraction extends Base {
             case 'newProof': this.newProof(); break;
             case 'closeProof': this.newProof(true); break;
             case 'getVotePrize': this.topGGVote(); break;
-            case 'WordleGameInfo': import('./modals/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
+            case 'WordleGameInfo': import('./modals/wordleGame/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
             default:
                 await this.interaction.reply({
                     content: `${this.emojis.QuestionMark} | Interação Desconhecida.`,

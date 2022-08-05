@@ -7,6 +7,7 @@ import { Database } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
 import TopGGAutoposter from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
+import mercadopago from 'mercadopago'
 
 const { AutoPost } = TopGGAutoposter
 
@@ -78,7 +79,8 @@ class SaphireClient extends Client {
         await super.login()
 
         this.shardId = this.shard.ids.at(-1) || 0
-
+        
+        mercadopago.configure({ access_token: process.env.MERCADO_PAGO_TOKEN })
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
         automaticSystems()

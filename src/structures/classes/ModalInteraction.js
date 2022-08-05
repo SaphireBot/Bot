@@ -18,7 +18,7 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
-        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame.modal.js').then(data => data.default(this))
+        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
 
         this.member = this.guild.members.cache.get(this.user.id)
 

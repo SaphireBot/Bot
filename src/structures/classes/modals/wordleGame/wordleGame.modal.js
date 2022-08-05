@@ -72,7 +72,7 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
 
         if (data.Players.length > 1) {
 
-            if (!embed.fields[0]) embed.fields = []
+            if (typeof embed.fields !== 'array') embed.fields = []
 
             embed.fields[0] = {
                 name: `👥 Jogadores (${data.Players.length})`,
