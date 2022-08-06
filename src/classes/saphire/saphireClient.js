@@ -77,9 +77,10 @@ class SaphireClient extends Client {
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
         await super.login()
+        import('../../api/app.js')
 
         this.shardId = this.shard.ids.at(-1) || 0
-        
+
         mercadopago.configure({ access_token: process.env.MERCADO_PAGO_TOKEN })
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
