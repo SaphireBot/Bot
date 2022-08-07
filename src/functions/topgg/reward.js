@@ -29,7 +29,7 @@ export default async (userId) => {
 
     const data = cachedData?.find(data => data?.userId === userId)
     await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.userId === userId)
-    if (!data) return
+    if (!data) return giveRewards()
 
     const channel = await client.channels.fetch(data.channelId)
     if (!channel) return

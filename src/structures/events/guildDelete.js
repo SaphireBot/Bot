@@ -39,5 +39,5 @@ client.on('guildDelete', async guild => {
                 }
             ]
         }]
-    }).catch(console.log)
+    }).catch(() => { })
 })

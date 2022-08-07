@@ -26,7 +26,6 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
     return dicio.significado(query?.toLowerCase())
         .then(() => editPlace())
         .catch(async err => {
-            console.log(err)
             return await interaction.reply({
                 content: `${e.Deny} | Esta palavra não existe.`,
                 ephemeral: true

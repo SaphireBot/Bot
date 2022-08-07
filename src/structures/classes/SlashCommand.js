@@ -18,12 +18,7 @@ export default class SlashCommand extends Base {
         this.clientData = clientData
 
         const command = this.client.slashCommands.get(this.interaction.commandName);
-
-        if (!command)
-            return await interaction.reply({
-                content: `${this.emojis.Deny} | Comando não registrado.`,
-                ephemeral: true
-            })
+        if (!command) return
 
         const admins = [...clientData.Administradores, this.config.ownerId]
         const staff = [...clientData.Administradores, ...clientData.Moderadores, this.config.ownerId, '327496267007787008']

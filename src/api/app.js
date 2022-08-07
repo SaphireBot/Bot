@@ -1,20 +1,25 @@
 import express from 'express'
 import { Webhook } from '@top-gg/sdk'
 import topggReward from '../functions/topgg/reward.js'
+import recieveNewPaymentRequest from '../functions/donate/recieve.payment.js'
 import { Database } from '../classes/index.js'
+import Routes from './Routes.js'
 import('dotenv/config')
 const app = express()
 const webhook = new Webhook(process.env.SAPHIRE_TOG_GG_AUTHORIZATION)
 
 app.use(express.json())
 
-app.get("/", (req, res) => res.send('Ok'))
+app.get(Routes.General, (req, res) => res.send('Ok'))
 
-app.post("/topgg", webhook.listener(vote => {
-  return topggReward(vote.user)
-}))
+app.post(Routes.TopGG, webhook.listener(vote => topggReward(vote.user)))
 
-app.get("/database", (req, res, next) => {
+app.post(Routes.MercadoPagoWebhook, async (req, res) => {
+  res.sendStatus(200)
+  return recieveNewPaymentRequest(req.body)
+})
+
+app.get(Routes.Database, (req, res, next) => {
 
   const auth = { login: process.env.DATABASE_USER_ACESS, password: process.env.DATABASE_PASSAWORD_ACESS }
 
@@ -36,7 +41,7 @@ app.get("/database", (req, res, next) => {
 
 })
 
-app.get("/database", async (req, res) => {
+app.get(Routes.Database, async (req, res) => {
   const allData = await Database.Cache.General.all()
   return res.send(allData)
 })
