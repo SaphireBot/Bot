@@ -5,6 +5,7 @@ import {
 import { WebhookClient } from 'discord.js'
 import { Emojis as e } from '../../util/util.js'
 import { Api } from '@top-gg/sdk'
+import { CodeGenerator } from '../../functions/plugins/plugins.js'
 
 export default async (userId) => {
 
@@ -12,13 +13,11 @@ export default async (userId) => {
 
     const user = await client.users.fetch(userId)
     if (!user) return
+    giveRewards()
 
     const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
     const votes = await TopGGApi.getVotes() || []
-
-    const webhook = new WebhookClient({
-        url: process.env.PRIMARY_WEEBHOOK_LINK
-    })
+    const webhook = new WebhookClient({ url: process.env.PRIMARY_WEEBHOOK_LINK })
 
     webhook.send({
         content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
@@ -41,7 +40,48 @@ export default async (userId) => {
     const embed = message.embeds[0]?.data
     if (!embed) return
 
-    embed.description = `${e.Check} | Recebi seu voto e te dei **+5000 ${await channel.guild.getCoin()}** e **+1000 XP ${e.RedStar}** `
+    embed.description = `${e.Check} | Recebi seu voto e te dei **+5000 ${await channel.guild.getCoin()}** e **+1000 XP ${e.RedStar}**`
     embed.color = client.green
+
+    if (data.isReminder) {
+
+        new Database.Reminder({
+            id: CodeGenerator(7).toUpperCase(),
+            userId: userId,
+            RemindMessage: `Voto disponível no ${e.topgg} Top GG.`,
+            Time: 43200000,
+            DateNow: Date.now(),
+            isAutomatic: true,
+            ChannelId: channel.id
+        }).save()
+
+        embed.description += `\n${e.Notification} | Como você ativou o lembrete automático, vou te lembrar ${Date.GetTimeout(43200000, Date.now(), 'R')}`
+
+    }
+
     return message.edit({ embeds: [embed], components: [] }).catch(() => { })
+
+    async function giveRewards() {
+
+        await Database.User.updateOne(
+            { id: userId },
+            {
+                $inc: {
+                    Balance: 5000,
+                    Xp: 1000
+                },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)} - TOP GG`,
+                            data: `${e.gain} Votou no Top.GG e ganhou 5000 Safiras`
+                        }],
+                        $position: 0
+                    }
+                }
+            },
+            { upsert: true }
+        )
+
+    }
 }

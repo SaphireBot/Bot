@@ -43,7 +43,7 @@ export default class Reminder {
 
     async saveReminder() {
 
-        const code = this.reminderData.id = CodeGenerator(7).toUpperCase()
+        this.reminderData.id = CodeGenerator(7).toUpperCase()
         this.reminderData.userId = this.user.id
         this.reminderData.ChannelId = this.message.channel.id
 

@@ -12,7 +12,7 @@ export default async function reminderStart({ user, data }) {
     const TimeOver = Date.Timeout(Time, DateNow)
 
     if (!TimeOver && !data.Alerted) {
-        
+
         const Channel = await client.channels.fetch(data.ChannelId).catch(() => NotifyUser(user, RemindMessage, data.id))
 
         if (!Channel || !Channel.guild.members.cache.has(user.id))
@@ -20,10 +20,11 @@ export default async function reminderStart({ user, data }) {
 
         let userNotified = false
 
-        const msg = await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`).catch(() => {
-            userNotified = true
-            return NotifyUser()
-        })
+        const msg = await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
+            .catch(() => {
+                userNotified = true
+                return NotifyUser()
+            })
 
         if (userNotified) return
         if (isAutomatic) return Database.deleteReminders(data.id)

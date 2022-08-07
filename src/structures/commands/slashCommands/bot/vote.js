@@ -36,11 +36,11 @@ export default {
                 ephemeral: true
             })
 
-        const subCommand = options.getString('options')
+        const optionChoice = options.getString('options')
+        const reminder = optionChoice === 'reminder'
 
         // TODO: Adicionar sub-funções options
-        // if (subCommand === 'list') return voteList()
-        // if (subCommand === 'reminder') return voteList()
+        // if (optionChoice === 'list') return voteList()
 
         const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
 
@@ -74,8 +74,10 @@ export default {
         return await Database.Cache.General.push(`${client.shardId}.TopGG`, {
             userId: user.id,
             channelId: channel.id,
-            messageId: msg.id
+            messageId: msg.id,
+            isReminder: reminder
         })
+
         // async function voteList() {
 
         //     const searchUserID = interaction.options.getString('search_user')
