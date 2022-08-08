@@ -21,11 +21,19 @@ export default {
                     value: 'reminder'
                 }
             ]
-        }
+        },
+        // {
+        //     name: 'search_user',
+        //     description: 'Pesquise por um usuário',
+        //     autocomplete: true
+        // }
     ],
     async execute({ interaction, client, Database, emojis: e }) {
 
         const { options, user, channel } = interaction
+
+        const optionChoice = options.getString('options')
+        // if (optionChoice === 'list') return voteList()
 
         const TopGG = new Api(process.env.TOP_GG_TOKEN)
         const hasVoted = await TopGG.hasVoted(user.id)
@@ -36,11 +44,7 @@ export default {
                 ephemeral: true
             })
 
-        const optionChoice = options.getString('options')
         const reminder = optionChoice === 'reminder'
-
-        // TODO: Adicionar sub-funções options
-        // if (optionChoice === 'list') return voteList()
 
         const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
 

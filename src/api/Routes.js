@@ -1,7 +1,7 @@
 export default {
     BaseDomain: "https://saphire.discloud.app",
+    General: "/",
     MercadoPagoWebhook: "/MercadoPagoComprovante",
     TopGG: "/topgg",
-    General: "/",
     Database: "/database"
 }

@@ -1,7 +1,5 @@
 import mercadopago from 'mercadopago'
-import newCreate from './create.payment.js'
-import newUpdate from './update.payment.js'
-import { Database } from '../../classes/index.js'
+import { SaphireClient as client } from '../../classes/index.js'
 
 export default async requestBody => {
 
@@ -9,7 +7,8 @@ export default async requestBody => {
 
     return mercadopago.payment.get(requestBody.data.id)
         .then(payment => requestBody.action === 'payment.updated'
-            ? newUpdate(payment.body)
-            : newCreate(payment.body))
+            ? client.emit('paymentUpdate', payment.body)
+            : client.emit('paymentCreate', payment.body)
+        )
         .catch(() => { })
 }

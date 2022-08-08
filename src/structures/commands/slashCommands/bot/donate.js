@@ -20,25 +20,13 @@ export default {
             description: 'Email para que eu possa te enviar o comprovante',
             type: 3,
             required: true
-        },
-        {
-            name: 'found',
-            description: 'any',
-            type: 4
         }
     ],
     async execute({ interaction: interaction, client: client, emojis: e, Database: Database }) {
 
-        const { options, user, channel, guild } = interaction
+        const { options, user, channel } = interaction
 
-        const found = options.getInteger('found')
         const email = options.getString('email')
-
-        if (found) {
-            return mercadopago.payment.get(found)
-                .then(payment => console.log(payment.body))
-                .catch(() => console.log('Nenhum pagamento encontrado.'))
-        }
 
         const msg = await interaction.reply({
             embeds: [{
@@ -55,7 +43,7 @@ export default {
             issuer_id: user.id,
             transaction_amount: options.getNumber('quantia'),
             binary_mode: true,
-            date_of_expiration: new Date(Date.now() + 600000),
+            date_of_expiration: new Date(Date.now() + 1200000), // 20 Minutos
             description: 'Obrigado por doar. Você está me ajudando a ficar online e os animais de rua.',
             metadata: {
                 user_id: user.id,
@@ -66,10 +54,6 @@ export default {
             payment_method_id: 'pix',
             payer: { email }
         })
-            .then(async () => {
-
-
-            })
             .catch(async () => await interaction.editReply({
                 embeds: [{
                     color: client.red,
