@@ -18,15 +18,14 @@ export default {
         {
             name: 'email',
             description: 'Email para que eu possa te enviar o comprovante',
-            type: 3,
-            required: true
+            type: 3
         }
     ],
     async execute({ interaction: interaction, client: client, emojis: e, Database: Database }) {
 
         const { options, user, channel } = interaction
 
-        const email = options.getString('email')
+        const email = options.getString('email') || 'nothing@nothing.com'
 
         const msg = await interaction.reply({
             embeds: [{
