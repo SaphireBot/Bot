@@ -47,7 +47,6 @@ export default {
         const reminder = optionChoice === 'reminder'
 
         const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
-
         if (cachedData?.find(data => data.userId === user.id))
             return await interaction.reply({
                 content: `${e.Deny} | Você já tem uma solicitação de voto em aberto.`,
@@ -69,6 +68,13 @@ export default {
                         emoji: e.Upvote,
                         url: Config.TopGGLink,
                         style: 5
+                    },
+                    {
+                        type: 2,
+                        label: 'CANCELR',
+                        customId: 'cancelVote',
+                        emoji: `${e.Trash}`,
+                        style: 4
                     }
                 ]
             }],

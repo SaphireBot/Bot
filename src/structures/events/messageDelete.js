@@ -8,8 +8,11 @@ client.on('messageDelete', async message => {
     if (!message?.id) return
 
     const isWordleGame = await Database.Cache.WordleGame.get(message.id)
-    if (isWordleGame)
-        await Database.Cache.WordleGame.delete(message.id)
+    if (isWordleGame) await Database.Cache.WordleGame.delete(message.id)
+
+    const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
+    if (cachedData?.find(data => data.messageId === message.id))
+        await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.messageId === message.id)
 
     // TODO: Terminar aqui
     // const Giveaways = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways.${message.guild.id}`)

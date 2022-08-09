@@ -12,6 +12,7 @@ export default class ButtonInteraction extends Base {
         super()
         this.interaction = interaction
         this.customId = interaction.customId
+        this.message = interaction.message
         this.user = interaction.user
         this.channel = interaction.channel
         this.guild = interaction.guild
@@ -28,6 +29,7 @@ export default class ButtonInteraction extends Base {
             case 'newProof': this.newProof(); break;
             case 'closeProof': this.newProof(true); break;
             case 'getVotePrize': this.topGGVote(); break;
+            case 'cancelVote': this.cancelVote(); break;
             case 'WordleGameInfo': import('./modals/wordleGame/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
             default:
                 await this.interaction.reply({
@@ -38,6 +40,12 @@ export default class ButtonInteraction extends Base {
         }
 
         return
+    }
+
+    async cancelVote() {
+        const commandUserId = this.message.interaction.user.id
+        if (commandUserId !== this.user.id) return await this.interaction.deferUpdate().catch(() => { })
+        return this.message.delete().catch(() => { })
     }
 
     async wordleGame(giveup) {
