@@ -7,7 +7,7 @@ import {
 
 export default async (interaction, playersAvailable = []) => {
 
-    const { options, user, guild } = interaction
+    const { options, user } = interaction
 
     const allWords = JSON.parse(fs.readFileSync('./src/JSON/frases.json')).Mix
     const optionGiven = options.getInteger('letras') || 4
@@ -42,7 +42,11 @@ export default async (interaction, playersAvailable = []) => {
         gameData.Players.push(...playersAvailable)
 
     await Database.Cache.WordleGame.set(msg.id, gameData)
-    await Database.Cache.WordleGame.push('inGame', { userId: interaction.user.id, messageId: msg.id })
+    await Database.Cache.WordleGame.push('inGame', {
+        userId: interaction.user.id,
+        messageId: msg.id,
+        messageUrl: msg.url
+    })
 
     let description = ''
 

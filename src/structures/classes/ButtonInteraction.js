@@ -87,14 +87,14 @@ export default class ButtonInteraction extends Base {
                 components: [], embeds: []
             }).catch(() => { })
 
-        if (!wordleGameData?.Players.includes(user.id)) return await interaction.deferReply()
+        if (!wordleGameData?.Players.includes(user.id)) return await this.interaction.deferReply()
 
         if (giveup) {
 
             const playersInGame = await this.Database.Cache.WordleGame.get('inGame')
             const game = playersInGame.find(data => data.messageId === message.id)
 
-            if (game.userId !== this.user.id)
+            if (game && game.userId !== this.user.id)
                 return await this.interaction.reply({
                     content: `${this.emojis.Deny} | Apenas <@${game.userId}> pode desistir desse jogo.`,
                     ephemeral: true

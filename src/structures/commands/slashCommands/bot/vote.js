@@ -47,9 +47,25 @@ export default {
         const reminder = optionChoice === 'reminder'
 
         const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
-        if (cachedData?.find(data => data.userId === user.id))
+        const inCachedData = cachedData?.find(data => data.userId === user.id)
+
+        if (inCachedData?.messageUrl)
             return await interaction.reply({
                 content: `${e.Deny} | Você já tem uma solicitação de voto em aberto.`,
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Ir para a solicitação',
+                                emoji: e.antlink,
+                                url: inCachedData.messageUrl,
+                                style: 5
+                            }
+                        ]
+                    }
+                ],
                 ephemeral: true
             })
 
@@ -85,7 +101,8 @@ export default {
             userId: user.id,
             channelId: channel.id,
             messageId: msg.id,
-            isReminder: reminder
+            isReminder: reminder,
+            messageUrl: msg.url
         })
 
         // async function voteList() {
