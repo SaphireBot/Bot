@@ -35,18 +35,16 @@ class Database extends Models {
 
     MongoConnect = async (client) => {
 
-        try {
-            await connect(process.env.MONGODB_LINK_CONNECTION, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
+        return connect(process.env.MONGODB_LINK_CONNECTION, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+            .then(() => 'Database Connected')
+            .catch(() => {
+                console.log('Mongoose Database | FAIL!\n--> ' + err)
+                client.destroy()
+                return 'Database ERROR'
             })
-
-            return 'Database Connected'
-        } catch (err) {
-            console.log('Mongoose Database | FAIL!\n--> ' + err)
-            client.destroy()
-            return 'Database ERROR'
-        }
     }
 
     add = async (userId, amount) => {

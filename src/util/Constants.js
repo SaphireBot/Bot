@@ -21,6 +21,7 @@ const ConfigurationBase = {
     TopGGLink: "https://top.gg/bot/912509487984812043/vote",
     statcordURL: "https://statcord.com/bot/",
     Terms: "https://saphire.gitbook.io/saphire/saphire/termos-de-servicos",
+    QrCodeWithoutPrice: "https://media.discordapp.net/attachments/893361065084198954/1007101315832360970/WhatsApp_Image_2022-08-10_at_10.39.05_PM.jpeg",
     guildsToPrivateCommands: [
         "986292524790464562",
         "888464632291917956",

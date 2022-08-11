@@ -45,27 +45,17 @@ export default {
         }
 
         async function get(userId, size, format, dynamic) {
-
-            let Data = ""
-
-            try {
-
-                await fetch(`https://discord.com/api/v10/users/${userId}`, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
+            return await fetch(`https://discord.com/api/v10/users/${userId}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
+            })
+                .then(res => res.json())
+                .then(user => {
+                    if (user.code == 50035) return false
+                    if (!user.banner) return false
+                    if (user.banner) return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
                 })
-                    .then(res => res.json())
-                    .then(user => {
-                        if (user.code == 50035) return false
-                        if (!user.banner) return false
-                        if (user.banner) Data = createBannerURL(user.id, user.banner, format, size, dynamic)
-                    })
-
-            } catch (err) {
-                return false
-            }
-
-            return Data
+                .catch(() => false)
         }
     }
 }

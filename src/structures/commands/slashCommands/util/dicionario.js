@@ -28,37 +28,9 @@ export default {
         const embed = { color: client.blue, title: `🔍 Palavra Pesquisada: ${query.toLowerCase().captalize()}`.limit('MessageEmbedTitle'), fields: [] }
         await interaction.deferReply()
 
-        try {
-
-            const result = await dicio.significado(query?.toLowerCase())
-
-            embed.fields.push({
-                name: `${e.Info} Classe`,
-                value: result.class.captalize().limit('MessageEmbedFieldValue')
-            })
-
-            if (result.etymology)
-                embed.fields.push({
-                    name: `${e.Commands} Etimologia`,
-                    value: result.etymology.limit('MessageEmbedFieldValue')
-                })
-
-            result.meanings.map((res, i) =>
-                embed.fields.push({
-                    name: `${e.saphireLendo} Significado ${i + 1}`,
-                    value: '> ' + res
-                        ?.replace(/\[|\]/g, '`')
-                        ?.limit('MessageEmbedFieldValue')
-                        || 'Resultado indefinido'
-                }))
-
-            if (embed.fields.length > 25) embed.fields.length = 25
-
-            return respondQuery()
-
-        } catch (err) {
-            return await interaction.editReply({ content: `${e.Deny} | Nenhum significado foi encontrado.` })
-        }
+        return await dicio.significado(query?.toLowerCase())
+            .then(result => buildEmbed(result))
+            .catch(async () => await interaction.editReply({ content: `${e.Deny} | Nenhum significado foi encontrado.` }))
 
         async function respondQuery() {
 
@@ -88,6 +60,34 @@ export default {
                     })
 
             }
+        }
+
+
+        function buildEmbed(result) {
+
+            embed.fields.push({
+                name: `${e.Info} Classe`,
+                value: result.class.captalize().limit('MessageEmbedFieldValue')
+            })
+
+            if (result.etymology)
+                embed.fields.push({
+                    name: `${e.Commands} Etimologia`,
+                    value: result.etymology.limit('MessageEmbedFieldValue')
+                })
+
+            result.meanings.map((res, i) =>
+                embed.fields.push({
+                    name: `${e.saphireLendo} Significado ${i + 1}`,
+                    value: '> ' + res
+                        ?.replace(/\[|\]/g, '`')
+                        ?.limit('MessageEmbedFieldValue')
+                        || 'Resultado indefinido'
+                }))
+
+            if (embed.fields.length > 25) embed.fields.length = 25
+
+            return respondQuery()
         }
 
     }

@@ -1,5 +1,6 @@
 import mercadopago from 'mercadopago'
 import Routes from '../../../../api/Routes.js'
+import { Config } from '../../../../util/Constants.js'
 
 export default {
     name: 'donate',
@@ -12,8 +13,7 @@ export default {
             description: 'Valor em reais a ser doado',
             type: 10,
             min_value: 0.01,
-            max_value: 9999999,
-            required: true
+            max_value: 9999999
         },
         {
             name: 'email',
@@ -21,11 +21,23 @@ export default {
             type: 3
         }
     ],
-    async execute({ interaction: interaction, client: client, emojis: e, Database: Database }) {
+    async execute({ interaction: interaction, client: client, emojis: e }) {
 
-        const { options, user, channel } = interaction
+        const { options, user, channel, guild } = interaction
 
         const email = options.getString('email') || 'nothing@nothing.com'
+        const price = options.getNumber('quantia') || 0
+
+        if (!price)
+            return await interaction.reply({
+                embeds: [{
+                    color: client.blue,
+                    title: 'Doação livre',
+                    description: `> ${e.Info} Este QrCode não irá te trazer nenhum benefício. Usando a opção de \`quantia\`, você irá ganhar **15000 ${await guild.getCoin()}** por real doado.`,
+                    image: { url: Config.QrCodeWithoutPrice }
+                }],
+                ephemeral: true
+            })
 
         const msg = await interaction.reply({
             embeds: [{

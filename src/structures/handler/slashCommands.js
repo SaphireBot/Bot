@@ -18,7 +18,7 @@ export default async (client) => {
 
             const query = await import(`../commands/slashCommands/${dir}/${file}`)
             const pull = query.default
-            
+
             if (pull && pull.name) {
                 client.slashCommands.set(pull.name, pull);
                 pull.admin || pull.staff ? adminCommands.push(pull) : commands.push(pull);
@@ -28,27 +28,20 @@ export default async (client) => {
 
     const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN)
 
-    return (async () => {
-        try {
+    const guildsId = config.guildsToPrivateCommands || []
 
-            const guildsId = config.guildsToPrivateCommands || []
+    for (let guild of guildsId)
+        if (client.guilds.cache.has(guild))
+            rest.put(Routes.applicationGuildCommands(client.user.id, guild), { body: adminCommands })
 
-            for (let guild of guildsId)
-                if (client.guilds.cache.has(guild))
-                    rest.put(Routes.applicationGuildCommands(client.user.id, guild), { body: adminCommands })
+    await rest.put(
+        Routes.applicationCommands(client.user.id),
+        { body: commands },
+    );
 
-            await rest.put(
-                Routes.applicationCommands(client.user.id),
-                { body: commands },
-            );
+    client.user.setActivity(`${client.slashCommands.size} comandos em ${client.guilds.cache.size} servidores`, { type: 'PLAYING' });
+    client.user.setStatus('idle');
 
-            client.user.setActivity(`${client.slashCommands.size} comandos em ${client.guilds.cache.size} servidores`, { type: 'PLAYING' });
-            client.user.setStatus('idle');
+    return `${client.slashCommands.size} Slash Commands Loaded`
 
-            return `${client.slashCommands.size} Slash Commands Loaded`
-        } catch (error) {
-            console.error(error);
-            return 'Erro ao registrar os Slash Commands'
-        }
-    })();
 }

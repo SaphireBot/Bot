@@ -74,19 +74,19 @@ export default async (interaction, playersAvailable = []) => {
             {
                 type: 2,
                 emoji: '📝',
-                custom_id: msg.id,
+                custom_id: JSON.stringify({ c: 'wordle', src: msg.id }),
                 style: 3
             },
             {
                 type: 2,
                 emoji: `${e.Info}`,
-                custom_id: 'WordleGameInfo',
+                custom_id: JSON.stringify({ c: 'wordle', src: 'WordleGameInfo' }),
                 style: 1
             },
             {
                 type: 2,
                 emoji: '🏳️',
-                custom_id: 'giveup',
+                custom_id: JSON.stringify({ c: 'wordle',  src:  'giveup' }),
                 style: 4
             }
         ]

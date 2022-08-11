@@ -55,7 +55,7 @@ export default {
                                 type: 2,
                                 label: 'Desistir do jogo aberto',
                                 emoji: e.Trash,
-                                custom_id: 'giveup-ephemeral',
+                                custom_id: JSON.stringify({ c: 'wordle', src: 'giveup-ephemeral' }),
                                 style: 4
                             },
                             {

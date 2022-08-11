@@ -38,14 +38,13 @@ export default {
         const TopGG = new Api(process.env.TOP_GG_TOKEN)
         const hasVoted = await TopGG.hasVoted(user.id)
 
-        if (hasVoted)
+        if (!hasVoted)
             return await interaction.reply({
                 content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
                 ephemeral: true
             })
 
         const reminder = optionChoice === 'reminder'
-
         const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
         const inCachedData = cachedData?.find(data => data.userId === user.id)
 
@@ -88,7 +87,7 @@ export default {
                     {
                         type: 2,
                         label: 'CANCELR',
-                        customId: 'cancelVote',
+                        customId: JSON.stringify({ c: 'vote', src: 'cancelVote' }),
                         emoji: `${e.Trash}`,
                         style: 4
                     }

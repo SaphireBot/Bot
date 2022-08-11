@@ -262,7 +262,6 @@ export default class ModalInteraction extends Base {
         let usernameData = fields.getTextInputValue('username')
         let anonymous = fields.getTextInputValue('anonymous')
         let letterContent = fields.getTextInputValue('letterContent')
-        let isError = false
         let userLetted = await client.getUser(usernameData)
 
         if (!userLetted)
@@ -303,29 +302,27 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        let isAnonymous = ['sim', 'yes'].includes(anonymous?.toLowerCase()) ? true : false,
-            ID = CodeGenerator(7).toLocaleUpperCase()
+        const isAnonymous = ['sim', 'yes'].includes(anonymous?.toLowerCase()) ? true : false
+        const ID = CodeGenerator(7).toLocaleUpperCase()
 
-        try {
+        await userLetted.send({
+            content: `ℹ | Algum problema com a carta? Contacte um administrador usando o comando \`/carta report\``,
+            embeds: [{
+                color: client.blue,
+                title: `📨 ${client.user.username}'s Letters System`,
+                description: `ℹ Esta carta foi enviada por: ${isAnonymous ? '\`Usuário anônimo\`' : `${user.tag} - ${user.id}`}`,
+                fields: [{
+                    name: `📝 Conteúdo da carta`,
+                    value: `\`\`\`txt\n${letterContent}\n\`\`\``
+                }],
+                footer: { text: `A ${client.user.username} não se responsabiliza pelo conteúdo presente nesta carta.` }
+            }]
+        })
+            .then(() => sucess())
+            .catch(() => error())
 
-            await userLetted.send({
-                content: `ℹ | Algum problema com a carta? Contacte algúm administrador usando o comando \`-adm\``,
-                embeds: [{
-                    color: client.blue,
-                    title: `📨 ${client.user.username}'s Letters System`,
-                    description: `ℹ Esta carta foi enviada por: ${isAnonymous ? '\`Usuário anônimo\`' : `${user.tag} - ${user.id}`}`,
-                    fields: [{
-                        name: `📝 Conteúdo da carta`,
-                        value: `\`\`\`txt\n${letterContent}\n\`\`\``
-                    }],
-                    footer: { text: `A ${client.user.username} não se responsabiliza pelo conteúdo presente nesta carta.` }
-                }]
-            }).catch(() => {
-                isError = true
-                return error()
-            })
+        async function sucess() {
 
-            if (isError) return
             this.Database.subtractItem(user.id, 'Slot.Cartas', 1)
             this.Database.SetTimeout(user.id, 'Timeouts.Letter')
 
@@ -351,14 +348,9 @@ export default class ModalInteraction extends Base {
                 content: `✅ | A carta foi enviada para ${userLetted.tag} com sucesso! (-1 carta)\n🕵️ | Anônimo: ${isAnonymous ? 'Sim' : 'Não'}`,
                 ephemeral: true
             })
-
-        } catch (err) {
-            isError = true
-            return error()
         }
 
         async function error() {
-            isError = true
             return await interaction.reply({
                 content: `❌ | Aparentemente a DM de ${userLetted.tag} está fechada e não posso efetuar o envio da carta.`,
                 embeds: [{

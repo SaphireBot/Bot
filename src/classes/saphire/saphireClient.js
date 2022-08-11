@@ -146,15 +146,6 @@ class SaphireClient extends Client {
             : null
     }
 
-    /**
-     * @param1 {TimeoutInMS} Milesegundos
-     * @param2 {DateNowAtDatabase} Date.now() configurado no banco de dados
-     * @return Boolean
-     */
-    Timeout({ TimeoutInMS = 0, DateNowAtDatabase = 0 }) {
-        return TimeoutInMS - (Date.now() - DateNowAtDatabase) > 0
-    }
-
     topGGAutoPoster() {
         if (this.user.id !== this.moonId) return
         return AutoPost(process.env.TOP_GG_TOKEN, this)
