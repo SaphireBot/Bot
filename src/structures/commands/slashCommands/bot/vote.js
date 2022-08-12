@@ -36,13 +36,14 @@ export default {
             type: 1,
             options: [
                 {
-                    name: 'check_user',
-                    description: 'Diga o nome ou ID do usuário para ver quantos votos ele tem',
-                    type: 3
+                    name: 'search_user',
+                    description: 'Pesquise por um usuário',
+                    type: 3,
+                    autocomplete: true
                 },
                 {
                     name: 'check_member',
-                    description: 'Selecione um membro do servidor para ver quantos votos ele tem',
+                    description: 'Pesquise por um membro',
                     type: 6
                 }
             ]

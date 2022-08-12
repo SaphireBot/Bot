@@ -7,10 +7,9 @@ export default
     async interaction => {
 
         const { options } = interaction
-        const searchUser = options.getString('check_user')
+        const searchUser = options.getString('search_user')
         const memberUser = options.getUser('check_member')
-        const user = memberUser || await client.users.fetchUser(searchUser)
-        const allUsers = await client.users.all(true)
+        const user = memberUser || client.allUsers.find(user => user.id ===  searchUser)
         const TopGG = new Api(process.env.TOP_GG_TOKEN)
         const allVotesData = await TopGG.getVotes() || []
 
@@ -44,7 +43,7 @@ export default
         const mappingOnlyIds = [...new Set(allVotesData.map(vote => vote.id))]
         const uniqueArray = mappingOnlyIds
             .map(id => {
-                const userData = allUsers.find(u => u.id === id)
+                const userData = client.allUsers.find(u => u.id === id)
 
                 return {
                     name: userData?.tag || null,

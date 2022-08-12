@@ -1,6 +1,5 @@
 // import { SaphireClient as client } from '../../classes/index.js'
 import ReminderSystem from './reminder/index.js'
-// const GiveawaySystem = require('../update/giveawaysystem')
 // const TopGlobalRanking = require('../update/TopGlobalRanking')
 // const boostReward = require('../server/boostReward')
 // const RaffleSystem = require('../update/rifasystem')
@@ -12,7 +11,6 @@ export default () => {
 
     setInterval(() => {
         ReminderSystem()
-        // GiveawaySystem()
         // RaffleSystem()
     }, 3000)
 

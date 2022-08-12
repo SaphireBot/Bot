@@ -130,7 +130,7 @@ export default class Autocomplete extends Base {
         const atualPrefix = data?.Prefix || null
         const prefixes = ['+', '!', '$', '*', 's', '&', '.', ',', 's!']
         const choices = []
-        
+
         for (let i of prefixes) choices.push({ name: i, value: i })
 
         if (atualPrefix && atualPrefix !== this.client.prefix)
@@ -408,16 +408,17 @@ export default class Autocomplete extends Base {
     }
 
     async allUsers(value) {
-        const broadcastEval = await this.client.allUsersData()
-        const users = broadcastEval.flat()
-        
+
+        const users = this.client.allUsers
+        if (!users || users.length === 0) return this.respond()
+
         const fill = users.filter(user => {
             if (!user) return
 
-            return user.tag?.toLowerCase().includes(value.toLowerCase())
-                || user.id?.includes(value)
+            return user?.tag.toLowerCase().includes(value.toLowerCase())
+                || user?.id.includes(value)
         })
-       
+
         const mapped = fill.filter(x => x).map(user => ({ name: `${user.tag} | ${user.id}`, value: user.id }))
         return this.respond(mapped)
     }
@@ -426,7 +427,7 @@ export default class Autocomplete extends Base {
         const userData = await this.Database.User.findOne({ id: this.user.id }, 'Walls') || []
         const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess') || []
         const wallSetted = userData.Walls?.Set
-        
+
         const userBackground = clientData?.BackgroundAcess.includes(this.user.id)
             ? Object.keys(this.Database.BgLevel)
             : userData.Walls?.Bg
@@ -496,18 +497,14 @@ export default class Autocomplete extends Base {
         return this.respond(arr)
     }
 
-    async respond(mappedArray = []) {
+    async respond(arrayData = []) {
 
-        if (mappedArray.length > 25) mappedArray.length = 25
+        if (arrayData.length > 25) arrayData.length = 25
 
-        if (mappedArray.length)
-            mappedArray = mappedArray.map(data => {
-
-                if (data?.name?.length > 100)
-                    data.name = data.name.slice(0, 97) + '...'
-
-                return { name: data?.name, value: data?.value }
-            })
+        const mappedArray = arrayData.map(data => ({
+            name: data?.name.limit('AutocompleteName'),
+            value: data?.value.limit('AutocompleteValue')
+        }))
 
         return await this.interaction.respond(mappedArray)
     }

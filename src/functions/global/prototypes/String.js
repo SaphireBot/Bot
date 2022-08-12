@@ -130,6 +130,8 @@ String.prototype.limit = function (param) {
         MessageEmbedFooter: 2048,
         MessageEmbedAuthorName: 256,
         MessageContent: 4096,
+        AutocompleteName: 100,
+        AutocompleteValue: 100
     }[param] || this.length
 
     if (this.length > limit)

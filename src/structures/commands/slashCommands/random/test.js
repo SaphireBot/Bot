@@ -4,11 +4,15 @@ export default {
     dm_permission: false,
     type: 1,
     admin: true,
-    options: [],
+    options: [
+        {
+            name: 'users_banned',
+            type: 3,
+            description: 'aa',
+            autocomplete: true
+        }
+    ],
     async execute({ interaction, client, Database, emojis: e }) {
-
-        const guild = await client.guilds.fetchGuild(data)
-
-        console.log(await client.users.all())
+        console.log(client.allUsers.filter(user => user.discriminator === interaction.options.getString('test')))
     }
 }

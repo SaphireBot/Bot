@@ -45,6 +45,13 @@ class SaphireClient extends Client {
         this.slashCommands = new Collection()
 
         /**
+         * @param Nothing
+         * @returns Um array com todos os usuários de todas as Shards
+         * @example [user1, user2, user3, user4, user5, user6]
+         */
+        this.allUsers = []
+
+        /**
          * @returns Shard Client ID
          */
         this.shardId = 0
@@ -85,6 +92,7 @@ class SaphireClient extends Client {
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
         automaticSystems()
+        this.allUsers = await this.users.all(true)
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
@@ -98,15 +106,6 @@ class SaphireClient extends Client {
      */
     async allGuildsData() {
         return await this.shard.broadcastEval(client => client.guilds.cache)
-    }
-
-    /**
-     * @param Nothing
-     * @returns Um array com todos os usuários de todas as Shards em cada array
-     * @example [[user1, user2, user3], [user4, user5, user6]]
-     */
-    async allUsersData() {
-        return await this.shard.broadcastEval(client => client.users.cache)
     }
 
     topGGAutoPoster() {

@@ -39,7 +39,7 @@ export default {
         if (!userData)
             return await interaction.reply({
                 content: `${e.Database} | DATABASE | Não foi possível obter os dados de **${user?.tag}** *\`${user.id}\`*`,
-                ephemeral: hide
+                ephemeral: true
             })
 
         const bal = parseInt(userData?.Balance).currency() || 0
