@@ -6,13 +6,13 @@ export default {
     admin: true,
     options: [
         {
-            name: 'users_banned',
+            name: 'database_users',
             type: 3,
             description: 'aa',
             autocomplete: true
         }
     ],
     async execute({ interaction, client, Database, emojis: e }) {
-        console.log(client.allUsers.filter(user => user.discriminator === interaction.options.getString('test')))
+        console.log(client.allGuilds.find(guild => guild.id === interaction.options.getString('search_guild')))
     }
 }

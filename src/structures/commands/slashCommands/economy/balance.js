@@ -10,8 +10,8 @@ export default {
             type: 6
         },
         {
-            name: 'search_user',
-            description: 'Pesquise por um usuário',
+            name: 'database_users',
+            description: 'Pesquise por um usuário no banco de dados',
             type: 3,
             autocomplete: true
         },
@@ -25,7 +25,7 @@ export default {
 
         const { options, guild } = interaction
         const hide = options.getBoolean('hide') || false
-        const user = options.getUser('user') || await client.users.fetchUser(options.getString('search_user')) || interaction.user
+        const user = options.getUser('user') || client.allUsers.find(data => data.id === options.getString('database_users')) || interaction.user
         const MoedaCustom = await guild.getCoin()
 
         if (user.id === client.user.id)

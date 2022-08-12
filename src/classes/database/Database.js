@@ -225,7 +225,10 @@ class Database extends Models {
         return fs.writeFile("cache.json", JSON.stringify(data))
     }
 
-    deleteUser = async (userId) => await this.User.deleteOne({ id: userId })
+    deleteUser = async (userId) => {
+        client.databaseUsers = client.databaseUsers.filter(id => id !== userId)
+        return await this.User.deleteOne({ id: userId })
+    }
 
     addLotery = async (value, clientId) => {
 
@@ -286,6 +289,7 @@ class Database extends Models {
         if (u || u?.id === user.id) return
 
         new this.User({ id: user.id }).save()
+        client.databaseUsers.push(user.id)
 
         await this.User.updateOne(
             { id: user.id },

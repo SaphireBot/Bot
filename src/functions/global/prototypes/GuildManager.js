@@ -5,18 +5,25 @@ GuildManager.prototype.fetchGuild = async function (dataToSearch) {
 
     if (!dataToSearch) return null
 
-    const allUsers = await client.shard.broadcastEval(Client => Client.users.cache)
+    const allGuilds = await client.shard.broadcastEval(Client => Client.guilds.cache)
 
-    const search = allUsers
+    const search = allGuilds
         .flat()
         .find(data => {
             return data.id === dataToSearch
-                || data.username?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.tag?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.discriminator === dataToSearch
-                || data.username?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
-                || data.tag?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
+                || data.name?.toLowerCase() === dataToSearch?.toLowerCase()
         })
 
-    return client.users.resolve(search.id) || null
+    return client.guilds.resolve(search.id) || null
+}
+
+/**
+ * @param Nothing
+ * @returns Um array com todos os servidores de todas as Shards em cada array
+ * @example <Client>.guilds.all() [[guild1, guild2, guild3], [guild4, guild5, guild6]]
+ * @example <Client>.guilds.all(true) [guild1, guild2, guild3, guild4, guild5, guild6]
+ */
+GuildManager.prototype.all = async (inFlat) => {
+    const allGuilds = await client.shard.broadcastEval(Client => Client.guilds.cache)
+    return inFlat ? allGuilds.flat() : allGuilds
 }

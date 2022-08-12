@@ -24,6 +24,7 @@ export default class Autocomplete extends Base {
             case 'color': case 'cor': this.utilColors(value); break;
             case 'betchoice': this.betChoices(value); break;
             case 'blocked_commands': this.blockCommands(value); break;
+            case 'database_users': this.databaseUsers(value); break;
             case 'show_commands': this.showCommands(value); break;
             case 'de': case 'para': this.translateLanguages(value); break;
             case 'search_guild': this.allGuilds(value); break;
@@ -45,7 +46,6 @@ export default class Autocomplete extends Base {
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
             case 'editar_imagem_com_censura': this.editImageLogoMarca(); break;
-            case 'set_prefix': this.prefix(); break;
             default: this.respond(); break;
         }
 
@@ -123,24 +123,6 @@ export default class Autocomplete extends Base {
 
         return this.respond(mapped)
     }
-
-    async prefix() {
-
-        const data = await this.Database.Guild.findOne({ id: this.guild.id }, 'Prefix')
-        const atualPrefix = data?.Prefix || null
-        const prefixes = ['+', '!', '$', '*', 's', '&', '.', ',', 's!']
-        const choices = []
-
-        for (let i of prefixes) choices.push({ name: i, value: i })
-
-        if (atualPrefix && atualPrefix !== this.client.prefix)
-            choices.unshift({ name: `Resetar prefixo para: ${util.Config.prefix}`, value: 'reset' })
-
-        const fill = choices.filter(p => p.name !== atualPrefix)
-
-        return this.respond(fill)
-    }
-
     async select_logo_marca(value) {
         const logoData = this.Database.Logomarca || []
         const fill = logoData.filter(marca => marca?.name.find(x => x.includes(value.toLowerCase())))
@@ -395,14 +377,40 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-    async allGuilds(value) {
-        const broadcastEval = await this.client.allGuildsData()
-        const guilds = broadcastEval.flat()
 
-        const fill = guilds.filter(guild =>
-            guild.name.toLowerCase().includes(value.toLowerCase())
-            || guild.id.includes(value)
-        )
+    async databaseUsers(value) {
+
+        const dataUsers = this.client.databaseUsers
+        const users = this.client.allUsers
+        if (!dataUsers || dataUsers.length === 0) return this.respond()
+
+        const fill = dataUsers
+            .map(id => users.find(data => data.id === id))
+            .filter(user => {
+                return user?.tag.toLowerCase().includes(value.toLowerCase())
+                    || user?.id.includes(value)
+            })
+
+        const mapped = fill
+            .filter(x => x)
+            .map(user => ({
+                name: `${user.tag} | ${user.id}`,
+                value: user.id
+            }))
+        return this.respond(mapped)
+    }
+
+    async allGuilds(value) {
+
+        const guilds = this.client.allGuilds
+        if (!guilds || guilds.length === 0) return this.respond()
+
+        const fill = guilds
+            .filter(guild =>
+                guild.name.toLowerCase().includes(value.toLowerCase())
+                || guild.id.includes(value)
+            )
+
         const mapped = fill.map(guild => ({ name: `(${guild.members.length}) - ${guild.name} | ${guild.id}`, value: guild.id }))
         return this.respond(mapped)
     }
@@ -412,14 +420,19 @@ export default class Autocomplete extends Base {
         const users = this.client.allUsers
         if (!users || users.length === 0) return this.respond()
 
-        const fill = users.filter(user => {
-            if (!user) return
+        const fill = users
+            .filter(user => {
+                return user?.tag.toLowerCase().includes(value.toLowerCase())
+                    || user?.id.includes(value)
+            })
 
-            return user?.tag.toLowerCase().includes(value.toLowerCase())
-                || user?.id.includes(value)
-        })
+        const mapped = fill
+            .filter(x => x)
+            .map(user => ({
+                name: `${user.tag} | ${user.id}`,
+                value: user.id
+            }))
 
-        const mapped = fill.filter(x => x).map(user => ({ name: `${user.tag} | ${user.id}`, value: user.id }))
         return this.respond(mapped)
     }
 

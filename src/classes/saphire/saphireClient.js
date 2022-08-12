@@ -52,6 +52,20 @@ class SaphireClient extends Client {
         this.allUsers = []
 
         /**
+         * @param Nothing
+         * @returns Um array com todos os serviddores de todas as Shards
+         * @example [guild1, guild2, guild3, guild4, guild5, guild6]
+         */
+        this.allGuilds = []
+
+        /**
+         * @param Nothing
+         * @returns Um array com todos os Ids de todos os usuários presentes no banco de dados
+         * @example [id, id, id, id, id, id]
+         */
+        this.databaseUsers = []
+
+        /**
          * @returns Shard Client ID
          */
         this.shardId = 0
@@ -92,7 +106,13 @@ class SaphireClient extends Client {
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
         automaticSystems()
+
         this.allUsers = await this.users.all(true)
+        this.allGuilds = await this.guilds.all(true)
+        this.databaseUsers = await (async () => {
+            const allUsersData = await Database.User.find({})
+            return allUsersData.map(data => data.id)
+        })()
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
