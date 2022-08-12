@@ -38,7 +38,7 @@ export default {
         const TopGG = new Api(process.env.TOP_GG_TOKEN)
         const hasVoted = await TopGG.hasVoted(user.id)
 
-        if (!hasVoted)
+        if (hasVoted)
             return await interaction.reply({
                 content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
                 ephemeral: true
