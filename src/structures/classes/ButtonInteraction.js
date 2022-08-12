@@ -21,7 +21,9 @@ export default class ButtonInteraction extends Base {
 
     async execute() {
 
+        if (!this.customId.includes('{')) return
         const commandData = JSON.parse(this.customId)
+        if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()

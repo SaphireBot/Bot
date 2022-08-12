@@ -1,5 +1,5 @@
 import Base from './Base.js'
-// import * as Starcord from 'statcord.js'
+import * as Statcord from 'statcord.js'
 
 export default class SlashCommand extends Base {
     constructor(interaction) {
@@ -79,7 +79,9 @@ export default class SlashCommand extends Base {
     }
 
     async registerCommand() {
-        // Starcord.ShardingClient.postCommand(this.interaction.commandName, this.user.id, this.client)
+       
+        Statcord.ShardingClient.postCommand(this.interaction.commandName, this.user.id, this.client)
+        
         return await this.Database.Client.updateOne(
             { id: this.client.user.id },
             {

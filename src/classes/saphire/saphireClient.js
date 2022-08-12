@@ -74,9 +74,9 @@ class SaphireClient extends Client {
      * Console Log da Shard
      */
     async start() {
+        await super.login()
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
-        await super.login()
         import('../../api/app.js')
 
         this.shardId = this.shard.ids.at(-1) || 0
@@ -107,43 +107,6 @@ class SaphireClient extends Client {
      */
     async allUsersData() {
         return await this.shard.broadcastEval(client => client.users.cache)
-    }
-
-    async getUser(dataToSearch) {
-
-        if (!dataToSearch) return null
-
-        const allUsers = await this.shard.broadcastEval(client => client.users.cache)
-
-        const search = allUsers.flat().find(data => {
-            return data.id === dataToSearch
-                || data.username?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.tag?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.discriminator === dataToSearch
-                || data.username?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
-                || data.tag?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
-        })
-
-        return search
-            ? await this.users.fetch(search.id)
-            : null
-    }
-
-    async getGuild(dataToSearch) {
-
-        if (!dataToSearch) return null
-
-        const allGuilds = await this.shard.broadcastEval(client => client.guilds.cache)
-
-        const search = allGuilds.flat().find(data => {
-            return data.id === dataToSearch
-                || data.name?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.name?.toLowerCase().includes(dataToSearch?.toLowerCase())
-        })
-
-        return search
-            ? await this.guilds.fetch(search.id)
-            : null
     }
 
     topGGAutoPoster() {

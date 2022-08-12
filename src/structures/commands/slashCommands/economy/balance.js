@@ -23,11 +23,10 @@ export default {
     ],
     async execute({ interaction, client, Database, config, guildData, emojis: e }) {
 
-        const MoedaCustom = guildData?.Moeda || `${e.Coin} Safiras`
-        const { options } = interaction
-
+        const { options, guild } = interaction
         const hide = options.getBoolean('hide') || false
-        const user = client.users.cache.get(options.getString('search_user')) || options.getUser('user') || interaction.user
+        const user = options.getUser('user') || await client.users.fetchUser(options.getString('search_user')) || interaction.user
+        const MoedaCustom = await guild.getCoin()
 
         if (user.id === client.user.id)
             return await interaction.reply({

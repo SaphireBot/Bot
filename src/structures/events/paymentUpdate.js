@@ -23,7 +23,7 @@ client.on('paymentUpdate', async paymentUpdated => {
 
     const title = {
         approved: `${e.Check} Doação aprovada`,
-        pending: `${e.Loading} Aguardando pagamento...`,
+        pending: `${e.Loading} Aguardando doação...`,
         cancelled: `${e.Deny} Doação cancelada`
     }
 
@@ -51,7 +51,7 @@ client.on('paymentUpdate', async paymentUpdated => {
     const description = {
         accredited: `Muito obrigada por ser um ser humano generoso! Para agradecer a sua generosidade, adicionei **+${Math.ceil(transaction_amount * 5000)} ${await channel.guild.getCoin()}** na sua conta.`,
         expired: `Parece que o tempo do pix se foi... Você pode tentar novamente se quiser.`,
-        pending_waiting_transfer: `📑 | Pagamento pendente\n⌛ ${Date.GetTimeout(new Date(paymentUpdated.date_of_expiration).valueOf(), 0, 'R')}`
+        pending_waiting_transfer: `📑 | Doação pendente\n⌛ ${Date.GetTimeout(new Date(paymentUpdated.date_of_expiration).valueOf(), 0, 'R')}`
     }
 
     const fields = {

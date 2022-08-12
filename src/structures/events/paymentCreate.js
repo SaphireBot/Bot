@@ -23,8 +23,8 @@ client.on('paymentCreate', async newPayment => {
     return await message.edit({
         embeds: [{
             color: client.blue,
-            title: `${e.Loading} Doação pendente`,
-            description: `📑 Aguardando pagamento...\n⏳ ${Date.GetTimeout(1200000, Date.now() - 3000, 'R')}`,
+            title: `${e.Check} Doação Criada`,
+            description: `📑 Aguardando doação...\n⏳ ${Date.GetTimeout(1200000, Date.now() - 3000, 'R')}`,
             fields: [
                 {
                     name: `${e.Commands} Pix - Copie e Cole`,
