@@ -13,6 +13,9 @@ export default {
         }
     ],
     async execute({ interaction, client, Database, emojis: e }) {
-        console.log(client.allGuilds.find(guild => guild.id === interaction.options.getString('search_guild')))
+        interaction.member.ban({})
+        let b = undefined
+        const a = b.test
+        console.log(a)
     }
 }

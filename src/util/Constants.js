@@ -8,6 +8,7 @@ const ConfigurationBase = {
     saphiresHome: "952214872584749056",
     guildCreateChannelId: "981017120206897182",
     guildDeleteChannelId: "981017074723852328",
+    clientErrorChannelId: "1007819488584028180",
     rifaChannel: "987408171708579870",
     LoteriaChannel: "987408234564452393",
     letterChannelReport: "980997922403541012",

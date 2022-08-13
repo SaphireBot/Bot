@@ -14,7 +14,9 @@ GuildManager.prototype.fetchGuild = async function (dataToSearch) {
                 || data.name?.toLowerCase() === dataToSearch?.toLowerCase()
         })
 
-    return client.guilds.resolve(search.id) || null
+    if (!search) return null
+
+    return client.guilds.resolve(search?.id) || null
 }
 
 /**
@@ -24,6 +26,7 @@ GuildManager.prototype.fetchGuild = async function (dataToSearch) {
  * @example <Client>.guilds.all(true) [guild1, guild2, guild3, guild4, guild5, guild6]
  */
 GuildManager.prototype.all = async (inFlat) => {
-    const allGuilds = await client.shard.broadcastEval(Client => Client.guilds.cache)
+    // const allGuilds = await client.shard.broadcastEval(Client => Client.guilds.cache)
+    const allGuilds = await client.shard.fetchClientValues('guilds.cache')
     return inFlat ? allGuilds.flat() : allGuilds
 }

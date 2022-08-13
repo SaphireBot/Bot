@@ -8,6 +8,8 @@ import automaticSystems from '../../functions/update/index.js'
 import TopGGAutoposter from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
 import mercadopago from 'mercadopago'
+import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
+import uncaughtException from '../modules/errors/process/uncaughtException.js'
 
 const { AutoPost } = TopGGAutoposter
 
@@ -95,6 +97,10 @@ class SaphireClient extends Client {
      * Console Log da Shard
      */
     async start() {
+
+        process.on('unhandledRejection', error => unhandledRejection(error))
+        process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
+
         await super.login()
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')

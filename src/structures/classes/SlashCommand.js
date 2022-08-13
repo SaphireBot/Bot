@@ -1,5 +1,6 @@
 import Base from './Base.js'
 import * as Statcord from 'statcord.js'
+import error from '../../classes/modules/errors/errors.js'
 
 export default class SlashCommand extends Base {
     constructor(interaction) {
@@ -9,7 +10,6 @@ export default class SlashCommand extends Base {
         this.member = interaction.member
         this.guild = interaction.guild
         this.channel = interaction.channel
-        // this.error = require('../functions/config/interactionError')
     }
 
     async execute(guildData, clientData) {
@@ -35,10 +35,9 @@ export default class SlashCommand extends Base {
                 ephemeral: true
             })
 
-        // await command.execute(this).catch(err => this.error(this, err))
-        await command.execute(this).catch(err => console.log(err))
-
-        return this.registerCommand()
+        return command.execute(this)
+            .then(() => this.registerCommand())
+            .catch(err => error(this, err))
     }
 
     async CheckBeforeExecute() {
@@ -79,9 +78,9 @@ export default class SlashCommand extends Base {
     }
 
     async registerCommand() {
-       
+
         Statcord.ShardingClient.postCommand(this.interaction.commandName, this.user.id, this.client)
-        
+
         return await this.Database.Client.updateOne(
             { id: this.client.user.id },
             {
