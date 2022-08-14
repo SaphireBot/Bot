@@ -1,11 +1,5 @@
 import Base from './Base.js'
-import { Api } from '@top-gg/sdk'
-
-import {
-    ChannelType,
-    OverwriteType,
-    PermissionFlagsBits as Permissions
-} from 'discord.js'
+import memoryGame from './buttons/memoryGame/solo.memory.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -26,6 +20,7 @@ export default class ButtonInteraction extends Base {
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
+        if (commandData.c === 'memory') return memoryGame(this.customId)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
 
