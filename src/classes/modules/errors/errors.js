@@ -12,7 +12,7 @@ export default async ({ interaction, Database, user, guild, channel }, err) => {
 
     const channelReporter = centralGuild.channels.cache.get(config.clientErrorChannelId)
     if (!channelReporter) return
-
+ 
     /*
     * 10062 - DiscordAPIError: Unknown interaction
     * 50001 - Missing Access
