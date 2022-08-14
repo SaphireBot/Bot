@@ -13,9 +13,8 @@ export default {
         }
     ],
     async execute({ interaction, client, Database, emojis: e }) {
-        interaction.member.ban({})
-        let b = undefined
-        const a = b.test
-        console.log(a)
+       
+        await interaction.member.ban()
+
     }
 }

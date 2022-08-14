@@ -5,7 +5,7 @@ import { WebhookClient } from 'discord.js'
 
 export default async function (reason) {
 
-    return
+    return console.log('unhandledRejection')
 
     /**
      * 500 Internal Server Error
