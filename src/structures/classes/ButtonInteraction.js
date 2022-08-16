@@ -10,7 +10,8 @@ export default class ButtonInteraction extends Base {
         this.user = interaction.user
         this.channel = interaction.channel
         this.guild = interaction.guild
-        this.commandName = interaction.message.interaction?.commandName
+        this.commandName = this.message.interaction.commandName
+        this.command = this.message.interaction
     }
 
     async execute() {
@@ -20,7 +21,7 @@ export default class ButtonInteraction extends Base {
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
-        if (commandData.c === 'memory') return memoryGame(this.customId)
+        if (commandData.c === 'memory' && this.command.user.id === this.user.id) return memoryGame(this.interaction, this.customId)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
 
