@@ -20,6 +20,7 @@ export default class ButtonInteraction extends Base {
         const commandData = JSON.parse(this.customId)
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
+        
         if (commandData.c === 'memory' && this.command.user.id === this.user.id) return memoryGame(this.interaction, this.customId)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
