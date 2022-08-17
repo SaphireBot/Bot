@@ -18,28 +18,51 @@ export default {
                     type: ApplicationCommandOptionType.Integer,
                     choices: [
                         {
-                            name: 'Números',
+                            name: 'Números (Easy)',
                             value: 0
                         },
                         {
-                            name: 'Bandeiras',
+                            name: 'Bandeiras (Medium)',
                             value: 1
                         },
                         {
-                            name: 'Animais',
+                            name: 'Animais (Easy)',
                             value: 2
                         },
                         {
-                            name: 'Frutas',
+                            name: 'Frutas (Easy)',
                             value: 3
                         },
                         {
-                            name: 'Bolas',
+                            name: 'Bolas (Easy)',
                             value: 4
                         },
                         {
-                            name: 'Emoticons',
+                            name: 'Emoticons (Medium)',
                             value: 5
+                        },
+                        {
+                            name: 'Corações (Easy)',
+                            value: 6
+                        },
+                        {
+                            name: 'Relógios (Hard)',
+                            value: 7
+                        },
+                        {
+                            name: 'Família (Ultimate)',
+                            value: 8
+                        }
+                    ]
+                },
+                {
+                    name: 'mode',
+                    description: 'Escolha um modo de jogo',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Tempo Corrido (2 minutos)',
+                            value: 'minutes'
                         }
                     ]
                 }

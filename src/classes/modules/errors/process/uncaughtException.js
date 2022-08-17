@@ -1,3 +1,3 @@
 export default async function (error, origin) {
-    console.log(error, origin)
+    return console.log(error, origin)
 }

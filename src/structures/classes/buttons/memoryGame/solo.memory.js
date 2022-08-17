@@ -1,9 +1,7 @@
-import {
-    Database
-} from '../../../../classes/index.js'
-import { Emojis as e } from '../../../../util/util.js'
+import { Emojis } from '../../../../util/util.js'
 import { indexButton } from '../../../commands/functions/memorygame/util.js'
 import { ButtonStyle } from 'discord.js'
+import disable from './disable.memory.js'
 
 /**
  * interaction: BUTTON INTERACTION
@@ -13,22 +11,16 @@ export default async (interaction, customIdData) => {
     /*
     *  id: ID do botão
     *  emoji: Emoji definido no botão
+    *  d: Date.now() + 120000 do limited mode
     */
-    const { id, emoji } = customIdData
-    const { user, message } = interaction
-    const memoryGames = await Database.Cache.Memory.get(user.id) || []
-    const gameData = memoryGames.find(data => data.id === message.id)
-
-    if (!gameData)
-        return await message.edit({
-            content: `${e.Deny} | Jogo inválido.`,
-            components: []
-        })
-
+    const { id, e: emoji, d } = customIdData
+    const { message } = interaction
     const components = message.components.map(components => components.toJSON())
     const allButtons = components.map(row => row.components).flat()
     const row = components[indexButton[id]]
     const button = row.components.find(button => JSON.parse(button.custom_id).src.id === id)
+
+    if (d && d < Date.now()) return invalid(true)
 
     button.disabled = true
     button.emoji = emoji
@@ -48,8 +40,7 @@ export default async (interaction, customIdData) => {
             primaryButton[0].style = ButtonStyle.Success
             primaryButton[1].style = ButtonStyle.Success
         } else {
-            for (let b of availableButtons)
-                b.disabled = true
+            for (let b of availableButtons) b.disabled = true
             updateDefault()
         }
     }
@@ -60,28 +51,46 @@ export default async (interaction, customIdData) => {
         setTimeout(() => {
             for (let button of availableButtons) {
                 button.style = ButtonStyle.Secondary
-                button.emoji = e.duvida
+                button.emoji = Emojis.duvida
                 button.disabled = false
             }
             return edit()
-        }, 2000)
+        }, 1000)
     }
 
     function resetDefault() {
         for (let button of availableButtons) {
             button.style = ButtonStyle.Secondary
-            button.emoji = e.duvida
+            button.emoji = Emojis.duvida
             button.disabled = false
         }
         return edit()
     }
 
     async function edit(win) {
-        message.edit({
-            content: win ? `${e.Check} | Jogo finalizado com sucesso.` : message.content,
+
+        if (interaction.replied)
+            return await interaction.editReply({
+                content: win ? `${Emojis.Check} | Jogo finalizado com sucesso.` : message.content,
+                components
+            }).catch(err => invalid(err))
+
+        return await interaction.update({
+            content: win ? `${Emojis.Check} | Jogo finalizado com sucesso.` : message.content,
             components
-        })
-        return await interaction.deferUpdate().catch(() => { })
+        }).catch(err => invalid(err))
+    }
+
+    async function invalid(timeout) {
+
+        if (timeout) return disable(interaction, components)
+
+        await interaction.deferUpdate().catch(() => { })
+
+        return await message.edit({
+            content: timeout ? `⏱ | Tempo esgotado.` : `${Emojis.Deny} | Jogo inválido.`,
+            components: timeout ? components : []
+        }).catch(() => message.delete().catch(() => { }))
     }
 
 }

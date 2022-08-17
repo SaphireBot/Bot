@@ -8,7 +8,7 @@ import reply from './functions/reply.errors.js'
 
 export default
     async ({ interaction, Database, user, guild, channel, client, Emojis: e }, err) => {
-
+        return console.log(err)
         if (!interaction || !interaction?.commandName) return
 
         const centralGuild = await client.guilds.fetchGuild(config.guildId)
