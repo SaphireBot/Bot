@@ -47,14 +47,14 @@ export default async interaction => {
                 ephemeral: true
             })
 
-        let dataArray = data.split('/'),
-            hourArray = hour.split(':'),
-            dia = parseInt(dataArray[0]),
-            mes = parseInt(dataArray[1]) - 1,
-            ano = parseInt(dataArray[2]),
-            hora = parseInt(hourArray[0]),
-            minutos = parseInt(hourArray[1]),
-            segundos = parseInt(hourArray[2]) || 0
+        let dataArray = data.split('/')
+        let hourArray = hour.split(':')
+        let dia = parseInt(dataArray[0])
+        let mes = parseInt(dataArray[1]) - 1
+        let ano = parseInt(dataArray[2])
+        let hora = parseInt(hourArray[0])
+        let minutos = parseInt(hourArray[1])
+        let segundos = parseInt(hourArray[2]) || 0
 
         let date = moment.tz({ day: dia, month: mes, year: ano, hour: hora, minutes: minutos, seconds: segundos }, "America/Sao_Paulo")
 
@@ -73,8 +73,7 @@ export default async interaction => {
 
         TimeMs += date - Date.now()
 
-    } else {
-
+    } else
         for (let arg of Args) {
 
             if (arg.slice(-1).includes('d')) {
@@ -113,7 +112,6 @@ export default async interaction => {
                 })
             }
         }
-    }
 
     if (TimeMs > 2592000000)
         return await interaction.reply({

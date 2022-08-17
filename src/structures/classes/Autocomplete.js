@@ -42,6 +42,7 @@ export default class Autocomplete extends Base {
             case 'roles_in_autorole': this.roles_in_autorole(value); break;
             case 'delete_lembrete': this.delete_lembrete(value); break;
             case 'quiz_question': this.quiz_question(value); break;
+            case 'select_giveaway': this.select_giveaway(value); break;
             case 'answers': this.answers(); break;
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
@@ -63,6 +64,30 @@ export default class Autocomplete extends Base {
 
         const mapped = question.answers.map(answer => ({ name: answer, value: answer }))
         return await this.respond(mapped)
+    }
+
+    async select_giveaway(value) {
+
+        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
+        const giveaways = guildData?.Giveaways || null
+
+        if (!giveaways) return this.respond()
+
+        const fill = value ?
+            giveaways.filter(data =>
+                data.MessageID?.toLowerCase().includes(value)
+                || data.Prize?.toLowerCase().includes(value?.toLowerCase())
+                || data.Winners === parseInt(value)
+            )
+            : giveaways
+
+        const mapped = fill.map(gw => ({ name: `${gw.MessageID} | ${gw.Winners > 1 ? `(${gw.Winners}) vencedores` : '(1) vencedor'} | ${gw.Prize}`, value: gw.MessageID }))
+
+        if (giveaways.length > 2)
+            mapped.unshift({ name: 'Deletar todos os sorteios', value: 'all' })
+
+        return await this.respond(mapped)
+
     }
 
     async quiz_question(value) {

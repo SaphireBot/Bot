@@ -163,15 +163,24 @@ class Database extends Models {
     deleteGiveaway = async (DataId, GuildId, All = false) => {
 
         return All
-            ? await this.Guild.updateOne(
-                { id: GuildId },
-                { $unset: { Giveaways: 1 } }
-            )
-            : await this.Guild.updateOne(
-                { id: GuildId },
-                { $pull: { Giveaways: { MessageID: DataId } } },
-                { MessageID: DataId }
-            )
+            ? (async () => {
+                await this.Guild.updateOne(
+                    { id: GuildId },
+                    { $unset: { Giveaways: 1 } }
+                )
+                await this.Cache.Giveaways.delete(`${client.shardId}.Giveaways.${GuildId}`)
+            })()
+            : (async () => {
+                await this.Guild.updateOne(
+                    { id: GuildId },
+                    { $pull: { Giveaways: { MessageID: DataId } } },
+                    { MessageID: DataId }
+                )
+                await this.Cache.Giveaways.pull(
+                    `${client.shardId}.Giveaways.${GuildId}`,
+                    data => data.MessageID === DataId
+                )
+            })()
 
     }
 
