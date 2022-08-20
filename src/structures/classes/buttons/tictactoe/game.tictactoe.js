@@ -14,7 +14,6 @@ export default async (interaction, customIdData) => {
     if (!opponentUser || !availablePlayers.includes(user.id)) return
 
     const playNow = message.mentions.users.first()
-
     if (!playNow || playNow.id !== user.id) return
 
     const emojis = { [commandAuthor.id]: '❌', [opponentId]: '⭕' }
