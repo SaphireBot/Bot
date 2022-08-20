@@ -1,4 +1,4 @@
-export default async (winResponse, { author, opponent }, components, interaction) => {
+export default async ({ winResponse, author, opponent, components, interaction }) => {
 
     disableAll()
 

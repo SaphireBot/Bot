@@ -30,12 +30,12 @@ export default async (interaction, customIdData) => {
     const winResponse = check(components, allButtons)
 
     if (winResponse)
-        return win(
+        return win({
             winResponse,
-            { author: availablePlayers[0], opponent: availablePlayers[1] },
+            author: availablePlayers[0], opponent: availablePlayers[1],
             components,
             interaction
-        )
+        })
 
     return await interaction.update({
         content: `${user.id === commandAuthor.id ? opponentUser : commandAuthor}, é sua vez.`,
