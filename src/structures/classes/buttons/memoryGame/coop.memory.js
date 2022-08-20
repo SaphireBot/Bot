@@ -1,30 +1,22 @@
+import { ButtonStyle } from 'discord.js'
 import { Emojis } from '../../../../util/util.js'
 import { indexButton } from '../../../commands/functions/memorygame/util.js'
-import { ButtonStyle } from 'discord.js'
-import disable from './disable.memory.js'
-import coopMode from './coop.memory.js'
 
-/**
- * interaction: BUTTON INTERACTION
- */
 export default async (interaction, customIdData) => {
 
-    /*
-    *  id: ID do botão
-    *  emoji: Emoji definido no botão
-    *  d: Date.now() + 120000 do limited mode
-    */
-    const { id, e: emoji, d, mId } = customIdData
+    const { user, message } = interaction
+    const { id, e: emoji, mId } = customIdData
+    const commandAuthor = message.interaction.user
 
-    if (mId) return coopMode(interaction, customIdData)
+    if (![commandAuthor.id, mId].includes(user.id)) return
 
-    const { message } = interaction
+    const playNow = message.mentions.members.first()
+    if (!playNow || playNow.user.id !== user.id) return
+
     const components = message.components.map(components => components.toJSON())
     const allButtons = components.map(row => row.components).flat()
     const row = components[indexButton[id]]
     const button = row.components.find(button => JSON.parse(button.custom_id).src.id === id)
-
-    if (d && d < Date.now()) return invalid(true)
 
     button.disabled = true
     button.emoji = emoji
@@ -59,7 +51,7 @@ export default async (interaction, customIdData) => {
                 button.disabled = false
             }
             return edit()
-        }, 1000)
+        }, 1700)
     }
 
     function resetDefault() {
@@ -75,25 +67,28 @@ export default async (interaction, customIdData) => {
 
         if (interaction.replied)
             return await interaction.editReply({
-                content: win ? `${Emojis.Check} | Jogo finalizado com sucesso.` : message.content,
+                content: win
+                    ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
+                    : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🤝 | Modo cooperativo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.`,
                 components
             }).catch(err => invalid(err))
 
         return await interaction.update({
-            content: win ? `${Emojis.Check} | Jogo finalizado com sucesso.` : message.content,
+            content: win
+                ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
+                : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🤝 | Modo cooperativo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.`,
             components
         }).catch(err => invalid(err))
     }
 
-    async function invalid(timeout) {
-
-        if (timeout) return disable(interaction, components)
+    async function invalid(err) {
+        console.log(err)
 
         await interaction.deferUpdate().catch(() => { })
 
         return await message.edit({
-            content: timeout ? `⏱ | Tempo esgotado.` : `${Emojis.Deny} | Jogo inválido.`,
-            components: timeout ? components : []
+            content: `${Emojis.Deny} | <@${commandAuthor.id}>, <@${mId}>, vocês perderam o jogo.`,
+            components: components
         }).catch(() => message.delete().catch(() => { }))
     }
 

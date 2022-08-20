@@ -103,18 +103,18 @@ export default {
                             name: 'delete',
                             value: 'delete'
                         },
-                        {
-                            name: 'reset',
-                            value: 'reset'
-                        },
-                        {
-                            name: 'finish',
-                            value: 'finish'
-                        },
-                        {
-                            name: 'info',
-                            value: 'info'
-                        }
+                        // {
+                        //     name: 'reset',
+                        //     value: 'reset'
+                        // },
+                        // {
+                        //     name: 'finish',
+                        //     value: 'finish'
+                        // },
+                        // {
+                        //     name: 'info',
+                        //     value: 'info'
+                        // }
                     ],
                 },
                 {
@@ -156,9 +156,9 @@ export default {
 
             switch (options.getString('method')) {
                 case 'delete': deleteGiveaway(interaction); break;
-                case 'reset': resetGiveaway(); break;
-                case 'finish': finishGiveaway(); break;
-                case 'info': infoGiveaway(); break;
+                // case 'reset': resetGiveaway(); break;
+                // case 'finish': finishGiveaway(); break;
+                // case 'info': infoGiveaway(); break;
             }
             return
 

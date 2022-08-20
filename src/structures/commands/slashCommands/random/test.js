@@ -13,8 +13,9 @@ export default {
         }
     ],
     async execute({ interaction, client, Database, emojis: e }) {
-       
-        await interaction.member.ban()
+
+        return
+
 
     }
 }

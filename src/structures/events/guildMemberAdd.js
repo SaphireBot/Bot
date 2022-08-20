@@ -5,6 +5,6 @@ import {
 client.on('guildMemberAdd', async Member => {
 
     if (!client.allUsers.find(user => user.id === Member.user.id))
-        client.allUsers.push(Member.user)
+        return client.allUsers.push(Member.user)
 
 })
