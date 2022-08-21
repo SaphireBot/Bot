@@ -43,67 +43,88 @@ export default async (interaction, customIdData) => {
         if (emoji1 === emoji2) {
             primaryButton[0].style = ButtonStyle.Success
             primaryButton[1].style = ButtonStyle.Success
-            await addPoint()
-            return edit({ win: allButtons.every(b => b.style === ButtonStyle.Success), isAccept: true })
-        } else {
-            for (let b of availableButtons) b.disabled = true
-            resetDefault(true)
+            return await addPoint()
         }
+
+        for (let b of availableButtons) b.disabled = true
+        edit({ componentsUpdate: true })
+        return resetDefault(true)
     }
 
-    return edit({ win: allButtons.every(b => b.style === ButtonStyle.Success) })
+    return edit({})
 
-    function resetDefault(ignore) {
-       
+    function resetDefault(timeout) {
+
         for (let button of availableButtons) {
             button.style = ButtonStyle.Secondary
             button.emoji = Emojis.duvida
             button.disabled = false
         }
 
-        if (ignore) return edit()
-
-        setTimeout(() => {
-            return edit()
-        }, 1700)
+        return timeout ? setTimeout(() => edit({ replied: true }), 1700) : edit({})
     }
-    //TODO: Não respondendo a interação do botão
-    async function edit({ win, isAccept, components }) {
 
-        if (interaction.replied)
+    async function edit({ isAccept, replied, componentsUpdate }) {
+
+        const win = allButtons.every(b => b.style === ButtonStyle.Success)
+
+        if (componentsUpdate)
+            return await interaction.update({ components })
+
+        if (replied)
             return await interaction.editReply({
                 content: win
-                    ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
-                    : isFirstPlay || isAccept ? message.content : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
+                    ? getFinishResponse()
+                    : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${getMention(isAccept)}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
                 components
-            }).catch(err => invalid(err))
+            }).catch(invalid)
 
         return await interaction.update({
             content: win
-                ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
-                : isFirstPlay || isAccept ? message.content : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
+                ? getFinishResponse()
+                : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${getMention(isAccept)}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
             components
-        }).catch(err => invalid(err))
+        }).catch(invalid)
+    }
+
+    function getMention(isAccept) {
+        return isFirstPlay || isAccept
+            ? playNow
+            : playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`
     }
 
     async function invalid(err) {
         console.log(err)
-
+        console.log(interaction)
         await interaction.deferUpdate().catch(() => { })
 
         return await message.edit({
-            content: `${Emojis.Deny} | <@${commandAuthor.id}>, <@${mId}>, vocês perderam o jogo.`,
-            components: components
+            content: `${Emojis.Deny} | Ocorreu um erro nesse jogo.`,
+            components: []
         }).catch(() => message.delete().catch(() => { }))
     }
 
     function addPoint() {
+
         for (let button of allButtons) {
             const customId = JSON.parse(button.custom_id)
             customId.src[commandAuthor.id === user.id ? 'up' : 'mp']++
             button.custom_id = JSON.stringify(customId)
         }
-        return customIdData[commandAuthor.id === user.id ? 'up' : 'mp']++
+
+        customIdData[commandAuthor.id === user.id ? 'up' : 'mp']++
+        return edit({ isAccept: true })
+    }
+
+    function getFinishResponse() {
+
+        if (customIdData.up > customIdData.mp)
+            return `👑 | ${commandAuthor} venceu o jogo contra ${member}\n${Emojis.Info} | Placar final: \`${customIdData.up}\` x \`${customIdData.mp}\``
+
+        if (customIdData.mp > customIdData.up)
+            return `👑 | ${member} venceu o jogo contra ${commandAuthor}\n${Emojis.Info} | Placar final: \`${customIdData.mp}\` x \`${customIdData.up}\``
+
+        return `👑 | O jogo foi um empate, daora, daora. ${commandAuthor} & ${member} terminaram o jogo com ${customIdData.up} pontos.`
     }
 
 }
