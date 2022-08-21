@@ -23,7 +23,7 @@ export default async (interaction, e) => {
     const buttons = buttonGenerator(emojis, e, member.id)
 
     return await interaction.editReply({
-        content: `${e.Loading} | Tente achar os pares de emojis iguais.\n${e.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow}, é sua vez.\n📉 | ${user.username} 0 x 0 ${member.username}`,
+        content: `${e.Loading} | Tente achar os pares de emojis iguais.\n${e.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow}, é sua vez.\n📉 | ${user.username} \`0\` x \`0\` ${member.username}`,
         components: buttons.default
     }).catch(console.log)
 }

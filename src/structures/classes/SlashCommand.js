@@ -10,6 +10,7 @@ export default class SlashCommand extends Base {
         this.member = interaction.member
         this.guild = interaction.guild
         this.channel = interaction.channel
+        this.commandName = interaction.commandName
     }
 
     async execute(guildData, clientData) {
@@ -17,7 +18,7 @@ export default class SlashCommand extends Base {
         this.guildData = guildData
         this.clientData = clientData
 
-        const command = this.client.slashCommands.get(this.interaction.commandName);
+        const command = this.client.slashCommands.get(this.commandName);
         if (!command) return
 
         const admins = [...clientData.Administradores, this.config.ownerId]

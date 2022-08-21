@@ -17,7 +17,7 @@ export default async (interaction, customIdData) => {
     if (!member)
         return await interaction.update({
             content: `${Emojis.Deny} | Jogo inválido. Oponente não encontrado.`,
-            ephemeral: true
+            components: []
         })
 
     const components = message.components.map(components => components.toJSON())
@@ -31,6 +31,7 @@ export default async (interaction, customIdData) => {
 
     const primaryButton = allButtons.filter(buttonData => buttonData.style === ButtonStyle.Primary)
     const availableButtons = allButtons.filter(b => b.style !== ButtonStyle.Success)
+    const isFirstPlay = primaryButton.length === 1
 
     if (primaryButton?.length >= 3) return resetDefault()
 
@@ -43,48 +44,44 @@ export default async (interaction, customIdData) => {
             primaryButton[0].style = ButtonStyle.Success
             primaryButton[1].style = ButtonStyle.Success
             await addPoint()
+            return edit({ win: allButtons.every(b => b.style === ButtonStyle.Success), isAccept: true })
         } else {
             for (let b of availableButtons) b.disabled = true
-            updateDefault()
+            resetDefault(true)
         }
     }
 
-    return edit(allButtons.every(b => b.style === ButtonStyle.Success))
+    return edit({ win: allButtons.every(b => b.style === ButtonStyle.Success) })
 
-    function updateDefault() {
-        setTimeout(() => {
-            for (let button of availableButtons) {
-                button.style = ButtonStyle.Secondary
-                button.emoji = Emojis.duvida
-                button.disabled = false
-            }
-            return edit()
-        }, 1700)
-    }
-
-    function resetDefault() {
+    function resetDefault(ignore) {
+       
         for (let button of availableButtons) {
             button.style = ButtonStyle.Secondary
             button.emoji = Emojis.duvida
             button.disabled = false
         }
-        return edit()
-    }
 
-    async function edit(win) {
+        if (ignore) return edit()
+
+        setTimeout(() => {
+            return edit()
+        }, 1700)
+    }
+    //TODO: Não respondendo a interação do botão
+    async function edit({ win, isAccept, components }) {
 
         if (interaction.replied)
             return await interaction.editReply({
                 content: win
                     ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
-                    : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} ${customIdData.up} x ${customIdData.mp} ${member.user.username}`,
+                    : isFirstPlay || isAccept ? message.content : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
                 components
             }).catch(err => invalid(err))
 
         return await interaction.update({
             content: win
                 ? `${Emojis.Check} | <@${commandAuthor.id}>, <@${mId}>, parabéns! Vocês completaram o jogo da memória.`
-                : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} ${customIdData.up} x ${customIdData.mp} ${member.user.username}`,
+                : isFirstPlay || isAccept ? message.content : `${Emojis.Loading} | Tente achar os pares de emojis iguais.\n${Emojis.Info} | Clique nos botões com calma para não estragar o jogo.\n🆚 | Modo competitivo: ${playNow.id === commandAuthor.id ? `<@${mId}>` : `<@${commandAuthor.id}>`}, é sua vez.\n📉 | ${commandAuthor.tag} \`${customIdData.up}\` x \`${customIdData.mp}\` ${member.user.username}`,
             components
         }).catch(err => invalid(err))
     }

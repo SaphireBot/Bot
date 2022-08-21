@@ -188,7 +188,6 @@ export default {
         const { options } = interaction
 
         const gameMode = options.getSubcommand()
-        console.log(gameMode)
         if (gameMode === 'solo') return solo(interaction, Database, e)
         if (gameMode === 'cooperative') return coop(interaction, e)
         if (gameMode === 'versus') return versus(interaction, e)
