@@ -34,8 +34,10 @@ const ClientOptions = {
 }
 
 const Emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json'))
+const Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
 
 export {
     Emojis,
-    ClientOptions
+    ClientOptions,
+    Flags
 }
