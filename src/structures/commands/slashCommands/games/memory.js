@@ -1,5 +1,6 @@
 import solo from '../../functions/memorygame/solo.memory.js'
 import coop from '../../functions/memorygame/coop.memory.js'
+import versus from '../../functions/memorygame/versus.memory.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 export default {
@@ -70,13 +71,69 @@ export default {
             ]
         },
         {
-            name: 'coop',
+            name: 'cooperative',
             description: '[games] Jogue com alguém no modo cooperativo',
             type: ApplicationCommandOptionType.Subcommand,
             options: [
                 {
                     name: 'member',
                     description: 'Selecione um membro',
+                    type: ApplicationCommandOptionType.User,
+                    required: true
+                },
+                {
+                    name: 'emojis',
+                    description: 'Emojis para o jogo',
+                    type: ApplicationCommandOptionType.Integer,
+                    choices: [
+                        {
+                            name: 'Números (Easy)',
+                            value: 0
+                        },
+                        {
+                            name: 'Bandeiras (Medium)',
+                            value: 1
+                        },
+                        {
+                            name: 'Animais (Easy)',
+                            value: 2
+                        },
+                        {
+                            name: 'Frutas (Easy)',
+                            value: 3
+                        },
+                        {
+                            name: 'Bolas (Easy)',
+                            value: 4
+                        },
+                        {
+                            name: 'Emoticons (Medium)',
+                            value: 5
+                        },
+                        {
+                            name: 'Corações (Easy)',
+                            value: 6
+                        },
+                        {
+                            name: 'Relógios (Hard)',
+                            value: 7
+                        },
+                        {
+                            name: 'Família (Ultimate)',
+                            value: 8
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'versus',
+            description: '[games] Jogue contra alguém no modo competitivo',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'member',
+                    description: 'Selecione um adversário',
                     type: ApplicationCommandOptionType.User,
                     required: true
                 },
@@ -131,8 +188,10 @@ export default {
         const { options } = interaction
 
         const gameMode = options.getSubcommand()
+        console.log(gameMode)
         if (gameMode === 'solo') return solo(interaction, Database, e)
-        if (gameMode === 'coop') return coop(interaction, e)
+        if (gameMode === 'cooperative') return coop(interaction, e)
+        if (gameMode === 'versus') return versus(interaction, e)
 
     }
 }

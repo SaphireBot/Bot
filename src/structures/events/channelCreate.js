@@ -6,8 +6,10 @@ client.on('channelCreate', async channel => {
 
     if (!channel || !channel.guild || !channel.guild.available || !channel.permissionsFor(channel.guild.members.me)?.has(Permissions.SendMessages)) return
 
-    const data = await Database.Guild.findOne({ id: channel.guild.id }, 'FirstSystem')
-    const firstOn = data?.FirstSystem
+    // const data = await Database.Guild.findOne({ id: channel.guild.id }, 'FirstSystem')
+    // const firstOn = data?.FirstSystem
+    // TODO: CTRL + Z
+    const firstOn = true
 
     if (!firstOn || !channel.isTextBased() || !channel.viewable) return
 
