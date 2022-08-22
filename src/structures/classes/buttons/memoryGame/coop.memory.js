@@ -29,6 +29,9 @@ export default async (interaction, customIdData) => {
 
     if (primaryButton.length === 2) {
 
+        // emoji: '😣'
+        // emoji: { name: '😣' }
+
         const emoji1 = primaryButton[0]?.emoji?.name || primaryButton[0]?.emoji
         const emoji2 = primaryButton[1]?.emoji?.name || primaryButton[1]?.emoji
 

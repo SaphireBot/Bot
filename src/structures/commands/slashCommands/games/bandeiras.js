@@ -1,23 +1,23 @@
-import game from '../../functions/bandeiras/game.bandeiras.js'
-import { ApplicationCommandOptionType } from 'discord.js'
+// import flag from '../../functions/bandeiras/class.bandeiras.js'
+// import { ApplicationCommandOptionType } from 'discord.js'
 
-export default {
-    name: 'bandeiras',
-    description: '[games] Um simples jogo de adivinhar as bandeiras',
-    dm_permission: false,
-    type: 1,
-    options: [
-        {
-            name: 'start',
-            description: '[games] Comece um novo jogo de adivinhar bandeiras',
-            type: ApplicationCommandOptionType.Subcommand
-        }
-    ],
-    async execute({ interaction, emojis: e }) {
+// export default {
+//     name: 'bandeiras',
+//     description: '[games] Um simples jogo de adivinhar as bandeiras',
+//     type: 1,
+//     dm_permission: false,
+//     options: [
+//         {
+//             name: 'start',
+//             description: '[games] Comece um novo jogo de adivinhar bandeiras',
+//             type: ApplicationCommandOptionType.Subcommand
+//         }
+//     ],
+//     async execute({ interaction, emojis: e }) {
 
-        const { options } = interaction
-        const subCommand = options.getSubcommand()
+//         // const { options } = interaction
+//         // const subCommand = options.getSubcommand()
 
-        if (subCommand === 'start') return game(interaction)
-    }
-}
+//         // if (subCommand === 'start') return new flag(interaction).game()
+//     }
+// }

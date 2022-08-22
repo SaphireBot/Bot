@@ -11,6 +11,30 @@ client.once('ready', async () => {
     Database.registerClient(client.user.id)
     await Database.Cache.GameChannels.deleteAll()
 
+    const restartInfo = await Database.Cache.Client.get(`${client.shardId}.RESTART`)
+    // channelId: channel.id,
+    // messageId: msg.id
+
+    if (restartInfo) {
+
+        const channel = await client.channels.fetch(restartInfo.channnelId)
+        if (!channel) return deleteRestartData()
+
+        const message = await channel.messages.fetch(restartInfo.messageId)
+        if (!message) return deleteRestartData()
+
+        await message.edit({
+            content: `${e.Check} | Reboot concluído.`
+        }).catch(() => { })
+
+        deleteRestartData()
+
+        async function deleteRestartData() {
+            return await Database.Cache.Client.delete(`${client.shardId}.RESTART`)
+        }
+
+    }
+
     const guildsLength = await client.allGuildsData() || []
 
     return client.user.setPresence({

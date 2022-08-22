@@ -3,5 +3,6 @@ export default {
     General: "/",
     MercadoPagoWebhook: "/MercadoPagoComprovante",
     TopGG: "/topgg",
-    Database: "/database"
+    Database: "/database",
+    DiscloudPort: 8080
 }

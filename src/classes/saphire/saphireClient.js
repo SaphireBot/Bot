@@ -82,6 +82,11 @@ class SaphireClient extends Client {
          * @returns Saphire Canary ID
          */
         this.canaryId = '930985650549841940'
+
+        /**
+         * @returns subdominio
+         */
+        this.subdomain = 'saphire'
     }
 
     /**

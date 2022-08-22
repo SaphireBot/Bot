@@ -1,0 +1,43 @@
+import axios from 'axios'
+import { SaphireClient as client, Database } from '../../../../../classes/index.js'
+import { Emojis as e } from '../../../../../util/util.js'
+import('dotenv/config')
+
+export default async interaction => {
+
+    const { channel } = interaction
+
+    const msg = await interaction.reply({
+        content: `${e.Loading} | Solicitando restart a Discloud Host...`,
+        fetchReply: true
+    })
+    // saphire
+    return await axios.put(`https://api.discloud.app/v2/app/${client.subdomain}/restart`, {}, {
+        headers: { "api-token": process.env.DISCLOUD_API_TOKEN }
+    })
+        .then(sendData)
+        .catch(async () => await msg.edit({
+            content: `${e.Deny} | Não foi possível completar a request com a Discloud Host.`
+        }))
+
+    async function sendData(data) {
+
+        const response = data.data
+
+        if (response.status !== 'ok')
+            return await interaction.editReply({
+                content: `${e.Deny} | Não foi possível concluir do backup.`
+            })
+
+        await msg.edit({
+            content: `${e.Loading} | Reiniciando...`,
+        }).catch(console.log)
+
+        return await Database.Cache.Client.set(`${client.shardId}.RESTART`, {
+            channelId: channel.id,
+            messageId: msg.id
+        })
+
+    }
+
+}

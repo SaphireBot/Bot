@@ -46,6 +46,6 @@ app.get(Routes.Database, async (req, res) => {
   return res.send(allData)
 })
 
-app.listen(8080, () => console.log('Saphire\'s API | OK!'))
+app.listen(Routes.DiscloudPort, () => console.log('Saphire\'s API | OK!'))
 
 export default app
