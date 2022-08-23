@@ -4,7 +4,7 @@ import { Emojis as e } from '../../../../../util/util.js'
 import('dotenv/config')
 
 export default async interaction => {
-
+    
     await interaction.deferReply({ ephemeral: true })
 
     return await axios.get(`https://api.discloud.app/v2/user`, {

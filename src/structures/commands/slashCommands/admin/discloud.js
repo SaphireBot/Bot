@@ -24,10 +24,10 @@ export default {
                     name: 'Fazer backup da aplicação na Host',
                     value: 'backup'
                 },
-                {
-                    name: 'Informação do Usuário',
-                    value: 'user'
-                },
+                // {
+                //     name: 'Informação do Usuário',
+                //     value: 'user'
+                // },
                 {
                     name: 'Reiniciar aplicação',
                     value: 'restart'

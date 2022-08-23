@@ -16,13 +16,16 @@ export default async interaction => {
         headers: { "api-token": process.env.DISCLOUD_API_TOKEN }
     })
         .then(sendData)
-        .catch(async () => await msg.edit({
-            content: `${e.Deny} | Não foi possível completar a request com a Discloud Host.`
-        }))
+        .catch(async (err) => {
+            console.log(err)
+            await msg.edit({
+                content: `${e.Deny} | Não foi possível completar a request com a Discloud Host.`
+            })
+        })
 
     async function sendData(data) {
 
-        const response = data.data
+        const response = data.status
 
         if (response.status !== 'ok')
             return await interaction.editReply({

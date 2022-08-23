@@ -7,7 +7,7 @@ export default async interaction => {
 
     await interaction.deferReply({})
 
-    return await axios.get(`https://api.discloud.app/v2/app/912509487984812043/logs`, {
+    return await axios.get(`https://api.discloud.app/v2/app/${client.subdomain}/logs`, {
         headers: { "api-token": process.env.DISCLOUD_API_TOKEN }
     })
         .then(sendData)
