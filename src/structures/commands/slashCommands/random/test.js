@@ -1,3 +1,5 @@
+import { Colors } from '../../../../util/Constants.js'
+
 export default {
     name: 'teste',
     description: 'test',
@@ -15,5 +17,10 @@ export default {
     async execute({ interaction, client, Database, emojis: e }) {
 
         return
-    }
+    },
+    helpData: [{
+        color: Colors.Red,
+        title: 'Comando teste',
+        description: 'Este é um comando privado para testes restrito apenas ao meu criador.'
+    }]
 }

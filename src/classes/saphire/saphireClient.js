@@ -87,6 +87,11 @@ class SaphireClient extends Client {
          * @returns subdominio
          */
         this.subdomain = 'saphire'
+
+        /**
+         * @returns [command1, command2]
+         */
+        this.allCommands = []
     }
 
     /**

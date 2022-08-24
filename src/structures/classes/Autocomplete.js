@@ -25,7 +25,6 @@ export default class Autocomplete extends Base {
             case 'betchoice': this.betChoices(value); break;
             case 'blocked_commands': this.blockCommands(value); break;
             case 'database_users': this.databaseUsers(value); break;
-            case 'show_commands': this.showCommands(value); break;
             case 'de': case 'para': this.translateLanguages(value); break;
             case 'search_guild': this.allGuilds(value); break;
             case 'search_user': this.allUsers(value); break;
@@ -373,13 +372,6 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-    async commandList(value) {
-        const cmds = this.client.slashCommands.map(x => x.name) || []
-        const fill = cmds.filter(cmdName => cmdName?.toLowerCase().includes(value.toLowerCase()))
-        const mapped = fill.map(cmdName => ({ name: cmdName, value: cmdName }))
-        return this.respond(mapped)
-    }
-
     async blockCommands(value) {
         const data = await this.Database.Client.findOne({ id: this.client.user.id }, 'ComandosBloqueadosSlash')
         const bugs = data?.ComandosBloqueadosSlash || []
@@ -388,17 +380,21 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-    showCommands(value) {
-        const commands = this.client.slashCommands.map(cmd => ({ name: cmd.name, description: cmd.description }))
-        const fill = commands.filter(cmd => cmd.name?.toLowerCase().includes(value.toLowerCase()))
-        const mapped = fill.map(cmd => ({ name: `${cmd.name} | ${cmd.description}`, value: cmd.name }))
+    async commandList(value) {
+        const cmds = [...this.client.allCommands]
+        const fill = cmds.filter(cmdName => cmdName.name?.toLowerCase().includes(value.toLowerCase()))
+        const mapped = fill.map(cmdName => ({ name: cmdName.name, value: cmdName.name }))
+
+        if (!value?.length || 'todos os comandos'.includes(value.toLowerCase()))
+            mapped.unshift({ name: 'Todos os comandos', value: 'all' })
+
         return this.respond(mapped)
     }
 
     translateLanguages(value) {
         const languages = Object.entries(util.Languages)
         const fill = languages.filter(([a, b]) => a.includes(value.toLowerCase()) || b.toLowerCase().includes(value.toLowerCase()))
-        const mapped = fill.map(([a, b]) => ({ name: b, value: b }))
+        const mapped = fill.map(([_, b]) => ({ name: b, value: b }))
         return this.respond(mapped)
     }
 

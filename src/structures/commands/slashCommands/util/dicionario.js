@@ -1,4 +1,5 @@
 import dicio from 'dicionario.js'
+import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'dicionario',
@@ -62,7 +63,6 @@ export default {
             }
         }
 
-
         function buildEmbed(result) {
 
             embed.fields.push({
@@ -90,5 +90,20 @@ export default {
             return respondQuery()
         }
 
-    }
+    },
+    helpData: [{
+        color: Colors.Blue,
+        title: 'Comando dicioanário',
+        description: 'Pesquise pelos significados das palavras usando este comando.',
+        fields: [
+            {
+                name: 'Palavra',
+                value: 'Escreva a palavra que você deseja pegar o significado neste campo. Exemplo: `/dicionario palavra:árvore`'
+            },
+            {
+                name: 'Permissões necessárias',
+                value: PermissionsTranslate['ManageWebhooks']
+            }
+        ]
+    }]
 }

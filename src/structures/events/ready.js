@@ -17,6 +17,8 @@ client.once('ready', async () => {
 
     if (restartInfo) {
 
+        if (!restartInfo.channnelId || !restartInfo.messageId) return deleteRestartData()
+
         const channel = await client.channels.fetch(restartInfo.channnelId)
         if (!channel) return deleteRestartData()
 

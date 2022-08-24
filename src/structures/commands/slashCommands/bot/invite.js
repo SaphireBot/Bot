@@ -10,7 +10,7 @@ export default {
         return await interaction.reply({
             embeds: [{
                 color: Colors.Green,
-                description: `${e.Link} | Você pode me adicionar (cliando aqui)[https://discord.com/oauth2/authorize?client_id=912509487984812043&scope=bot%20applications.commands&permissions=2146958847].`
+                description: `${e.Link} | Você pode me adicionar [cliando aqui](https://discord.com/oauth2/authorize?client_id=912509487984812043&scope=bot%20applications.commands&permissions=2146958847).`
             }]
         })
     }
