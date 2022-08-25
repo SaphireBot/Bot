@@ -2,6 +2,17 @@ import translate from '@iamtraction/google-translate'
 
 export default {
     name: 'Translate Message',
+    helpData: {
+        color: 'Blue',
+        description: 'Clique na mensagem e traduza ela para a língua padrão do seu Discord.',
+        permissions: [],
+        fields: [
+            {
+                name: 'Linguagens suportadas',
+                value: 'Quase todas. Vou detectar a língua da mensagem automáticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
+            }
+        ]
+    },
     type: 3,
     async execute({ interaction, emojis: e, client, Constants }) {
 
@@ -28,7 +39,7 @@ export default {
 
         await interaction.deferReply({})
 
-        return translate(text, { to: formatedLocale, from: 'pt' })
+        return await translate(text, { to: formatedLocale, from: 'pt' })
             .then(async res => {
                 Embed.fields[1] = {
                     name: 'Tradução',

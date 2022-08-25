@@ -132,7 +132,7 @@ class SaphireClient extends Client {
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
-        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | Event Ready | OK!`)
+        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | OK!`)
     }
 
     /**

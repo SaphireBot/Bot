@@ -3,6 +3,7 @@ import getLogs from './functions/logs.discloud.js'
 import newBackup from './functions/backup.discloud.js'
 import userInfo from './functions/user.discloud.js'
 import restart from './functions/restart.discloud.js'
+import { Colors } from '../../../../util/Constants.js'
 
 export default {
     name: 'discloud',

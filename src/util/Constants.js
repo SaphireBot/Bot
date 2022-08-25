@@ -282,6 +282,50 @@ const PermissionsAsFlagBits = {
     ModerateMembers: 1099511627776
 }
 
+const DiscordPermissons = {
+    AddReactions: "AddReactions",
+    Administrator: "Administrator",
+    AttachFiles: "AttachFiles",
+    BanMembers: "BanMembers",
+    ChangeNickname: "ChangeNickname",
+    Connect: "Connect",
+    CreateInstantInvite: "CreateInstantInvite",
+    CreatePrivateThreads: "CreatePrivateThreads",
+    CreatePublicThreads: "CreatePublicThreads",
+    DeafenMembers: "DeafenMembers",
+    EmbedLinks: "EmbedLinks",
+    KickMembers: "KickMembers",
+    ManageChannels: "ManageChannels",
+    ManageEmojisAndStickers: "ManageEmojisAndStickers",
+    ManageEvents: "ManageEvents",
+    ManageGuild: "ManageGuild",
+    ManageMessages: "ManageMessages",
+    ManageNicknames: "ManageNicknames",
+    ManageRoles: "ManageRoles",
+    ManageThreads: "ManageThreads",
+    ManageWebhooks: "ManageWebhooks",
+    MentionEveryone: "MentionEveryone",
+    ModerateMembers: "ModerateMembers",
+    MoveMembers: "MoveMembers",
+    MuteMembers: "MuteMembers",
+    PrioritySpeaker: "PrioritySpeaker",
+    ReadMessageHistory: "ReadMessageHistory",
+    RequestToSpeak: "RequestToSpeak",
+    SendMessages: "SendMessages",
+    SendMessagesInThreads: "SendMessagesInThreads",
+    SendTTSMessages: "SendTTSMessages",
+    Speak: "Speak",
+    UseEmbeddedActivities: "UseEmbeddedActivities",
+    Stream: "Stream",
+    UseApplicationCommands: "UseApplicationCommands",
+    UseExternalEmojis: "UseExternalEmojis",
+    UseExternalStickers: "UseExternalStickers",
+    UseVAD: "UseVAD",
+    ViewAuditLog: "ViewAuditLog",
+    ViewChannel: "ViewChannel",
+    ViewGuildInsights: "ViewGuildInsights"
+}
+
 const PermissionsTranslate = {
     AddReactions: "Adicionar reações",
     Administrator: "Administrador",
@@ -576,6 +620,7 @@ export {
     PermissionsAsFlagBits as Permissions,
     PermissionsTranslate,
     DiscordErrors,
+    DiscordPermissons,
     ErrorsToIgnore,
     ErrorResponse
 }

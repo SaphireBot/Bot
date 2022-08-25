@@ -1,11 +1,14 @@
 import allCommands from '../../functions/help/allCommands.js'
-import { Colors } from '../../../../util/Constants.js'
+import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'help',
     description: '[bot] Comando de ajuda',
     dm_permission: false,
     type: 1,
+    helpData: {
+        description: 'Meio suspeito pedir ajuda no comando de ajuda... Escolhe um comando pra pegar as informações dele, né?'
+    },
     options: [
         {
             name: 'command',
@@ -29,23 +32,35 @@ export default {
                 ephemeral: true
             })
 
-        if (!command.helpData)
+        const helpData = command.helpData
+        if (!helpData)
             return await interaction.reply({
                 content: `${e.Deny} | Informações do comando não encontrada.`,
                 ephemeral: true
             })
 
-        return await interaction.reply({ embeds: command.helpData })
-            .catch(async () => {
-                return await interaction.reply({
-                    content: `${e.Deny} | Erro ao executar o \`helpData\` do comando \`${command.name || "Nome não encontrado."}\``
-                })
+        if (!helpData.fields) helpData.fields = []
+
+        if (helpData.permissions)
+            helpData.fields.unshift({
+                name: 'Permissões',
+                value: !helpData.permissions || !helpData.permissions?.length ? 'Nenhuma' : helpData.permissions.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ').limit('MessageEmbedFieldValue')
             })
 
-    },
-    helpData: [{
-        color: Colors.Blue,
-        title: 'Help Command',
-        description: 'teste'
-    }]
+        if (helpData.fields.length > 25) helpData.fields.length = 25
+
+        return await interaction.reply({
+            embeds: [{
+                title: `Comando: ${command.name}`,
+                color: Colors[helpData.color] || Colors.Blue,
+                description: helpData.description,
+                fields: [...helpData.fields]
+            }]
+        })
+            .catch(async () => await interaction.reply({
+                content: `${e.Deny} | Erro ao executar o \`helpData\` do comando \`${command.name || "Nome não encontrado."}\``
+            }).catch(() => { })
+            )
+
+    }
 }

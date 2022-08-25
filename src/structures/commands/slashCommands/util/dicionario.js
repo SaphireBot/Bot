@@ -1,10 +1,21 @@
 import dicio from 'dicionario.js'
-import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
+import { DiscordPermissons } from '../../../../util/Constants.js'
 
 export default {
     name: 'dicionario',
     description: '[util] Pesquise por significados de palavras',
     dm_permission: false,
+    helpData: {
+        color: 'Blue',
+        description: 'Pesquise pelos significados das palavras usando este comando.',
+        permissions: [DiscordPermissons.ManageWebhooks],
+        fields: [
+            {
+                name: 'Campo: Palavra',
+                value: 'Escreva a palavra que você deseja pegar o significado neste campo. Exemplo: `/dicionario palavra: céu`'
+            }
+        ]
+    },
     type: 1,
     options: [
         {
@@ -19,6 +30,7 @@ export default {
     async execute({ interaction, client, emojis: e }) {
 
         const { options, guild, channel } = interaction
+        console.log(interaction.commandId)
 
         if (!guild.clientHasPermission('ManageWebhooks'))
             return await interaction.reply({
@@ -90,20 +102,5 @@ export default {
             return respondQuery()
         }
 
-    },
-    helpData: [{
-        color: Colors.Blue,
-        title: 'Comando dicioanário',
-        description: 'Pesquise pelos significados das palavras usando este comando.',
-        fields: [
-            {
-                name: 'Palavra',
-                value: 'Escreva a palavra que você deseja pegar o significado neste campo. Exemplo: `/dicionario palavra:árvore`'
-            },
-            {
-                name: 'Permissões necessárias',
-                value: PermissionsTranslate['ManageWebhooks']
-            }
-        ]
-    }]
+    }
 }

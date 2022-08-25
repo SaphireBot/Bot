@@ -25,13 +25,22 @@ export default async interaction => {
         components: [
             {
                 type: 2,
-                emoji: '◀',
+                label: 'Pu final',
+                emoji: e.saphireLeft,
                 custom_id: 'left',
                 style: ButtonStyle.Primary
             },
             {
                 type: 2,
-                emoji: '▶',
+                label: `1/${embeds.length}`,
+                custom_id: '0',
+                style: ButtonStyle.Secondary,
+                disabled: true
+            },
+            {
+                type: 2,
+                label: 'Pra lá',
+                emoji: e.saphireRight,
                 custom_id: 'right',
                 style: ButtonStyle.Primary
             }
@@ -60,6 +69,9 @@ export default async interaction => {
 
             const { customId } = buttonInteraction
 
+            buttons.components[2].label = 'Pra lá'
+            buttons.components[0].label = 'Pra cá'
+
             if (customId === 'right') {
                 embedIndex++
                 if (embedIndex > embeds.length - 1) embedIndex = 0
@@ -70,7 +82,10 @@ export default async interaction => {
                 if (embedIndex < 0) embedIndex = embeds.length - 1
             }
 
-            return await buttonInteraction.update({ embeds: [embeds[embedIndex]] })
+            buttons.components[1].label = `${embedIndex + 1}/${embeds.length}`
+            if (embedIndex === embeds.length - 1) buttons.components[2].label = 'Pu começo'
+            if (embedIndex === 0) buttons.components[0].label = 'Pu final'
+            return await buttonInteraction.update({ embeds: [embeds[embedIndex]], components: [buttons] })
         })
         .on('end', async () => {
 
@@ -82,7 +97,17 @@ export default async interaction => {
             embed.footer = { text: `${embed.footer.text} | Comando encerrado.` }
             return await msg.edit({
                 embeds: [embed],
-                components: []
+                components: [{
+                    type: 1,
+                    components: [{
+                        type: 2,
+                        label: 'Cabô',
+                        emoji: e.saphireDesespero,
+                        custom_id: '0',
+                        style: ButtonStyle.Secondary,
+                        disabled: true
+                    }]
+                }]
             })
         })
 }
@@ -91,7 +116,6 @@ function EmbedGenerator(array) {
 
     let amount = 10
     let page = 1
-    let length = array.length / 10 <= 1 ? 1 : parseInt((array.length / 10) + 1)
     const embeds = []
 
     for (let i = 0; i < array.length; i += 10) {
@@ -101,11 +125,10 @@ function EmbedGenerator(array) {
             name: cmd.name ? `${cmd.name}` : 'Nome não encontrado',
             value: cmd.description || 'Descrição não encontrada'
         }))
-        let pageCount = length > 1 ? ` ${page}/${length}` : ''
 
         embeds.push({
             color: client.blue,
-            title: `${e.Commands} Todos os comandos${pageCount}`,
+            title: `${e.Commands} Todos os comandos`,
             fields: fields,
             footer: { text: `${array.length} Comandos` }
         })

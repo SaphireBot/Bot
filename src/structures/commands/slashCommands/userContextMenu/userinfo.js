@@ -1,8 +1,15 @@
-import { DiscordFlags as flags, PermissionsTranslate } from '../../../../util/Constants.js'
+import { DiscordFlags as flags, PermissionsTranslate, DiscordPermissons } from '../../../../util/Constants.js'
+import { ButtonStyle } from 'discord.js'
 
 export default {
     name: 'User Info',
     dm_permission: false,
+    helpData: {
+        color: 'Blue',
+        description: 'Clique em alguém e veja suas informações de maneira simples e prática',
+        permissions: [],
+        fields: []
+    },
     type: 2,
     async execute({ interaction: interaction, client: client, emojis: e, config: config }) {
 
@@ -35,7 +42,6 @@ export default {
             })()
         }
 
-        // const colorData = member ? await Colors(user.id) : client.blue
         const colorData = client.blue
         const whoIs = user.id === author.id ? 'Suas Informações' : `Informações de ${user.username}`
 
@@ -88,15 +94,13 @@ export default {
             embeds.push(embed)
             components.push({
                 type: 1,
-                components: [
-                    {
-                        type: 2,
-                        label: 'ADICIONAR BOT',
-                        emoji: '🔗',
-                        url: `https://discord.com/oauth2/authorize?client_id=${application.id}&scope=bot%20applications.commands&permissions=2146958847`,
-                        style: 'LINK'
-                    }
-                ]
+                components: [{
+                    type: 2,
+                    label: 'ADICIONAR BOT',
+                    emoji: '🔗',
+                    url: `https://discord.com/oauth2/authorize?client_id=${application.id}&scope=bot%20applications.commands&permissions=2146958847`,
+                    style: ButtonStyle.Link
+                }]
             })
         }
 
