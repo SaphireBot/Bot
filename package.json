@@ -17,6 +17,7 @@
     "better-sqlite3": "^7.6.2",
     "canvacord": "^5.4.6",
     "dicionario.js": "^1.1.1-b",
+    "discloud.app": "^0.0.2",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
@@ -27,7 +28,6 @@
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.6",
     "statcord.js": "^3.4.3",
-    "topgg-autoposter": "^2.0.1",
-    "undici": "^5.10.0"
+    "topgg-autoposter": "^2.0.1"
   }
 }

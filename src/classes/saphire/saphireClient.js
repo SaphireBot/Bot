@@ -3,7 +3,7 @@ import { ClientOptions } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import 'dotenv/config'
 import slashCommand from '../../structures/handler/slashCommands.js'
-import { Database } from '../index.js'
+import { Database, Discloud } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
 import TopGGAutoposter from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
@@ -112,6 +112,9 @@ class SaphireClient extends Client {
         process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
 
         await super.login()
+
+        const discloudResult = await Discloud.login()
+
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
         import('../../api/app.js')
@@ -132,7 +135,7 @@ class SaphireClient extends Client {
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
-        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${slashCommandsResponse} | OK!`)
+        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
     }
 
     /**

@@ -1,9 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import getLogs from './functions/logs.discloud.js'
-import newBackup from './functions/backup.discloud.js'
-import userInfo from './functions/user.discloud.js'
-import restart from './functions/restart.discloud.js'
-import { Colors } from '../../../../util/Constants.js'
+import { logs, backup, user, restart, stop, start } from './functions/functions.discloud.js'
 
 export default {
     name: 'discloud',
@@ -11,6 +7,9 @@ export default {
     dm_permission: false,
     admin: true,
     type: 1,
+    helpData: {
+        description: 'Comando exclusivo aos meus administradores para obter informações e funções da minha HOST.'
+    },
     options: [
         {
             name: 'options',
@@ -25,13 +24,21 @@ export default {
                     name: 'Fazer backup da aplicação na Host',
                     value: 'backup'
                 },
-                // {
-                //     name: 'Informação do Usuário',
-                //     value: 'user'
-                // },
+                {
+                    name: 'Informação do Usuário',
+                    value: 'user'
+                },
                 {
                     name: 'Reiniciar aplicação',
                     value: 'restart'
+                },
+                {
+                    name: 'Parar aplicação',
+                    value: 'stop'
+                },
+                {
+                    name: 'Inicializar aplicação',
+                    value: 'start'
                 }
             ]
         }
@@ -41,10 +48,20 @@ export default {
         const { options } = interaction
         const query = options.getString('options')
 
-        if (query === 'logs') return getLogs(interaction)
-        if (query === 'backup') return newBackup(interaction)
-        if (query === 'user') return userInfo(interaction)
-        if (query === 'restart') return restart(interaction)
+        switch (query) {
+            case 'logs': logs(interaction); break;
+            case 'backup': backup(interaction); break;
+            case 'user': user(interaction); break;
+            case 'restart': restart(interaction); break;
+            case 'stop': stop(interaction); break;
+            case 'start': start(interaction); break;
+            default: break;
+        }
+
+        return await interaction.reply({
+            content: `${e.Deny} | ID da OPTION não encontrado ou sem função definida.`,
+            ephemeral: true
+        })
 
     }
 }

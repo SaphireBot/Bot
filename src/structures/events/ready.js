@@ -25,11 +25,11 @@ client.once('ready', async () => {
         const message = await channel.messages.fetch(restartInfo.messageId)
         if (!message) return deleteRestartData()
 
-        await message.edit({
+        return message.edit({
             content: `${e.Check} | Reboot concluído.`
-        }).catch(() => { })
-
-        deleteRestartData()
+        })
+        .then(deleteRestartData)
+        .catch(() => { })
 
         async function deleteRestartData() {
             return await Database.Cache.Client.delete(`${client.shardId}.RESTART`)

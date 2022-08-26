@@ -3,6 +3,9 @@ export default {
     description: '[bot] Comando de ping',
     dm_permission: false,
     type: 1,
+    helpData: {
+        description: 'Pong.'
+    },
     options: [],
     async execute({ interaction: interaction, client: client }) {
         await interaction.deferReply({ ephemeral: true })

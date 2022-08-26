@@ -7,6 +7,23 @@ export default {
     description: '[bot] Doe para a Saphire',
     dm_permission: false,
     type: 1,
+    helpData: {
+        description: 'Comando exclusivo para fazer doações.',
+        fields: [
+            {
+                name: 'Prêmio',
+                value: 'A cada real doado, você ganha 15000 Safiras'
+            },
+            {
+                name: 'Quantia',
+                value: 'O valor dado deve ser em real e centavos separado por virgula'
+            },
+            {
+                name: 'Email',
+                value: 'O email não é obrigatório. Mas você pode receber um comprovante se passar o seu email.'
+            }
+        ]
+    },
     options: [
         {
             name: 'quantia',
