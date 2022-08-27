@@ -1,8 +1,5 @@
-import {
-    Discloud
-} from '../../../../../classes/index.js'
+import { Discloud } from '../../../../../classes/index.js'
 import { Emojis as e } from '../../../../../util/util.js'
-import('dotenv/config')
 
 export default async interaction => {
 

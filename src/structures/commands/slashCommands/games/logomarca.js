@@ -1,5 +1,4 @@
 import newGame from '../../functions/logomarca/game.logomarca.js'
-import { ApplicationCommandOptionType } from 'discord.js'
 
 export default {
     name: 'logomarca',

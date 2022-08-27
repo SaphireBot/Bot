@@ -20,3 +20,12 @@ User.prototype.isMod = async function () {
     const staff = [...clientData?.Administradores, ...clientData?.Moderadores, config.ownerId]
     return staff.includes(this.id)
 }
+
+User.prototype.balance = async function () {
+
+    const userData = await Database.User.findOne({ id: this.id }, 'Balance')
+
+    if (!userData || !userData.Balance) return 0
+
+    return parseInt(userData.Balance) || 0
+}

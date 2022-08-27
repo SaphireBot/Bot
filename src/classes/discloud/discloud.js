@@ -1,14 +1,10 @@
-import { DiscloudApp } from 'discloud.app'
+import { discloud } from 'discloud.app'
+import('dotenv/config')
 
-export default new class Discloud extends DiscloudApp {
-    constructor() {
-        super({ token: process.env.DISCLOUD_API_TOKEN })
-    }
+discloud.login()
+    .catch(err => {
+        console.log(err)
+        return 'Discloud Host Not Connected'
+    })
 
-    login() {
-        return super.login()
-            .then(() => 'Discloud Api Logged')
-            .catch(() => 'Discloud Host Not Connected')
-    }
-
-}
+export default discloud

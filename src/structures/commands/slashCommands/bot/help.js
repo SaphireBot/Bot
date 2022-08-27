@@ -41,10 +41,12 @@ export default {
 
         if (!helpData.fields) helpData.fields = []
 
-        if (helpData.permissions)
+        if (helpData.permissions.length > 0)
             helpData.fields.unshift({
                 name: 'Permissões',
-                value: !helpData.permissions || !helpData.permissions?.length ? 'Nenhuma' : helpData.permissions.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ').limit('MessageEmbedFieldValue')
+                value: !helpData.permissions || !helpData.permissions?.length
+                    ? 'Nenhuma'
+                    : helpData.permissions.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ').limit('MessageEmbedFieldValue')
             })
 
         if (helpData.fields.length > 25) helpData.fields.length = 25

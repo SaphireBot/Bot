@@ -8,7 +8,7 @@ export default async interaction => {
 
     await interaction.deferReply({})
 
-    const response = await Discloud.user.fetch()
+    const response = Discloud.user
 
     if (!response)
         return await interaction.editReply({
@@ -33,44 +33,38 @@ export default async interaction => {
         Booster: 'Booster',
     }
 
-    const appStatus = Object.entries(response.appsStatus || {})
-    const appMapped = appStatus.map(([id, data]) => `${data.online ? '🟢' : '🔴'} \`${id}\``).join('\n')
-
     return await interaction.editReply({
         embeds: [{
             color: client.blue,
             title: `Informações do usuário - Discloud User`,
             fields: [
                 {
-                    name: '🤖 Apps',
-                    value: `${response.appIDs.length} Apps hospedados`
+                    name: 'Apps',
+                    value: `${response.appIDs.length} Apps hospedados.`
                 },
                 {
-                    name: '🚩 Locale',
-                    value: locale[response.locale] || 'Não encontrado'
+                    name: 'Locale',
+                    value: locale[response.locale] || 'Não encontrado.'
                 },
                 {
-                    name: '🛠 Plano atual',
+                    name: 'Plano atual',
                     value: plans[response.plan] || 'Sem plano'
                 },
                 {
-                    name: '📆 Data de término do plano',
+                    name: 'Data de término do plano',
                     value: Date.GetTimeout(0, new Date(response.planDataEnd).valueOf(), 'R')
                 },
                 {
-                    name: `${e.Ram} Memória RAM`,
-                    value: `${response.ramUsedMb}/${response.totalRamMb}MB`
+                    name: 'Memória RAM',
+                    value: `${response.ramUsedMb}/${response.totalRamMb}`
                 },
                 {
-                    name: `🔗 Sub-domínios`,
+                    name: 'Sub-domínios',
                     value: response.subdomains.map(subdomain => `\`${subdomain}\``).join(', ') || 'Nenhum subdomínio registrado.'.limit('MessageEmbedFieldValue')
-                },
-                {
-                    name: `${e.Info} Apps Status`,
-                    value: appMapped
                 }
             ]
         }]
-    }).catch(() => { })
+    }).catch(console.log)
+
 
 }
