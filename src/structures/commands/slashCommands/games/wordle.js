@@ -33,7 +33,7 @@ export default {
             type: 3
         }
     ],
-    async execute({ interaction, Database, emojis: e }) {
+    async execute({ interaction, Database, e }) {
 
         const playersInGame = await Database.Cache.WordleGame.get('inGame')
 

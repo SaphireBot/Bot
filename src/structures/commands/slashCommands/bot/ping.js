@@ -7,7 +7,7 @@ export default {
         description: 'Pong.'
     },
     options: [],
-    async execute({ interaction: interaction, client: client }) {
+    async execute({ interaction, client }) {
         await interaction.deferReply({ ephemeral: true })
         return interaction.editReply({ content: `🏓 | Meu ping atual está em: **${client.ws.ping}**ms` }).catch(() => { })
     }

@@ -5,7 +5,7 @@ export default {
     name: 'Avatar',
     dm_permission: false,
     type: 2,
-    async execute({ interaction: interaction, client: client, emojis: e }) {
+    async execute({ interaction, client, e }) {
 
         const { targetId, guild } = interaction
         const member = guild.members.cache.get(targetId)

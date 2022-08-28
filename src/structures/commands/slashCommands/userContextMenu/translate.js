@@ -14,7 +14,7 @@ export default {
         ]
     },
     type: 3,
-    async execute({ interaction, emojis: e, client, Constants }) {
+    async execute({ interaction, e, client, Constants }) {
 
         const { Languages } = Constants
         const { targetMessage, locale } = interaction

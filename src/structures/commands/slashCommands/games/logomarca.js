@@ -30,7 +30,7 @@ export default {
         //     ]
         // }
     ],
-    async execute({ interaction, emojis: e }) {
+    async execute({ interaction, e }) {
         return
         const { options } = interaction
         const subCommands = options.getSubcommand()

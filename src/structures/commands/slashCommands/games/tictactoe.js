@@ -14,7 +14,7 @@ export default {
             required: true
         }
     ],
-    async execute({ interaction, emojis: e }) {
+    async execute({ interaction, e }) {
 
         const { options, user } = interaction
         const opponent = options.getUser('oponente')

@@ -1,5 +1,5 @@
 export default
-    async ({ interaction, client, emojis: e }) =>
+    async ({ interaction, client, e }) =>
         await interaction.reply({
             embeds: [{
                 color: client.blue,

@@ -38,7 +38,7 @@ export default {
             type: 3
         }
     ],
-    async execute({ interaction: interaction, client: client, emojis: e }) {
+    async execute({ interaction, client, e }) {
 
         const { options, user, channel, guild } = interaction
 

@@ -183,7 +183,7 @@ export default {
             ]
         }
     ],
-    async execute({ interaction, Database, emojis: e }) {
+    async execute({ interaction, Database, e }) {
 
         const { options } = interaction
 

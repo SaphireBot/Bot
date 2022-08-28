@@ -5,7 +5,7 @@ export default {
     dm_permission: false,
     default_member_permissions: Permissions.ManageMessages,
     type: 3,
-    async execute({ interaction: interaction, emojis: e, config: config }) {
+    async execute({ interaction, e, config }) {
 
         const { targetMessage } = interaction
 

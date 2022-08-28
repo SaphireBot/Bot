@@ -18,7 +18,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, emojis: e, client }) {
+    async execute({ interaction, e, client }) {
 
         const { options } = interaction
         const commandOption = options.getString('command')

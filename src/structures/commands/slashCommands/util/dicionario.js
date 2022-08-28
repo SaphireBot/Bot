@@ -27,7 +27,7 @@ export default {
             max_length: 46
         }
     ],
-    async execute({ interaction, client, emojis: e }) {
+    async execute({ interaction, client, e }) {
 
         const { options, guild, channel } = interaction
         console.log(interaction.commandId)

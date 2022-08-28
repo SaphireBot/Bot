@@ -1,6 +1,6 @@
 import dicio from 'dicionario.js'
 
-export default async ({ interaction, fields, Database, client, emojis: e }) => {
+export default async ({ interaction, fields, Database, client, e }) => {
 
     const query = fields.getTextInputValue('wordleGame')?.toLowerCase()
 

@@ -1,6 +1,7 @@
 import Base from './Base.js'
-import * as Statcord from 'statcord.js'
 import error from '../../classes/modules/errors/errors.js'
+import * as Statcord from 'statcord.js'
+import { Emojis, economy } from '../../util/util.js'
 
 export default class SlashCommand extends Base {
     constructor(interaction) {
@@ -11,6 +12,8 @@ export default class SlashCommand extends Base {
         this.guild = interaction.guild
         this.channel = interaction.channel
         this.commandName = interaction.commandName
+        this.e = Emojis
+        this.economy = economy
     }
 
     async execute(guildData, clientData) {
@@ -26,13 +29,13 @@ export default class SlashCommand extends Base {
 
         if (command.admin && !admins.includes(this.user.id))
             return await this.interaction.reply({
-                content: `${this.emojis.Deny} | Este comando é exclusivo para meus administradores.`,
+                content: `${this.e.Deny} | Este comando é exclusivo para meus administradores.`,
                 ephemeral: true
             })
 
         if (command.staff && !staff.includes(this.user.id))
             return await this.interaction.reply({
-                content: `${this.emojis.Deny} | Este comando é exclusivo para os membros da equipe Saphire's Team.`,
+                content: `${this.e.Deny} | Este comando é exclusivo para os membros da equipe Saphire's Team.`,
                 ephemeral: true
             })
 
@@ -43,7 +46,7 @@ export default class SlashCommand extends Base {
 
     async CheckBeforeExecute() {
 
-        const { guild, emojis: e, Database, interaction, user, channel, client } = this
+        const { guild, e, Database, interaction, user, channel, client } = this
 
         const guildData = await Database.Guild.findOne({ id: guild?.id })
 

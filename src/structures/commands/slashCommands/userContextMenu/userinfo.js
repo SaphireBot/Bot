@@ -11,7 +11,7 @@ export default {
         fields: []
     },
     type: 2,
-    async execute({ interaction: interaction, client: client, emojis: e, config: config }) {
+    async execute({ interaction, client, e }) {
 
         const { targetUser: user, targetMember: member, guild: guild, user: author } = interaction
         const components = []

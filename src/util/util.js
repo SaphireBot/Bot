@@ -1,4 +1,5 @@
 import DiscordJS, { GatewayIntentBits, Partials } from 'discord.js'
+import { Database } from '../classes/index.js'
 import * as fs from 'fs'
 
 /**
@@ -34,10 +35,56 @@ const ClientOptions = {
 }
 
 const Emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json'))
+const Gifs = JSON.parse(fs.readFileSync('./src/JSON/gifs.json'))
 const Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
+
+const economy = {
+    async add(userId, amount) {
+
+        if (!userId || !amount || isNaN(amount)) return
+
+        const data = await Database.User.findOneAndUpdate(
+            { id: userId },
+            {
+                $inc: {
+                    Balance: parseInt(amount)
+                }
+            },
+            {
+                upsert: true,
+                new: true,
+                fields: 'Balance'
+            }
+        )
+
+        return data
+    },
+    async sub(userId, amount) {
+
+        if (!userId || !amount || isNaN(amount)) return
+
+        const data = await Database.User.findOneAndUpdate(
+            { id: userId },
+            {
+                $inc: {
+                    Balance: -parseInt(amount)
+                }
+            },
+            {
+                upsert: true,
+                new: true,
+                fields: 'Balance'
+            }
+        )
+
+        return data
+    }
+}
 
 export {
     Emojis,
     ClientOptions,
-    Flags
+    Flags,
+    Gifs,
+    economy
 }

@@ -27,7 +27,7 @@ export default {
             type: 5
         }
     ],
-    async execute({ interaction, emojis: e }) {
+    async execute({ interaction }) {
 
         await interaction.deferReply()
 

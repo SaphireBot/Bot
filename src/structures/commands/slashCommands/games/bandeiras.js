@@ -13,7 +13,7 @@
 //             type: ApplicationCommandOptionType.Subcommand
 //         }
 //     ],
-//     async execute({ interaction, emojis: e }) {
+//     async execute({ interaction, e }) {
 
 //         // const { options } = interaction
 //         // const subCommand = options.getSubcommand()

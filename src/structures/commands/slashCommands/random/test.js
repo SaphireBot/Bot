@@ -14,7 +14,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, Database, emojis: e }) {
+    async execute({ interaction, client, Database, e }) {
 
         return console.log(interaction)
     }

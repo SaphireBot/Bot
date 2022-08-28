@@ -47,7 +47,7 @@ export default {
             ]
         }
     ],
-    async execute({ interaction, emojis: e }) {
+    async execute({ interaction, e }) {
 
         const { options } = interaction
         const query = options.getString('options')

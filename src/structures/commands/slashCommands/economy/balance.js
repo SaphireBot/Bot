@@ -21,7 +21,7 @@ export default {
             type: 5
         }
     ],
-    async execute({ interaction, client, Database, config, guildData, emojis: e }) {
+    async execute({ interaction, client, Database, config, e }) {
 
         const { options, guild } = interaction
         const hide = options.getBoolean('hide') || false
