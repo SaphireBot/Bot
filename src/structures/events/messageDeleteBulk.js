@@ -27,8 +27,10 @@ client.on('messageDeleteBulk', async (messages) => {
 
     if (!cachedData || !cachedData.length) return
 
-    for (let cached of cachedData)
-        client.emit('betRefund', cached)
+    for await (let cached of cachedData) {
+        await Database.Cache.Bet.delete(`Bet.${cached.messageId}`)
+        client.emit('betRefund', cached, true)
+    }
 
     return
 })
