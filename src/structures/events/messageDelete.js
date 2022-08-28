@@ -14,7 +14,11 @@ client.on('messageDelete', async message => {
     if (cachedData?.find(data => data.messageId === message.id))
         await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.messageId === message.id)
 
-    // TODO: Terminar aqui
+    const betDataFound = await Database.Cache.Bet.get(`Bet.${message.id}`)
+    if (betDataFound)
+        client.emit('betRefund', betDataFound)
+  
+        // TODO: Terminar aqui
     // const Giveaways = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways.${message.guild.id}`)
     // if (Giveaways?.includes(data => data.MessageID === message.id)) {
     //     await Database.Cache.Giveaways.pull(`${client.shardId}.Giveaways`, data => data.MessageID === message.id)

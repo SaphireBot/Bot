@@ -1,11 +1,17 @@
-export default class Bet {
-    constructor(collector) {
+import { Base } from '../../../../../classes/index.js'
+
+export default class Bet extends Base {
+    constructor(collector, message) {
+        super()
         this.collector = collector
+        this.msg = message
     }
 
     events = {
-        collect: async (reaction, user) => await import('./functions/collect.bet.js').default(reaction, user, this),
-        remove: async (reaction, user) => await import('./functions/remove.bet.js').default(reaction, user, this),
-        end: async (_, reason) => await import('./functions/end.bet.js').default(reason, this)
+        end: async (...args) => (await import('./functions/end.bet.js')).default(...args)
+    }
+
+    async save(messageId, data) {
+        return await this.Database.Cache.Bet.set(`Bet.${messageId}`, data)
     }
 }

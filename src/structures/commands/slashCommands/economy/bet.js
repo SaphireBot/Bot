@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Colors } from '../../../../util/Constants.js'
 import simpleBet from './bet/new.bet.js'
+import refundValues from './bet/refund.bet.js'
 
 export default {
     name: 'bet',
@@ -41,7 +42,7 @@ export default {
                         },
                         {
                             name: '1 Minuto e 30 Segundos',
-                            value: 190000
+                            value: 90000
                         },
                         {
                             name: '2 Minutos',
@@ -49,6 +50,20 @@ export default {
                         }
                     ]
                 }
+            ]
+        },
+        {
+            name: 'refund',
+            description: '[economy] Resgate apostas perdidas com o tempo',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'available_bets',
+                    description: 'Apostas abertas porém não finalizadas',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    autocomplete: true
+                },
             ]
         }
     ],
@@ -65,14 +80,23 @@ export default {
         const subCommand = options.getSubcommand()
         const userMoney = await user.balance()
 
-        if (userMoney <= 0)
+        if (userMoney <= 0 || userMoney < amount)
             return await interaction.reply({
                 content: `${e.Deny} | Você não tem dinheiro suficiente.`,
                 ephemeral: true
             })
 
         switch (subCommand) {
-            case 'simple': simpleBet({ interaction, economy, e, amount, client })
+            case 'simple': simpleBet({ interaction, economy, e, amount, client }); break;
+            case 'refund': refundValues({ interaction, e }); break
+            default:
+                await interaction.reply({
+                    content: `${e.Deny} | Sub comando não encotrado.`,
+                    ephemeral: true
+                });
+                break;
         }
+
+        return
     }
 }

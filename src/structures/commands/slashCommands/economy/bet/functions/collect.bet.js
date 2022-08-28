@@ -1,3 +1,3 @@
 export default (reaction, user) => {
-    return
+    return console.log('collect ' + reaction.emoji.name)
 }

@@ -6,7 +6,10 @@ export default async interaction => {
     await interaction.deferReply({})
 
     const response = await Discloud.apps.update('saphire', { file: './src.zip' })
-        .catch(() => false)
+        .catch(err => {
+            console.log(err)
+            return false
+        })
 
     if (!response)
         return await interaction.editReply({

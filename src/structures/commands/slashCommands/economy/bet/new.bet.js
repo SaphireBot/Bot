@@ -1,21 +1,15 @@
-import { Gifs } from '../../../../../util/util.js'
+import { economy, Gifs } from '../../../../../util/util.js'
 import { Colors } from '../../../../../util/Constants.js'
 import BetClass from './class.bet.js'
 
-export default async ({ interaction, economy, e, amount, client }) => {
+export default async ({ interaction, e, amount, client }) => {
 
-    const { options, user: author, guild } = interaction
+    const { options, user: author, guild, channel } = interaction
     const playersCount = options.getInteger('players') || 30
     const finishTime = options.getInteger('finish') || 60000
     const warnText = `Dinheiro perdido nos comandos de apostas não será extornado.\nCuidado com promessas de jogadores e sua ganância.\nA equipe de administração da ${client.user.username} não é responsável pelas transações deste jogo.`
     const coin = await guild.getCoin()
-    const emojis = ['💸', '✅', '❌']
-    const players = [author.id]
-    const endedReason = {
-        messageDelete: 'Mensagem deletada',
-        time: 'Tempo encerrado',
-        user: `Aposta encerrada por ${author}`
-    }
+    const emojis = ['💸', '✅']
 
     const embed = {
         title: '🎲 Aposta Simples',
@@ -30,6 +24,10 @@ export default async ({ interaction, economy, e, amount, client }) => {
             {
                 name: '💰 Valor da aposta',
                 value: `**${amount} ${coin}**`
+            },
+            {
+                name: '⏱ Tempo',
+                value: Date.Timestamp(new Date(finishTime).valueOf(), 'R')
             }
         ]
     }
@@ -47,8 +45,19 @@ export default async ({ interaction, economy, e, amount, client }) => {
         dispose: true
     });
 
-    const Bet = new BetClass(collector)
+    const Bet = new BetClass(collector, msg)
     for (let event of Object.entries(Bet.events))
-        collector.on(event[0], (...args) => event[1](...args))
-    return
+        collector.on(event[0], (...args) => event[1](...args, msg))
+
+    await Bet.save(msg.id, {
+        messageId: msg.id,
+        channelId: channel.id,
+        amount: amount,
+        authorId: author.id,
+        finishTime: finishTime,
+        players: [author.id],
+        playersCount: playersCount
+    })
+
+    return economy.sub(author.id, amount)
 }

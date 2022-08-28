@@ -1,9 +1,8 @@
-// import { SaphireClient as client } from '../../classes/index.js'
+// import { SaphireClient as client, Database } from '../../classes/index.js'
 import ReminderSystem from './reminder/index.js'
 // const TopGlobalRanking = require('../update/TopGlobalRanking')
 // const boostReward = require('../server/boostReward')
 // const RaffleSystem = require('../update/rifasystem')
-// const slashCommandsHandler = require('../../../src/structures/slashCommand')
 
 export default () => {
 

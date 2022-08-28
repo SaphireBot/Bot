@@ -42,6 +42,7 @@ export default class Autocomplete extends Base {
             case 'delete_lembrete': this.delete_lembrete(value); break;
             case 'quiz_question': this.quiz_question(value); break;
             case 'select_giveaway': this.select_giveaway(value); break;
+            case 'available_bets': this.available_bets(value); break;
             case 'answers': this.answers(); break;
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
@@ -50,6 +51,28 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async available_bets(value) {
+
+        const allBets = await this.Database.Cache.Bet.get('Bet')
+        if (!allBets) return await this.respond()
+
+        const values = Object.values(allBets || {})
+        const availableBets = values.filter(bet => bet.authorId === this.user.id)
+
+        if (!availableBets || !availableBets.length) return await this.respond()
+
+        const mapped = availableBets.map(bet => ({ name: `${bet.amount} Safiras e ${bet.players.length} jogadores`, value: bet.messageId }))
+        const fill = mapped.filter(bet => bet.name.toLowerCase().includes(value.toLowerCase()) || bet.value.includes(value))
+
+        if (fill.length > 1)
+            fill.unshift({
+                name: `Resgatar todas as ${availableBets.length} apostas`,
+                value: 'all'
+            })
+
+        return await this.respond(fill)
     }
 
     async answers() {

@@ -40,8 +40,9 @@ export default {
             })
 
         if (!helpData.fields) helpData.fields = []
+        if (!helpData.permissions) helpData.permissions = []
 
-        if (helpData.permissions.length > 0)
+        if (helpData.permissions?.length > 0)
             helpData.fields.unshift({
                 name: 'Permissões',
                 value: !helpData.permissions || !helpData.permissions?.length

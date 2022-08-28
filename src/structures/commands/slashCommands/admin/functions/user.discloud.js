@@ -33,8 +33,8 @@ export default async interaction => {
         Booster: 'Booster',
     }
 
-    const appStatus = Object.entries(response.appsStatus || {})
-    const appMapped = appStatus.map(([id, data]) => `${data.online ? '🟢' : '🔴'} \`${id}\``).join('\n')
+    const data = [...response.appsStatus.values()]
+    const appMapped = data.map(data => `${data.online ? '🟢' : '🔴'} \`${data.name}\``).join('\n')
 
     return await interaction.editReply({
         embeds: [{

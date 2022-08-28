@@ -40,6 +40,43 @@ Date.prototype.constructor.GetTimeout = function (TimeToCooldown = 0, DateNowInD
 
 Date.prototype.constructor.Timeout = (TimeoutInMS = 0, DateNowAtDatabase = 0) => TimeoutInMS - (Date.now() - DateNowAtDatabase) > 0
 
+Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style) {
+
+    const TimestampStyles = {
+        /**
+         * Short time format, consisting of hours and minutes, e.g. 16:20
+         */
+        t: "t",
+        /**
+         * Long time format, consisting of hours, minutes, and seconds, e.g. 16:20:30
+         */
+        T: "T",
+        /**
+         * Short date format, consisting of day, month, and year, e.g. 20/04/2021
+         */
+        d: "d",
+        /**
+         * Long date format, consisting of day, month, and year, e.g. 20 April 2021
+         */
+        D: "D",
+        /**
+         * Short date-time format, consisting of short date and short time formats, e.g. 20 April 2021 16:20
+         */
+        f: "f",
+        /**
+         * Long date-time format, consisting of long date and short time formats, e.g. Tuesday, 20 April 2021 16:20
+         */
+        F: "F",
+        /**
+         * Relative time format, consisting of a relative duration format, e.g. 2 months ago
+         */
+        R: "R"
+    }[style] || 't'
+
+    return time(new Date((Date.now() + TimeInMs) / 1000).valueOf(), TimestampStyles)
+
+}
+
 Date.prototype.constructor.format = function (DateInMs = 0, Shorted = false, withDateNow = true) {
 
     if (Shorted)
