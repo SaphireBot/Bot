@@ -5,8 +5,7 @@
   "main": "shard.js",
   "type": "module",
   "scripts": {
-    "start": ".",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "author": "rody",
   "license": "ISC",

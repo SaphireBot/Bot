@@ -59,7 +59,7 @@ export default async ({ interaction, e, amount, client }) => {
         authorId: author.id,
         finishTime: finishTime,
         players: [author.id],
-        versus: member.id,
+        versus: member?.id || '',
         playersCount: playersCount
     })
 
