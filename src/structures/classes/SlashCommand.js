@@ -52,13 +52,20 @@ export default class SlashCommand extends Base {
 
         if (!guildData) {
             await Database.registerServer(guild)
-
             return await interaction.reply({
                 content: `${e.Database} | DATABASE | Registro do servidor no banco de dados efetuado com sucesso.`
             })
         }
 
         const clientData = await Database.Client.findOne({ id: client.user.id })
+
+        if (!clientData) {
+            await Database.registerClient(client.user.id)
+            return await interaction.reply({
+                content: `${e.Database} | Por favor, tente novamente. Alguns dados não foram encontrados.`,
+                ephemeral: true
+            })
+        }
 
         if (clientData.Rebooting?.ON)
             return await interaction.reply({ content: `${e.Loading} | Reiniciando em breve...\n${e.BookPages} | ${clientData.Rebooting?.Features || 'Nenhum dado fornecido'}` })

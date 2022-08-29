@@ -30,7 +30,6 @@ export default {
     async execute({ interaction, client, e }) {
 
         const { options, guild, channel } = interaction
-        console.log(interaction.commandId)
 
         if (!guild.clientHasPermission('ManageWebhooks'))
             return await interaction.reply({

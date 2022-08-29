@@ -13,7 +13,7 @@ export default async (interaction, Database, e) => {
     const msg = await interaction.reply({
         content: `${e.Loading} | Construindo novo jogo...\n${limitedMinutes ? '⏱ | Modo limitado a 2 minutos' : ''}`,
         fetchReply: true
-    }).catch(console.log)
+    }).catch(() => { })
 
     const buttons = buttonGenerator(emojis, e, limitedMinutes)
 
@@ -22,5 +22,5 @@ export default async (interaction, Database, e) => {
     return await interaction.editReply({
         content: `${e.Loading} | Tente achar os pares de emojis iguais.\n${e.Info} | Clique nos botões com calma para não estragar o jogo.\n${limitedMinutes ? `⏱ | ${Date.GetTimeout(120000, Date.now(), 'R')}` : ''}`,
         components: buttons.default
-    }).catch(console.log)
+    }).catch(() => { })
 }

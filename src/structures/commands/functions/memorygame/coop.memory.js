@@ -18,12 +18,12 @@ export default async (interaction, e) => {
 
     await interaction.reply({
         content: `${e.Loading} | Construindo novo jogo cooperativo...`
-    }).catch(console.log)
+    }).catch(() => { })
 
     const buttons = buttonGenerator(emojis, e, member.id)
 
     return await interaction.editReply({
         content: `${e.Loading} | Tente achar os pares de emojis iguais.\n${e.Info} | Clique nos botões com calma para não estragar o jogo.\n🤝 | Modo cooperativo: ${playNow}, é sua vez.`,
         components: buttons.default
-    }).catch(console.log)
+    }).catch(() => { })
 }

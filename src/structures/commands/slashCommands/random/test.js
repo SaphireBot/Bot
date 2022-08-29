@@ -1,4 +1,4 @@
-import { Colors } from '../../../../util/Constants.js'
+import { Database } from '../../../../classes/index.js'
 
 export default {
     name: 'teste',
@@ -6,16 +6,12 @@ export default {
     dm_permission: false,
     type: 1,
     admin: true,
-    options: [
-        {
-            name: 'database_users',
-            type: 3,
-            description: 'aa',
-            autocomplete: true
-        }
-    ],
-    async execute({ interaction, client, Database, e }) {
+    options: [],
+    helpData: {
+        description: 'Apenas um comando de teste exclusivo para o meu'
+    },
+    async execute({ interaction, client, e }) {
 
-        return console.log(interaction)
+        return 
     }
 }

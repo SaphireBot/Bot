@@ -31,12 +31,19 @@ client.on('betReaction', async ({ message, user, emojiName }) => {
     const timestamp = embed.fields[2].value.replace(/[^0-9]/g, '')
     const time = new Date(timestamp * 1000).valueOf()
 
-    const { authorId, players, playersCount } = betCachedData
+    const { authorId, players, playersCount, versus, amount } = betCachedData
+
+    const userBalance = await user.balance()
 
     if (time < Date.now() || emojiName === '✅' && user.id === authorId)
         return realizeBet(betCachedData, message)
 
-    if (players.includes(user.id)) return
+    if (
+        players.includes(user.id)
+        || versus && user.id !== versus
+        || !userBalance
+        || userBalance < amount
+    ) return
 
     return newBetUser(betCachedData, message, user.id, (players.length + 1) >= playersCount)
 })

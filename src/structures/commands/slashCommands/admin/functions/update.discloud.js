@@ -5,12 +5,12 @@ export default async interaction => {
 
     await interaction.deferReply({})
 
-    const response = await Discloud.apps.update('saphire', { file: './src.zip' })
+    const response = await Discloud.apps.update('saphire', { file: './index.js' })
         .catch(err => {
             console.log(err)
             return false
         })
-
+        
     if (!response)
         return await interaction.editReply({
             content: `${e.Deny} | Não foi possivel realizar o commit.`

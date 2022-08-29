@@ -40,7 +40,7 @@ class Database extends Models {
             useUnifiedTopology: true,
         })
             .then(() => 'Database Connected')
-            .catch(() => {
+            .catch(err => {
                 console.log('Mongoose Database | FAIL!\n--> ' + err)
                 client.destroy()
                 return 'Database ERROR'

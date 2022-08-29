@@ -21,7 +21,7 @@ export default async interaction => {
             title: `${e.Check} Discloud Backup`,
             description: `[Backup](${response.url}) gerado com sucesso.`
         }]
-    }).catch(console.log)
+    }).catch(() => { })
 
 
 

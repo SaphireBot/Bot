@@ -5,11 +5,14 @@ import BetClass from './class.bet.js'
 export default async ({ interaction, e, amount, client }) => {
 
     const { options, user: author, guild, channel } = interaction
-    const playersCount = options.getInteger('players') || 30
+    let playersCount = options.getInteger('players') || 30
     const finishTime = options.getInteger('finish') || 60000
+    const member = options.getMember('versus')
     const warnText = `Dinheiro perdido nos comandos de apostas não será extornado.\nCuidado com promessas de jogadores e sua ganância.\nA equipe de administração da ${client.user.username} não é responsável pelas transações deste jogo.`
     const coin = await guild.getCoin()
     const emojis = ['💸', '✅']
+
+    if (member) playersCount = 2
 
     const embed = {
         title: '🎲 Aposta Simples',
@@ -19,7 +22,7 @@ export default async ({ interaction, e, amount, client }) => {
         fields: [
             {
                 name: `👥 Jogadores - 1/${playersCount}`,
-                value: `${e.OwnerCrow} ${author}`
+                value: `${e.OwnerCrow} ${author}${member ? `\n${e.Loading} ${member}` : ''}`
             },
             {
                 name: '💰 Valor da aposta',
@@ -56,6 +59,7 @@ export default async ({ interaction, e, amount, client }) => {
         authorId: author.id,
         finishTime: finishTime,
         players: [author.id],
+        versus: member.id,
         playersCount: playersCount
     })
 

@@ -94,8 +94,6 @@ export default async (interaction, customIdData) => {
     }
 
     async function invalid(err) {
-        console.log(err)
-        console.log(interaction)
         await interaction.deferUpdate().catch(() => { })
 
         return await message.edit({

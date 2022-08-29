@@ -3,7 +3,7 @@ import { Emojis as e, economy } from "../../../../../../util/util.js"
 import realizeBet from './realize.bet.js'
 
 export default async (cachedData, message, userId, finalize) => {
-    console.log(finalize)
+
     const returnedData = await Database.Cache.Bet.push(`Bet.${message.id}.players`, userId)
     const allBets = Object.entries(returnedData || {})
     const thisBet = allBets.find(([messageId]) => messageId === message.id)

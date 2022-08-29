@@ -64,7 +64,7 @@ export default async interaction => {
                 }
             ]
         }]
-    }).catch(console.log)
+    }).catch(() => { })
 
 
 }

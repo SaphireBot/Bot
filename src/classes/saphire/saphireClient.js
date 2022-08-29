@@ -124,7 +124,6 @@ class SaphireClient extends Client {
         mercadopago.configure({ access_token: process.env.MERCADO_PAGO_TOKEN })
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
-        automaticSystems()
 
         this.allUsers = await this.users.all(true)
         this.allGuilds = await this.guilds.all(true)
@@ -135,6 +134,7 @@ class SaphireClient extends Client {
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
+        automaticSystems()
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
     }
 

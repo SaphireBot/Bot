@@ -119,7 +119,7 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const msg = await Channel.send({ embeds: [{ color: color || client.blue, title: `${e.Loading} | Construindo sorteio...` }] }).catch(err => console.log(err))
+    const msg = await Channel.send({ embeds: [{ color: color || client.blue, title: `${e.Loading} | Construindo sorteio...` }] }).catch(() => { })
 
     if (!msg?.id)
         return await interaction.reply({

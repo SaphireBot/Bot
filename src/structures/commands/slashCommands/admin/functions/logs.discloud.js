@@ -26,7 +26,7 @@ export default async interaction => {
             title: `${e.Reference} Discloud Logs`,
             description: `\`\`\`txt\n${response.small}\`\`\``.limit('MessageEmbedDescription')
         }]
-    }).catch(console.log)
+    }).catch(() => { })
 
 
 

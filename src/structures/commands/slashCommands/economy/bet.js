@@ -49,6 +49,11 @@ export default {
                             value: 120000
                         }
                     ]
+                },
+                {
+                    name: 'versus',
+                    description: 'Escolha apenas 1 adversário',
+                    type: ApplicationCommandOptionType.User
                 }
             ]
         },

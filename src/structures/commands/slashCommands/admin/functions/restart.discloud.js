@@ -23,7 +23,7 @@ export default async interaction => {
 
     await msg.edit({
         content: `${e.Loading} | Reiniciando...`,
-    }).catch(console.log)
+    }).catch(() => { })
 
     return await Database.Cache.Client.set(`${client.shardId}.RESTART`, {
         channelId: channel.id,
