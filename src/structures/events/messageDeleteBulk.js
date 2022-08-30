@@ -5,32 +5,21 @@ import {
 
 client.on('messageDeleteBulk', async (messages) => {
 
-    const messagesId = messages.keys()
-    const allCachedGames = await Database.Cache.Bet.get('Bet')
-    const allGamesId = Object.keys(allCachedGames || {})
-    const toDelete = []
+    return setTimeout(() => check(), 3000)
 
-    if (!allGamesId || !allGamesId.length) return
+    async function check() {
 
-    for (let id of messagesId)
-        if (allGamesId.includes(id)) toDelete.push(id)
+        const messagesId = [...messages.keys()]
+        const allCachedGames = await Database.Cache.Bet.get('Bet') || {}
+        const allGamesId = Object.entries(allCachedGames)
+        const gamesToDelete = allGamesId.filter(([id]) => messagesId.includes(id)) || []
 
-    if (!toDelete || !toDelete.length) return
+        if (!gamesToDelete || !gamesToDelete.length) return
 
-    const cachedData = []
+        for (let game of gamesToDelete) {
+            client.emit('betRefund', game[1])
+        }
 
-    for await (let id of toDelete) {
-        const data = await Database.Cache.Bet.get(`Bet.${id}`)
-        cachedData.push(data)
-        continue
+        return
     }
-
-    if (!cachedData || !cachedData.length) return
-
-    for await (let cached of cachedData) {
-        await Database.Cache.Bet.delete(`Bet.${cached.messageId}`)
-        client.emit('betRefund', cached, true)
-    }
-
-    return
 })

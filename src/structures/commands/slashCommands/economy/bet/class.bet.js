@@ -1,14 +1,14 @@
 import { Base } from '../../../../../classes/index.js'
+import end from './functions/end.bet.js'
 
 export default class Bet extends Base {
-    constructor(collector, message) {
+    constructor(message) {
         super()
-        this.collector = collector
         this.msg = message
     }
 
-    events = {
-        end: async (...args) => (await import('./functions/end.bet.js')).default(...args)
+    async finish(message) {
+        return end(message)
     }
 
     async save(messageId, data) {

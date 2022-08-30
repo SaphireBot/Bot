@@ -42,15 +42,9 @@ export default async ({ interaction, e, amount, client }) => {
 
     for (let emoji of emojis) msg.react(emoji).catch(() => { })
 
-    const collector = msg.createReactionCollector({
-        filter: (r, u) => emojis.includes(r.emoji.name) && !u.bot,
-        time: finishTime,
-        dispose: true
-    });
+    const Bet = new BetClass(msg)
 
-    const Bet = new BetClass(collector, msg)
-    for (let event of Object.entries(Bet.events))
-        collector.on(event[0], (...args) => event[1](...args, msg))
+    setTimeout(() => Bet.finish(msg), finishTime)
 
     await Bet.save(msg.id, {
         messageId: msg.id,
