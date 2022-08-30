@@ -15,6 +15,7 @@ export default {
             name: 'options',
             description: 'Opções do comando',
             type: ApplicationCommandOptionType.String,
+            required: true,
             choices: [
                 {
                     name: 'Conteúdo do Terminal',
