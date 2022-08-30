@@ -8,10 +8,11 @@ export default async (cachedData, message) => {
 
     if (players.length <= 1) {
         client.emit('betRefund', cachedData)
+        message.reactions.removeAll().catch(() => { })
         return message.edit({
             content: `${e.Deny} | Aposta cancelada por falta de participantes.\n${e.Info} | O dinheiro foi devolvido.`,
             embeds: []
-        })
+        }).catch(() => { })
     }
 
     const winner = players.random()

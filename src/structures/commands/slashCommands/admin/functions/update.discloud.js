@@ -5,7 +5,7 @@ export default async interaction => {
 
     await interaction.deferReply({})
 
-    const response = await Discloud.apps.update('saphire', { file: './index.js' })
+    const response = await Discloud.apps.update('saphire', { file: './src.js' })
         .catch(err => {
             console.log(err)
             return false

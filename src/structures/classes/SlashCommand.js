@@ -50,7 +50,7 @@ export default class SlashCommand extends Base {
 
         const guildData = await Database.Guild.findOne({ id: guild?.id })
 
-        if (!guildData) {
+        if (!guildData && guild) {
             await Database.registerServer(guild)
             return await interaction.reply({
                 content: `${e.Database} | DATABASE | Registro do servidor no banco de dados efetuado com sucesso.`

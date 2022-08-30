@@ -4,11 +4,11 @@ import {
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
-client.on('betRefund', async ({ players, amount, messageId }, noDelete) => {
+client.on('betRefund', async ({ players, amount, messageId }, noDelete = false) => {
 
     if (!players || !amount || !messageId) return
 
-    if (noDelete)
+    if (!noDelete)
         await Database.Cache.Bet.delete(`Bet.${messageId}`)
 
     if (players?.length > 0)

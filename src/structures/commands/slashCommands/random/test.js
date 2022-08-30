@@ -1,7 +1,5 @@
-import { Database } from '../../../../classes/index.js'
-
 export default {
-    name: 'teste',
+    name: 'test',
     description: 'test',
     dm_permission: false,
     type: 1,
@@ -12,6 +10,6 @@ export default {
     },
     async execute({ interaction, client, e }) {
 
-        return 
+        return
     }
 }

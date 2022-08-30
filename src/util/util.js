@@ -39,11 +39,11 @@ const Gifs = JSON.parse(fs.readFileSync('./src/JSON/gifs.json'))
 const Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
 
 const economy = {
-    async add(userId, amount) {
+    async add(userId, amount, message) {
 
         if (!userId || !amount || isNaN(amount)) return
 
-        const data = await Database.User.findOneAndUpdate(
+        const saveData = [
             { id: userId },
             {
                 $inc: {
@@ -55,7 +55,20 @@ const economy = {
                 new: true,
                 fields: 'Balance'
             }
-        )
+        ]
+
+        if (message)
+            saveData[1].$push = {
+                Transactions: {
+                    $each: [{
+                        time: `${Date.format(0, true)} - Error Prize`,
+                        data: message
+                    }],
+                    $position: 0
+                }
+            }
+
+        const data = await Database.User.findOneAndUpdate(...saveData)
 
         return data
     },

@@ -8,9 +8,7 @@ import newBetUser from '../commands/slashCommands/economy/bet/functions/addPlaye
 
 client.on('betReaction', async ({ message, user, emojiName }) => {
 
-    const embed = message.embeds[0]?.data
     const betCachedData = await Database.Cache.Bet.get(`Bet.${message.id}`)
-
     if (!betCachedData) {
         message.reactions.removeAll().catch(() => { })
         return await message.edit({
@@ -19,9 +17,9 @@ client.on('betReaction', async ({ message, user, emojiName }) => {
         }).catch(() => { })
     }
 
+    const embed = message.embeds[0]?.data
     if (!embed) {
         client.emit('betRefund', betCachedData)
-
         message.reactions.removeAll().catch(() => { })
         return await message.edit({
             content: `${e.Deny} | Aposta inválida.\n${e.Info} | Os valores foram devolvidos aos participantes.`
@@ -30,9 +28,7 @@ client.on('betReaction', async ({ message, user, emojiName }) => {
 
     const timestamp = embed.fields[2].value.replace(/[^0-9]/g, '')
     const time = new Date(timestamp * 1000).valueOf()
-
     const { authorId, players, playersCount, versus, amount } = betCachedData
-
     const userBalance = await user.balance()
 
     if (time < Date.now() || emojiName === '✅' && user.id === authorId)

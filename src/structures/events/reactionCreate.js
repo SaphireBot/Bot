@@ -1,7 +1,4 @@
-import {
-    Database,
-    SaphireClient as client
-} from '../../classes/index.js'
+import { SaphireClient as client } from '../../classes/index.js'
 
 client.on('messageReactionAdd', async (messageReaction, user) => {
 
@@ -15,6 +12,8 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
             return await reactionFetched.message
         })()
         : messageReaction.message
+
+    if (message.author.id !== client.user.id || !message.interaction) return
 
     if (message.interaction.commandName.includes('bet'))
         return client.emit('betReaction', { message, user, emojiName })

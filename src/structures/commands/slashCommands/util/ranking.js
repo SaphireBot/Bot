@@ -39,7 +39,7 @@ export default {
         const category = options.getString('category')
         const { query, embed } = await Database.Cache.Ranking.get(`Rankings.${category}`)
         const nextUpdate = await Database.Cache.General.get('updateTime')
-        const moeda = await guild.getCoin()
+        const moeda = await guild?.getCoin() || `${e.Coin} Safiras`
         const userRanking = query.findIndex(q => q.id === user.id) || '^2000'
 
         if (query.length > 10) query.length = 10
