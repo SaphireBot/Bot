@@ -10,6 +10,7 @@ export default new class CacheManager extends Cache {
         this.Client = this.table('Client')
         this.Bet = this.table('Bet')
         this.Ranking = this.table('Ranking')
+        this.Blackjack = this.table('Blackjack')
     }
 
     async clearTables(shardId) {

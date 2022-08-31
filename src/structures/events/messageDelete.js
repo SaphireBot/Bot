@@ -2,6 +2,10 @@ import {
     Database,
     SaphireClient as client
 } from '../../classes/index.js'
+import {
+    Emojis as e,
+    economy
+} from '../../util/util.js'
 
 client.on('messageDelete', async message => {
 
@@ -16,6 +20,12 @@ client.on('messageDelete', async message => {
 
     const betDataFound = await Database.Cache.Bet.get(`Bet.${message.id}`)
     if (betDataFound) client.emit('betRefund', betDataFound)
+
+    const blackjack = await Database.Cache.Blackjack.get(message.id)
+    if (blackjack) {
+        economy.add(blackjack.userId, blackjack.bet, `${e.gain} Recebeu ${blackjack.bet} Safiras via *Blackjack Refund*`)
+        await Database.Cache.Blackjack.delete(message.id)
+    }
 
     // TODO: Terminar aqui
     // const Giveaways = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways.${message.guild.id}`)
