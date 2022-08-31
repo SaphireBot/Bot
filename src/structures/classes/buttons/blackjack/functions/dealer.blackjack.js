@@ -16,7 +16,7 @@ export default async (interaction, message, gameData) => {
 
     do {
 
-        dealerHandValue = gameData.dealerHand[0].value
+        dealerHandValue = 0
         const RandomCard = getCard()
         gameData.dealerHand.push(RandomCard)
 
