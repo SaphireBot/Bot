@@ -19,12 +19,12 @@ export default {
                     type: ApplicationCommandOptionType.String,
                     required: true,
                     choices: [
+                        // {
+                        //     name: 'Hidden - Você não sabe a primeira carta',
+                        //     value: 'hidden'
+                        // },
                         {
-                            name: 'Hidden - Você não sabe a primeira carta',
-                            value: 'hidden'
-                        },
-                        {
-                            name: 'Luck - Tente a sorte no 21',
+                            name: 'Dealer - Jogue contra o Dealer',
                             value: 'luck'
                         }
                     ]

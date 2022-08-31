@@ -45,7 +45,7 @@ export default async ({ interaction, BlackJackEmojis }) => {
                 },
                 {
                     name: '📑 Pontuação',
-                    value: `\`${firstCard.value}/21\``
+                    value: `\`${firstCard.value}/21\` - ${user.username}`
                 },
                 {
                     name: `${e.MoneyWings} Dinheiro apostado`,
@@ -90,8 +90,10 @@ export default async ({ interaction, BlackJackEmojis }) => {
         messageId: msg.id,
         userId: user.id,
         hand: [firstCard],
+        pickUpHand: [],
         cards: cards,
-        bet: bet
+        bet: bet,
+        dealerHand: [getCard()]
     })
 
     function getCard() {
