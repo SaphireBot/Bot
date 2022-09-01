@@ -11,14 +11,19 @@ export default class Autocomplete extends Base {
         this.options = interaction.options
         this.guild = interaction.guild
         this.channel = interaction.channel
+        this.commandName = interaction.commandName
         this.e = this.emojis
     }
 
     async build() {
 
         const { name, value } = this.options.getFocused(true)
+        let query = name
 
-        switch (name) {
+        if (query === 'search')
+            query = this.commandName
+
+        switch (query) {
             case 'channel': this.blockedChannels(value); break;
             case 'users_banned': this.usersBanned(value); break;
             case 'color': case 'cor': this.utilColors(value); break;
@@ -44,6 +49,7 @@ export default class Autocomplete extends Base {
             case 'select_giveaway': this.select_giveaway(value); break;
             case 'available_bets': this.available_bets(value); break;
             case 'blackjacks': this.blackjacks(value); break;
+            case 'wallpaper': this.wallpapers(value); break;
             case 'answers': this.answers(); break;
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
@@ -52,6 +58,24 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async wallpapers(value) {
+
+        const allWallpaper = Object.keys(this.Database.Wallpapers || {})
+
+        if (!allWallpaper || !allWallpaper.length) return await this.respond()
+
+        const fill = allWallpaper.filter(name => name.toLowerCase().includes(value?.toLowerCase()))
+        const mapped = fill.map(name => ({ name: name, value: name }))
+
+        if (mapped.length > 2)
+            mapped.unshift({
+                name: 'Ver todos os wallpapers',
+                value: 'all'
+            })
+
+        return await this.respond(mapped)
     }
 
     async blackjacks(value) {

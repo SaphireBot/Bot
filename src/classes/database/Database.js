@@ -19,6 +19,7 @@ class Database extends Models {
         this.Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
         this.Logomarca = JSON.parse(fs.readFileSync('./src/JSON/logomarca.json'))
         this.Quiz = JSON.parse(fs.readFileSync('./src/JSON/quiz.json'))
+        this.Wallpapers = JSON.parse(fs.readFileSync('./src/JSON/wallpaperanime.json'))
         this.Cache = Cache
         this.Names = {
             Rody: "451619591320371213",
