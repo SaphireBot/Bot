@@ -6,10 +6,7 @@ export default async (interaction, message, gameData) => {
     const { user } = interaction
     const { embeds } = message
     const embed = embeds[0]?.data
-    let atualValue = 0
-
-    for (let card of [...gameData.pickUpHand, ...gameData.hand])
-        atualValue += card.value
+    let atualValue = [...gameData.pickUpHand, ...gameData.hand].reduce((acc, card) => acc += card.value, 0)
 
     gameData.hand.push(...gameData.pickUpHand)
     gameData.pickUpHand = []

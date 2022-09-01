@@ -34,13 +34,25 @@ client.on('messageDeleteBulk', async (messages) => {
 
         const allCachedGames = await Database.Cache.Blackjack.all() || []
         const gamesToDelete = allCachedGames.filter(game => messagesId.includes(game.id)) || []
+        const multiplayer = []
 
         if (!gamesToDelete || !gamesToDelete.length) return
 
         for await (let game of gamesToDelete) {
+
+            if (game?.players?.length > 0) {
+                multiplayer.push(game)
+                continue
+            }
+
             economy.add(game.value.userId, game.value.bet, `${e.gain} Recebeu ${game.value.bet} Safiras via *Blackjack Refund*`)
             await Database.Cache.Blackjack.delete(game.id)
             continue
+        }
+
+        for await (let game of multiplayer) {
+            client.emit(game, true)
+            await Database.Cache.Blackjack.delete(game.id)
         }
     }
 

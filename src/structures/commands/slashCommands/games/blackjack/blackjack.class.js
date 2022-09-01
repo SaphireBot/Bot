@@ -15,6 +15,8 @@ export default class Blackjack extends Base {
 
         switch (option) {
             case 'solo': import('./solo/index.js').then(solo => solo.default(this)); break;
+            case 'multiplayer': import('./multiplayer/multiplayer.blackjack.js').then(multiplayer => multiplayer.default(this)); break;
+            case 'refund': import('./refund/index.js').then(refund => refund.default(this)); break;
 
             default:
                 await this.interaction.reply({
@@ -24,6 +26,7 @@ export default class Blackjack extends Base {
                 break;
         }
 
+        return
     }
 
     get BlackJackEmojis() {

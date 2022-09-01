@@ -6,7 +6,7 @@ import {
 
 export default async (interaction, message, gameData) => {
 
-    const { user } = interaction
+    const { user, guild } = interaction
     const { embeds } = message
     const embed = embeds[0]?.data
     const cardRandom = getCard()
@@ -27,6 +27,7 @@ export default async (interaction, message, gameData) => {
     if (atualValue > 21) {
         embed.color = client.red
         components = null
+        embed.fields[2].value = embed.fields[2].value + ` -> 0 ${await guild.getCoin()}`
         embed.fields[3] = {
             name: `${e.Deny} Passou de 21`,
             value: `Você estorou o limite de 21 pontos e perdeu o jogo.`

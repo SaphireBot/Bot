@@ -23,6 +23,10 @@ client.on('messageDelete', async message => {
 
     const blackjack = await Database.Cache.Blackjack.get(message.id)
     if (blackjack) {
+
+        if (blackjack?.players?.length > 0)
+            client.emit('blackjackRefund', blackjack)
+
         economy.add(blackjack.userId, blackjack.bet, `${e.gain} Recebeu ${blackjack.bet} Safiras via *Blackjack Refund*`)
         await Database.Cache.Blackjack.delete(message.id)
     }

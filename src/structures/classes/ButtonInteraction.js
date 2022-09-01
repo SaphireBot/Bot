@@ -2,6 +2,7 @@ import Base from './Base.js'
 import memoryGame from './buttons/memoryGame/solo.memory.js'
 import tictactoe from './buttons/tictactoe/game.tictactoe.js'
 import blackjack from './buttons/blackjack/game.blackjack.js'
+import blackjackMultiplayer from './buttons/blackjack/game.blackjack.multiplayer.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -26,6 +27,7 @@ export default class ButtonInteraction extends Base {
         if (commandData.c === 'mg') return memoryGame(this.interaction, this.customId)
         if (commandData.c === 'ttt') return tictactoe(this.interaction, this.customId)
         if (commandData.c === 'bj') return blackjack(this.interaction, this.customId)
+        if (commandData.c === 'bjm') return blackjackMultiplayer(this.interaction, this.customId)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
 

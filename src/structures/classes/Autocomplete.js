@@ -43,6 +43,7 @@ export default class Autocomplete extends Base {
             case 'quiz_question': this.quiz_question(value); break;
             case 'select_giveaway': this.select_giveaway(value); break;
             case 'available_bets': this.available_bets(value); break;
+            case 'blackjacks': this.blackjacks(value); break;
             case 'answers': this.answers(); break;
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
@@ -51,6 +52,29 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async blackjacks(value) {
+
+        const allBets = await this.Database.Cache.Blackjack.all() || []
+        if (!allBets || !allBets.length) return await this.respond()
+
+        const availableBlackjacks = allBets.filter(gameData => gameData.value.userId === this.user.id)
+
+        if (!availableBlackjacks || !availableBlackjacks.length) return await this.respond()
+
+        const noMultiplayers = availableBlackjacks.filter(gameData => !gameData.value.availablePlayers)
+        const mapped = availableBlackjacks.map(gameData => ({ name: `${gameData.value.availablePlayers ? 'Multiplayer' : 'Solo'} - ${gameData.value.bet} Safiras`, value: gameData.id }))
+        const fill = mapped.filter(bet => bet.name.toLowerCase().includes(value.toLowerCase()) || bet.value.includes(value))
+
+        if (noMultiplayers.length > 1)
+            fill.unshift({
+                name: `Resgatar todos os ${noMultiplayers.length} blackjacks solos`,
+                value: 'all'
+            })
+
+        return await this.respond(fill)
+
     }
 
     async available_bets(value) {
