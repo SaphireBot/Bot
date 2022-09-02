@@ -7,9 +7,11 @@ import { Emojis as e } from '../../util/util.js'
 
 client.on("guildCreate", async guild => {
 
-    if (!client.allGuilds.find(g => g.id === guild.id))
-        client.allGuilds.push(guild)
-        
+    if (!client.allGuilds.find(g => g.id === guild.id)) {
+        client.allGuilds.push(client.guilds.resolve(guild.id))
+        await guild.members.fetch()
+    }
+
     const clientData = await Database.Client.findOne({ id: client.user.id }, 'Blacklist')
     const blacklistServers = clientData?.Blacklist?.Guilds || []
 

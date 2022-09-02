@@ -1,4 +1,4 @@
 {
-    "editor.experimental.stickyScroll.enabled": true,
-    "editor.smoothScrolling": true
+    "editor.smoothScrolling": true,
+    "editor.stickyScroll.enabled": true
 }

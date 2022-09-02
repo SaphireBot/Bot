@@ -1,6 +1,6 @@
 import dicio from 'dicionario.js'
 
-export default async ({ interaction, fields, Database, client, e }) => {
+export default async ({ interaction, fields, Database, client, emojis: e }) => {
 
     const query = fields.getTextInputValue('wordleGame')?.toLowerCase()
 
@@ -25,12 +25,10 @@ export default async ({ interaction, fields, Database, client, e }) => {
 
     return dicio.significado(query?.toLowerCase())
         .then(() => editPlace())
-        .catch(async err => {
-            return await interaction.reply({
-                content: `${e.Deny} | Esta palavra não existe.`,
-                ephemeral: true
-            })
-        }).catch(() => deleteGameFromCache())
+        .catch(async () => await interaction.reply({
+            content: `${e.Deny} | Esta palavra não existe.`,
+            ephemeral: true
+        })).catch(() => deleteGameFromCache())
 
     async function editPlace() {
 
