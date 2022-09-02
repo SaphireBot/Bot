@@ -16,8 +16,7 @@ const { AutoPoster } = TopGG
 /**
  * Extensão do Discord.Client para melhor performance e praticidade
  */
-
-class SaphireClient extends Client {
+export default new class SaphireClient extends Client {
     constructor() {
         super(ClientOptions)
 
@@ -92,6 +91,21 @@ class SaphireClient extends Client {
          * @returns [command1, command2]
          */
         this.allCommands = []
+
+        /**
+         * @returns [adminId1, adminId2]
+         */
+        this.admins = []
+
+        /**
+         * @returns [modId1, modId2]
+         */
+        this.mods = []
+
+        /**
+         * @returns [staff1, staff2]
+         */
+        this.staff = []
     }
 
     /**
@@ -143,6 +157,13 @@ class SaphireClient extends Client {
         if (this.user.id !== this.moonId) return
         return AutoPoster(process.env.TOP_GG_TOKEN, this)
     }
-}
 
-export default new SaphireClient
+    async refreshStaff() {
+        const clientData = await Database.Client.findOne({ id: this.user.id }, 'Administradores Moderadores')
+        if (!clientData) return
+
+        if (clientData.Administradores) this.admins = [...clientData.Administradores]
+        if (clientData.Moderadores) this.mods = [...clientData.Moderadores]
+        this.staff = [...this.admins, ...this.mods]
+    }
+}

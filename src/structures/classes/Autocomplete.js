@@ -20,8 +20,7 @@ export default class Autocomplete extends Base {
         const { name, value } = this.options.getFocused(true)
         let query = name
 
-        if (query === 'search')
-            query = this.commandName
+        if (['search', 'options'].includes(query)) query = this.commandName
 
         switch (query) {
             case 'channel': this.blockedChannels(value); break;
@@ -40,7 +39,6 @@ export default class Autocomplete extends Base {
             case 'sugest_channel': this.ideiaChannels(value); break;
             case 'report_channel': this.reportChannels(value); break;
             case 'log_channel': this.logChannels(value); break;
-            case 'flag-adminstration': this.flagAdminOptions(); break;
             case 'select_logo_marca': this.select_logo_marca(value); break;
             case 'remove_sinonimo': this.remove_sinonimo(value); break;
             case 'roles_in_autorole': this.roles_in_autorole(value); break;
@@ -50,6 +48,9 @@ export default class Autocomplete extends Base {
             case 'available_bets': this.available_bets(value); break;
             case 'blackjacks': this.blackjacks(value); break;
             case 'wallpaper': this.wallpapers(value); break;
+            case 'flag-adminstration': this.flagAdminOptions(); break;
+            case 'ranking': this.rankingOptions(); break;
+            case 'daily': this.dailyOptions(); break;
             case 'answers': this.answers(); break;
             case 'level_options': this.levelOptions(); break;
             case 'option': this.ideaCommandOptions(); break;
@@ -58,6 +59,28 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async dailyOptions() {
+
+        const data = [
+            {
+                name: 'Meu status do daily',
+                value: 'sequency'
+            },
+            {
+                name: 'Ativar lembrete automático',
+                value: 'reminder'
+            }
+        ]
+
+        return await this.respond(data)
+    }
+
+    async rankingOptions() {
+        if (!this.client.staff?.includes(this.user.id)) return await this.respond()
+
+        return await this.respond([{ name: 'Atualizar rankings', value: 'refresh' }])
     }
 
     async wallpapers(value) {

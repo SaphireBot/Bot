@@ -3,6 +3,7 @@ import {
     SaphireClient as client
 } from '../../../../classes/index.js'
 import { ApplicationCommandOptionType } from 'discord.js'
+import refreshRanking from '../../../../functions/update/ranking/index.ranking.js'
 
 export default {
     name: 'ranking',
@@ -28,6 +29,12 @@ export default {
                     value: 'Xp'
                 }
             ]
+        },
+        {
+            name: 'options',
+            description: 'Mais opções no comando ranking',
+            type: ApplicationCommandOptionType.String,
+            autocomplete: true
         }
     ],
     helpData: {
@@ -37,6 +44,13 @@ export default {
 
         const { options, guild, user } = interaction
         const category = options.getString('category')
+        const option = options.getString('options')
+
+        if (option === 'refresh') {
+            await refreshRanking()
+            return await interaction.reply({ content: `${e.Check} | Ranking atualizado com sucesso.` })
+        }
+
         const rankingData = await Database.Cache.Ranking.get(`Rankings.${category}`)
 
         if (!rankingData)

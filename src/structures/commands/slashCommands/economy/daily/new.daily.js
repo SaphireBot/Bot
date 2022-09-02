@@ -1,11 +1,8 @@
-// const Reminder = require('../../../../modules/classes/Reminder')
 import Base from '../../../../classes/Base.js'
 import {
     Config as config
 } from '../../../../../util/Constants.js'
-import {
-    economy
-} from '../../../../../util/util.js'
+import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -13,6 +10,7 @@ export default class Daily extends Base {
         this.interaction = interaction
         this.user = interaction.user
         this.guild = interaction.guild
+        this.channel = interaction.channel
         this.member = interaction.member
         this.options = interaction.options
     }
@@ -27,6 +25,7 @@ export default class Daily extends Base {
         const bugHunters = clientData?.Titles.BugHunter || []
         const dailyTimeout = authorData?.Timeouts?.Daily || 0
         const count = authorData?.DailyCount || 0
+        const isReminder = option === 'reminder'
 
         if (option === 'sequency') return this.dailyUserInfo(count)
 
@@ -98,6 +97,9 @@ export default class Daily extends Base {
             data.fields.push({ name: `${e.Boost} Server Booster`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
         }
 
+        if (isReminder)
+            data.fields.push({ name: '⏰ Lembrete automático', value: 'Como ativou essa funçao, então eu vou te ajudar. Quando o próximo daily estiver disponível, eu vou te avisar.' })
+
         let days = Daily.dailyPrizes.map(data => data.day)
         let daysCountFormat = prize.day <= 31 ? days.map((num, i) => this.formatCalendar(prize, num, i)).join('') : 'Um calendário comum não cabe a você.'
 
@@ -107,7 +109,7 @@ export default class Daily extends Base {
         })
 
         data.fields.push({ name: '📆 Calendário', value: `\`\`\`txt\n${daysCountFormat}\n\`\`\`` })
-        this.setNewDaily(prize)
+        this.setNewDaily(prize, isReminder)
 
         return await interaction.reply({
             embeds: [{
@@ -120,7 +122,18 @@ export default class Daily extends Base {
 
     }
 
-    async setNewDaily(prize) {
+    async setNewDaily(prize, isReminder) {
+
+        if (isReminder)
+            new this.Database.Reminder({
+                id: CodeGenerator(7).toUpperCase(),
+                userId: this.user.id,
+                RemindMessage: 'Daily Disponível',
+                Time: 86400000,
+                DateNow: Date.now(),
+                isAutomatic: true,
+                ChannelId: this.channel.id
+            }).save()
 
         const data = {
             'Timeouts.Daily': Date.now(),

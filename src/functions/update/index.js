@@ -9,6 +9,7 @@ export default async () => {
     await Ranking()
     await client.guilds.all(true, true)
     client.users.all(true, true)
+    client.refreshStaff()
 
     setInterval(() => {
         ReminderSystem()

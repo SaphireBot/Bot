@@ -11,14 +11,9 @@ export default {
     options: [
         {
             name: 'options',
-            description: 'Verifique o status do seu daily',
+            description: 'Mais opções no sistema daily',
             type: ApplicationCommandOptionType.String,
-            choices: [
-                {
-                    name: 'Meu status do daily',
-                    value: 'sequency'
-                }
-            ]
+            autocomplete: true
         }
     ],
     helpData: {
@@ -26,8 +21,6 @@ export default {
         description: 'Resgate recompensas diárias usando o daily'
     },
     async execute({ interaction }) {
-
         return new Daily(interaction).execute()
-
     }
 }
