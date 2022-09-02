@@ -125,7 +125,7 @@ export default {
                 { upsert: true }
             )
 
-            let returnContent = `${e.BitCoin} | Mais +1 fragmento de Bitcoin pra sua conta \`^${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(((timeout || 0) - (timeout > 0 ? Date.now() : 0)) + 7200000, 'R')}`
+            let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`^${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(((timeout || 0) - (timeout > 0 ? Date.now() : 0)) + 7200000, 'R')}`
 
             if (isReminder) {
                 new Database.Reminder({
