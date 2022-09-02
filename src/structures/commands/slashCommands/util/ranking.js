@@ -37,10 +37,19 @@ export default {
 
         const { options, guild, user } = interaction
         const category = options.getString('category')
-        const { query, embed } = await Database.Cache.Ranking.get(`Rankings.${category}`)
+        const rankingData = await Database.Cache.Ranking.get(`Rankings.${category}`)
+
+        if (!rankingData)
+            return await interaction.reply({
+                content: `${e.Deny} | Ranking não encontrado ou ainda não construído.`,
+                ephemeral: true
+            })
+
+        const { query, embed } = rankingData
+
         const nextUpdate = await Database.Cache.General.get('updateTime')
         const moeda = await guild?.getCoin() || `${e.Coin} Safiras`
-        const userRanking = query.findIndex(q => q.id === user.id) || '^2000'
+        const userRanking = query.findIndex(q => q.id === user.id) + 1 || '^2000'
 
         if (query.length > 10) query.length = 10
 
@@ -51,7 +60,7 @@ export default {
         }
 
         const format = query
-            .map((query, i) => `**${top(i)} ${query.tag} \`${query.id}\`**\n${query.emoji} ${query[category]} ${emojis[category]}`)
+            .map((query, i) => `**${query.tag ? top(i) : e.Deny} ${query.tag || '\`Not Found\`'} \`${query.id}\`**\n${query.emoji} ${query[category].currency()} ${emojis[category]}`)
             .join('\n \n')
 
         return await interaction.reply({
@@ -70,7 +79,7 @@ export default {
                 0: e.CoroaDourada,
                 1: e.CoroaDePrata,
                 2: e.thirdcrown
-            }[i] || `${i + 1}`
+            }[i] || `${i + 1}.`
         }
     }
 }

@@ -469,7 +469,6 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-
     async databaseUsers(value) {
 
         const dataUsers = this.client.databaseUsers

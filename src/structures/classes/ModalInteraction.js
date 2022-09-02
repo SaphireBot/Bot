@@ -236,14 +236,14 @@ export default class ModalInteraction extends Base {
 
         if (!guildChannel)
             return await interaction.reply({
-                content: `❌ | Houve um erro ao encontrar o canal designado para recebimento de reports. Por favor, fale diretamente com meu criador: ${client.users.cache.get(Config.ownerId)?.tag || 'Não encontrado'}`,
+                content: `❌ | Houve um erro ao encontrar o canal designado para recebimento de reports. Por favor, fale diretamente com meu criador: ${client.users.resolve(Config.ownerId)?.tag || 'Não encontrado'}`,
                 embeds: [embed],
                 ephemeral: true
             })
 
         await guildChannel.send({ embeds: [embed] }).catch(async err => {
             return await interaction.reply({
-                content: `❌ | Houve um erro ao enviar o reporte para o canal designado. Por favor, fale diretamente com meu criador: ${client.users.cache.get(Config.OwnerId)?.tag || 'Não encontrado'}\n${err}`,
+                content: `❌ | Houve um erro ao enviar o reporte para o canal designado. Por favor, fale diretamente com meu criador: ${client.users.resolve(Config.OwnerId)?.tag || 'Não encontrado'}\n${err}`,
                 embeds: [embed],
                 ephemeral: true
             })

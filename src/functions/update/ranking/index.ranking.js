@@ -6,15 +6,17 @@ import { Emojis as e } from '../../../util/util.js'
 
 export default async () => {
 
-    if (client.shardId !== 0) return
-
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
         { name: 'Likes', emoji: e.Like, title: `${e.Like} Ranking - Global Likes` },
         { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` },
     ]
 
-    const allUsers = client.allUsers
+    const allUsersData = []
+    const hyperQuery = await Database.User.find({}, 'id ' + fields.map(d => d.name).join(' ')) || []
+
+    if (!hyperQuery || !hyperQuery?.length) return
+    allUsersData.push(...hyperQuery)
 
     for await (let field of fields) {
         const data = await getData(field)
@@ -23,32 +25,27 @@ export default async () => {
             embed: {
                 title: field.title
             },
-            query: data
+            query: [...data]
         })
         continue
     }
 
-    return await Database.Cache.General.set('updateTime', new Date(1800000).valueOf())
+    return await Database.Cache.General.set('updateTime', new Date(60000 * 15).valueOf())
 
     async function getData({ name, emoji }) {
 
-        const data = await Database.User.find(
-            {},
-            [name, 'id'],
-            {
-                sort: { [name]: -1 },
-                limit: 2000
-            }
-        )
-
-        return data
-            .map(result => ({
-                id: result.id,
+        return [...allUsersData]
+            .filter(data => data[name] && data[name] > 0)
+            .sort((a, b) => b[name] - a[name])
+            .map(data => ({
+                id: data.id,
                 emoji: emoji,
-                tag: allUsers.find(user => user.id === result.id)?.tag || null,
-                [name]: result[name]
+                tag: client.users.resolve(data.id)?.tag || null,
+                [name]: data[name]
             }))
-            .filter(define => define[name] && define.tag)
+            .filter(data => data.tag)
+            .slice(0, 2000)
+
     }
 
 }

@@ -15,5 +15,5 @@ export default async (interaction, messageResponse) => {
             embeds: [],
             components: [],
             ephemeral: true
-        }))
+        }).catch(() => { }))
 }

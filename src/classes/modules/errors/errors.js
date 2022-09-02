@@ -114,7 +114,7 @@ export default
                             name: '⚙ Command',
                             value: `</${commandName}${interaction?.options.getSubcommandGroup() ? ` ${interaction?.options.getSubcommandGroup()}` : ''}${interaction?.options.getSubcommand(false) ? ` ${interaction?.options.getSubcommand(false)}` : ''}:${commandId}>`,
                             inline: true
-    
+
                         }
                     ],
                     footer: {
@@ -133,7 +133,7 @@ export default
             return await interaction.followUp({
                 content: `${e.Warn} | Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.gain} | Te dei **+1500 ${moeda}** por ter descoberto esse bug.`,
                 ephemeral: true
-            })
+            }).catch(() => { })
         })
 
     }

@@ -31,7 +31,9 @@ export default {
         // }
     ],
     async execute({ interaction, e }) {
-        return
+        return await interaction.reply({
+            content: `${e.Deny} | Comando em construção.`
+        })
         const { options } = interaction
         const subCommands = options.getSubcommand()
 

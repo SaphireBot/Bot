@@ -16,6 +16,8 @@ export default new class CacheManager extends Cache {
     async clearTables(shardId) {
         await this.General.delete(shardId)
         await this.Giveaways.delete(shardId)
+        await this.Ranking.deleteAll()
+        await this.General.delete('Looped')
         return true
     }
 

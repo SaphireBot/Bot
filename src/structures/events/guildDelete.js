@@ -16,12 +16,12 @@ client.on('guildDelete', async guild => {
         { $pull: { PremiumServers: guild.id } }
     )
 
-    const owner = await guild.members.cache.get(guild.ownerId)
+    const owner = guild.members.cache.get(guild.ownerId)
     const channel = await client.channels.fetch(config.LogChannelId)
     const fetchWebhook = await channel.fetchWebhooks()
     const webhook = fetchWebhook.find(web => web.name === 'Saphire Database Logs')
 
-    if (!webhook) return
+    if (!webhook || !owner) return
 
     return await webhook.send({
         embeds: [{
@@ -34,7 +34,7 @@ client.on('guildDelete', async guild => {
                 },
                 {
                     name: 'Status',
-                    value: `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`
+                    value: `**Dono:** ${owner?.user?.tag || '\`Not Found\`'} *\`(${guild.ownerId})\`*\n**Membros:** ${guild.memberCount}`
                 }
             ]
         }]

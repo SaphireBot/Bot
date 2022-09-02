@@ -1,3 +1,5 @@
+import ranking from '../../../../functions/update/ranking/index.ranking.js'
+
 export default {
     name: 'test',
     description: 'test',
@@ -9,7 +11,6 @@ export default {
         description: 'Apenas um comando de teste exclusivo para o meu'
     },
     async execute({ interaction, client, e }) {
-
-        return
+        ranking()
     }
 }

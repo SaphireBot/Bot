@@ -1,5 +1,5 @@
 import { UserManager } from 'discord.js'
-import { SaphireClient as client } from '../../../classes/index.js'
+import { Database, SaphireClient as client } from '../../../classes/index.js'
 
 UserManager.prototype.fetchUser = function (dataToSearch) {
 
@@ -24,7 +24,20 @@ UserManager.prototype.fetchUser = function (dataToSearch) {
  * @example <Client>.users.all() [[user1, user2, user3], [user4, user5, user6]]
  * @example <Client>.users.all(true) [user1, user2, user3, user4, user5, user6]
  */
-UserManager.prototype.all = async (inFlat) => {
-    const allUsers = await client.shard.broadcastEval(Client => Client.users.cache)
-    return inFlat ? allUsers.flat() : allUsers
+UserManager.prototype.all = async (inFlat, toDefine) => {
+
+    const looped = await Database.Cache.General.get('Looped')
+
+    if (!looped) {
+        await Database.Cache.General.set('Looped', true)
+        for await (let guildRaw of client.allGuilds) {
+            const guild = await client.guilds.fetch(guildRaw.id)
+            await guild.members.fetch()
+            continue
+        }
+    }
+
+    const data = await client.shard.broadcastEval(Client => Client.users.cache)
+    if (toDefine) return client.allUsers = data.flat()
+    return inFlat ? data.flat() : data
 }

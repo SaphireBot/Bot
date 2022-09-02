@@ -5,16 +5,16 @@ import 'dotenv/config'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import { Database, Discloud } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
-import TopGGAutoposter from 'topgg-autoposter'
+import * as TopGG from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
 import mercadopago from 'mercadopago'
 import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
 import uncaughtException from '../modules/errors/process/uncaughtException.js'
 
-const { AutoPost } = TopGGAutoposter
+const { AutoPoster } = TopGG
 
 /**
- * Extensão do Discord.Client para melhor performance e facilidade
+ * Extensão do Discord.Client para melhor performance e praticidade
  */
 
 class SaphireClient extends Client {
@@ -112,7 +112,6 @@ class SaphireClient extends Client {
         process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
 
         await super.login()
-
         const discloudResult = await Discloud.login()
 
         import('../../functions/global/prototypes.js')
@@ -125,16 +124,9 @@ class SaphireClient extends Client {
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
 
-        this.allUsers = await this.users.all(true)
-        this.allGuilds = await this.guilds.all(true)
-        this.databaseUsers = await (async () => {
-            const allUsersData = await Database.User.find({})
-            return allUsersData.map(data => data.id)
-        })()
-
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
-        automaticSystems()
+        await automaticSystems()
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
     }
 
@@ -149,7 +141,7 @@ class SaphireClient extends Client {
 
     topGGAutoPoster() {
         if (this.user.id !== this.moonId) return
-        return AutoPost(process.env.TOP_GG_TOKEN, this)
+        return AutoPoster(process.env.TOP_GG_TOKEN, this)
     }
 }
 
