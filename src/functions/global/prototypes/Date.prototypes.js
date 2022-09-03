@@ -40,7 +40,7 @@ Date.prototype.constructor.GetTimeout = function (TimeToCooldown = 0, DateNowInD
 
 Date.prototype.constructor.Timeout = (TimeoutInMS = 0, DateNowAtDatabase = 0) => TimeoutInMS - (Date.now() - DateNowAtDatabase) > 0
 
-Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style) {
+Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style, isDate) {
 
     const TimestampStyles = {
         /**
@@ -72,6 +72,8 @@ Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style) {
          */
         R: "R"
     }[style] || 't'
+
+    if (isDate) return time(TimeInMs, TimestampStyles)
 
     return time(new Date((Date.now() + TimeInMs) / 1000).valueOf(), TimestampStyles)
 

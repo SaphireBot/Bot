@@ -47,8 +47,9 @@ export default {
         const option = options.getString('options')
 
         if (option === 'refresh') {
+            await interaction.reply({ content: `${e.Loading} | Iniciando atualização...` })
             await refreshRanking()
-            return await interaction.reply({ content: `${e.Check} | Ranking atualizado com sucesso.` })
+            return await interaction.editReply({ content: `${e.Check} | Ranking atualizado com sucesso.` })
         }
 
         const rankingData = await Database.Cache.Ranking.get(`Rankings.${category}`)
@@ -82,7 +83,7 @@ export default {
                 {
                     color: client.blue,
                     title: embed.title,
-                    description: `⏱ Próxima atualização ${Date.Timestamp(nextUpdate, 'R')}\n \n${format.limit('MessageEmbedDescription')}`,
+                    description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 60000 * 15), 'R', true)}\n \n${format.limit('MessageEmbedDescription')}`,
                     footer: { text: `Seu ranking: ${userRanking}` }
                 }
             ]

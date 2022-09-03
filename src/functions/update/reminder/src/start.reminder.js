@@ -21,13 +21,13 @@ export default async function reminderStart({ user, data }) {
         let userNotified = false
 
         const msg = await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
-            .catch(() => {
+            .catch(async () => {
                 userNotified = true
                 return NotifyUser()
             })
 
         if (userNotified) return
-        if (isAutomatic) return Database.deleteReminders(data.id)
+        if (isAutomatic) return await Database.deleteReminders(data.id)
 
         await Database.Reminder.updateOne(
             { id: data.id },

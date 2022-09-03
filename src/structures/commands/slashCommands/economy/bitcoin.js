@@ -35,7 +35,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, Database, emojis: e }) {
+    async execute({ interaction, Database, emojis: e }) {
 
         const { options, user: author, guild } = interaction
         const user = options.getUser('user')
@@ -82,7 +82,7 @@ export default {
 
         if (Date.Timeout(7200000, timeout))
             return await interaction.reply({
-                content: `${e.Loading} | Seu farming está em \`${Bits}/1000\` e o reset é ${Date.Timestamp(((timeout || 0) - (timeout > 0 ? Date.now() : 0)) + 7200000, 'R')}`
+                content: `${e.Loading} | Seu farming está em \`${Bits}/1000\` e o reset é ${Date.Timestamp(new Date(timeout + 7200000), 'R', true)}`
             })
 
         return Bits >= 1000 ? NewBitCoin() : MineBitCoin()
@@ -125,7 +125,7 @@ export default {
                 { upsert: true }
             )
 
-            let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`^${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(((timeout || 0) - (timeout > 0 ? Date.now() : 0)) + 7200000, 'R')}`
+            let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(new Date((timeout || Date.now()) + 7200000), 'R', true)}`
 
             if (isReminder) {
                 new Database.Reminder({

@@ -5,6 +5,7 @@ import restart from './restart.discloud.js'
 import stop from './stop.discloud.js'
 import start from './start.discloud.js'
 import update from './update.discloud.js'
+import apps from './apps.discloud.js'
 
 export {
     logs,
@@ -13,5 +14,6 @@ export {
     restart,
     stop,
     start,
-    update
+    update,
+    apps
 }

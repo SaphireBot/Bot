@@ -33,9 +33,6 @@ export default async interaction => {
         Booster: 'Booster',
     }
 
-    const data = [...response.appsStatus.values()]
-    const appMapped = data.map(data => `${data.online ? '🟢' : '🔴'} \`${data.name}\``).join('\n')
-
     return await interaction.editReply({
         embeds: [{
             color: client.blue,
@@ -55,7 +52,7 @@ export default async interaction => {
                 },
                 {
                     name: '📆 Data de término do plano',
-                    value: Date.GetTimeout(0, new Date(response.planDataEnd).valueOf(), 'R')
+                    value: Date.Timestamp(new Date(response.planDataEnd), 'f', true) + '\n' + Date.Timestamp(new Date(response.planDataEnd), 'R', true)
                 },
                 {
                     name: `${e.Ram} Memória RAM`,
@@ -64,10 +61,6 @@ export default async interaction => {
                 {
                     name: `🔗 Sub-domínios`,
                     value: response.subdomains.map(subdomain => `\`${subdomain}\``).join(', ') || 'Nenhum subdomínio registrado.'.limit('MessageEmbedFieldValue')
-                },
-                {
-                    name: `${e.Info} Apps Status`,
-                    value: appMapped
                 }
             ]
         }]

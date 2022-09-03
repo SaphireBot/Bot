@@ -25,6 +25,11 @@ export default {
                         content: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`
                     })
 
+                if (err.code === 50013)
+                    return await interaction.reply({
+                        content: `${e.Deny} | Eu não tenho a permissão **\`Gerenciar Mensagens\`** para executar este comando.`
+                    })
+
                 if (err.code === 50034)
                     return await interaction.reply({
                         content: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`

@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { logs, backup, user, restart, stop, start, update } from './functions/functions.discloud.js'
+import { logs, backup, user, restart, stop, start, update, apps } from './functions/functions.discloud.js'
 
 export default {
     name: 'discloud',
@@ -28,6 +28,10 @@ export default {
                 {
                     name: 'Informação do Usuário',
                     value: 'user'
+                },
+                {
+                    name: 'Informações das aplicações',
+                    value: 'apps'
                 },
                 {
                     name: 'Reiniciar aplicação',
@@ -61,6 +65,7 @@ export default {
             case 'stop': stop(interaction); break;
             case 'start': start(interaction); break;
             case 'update': update(interaction); break;
+            case 'apps': apps(interaction); break;
             default:
                 await interaction.reply({
                     content: `${e.Deny} | ID da OPTION não encontrado ou sem função definida.`,

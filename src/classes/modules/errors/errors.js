@@ -11,7 +11,7 @@ import { ChannelType } from 'discord.js'
 
 export default
     async ({ interaction, Database, user, guild, channel, client }, err) => {
-
+        console.log(err)
         if (!interaction || !interaction?.commandName) return
 
         const { commandName, commandId } = interaction

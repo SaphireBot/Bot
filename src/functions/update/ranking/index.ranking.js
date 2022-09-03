@@ -30,7 +30,7 @@ export default async () => {
         continue
     }
 
-    return await Database.Cache.General.set('updateTime', new Date(60000 * 15).valueOf())
+    return await Database.Cache.General.set('updateTime', Date.now() + (60000 * 15))
 
     async function getData({ name, emoji }) {
 
