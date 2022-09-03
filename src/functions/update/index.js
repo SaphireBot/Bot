@@ -20,7 +20,7 @@ export default async () => {
         client.allGuilds = await client.guilds.all(true)
         client.allUsers = await client.users.all(true)
         const allDataUsers = await Database.User.find({})
-        client.allUsersData = allDataUsers.map(data => data.id)
+        client.databaseUsers = allDataUsers.map(data => data.id)
     }, 60000 * 5)
 
     // setInterval(() => boostReward(), 60000)
@@ -30,6 +30,6 @@ export default async () => {
     // }, 300000)
 
     const allDataUsers = await Database.User.find({})
-    client.allUsersData = allDataUsers.map(data => data.id)
+    client.databaseUsers = allDataUsers.map(data => data.id)
 
 }

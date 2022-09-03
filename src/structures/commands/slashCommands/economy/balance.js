@@ -42,7 +42,7 @@ export default {
                 ephemeral: true
             })
 
-        const bal = userData?.Balance > 0 ? parseInt(userData?.Balance).currency() || 0 : userData?.Balance
+        const bal = userData?.Balance > 0 ? parseInt(userData?.Balance).currency() || 0 : userData?.Balance || 0
         const oculto = interaction.user.id === config.ownerId ? false : userData?.Perfil?.BalanceOcult
         const balance = oculto ? `||oculto ${MoedaCustom}||` : `${bal} ${MoedaCustom}`
         const NameOrUsername = user.id === interaction.user.id ? 'O seu saldo é de' : `${user?.tag} possui`
