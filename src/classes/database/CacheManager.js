@@ -6,6 +6,7 @@ export default new class CacheManager extends Cache {
         this.General = this.table('General')
         this.GameChannels = this.table('GameChannels')
         this.Giveaways = this.table('Giveaways')
+        this.Polls = this.table('Polls')
         this.WordleGame = this.table('WordleGame')
         this.Client = this.table('Client')
         this.Bet = this.table('Bet')
@@ -16,6 +17,7 @@ export default new class CacheManager extends Cache {
     async clearTables(shardId) {
         await this.General.delete(shardId)
         await this.Giveaways.delete(shardId)
+        await this.Polls.delete(shardId)
         await this.Ranking.deleteAll()
         await this.General.delete('Looped')
         return true

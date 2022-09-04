@@ -7,6 +7,7 @@ import { Database, Discloud } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
 import * as TopGG from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
+import PollManager from '../../functions/update/polls/poll.manager.js'
 import mercadopago from 'mercadopago'
 import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
 import uncaughtException from '../modules/errors/process/uncaughtException.js'
@@ -140,6 +141,7 @@ export default new class SaphireClient extends Client {
 
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
+        PollManager.setPolls()
         await automaticSystems()
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
     }

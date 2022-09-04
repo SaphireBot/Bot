@@ -6,6 +6,7 @@ export default model("Guild", new Schema({
     Prefix: String,
     LogChannel: String,
     Giveaways: Array,
+    Polls: Array,
     IdeiaChannel: String,
     Moeda: String,
     ReportChannel: String,

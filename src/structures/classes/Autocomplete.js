@@ -37,6 +37,7 @@ export default class Autocomplete extends Base {
             case 'select_country': this.flagSearch(value); break;
             case 'command': this.commandList(value); break;
             case 'sugest_channel': this.ideiaChannels(value); break;
+            case 'available_polls': this.available_polls(value); break;
             case 'report_channel': this.reportChannels(value); break;
             case 'log_channel': this.logChannels(value); break;
             case 'select_logo_marca': this.select_logo_marca(value); break;
@@ -59,6 +60,32 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async available_polls(value) {
+
+        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Polls')
+        const polls = guildData.Polls || []
+
+        if (!polls || !polls.length) return await this.respond()
+
+        const authorPolls = polls.filter(poll => poll.Author === this.user.id)
+        if (!authorPolls || !authorPolls.length) return await this.respond()
+
+        const fill = authorPolls.filter(({ MessageID, ChannelId, GuildId, Text }) => {
+            return MessageID.includes(value)
+                || ChannelId.includes(value)
+                || GuildId.includes(value)
+                || Text.toLowerCase().includes(value?.toLowerCase())
+        })
+
+        if (!fill || !fill.length) return await this.respond()
+
+        const mapped = fill.map(poll => ({ name: `${poll.Text}`, value: poll.MessageID })) || []
+        if (!mapped || !mapped.length) return await this.respond()
+
+        return await this.respond(mapped)
+
     }
 
     async dailyOptions() {
