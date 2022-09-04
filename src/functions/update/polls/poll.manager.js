@@ -57,13 +57,9 @@ export default new class PollManager {
         if (!message) return this.pull(poll.MessageId)
         if (message.partial) message = await message.fetch()
 
-        const { embeds, components } = message
+        const { embeds } = message
         const embed = embeds[0]?.data
         if (!embed) return this.pull(poll.MessageId)
-
-        const componentsJSON = components[0].toJSON()
-        for (let button of componentsJSON.components)
-            button.disabled = true
 
         embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
         embed.color = client.red

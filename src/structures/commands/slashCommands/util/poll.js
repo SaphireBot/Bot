@@ -31,7 +31,7 @@ export default {
                         },
                         {
                             name: '1 Minuto',
-                            value: 5000
+                            value: 60000
                         },
                         {
                             name: '5 Minutos',
