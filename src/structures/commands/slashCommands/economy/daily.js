@@ -1,4 +1,3 @@
-import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import Daily from './daily/new.daily.js'
