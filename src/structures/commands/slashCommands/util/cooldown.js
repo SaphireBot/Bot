@@ -33,7 +33,7 @@ export default {
         const timeouts = data?.Timeouts
         const clientTimeouts = clientData?.Timeouts
 
-        let TDaily, TPig, TWork, TRestoreDividas, TCu, TBit, TLikes, TVip
+        let TDaily, TPig, TWork, TCu, TBit, TLikes, TVip
 
         if (isGlobal)
             return SendCooldownsSaphire()
@@ -45,8 +45,6 @@ export default {
 
         const Daily = timeouts.Daily
         const Porquinho = timeouts.Porquinho
-        const Work = timeouts.Work
-        const Cu = timeouts.Cu
         const Bitcoin = timeouts.Bitcoin
         const Rep = timeouts.Rep
         const Vip = {
@@ -60,12 +58,6 @@ export default {
 
         // Timeout Pig
         TPig = cooldown(30000, Porquinho)
-
-        // Timeout Work
-        TWork = cooldown(66400000, Work)
-
-        // Timeout Cu
-        TCu = cooldown(600000, Cu)
 
         // Timeout Bitcoin
         TBit = cooldown(7200000, Bitcoin)
@@ -83,7 +75,6 @@ export default {
                     title: `⏱️ ${client.user.username} Timeouts | ${user?.username || "User not found."}`,
                     description: 'Aqui você pode conferir todos os timeouts.',
                     fields: [
-
                         {
                             name: `${e.VipStar} Vip`,
                             value: TVip || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
@@ -93,16 +84,8 @@ export default {
                             value: TDaily || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
                         },
                         {
-                            name: `${e.PepeRich} Work`,
-                            value: TWork || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
-                        },
-                        {
                             name: `${e.Pig} Pig`,
                             value: TPig || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
-                        },
-                        {
-                            name: `${e.SaphireOk} Cu`,
-                            value: TCu || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
                         },
                         {
                             name: `${e.BitCoin} Bitcoin`,
@@ -111,7 +94,7 @@ export default {
                         {
                             name: `${e.Like} Like`,
                             value: TLikes || `\`Você não deveria ver essa mensagem... Usa "/bug", por favor?\``
-                        },
+                        }
                     ]
                 }
             ]

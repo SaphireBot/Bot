@@ -3,6 +3,7 @@ import {
     Config as config
 } from '../../../../../util/Constants.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
+import revalidateReminder from './reminder.daily.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -36,11 +37,13 @@ export default class Daily extends Base {
             })
         }
 
-        if (Date.Timeout(86400000, dailyTimeout))
+        if (Date.Timeout(86400000, dailyTimeout)) {
+            if (isReminder) return revalidateReminder(interaction, dailyTimeout, 86400000)
             return await interaction.reply({
                 content: `⏱ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.\n${e.Info} | Se você quiser ver os seus status, use </daily:${interaction.commandId}>, vá em \`options\` e \`Meu status do daily\``,
                 ephemeral: true
             })
+        }
 
         let data = { fields: [] }
         let prize = Daily.dailyPrizes[count]
@@ -124,19 +127,21 @@ export default class Daily extends Base {
 
     async setNewDaily(prize, isReminder) {
 
+        const dateNow = Date.now()
+
         if (isReminder)
             new this.Database.Reminder({
                 id: CodeGenerator(7).toUpperCase(),
                 userId: this.user.id,
                 RemindMessage: 'Daily Disponível',
                 Time: 86400000,
-                DateNow: Date.now(),
+                DateNow: dateNow,
                 isAutomatic: true,
                 ChannelId: this.channel.id
             }).save()
 
         const data = {
-            'Timeouts.Daily': Date.now(),
+            'Timeouts.Daily': dateNow,
             $inc: {
                 DailyCount: 1,
                 Balance: prize.money,
