@@ -67,6 +67,7 @@ export default class SlashCommand extends Base {
             })
         }
 
+        this.clientData = clientData
         if (clientData.Rebooting?.ON)
             return await interaction.reply({ content: `${e.Loading} | Reiniciando em breve...\n${e.BookPages} | ${clientData.Rebooting?.Features || 'Nenhum dado fornecido'}` })
 
@@ -85,6 +86,7 @@ export default class SlashCommand extends Base {
                 ephemeral: true
             })
 
+        this.Moeda = guildData.Moeda || `${e.Coin} Safiras`
         return this.execute(guildData, clientData)
     }
 

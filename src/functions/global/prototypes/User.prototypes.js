@@ -29,3 +29,11 @@ User.prototype.balance = async function () {
 
     return parseInt(userData.Balance) || 0
 }
+
+User.prototype.color = async function () {
+    
+    const userData = await Database.User.findOne({ id: this.id }, 'Color')
+    if (!userData || !userData?.Color.Perm || !userData?.Color.Set) return client.blue
+
+    return client.blue
+}
