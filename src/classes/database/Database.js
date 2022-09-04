@@ -338,7 +338,8 @@ class Database extends Models {
                     CommandBlocks: 1,
                     AfkSystem: 1,
                     Autorole: 1,
-                    Giveaways: 1
+                    Giveaways: 1,
+                    Polls: 1
                 }
             },
             { upsert: true }
