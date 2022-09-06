@@ -84,7 +84,7 @@ export default class ModalInteraction extends Base {
                         }
                     }
                 },
-                response: `adicionou **${value} ${moeda}** para ${targetUser?.tag || 'Not found'} \`${targetUser?.id || 0}\``
+                response: `adicionou **${value?.currency()} ${moeda}** para ${targetUser?.tag || 'Not found'} \`${targetUser?.id || 0}\``
             },
             remove: {
                 mongoose: {
