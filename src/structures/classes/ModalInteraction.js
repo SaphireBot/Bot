@@ -13,20 +13,20 @@ export default class ModalInteraction extends Base {
         this.user = interaction.user
         this.guild = interaction.guild
         this.channel = interaction.channel
+        this.member = interaction.member
         this.data = {}
     }
 
     submitModalFunctions = async () => {
 
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
-        
-        this.member = this.guild.members.cache.get(this.user.id)
 
         switch (this.customId) {
             case 'BugModalReport': this.BugModalReport(this); break;
             case 'editProfile': this.editProfile(this); break;
             case 'newLetter': this.newLetter(this); break;
             case 'lettersReport': this.lettersReport(this); break;
+            case 'balance': this.balanceOptions(this); break;
             case 'transactionsModalReport': this.transactionsModalReport(); break;
             case 'botSugest': this.botSugest(); break;
             case 'serverSugest': this.serverSugest(); break;
@@ -35,13 +35,116 @@ export default class ModalInteraction extends Base {
                 break;
         }
 
-        const flags = this.Database.Flags.get('Flags') || []
-        if (flags.find(data => data.country[0] === this.customId)) return this.editFlag(this)
+        // const flags = this.Database.Flags.get('Flags') || []
+        // if (flags.find(data => data.country[0] === this.customId)) return this.editFlag(this)
 
         return
     }
 
-    editProfile = async ({ interaction, fields, user } = this) => {
+    balanceOptions = async ({ interaction, guild, fields, user }) => {
+
+        if (!client.admins.includes(user.id))
+            return await interaction.reply({
+                content: `${e.Deny} | Você não faz parte da equipe administrativa.`,
+                ephemeral: true
+            })
+
+        const { value, customId } = fields.fields.first()
+        const customIdData = customId.split('_')
+        const userId = customIdData[0]
+        const method = customIdData[1]
+        const targetUser = await client.users.fetch(userId).catch(() => null)
+        const moeda = await guild.getCoin()
+
+        if (!targetUser)
+            return await interaction.reply({
+                content: `${e.Deny} | Usuário não encontrado.`,
+                ephemeral: true
+            })
+
+        if (isNaN(value))
+            return await interaction.reply({
+                content: `${e.Deny} | O valor inserido não é um número.`,
+                ephemeral: true
+            })
+
+        const dataMethod = {
+            add: {
+                mongoose: {
+                    $inc: {
+                        Balance: value
+                    },
+                    $push: {
+                        Transactions: {
+                            $each: [{
+                                time: `${Date.format(0, true)}`,
+                                data: `${e.Admin} Um administrador adicionou ${value} Safiras`
+                            }],
+                            $position: 0
+                        }
+                    }
+                },
+                response: `adicionou **${value} ${moeda}** para ${targetUser?.tag || 'Not found'} \`${targetUser?.id || 0}\``
+            },
+            remove: {
+                mongoose: {
+                    $inc: {
+                        Balance: -value
+                    },
+                    $push: {
+                        Transactions: {
+                            $each: [{
+                                time: `${Date.format(0, true)}`,
+                                data: `${e.Admin} Um administrador removeu ${value} Safiras`
+                            }],
+                            $position: 0
+                        }
+                    }
+                },
+                response: `removeu **${value} ${moeda}** de ${targetUser} \`${targetUser.id}\``
+            },
+            reconfig: {
+                mongoose: {
+                    $set: {
+                        Balance: value
+                    },
+                    $push: {
+                        Transactions: {
+                            $each: [{
+                                time: `${Date.format(0, true)}`,
+                                data: `${e.Admin} Um administrador redefiniu o saldo para ${value} Safiras`
+                            }],
+                            $position: 0
+                        }
+                    }
+                },
+                response: `redefiniu o saldo de ${targetUser} \`${targetUser.id}\``
+            }
+        }[method]
+
+        if (!dataMethod)
+            return await interaction.reply({
+                content: `${e.Deny} | Método não reconhecido`,
+                ephemeral: true
+            })
+
+        const newData = await this.Database.User.findOneAndUpdate(
+            { id: userId },
+            dataMethod.mongoose,
+            {
+                upsert: true,
+                new: true,
+                fields: 'Balance'
+            }
+        )
+
+        return await interaction.reply({
+            content: `${e.Check} | Você ${dataMethod.response}.\n${e.Info} | Novo valor: **${newData.Balance.currency()} ${moeda}**`
+        })
+
+    }
+
+    editProfile = async ({ interaction, fields, user }) => {
 
         let data = await this.Database.User.findOne({ id: user.id }, 'Perfil')
         let title = undefined

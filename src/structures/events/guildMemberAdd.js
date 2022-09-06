@@ -120,10 +120,10 @@ client.on('guildMemberAdd', async member => {
 
         if (!Canal) return
 
-        if (!Canal?.permissionsFor(member.guild.members.me, true).has(Permissions.SendMessages)) {
-            DelWelcomeSystem()
-            return Notify(member.guild.id, 'Sem permissão', `Eu não tenho permissão para enviar mensagens de boas-vindas no canal ${Canal}. Eu desativei este sistema até que corrijam este problema.`)
-        }
+        // if (!Canal?.permissionsFor(member.guild.members.me, true).has(Permissions.SendMessages)) {
+        //     DelWelcomeSystem()
+        //     return Notify(member.guild.id, 'Sem permissão', `Eu não tenho permissão para enviar mensagens de boas-vindas no canal ${Canal}. Eu desativei este sistema até que corrijam este problema.`)
+        // }
 
         const newMessage = Mensagem.replace('$member', member).replace('$servername', member.guild.name)
 

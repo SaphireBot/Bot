@@ -11,6 +11,8 @@ export default {
         description: 'Apenas um comando de teste exclusivo para o meu'
     },
     async execute({ interaction, client, e }) {
-        ranking()
+
+        console.log(Date.stringDate(((60000 * 60) * 24) * 7 + 2512))
+
     }
 }

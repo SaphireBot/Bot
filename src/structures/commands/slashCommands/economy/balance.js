@@ -1,3 +1,6 @@
+import { ApplicationCommandOptionType } from "discord.js"
+import balanceOptions from './balance/manage.balance.js'
+
 export default {
     name: 'balance',
     description: '[economy] Confira suas finanças',
@@ -7,25 +10,32 @@ export default {
         {
             name: 'user',
             description: 'Veja as finanças de alguém',
-            type: 6
+            type: ApplicationCommandOptionType.User
         },
         {
             name: 'database_users',
             description: 'Pesquise por um usuário no banco de dados',
-            type: 3,
+            type: ApplicationCommandOptionType.String,
             autocomplete: true
         },
         {
-            name: 'hide',
-            description: 'Esconder a mensagem de resposta',
-            type: 5
+            name: 'options',
+            description: 'Mais opções do comando',
+            type: ApplicationCommandOptionType.String,
+            autocomplete: true
         }
     ],
     async execute({ interaction, client, Database, config, e }) {
 
-        const { options, guild } = interaction
-        const hide = options.getBoolean('hide') || false
-        const user = options.getUser('user') || client.allUsers.find(data => data.id === options.getString('database_users')) || interaction.user
+        const { options, guild, user: author } = interaction
+        const option = options.getString('options') || false
+        const hide = option === 'hide'
+        const user = options.getUser('user')
+            || await client.users.fetch(options.getString('database_users')).catch(() => null)
+            || author
+
+        if (option && option !== 'hide') return balanceOptions(interaction, option, user)
+
         const MoedaCustom = await guild.getCoin()
 
         if (user.id === client.user.id)
@@ -43,9 +53,9 @@ export default {
             })
 
         const bal = userData?.Balance > 0 ? parseInt(userData?.Balance).currency() || 0 : userData?.Balance || 0
-        const oculto = interaction.user.id === config.ownerId ? false : userData?.Perfil?.BalanceOcult
+        const oculto = author.id === config.ownerId ? false : userData?.Perfil?.BalanceOcult
         const balance = oculto ? `||oculto ${MoedaCustom}||` : `${bal} ${MoedaCustom}`
-        const NameOrUsername = user.id === interaction.user.id ? 'O seu saldo é de' : `${user?.tag} possui`
+        const NameOrUsername = user.id === author.id ? 'O seu saldo é de' : `${user?.tag} possui`
 
         return await interaction.reply({ content: `👝 | ${NameOrUsername} **${balance}**`, ephemeral: hide })
 

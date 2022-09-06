@@ -11,15 +11,16 @@ client.on('paymentUpdate', async paymentUpdated => {
     const channel = client.channels.cache.get(metadata.channel_id)
     if (!channel) return
 
-    const user = await channel.guild.members.fetch(metadata.user_id)
+    const user = await channel.guild.members.fetch(metadata.user_id).catch(() => null)
     if (!user) return
 
-    const message = await channel.messages.fetch(metadata.message_id)
+    const message = await channel.messages.fetch(metadata.message_id).catch(() => null)
     if (!message) return
 
     await Database.Cache.General.push('UPDATE', paymentUpdated)
 
     const embed = message.embeds[0]?.data || {}
+    const sevenDays = ((60000 * 60) * 24) * 7
 
     const title = {
         approved: `${e.Check} Doação aprovada`,
@@ -49,8 +50,8 @@ client.on('paymentUpdate', async paymentUpdated => {
     }
 
     const description = {
-        accredited: `Muito obrigada por ser um ser humano generoso! Para agradecer a sua generosidade, adicionei **+${Math.ceil(transaction_amount * 5000)} ${await channel.guild.getCoin()}** na sua conta.`,
-        expired: `Parece que o tempo do pix se foi... Você pode tentar novamente se quiser.`,
+        accredited: `Muito obrigada por ser um ser humano generoso! Para agradecer a sua generosidade, adicionei **+${Math.ceil(transaction_amount * 5000)} ${await channel.guild.getCoin()}** e **+${Date.stringDate(Math.ceil(transaction_amount * sevenDays))}** de vip na sua conta.`,
+        expired: 'Parece que o tempo do pix se foi... Você pode tentar novamente se quiser.',
         pending_waiting_transfer: `📑 | Doação pendente\n⌛ ${Date.GetTimeout(new Date(paymentUpdated.date_of_expiration).valueOf(), 0, 'R')}`
     }
 
@@ -75,15 +76,21 @@ client.on('paymentUpdate', async paymentUpdated => {
     }).catch(console.log)
 
     async function addBonus() {
-        return await Database.User.updateOne(
-            { id: metadata.user_id },
-            {
-                $inc: {
-                    Balance: Math.ceil(transaction_amount * 5000)
-                }
-            },
-            { upsert: true }
-        )
+
+        const vipBonus = Math.ceil(transaction_amount * sevenDays)
+        const isVip = await user.user.isVip()
+
+        const editData = {
+            $inc: {
+                Balance: Math.ceil(transaction_amount * 5000),
+                'Vip.TimeRemaing': vipBonus
+            }
+        }
+
+        if (!isVip)
+            editData.$set = { 'Vip.DateNow': Date.now() }
+
+        return await Database.User.updateOne({ id: metadata.user_id }, editData, { upsert: true })
 
     }
 })

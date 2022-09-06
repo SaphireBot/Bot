@@ -1,4 +1,5 @@
 import { time } from 'discord.js'
+import parsems from 'parse-ms'
 
 Date.prototype.constructor.GetTimeout = function (TimeToCooldown = 0, DateNowInDatabase = 0, style) {
 
@@ -114,6 +115,29 @@ Date.prototype.constructor.thirteen = (formatBr = false) => {
 
     return `${Ano}-${FormatNumber(date.getMonth() + 1)}-${Dia}`
 
+}
+
+Date.prototype.constructor.stringDate = (ms) => {
+
+    if (!ms || isNaN(ms)) return '0 segundo'
+
+    const translate = {
+        days: (n) => n > 1 ? 'dias' : 'dia',
+        hours: (n) => n > 1 ? 'horas' : 'hora',
+        minutes: (n) => n > 1 ? 'minutos' : 'minuto',
+        seconds: (n) => n > 1 ? 'segundos' : 'segundo'
+    }
+
+    const date = parsems(ms)
+    const entries = Object.entries(date)
+    let result = ''
+
+    for (let d of entries)
+        if (d[1] > 0 && translate[d[0]])
+            result += `${d[1]} ${translate[d[0]](d[1])} `
+        else continue
+
+    return result
 }
 
 function FormatNumber(data) {

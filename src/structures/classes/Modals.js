@@ -4,6 +4,33 @@ export default new class Modals {
         return { ...this }
     }
 
+    BalanceModal = (option, user, userMoney) => {
+
+        const label = {
+            add: 'Adicionar valor',
+            remove: 'Remover valor',
+            reconfig: 'Reconfigurar um novo valor'
+        }[option]
+
+        return {
+            title: 'Balance Administrator Center',
+            custom_id: 'balance',
+            components: [
+                {
+                    type: 1,
+                    components: [{
+                        type: 4,
+                        custom_id: `${user.id}_${option}`,
+                        label: label || 'Valor não reconhecido',
+                        style: 1,
+                        placeholder: `${user.tag} possui ${userMoney} Safiras`,
+                        required: true
+                    }]
+                }
+            ]
+        }
+    }
+
     newAnimeCharacter = {
         title: 'New Anime Character Quiz Data',
         custom_id: "newAnimeCharacter",

@@ -29,6 +29,7 @@ export default class Autocomplete extends Base {
             case 'betchoice': this.betChoices(value); break;
             case 'blocked_commands': this.blockCommands(value); break;
             case 'database_users': this.databaseUsers(value); break;
+            case 'balance': this.balanceOptions(value); break;
             case 'de': case 'para': this.translateLanguages(value); break;
             case 'search_guild': this.allGuilds(value); break;
             case 'search_user': case 'userinfo': this.allUsers(value); break;
@@ -517,6 +518,41 @@ export default class Autocomplete extends Base {
         const fill = languages.filter(([a, b]) => a.includes(value.toLowerCase()) || b.toLowerCase().includes(value.toLowerCase()))
         const mapped = fill.map(([_, b]) => ({ name: b, value: b }))
         return this.respond(mapped)
+    }
+
+    async balanceOptions(value) {
+
+        const isStaff = this.client.admins.includes(this.user.id)
+        const options = [
+            {
+                name: 'Esconder só pra mim',
+                value: 'hide'
+            }
+        ]
+
+        if (isStaff)
+            options.push(
+                {
+                    name: 'Adicionar Safiras',
+                    value: 'add'
+                },
+                {
+                    name: 'Remover Safiras',
+                    value: 'remove'
+                },
+                {
+                    name: 'Deletar Safiras',
+                    value: 'delete'
+                },
+                {
+                    name: 'Definir um novo valor de Safiras',
+                    value: 'reconfig'
+                }
+            )
+
+        const fill = options.filter(data => data.name.toLowerCase().includes(value.toLowerCase()))
+        return await this.respond(fill)
+
     }
 
     async databaseUsers(value) {
