@@ -12,7 +12,7 @@ export default {
     },
     async execute({ interaction, client, e }) {
 
-        console.log(Date.stringDate(((60000 * 60) * 24) * 7 + 2512))
+        return await interaction.reply({ content: 'ok', ephemeral: true })
 
     }
 }
