@@ -506,14 +506,15 @@ export default class ModalInteraction extends Base {
 
     transactionsModalReport = async () => {
 
-        let problemText = this.fields.getTextInputValue('text'),
-            channel = client.channels.cache.get(config.BugsChannelId),
-            messageResponde = `✅ | Reporte enviado com sucesso! Muito obrigado por reportar erros.`
+        const problemText = this.fields.getTextInputValue('text')
+        const channel = client.channels.cache.get(config.BugsChannelId)
+        let messageResponse = '✅ | Reporte enviado com sucesso!'
 
-        if (!channel) return await this.interaction.reply({
-            content: `❌ | Erro ao contactar o canal de reportes.`,
-            ephemeral: trueF
-        })
+        if (!channel)
+            return await this.interaction.reply({
+                content: `❌ | Erro ao contactar o canal de reportes.`,
+                ephemeral: true
+            })
 
         channel.send({
             embeds: [{
@@ -522,7 +523,7 @@ export default class ModalInteraction extends Base {
                 fields: [
                     {
                         name: '👤 Usuário',
-                        value: `> ${this.user.tag || 'NOT FOUND'} - \`${this.user.id}\``
+                        value: `> ${this.user?.tag || 'NOT FOUND'} - \`${this.user?.id}\``
                     },
                     {
                         name: '📝 Conteúdo do Reporte',
@@ -531,13 +532,10 @@ export default class ModalInteraction extends Base {
                 ]
             }]
         }).catch(() => {
-            messageResponde = '❌ | Erro ao enviar o reporte ao canal principal.'
+            messageResponse = '❌ | Erro ao enviar o reporte ao canal principal.'
         })
 
-        return await this.interaction.reply({
-            content: messageResponde,
-            ephemeral: true
-        })
+        return await this.interaction.reply({ content: messageResponse, ephemeral: true })
 
     }
 
