@@ -11,12 +11,12 @@ export default {
             description: 'Selecione um usuário para ver suas transações',
             type: 6
         },
-        {
-            name: 'database_users',
-            description: 'Pesquise por um usuário',
-            type: 3,
-            autocomplete: true
-        }
+        // {
+        //     name: 'database_users',
+        //     description: 'Pesquise por um usuário',
+        //     type: 3,
+        //     autocomplete: true
+        // }
     ],
     helpData: {
         description: 'Com este comando você consegue ver toda a sua movimentação econômica'
@@ -25,7 +25,7 @@ export default {
 
         const { options, user: author } = interaction
         const user = options.getUser('user')
-            || await client.users.fetch(options.getString('search_user')).catch(() => null)
+            || await client.users.fetch(options.getString('database_users')).catch(() => null)
             || author
 
         if (!user || user.bot)
