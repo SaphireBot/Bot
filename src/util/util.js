@@ -59,7 +59,7 @@ const economy = {
             saveData[1].$push = {
                 Transactions: {
                     $each: [{
-                        time: `${Date.format(0, true)} - Error Prize`,
+                        time: `${Date.format(0, true)}`,
                         data: message
                     }],
                     $position: 0

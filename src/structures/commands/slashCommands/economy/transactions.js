@@ -10,13 +10,7 @@ export default {
             name: 'user',
             description: 'Selecione um usuário para ver suas transações',
             type: 6
-        },
-        // {
-        //     name: 'database_users',
-        //     description: 'Pesquise por um usuário',
-        //     type: 3,
-        //     autocomplete: true
-        // }
+        }
     ],
     helpData: {
         description: 'Com este comando você consegue ver toda a sua movimentação econômica'

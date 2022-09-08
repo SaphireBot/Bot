@@ -1,5 +1,5 @@
 import { Base, SaphireClient as client } from '../../classes/index.js'
-import { Emojis as e } from '../../util/util.js'
+import { Emojis as e, economy } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
@@ -49,7 +49,9 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        const { value, customId } = fields.fields.first()
+        const field = fields.fields.first()
+        const value = parseInt(field.value)
+        const customId = field.customId
         const customIdData = customId.split('_')
         const userId = customIdData[0]
         const method = customIdData[1]

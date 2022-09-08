@@ -281,7 +281,17 @@ class Database extends Models {
 
         return await this.User.updateOne(
             { id: userId },
-            { $push: { Transactions: { $each: [{ time: `${Date.format(0, true)} - ${balance}`, data: `${Frase}` }], $position: 0 } } },
+            {
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)} - ${balance}`,
+                            data: `${Frase}`
+                        }],
+                        $position: 0
+                    }
+                }
+            },
             { upsert: true }
         )
     }

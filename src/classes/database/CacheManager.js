@@ -10,6 +10,7 @@ export default new class CacheManager extends Cache {
         this.WordleGame = this.table('WordleGame')
         this.Client = this.table('Client')
         this.Bet = this.table('Bet')
+        this.Pay = this.table('Payment')
         this.Ranking = this.table('Ranking')
         this.Blackjack = this.table('Blackjack')
     }
