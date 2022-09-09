@@ -4,6 +4,43 @@ export default new class Modals {
         return { ...this }
     }
 
+    vocePrefere = (questionOne, questionTwo, customId) => {
+        return {
+            title: 'Você Prefere - New Question',
+            custom_id: customId || 'rather',
+            components: [
+                {
+                    type: 1,
+                    components: [{
+                        type: 4,
+                        custom_id: 'questionOne',
+                        label: 'Questão 1',
+                        style: 1,
+                        placeholder: 'Ser algo...',
+                        min_length: 5,
+                        max_length: 1024,
+                        required: true,
+                        value: questionOne || null
+                    }]
+                },
+                {
+                    type: 1,
+                    components: [{
+                        type: 4,
+                        custom_id: 'questionTwo',
+                        label: 'Questão 2',
+                        style: 1,
+                        placeholder: 'Ser alguém...',
+                        min_length: 5,
+                        max_length: 1024,
+                        required: true,
+                        value: questionTwo || null
+                    }]
+                }
+            ]
+        }
+    }
+
     BalanceModal = (option, user, userMoney) => {
 
         const label = {

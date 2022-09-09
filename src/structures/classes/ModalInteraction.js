@@ -1,5 +1,5 @@
 import { Base, SaphireClient as client } from '../../classes/index.js'
-import { Emojis as e, economy } from '../../util/util.js'
+import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
@@ -14,6 +14,7 @@ export default class ModalInteraction extends Base {
         this.guild = interaction.guild
         this.channel = interaction.channel
         this.member = interaction.member
+        this.message = interaction.message
         this.data = {}
     }
 
@@ -27,6 +28,8 @@ export default class ModalInteraction extends Base {
             case 'newLetter': this.newLetter(this); break;
             case 'lettersReport': this.lettersReport(this); break;
             case 'balance': this.balanceOptions(this); break;
+            case 'rather': this.vocePrefere(this); break;
+            case 'ratherEdit': this.vocePrefereEdit(this); break;
             case 'transactionsModalReport': this.transactionsModalReport(); break;
             case 'botSugest': this.botSugest(); break;
             case 'serverSugest': this.serverSugest(); break;
@@ -39,6 +42,108 @@ export default class ModalInteraction extends Base {
         // if (flags.find(data => data.country[0] === this.customId)) return this.editFlag(this)
 
         return
+    }
+
+    vocePrefere = async ({ interaction, fields, user, guild }) => {
+
+        const channel = await client.channels.fetch(config.vocePrefereChannel)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Canal de sugestões do jogo não encontrado.`,
+                ephemeral: true
+            })
+
+        const questionOne = fields.getTextInputValue('questionOne')
+        const questionTwo = fields.getTextInputValue('questionTwo')
+
+        const embed = {
+            color: client.blue,
+            title: `${e.QuestionMark} Sugestão de Pergunta`,
+            fields: [
+                {
+                    name: '👤 Usuário',
+                    value: `${user.tag} - \`${user.id}\`\nEnviado do servidor ${guild.name} \`${guild.id}\``
+                },
+                {
+                    name: 'Pergunta 1',
+                    value: questionOne
+                },
+                {
+                    name: 'Pergunta 2',
+                    value: questionTwo
+                }
+            ],
+            footer: { text: user.id }
+        }
+
+        const selectMenuObject = {
+            type: 1,
+            components: [{
+                type: 3,
+                custom_id: 'vocePrefere',
+                placeholder: 'Admin Options',
+                options: [
+                    {
+                        label: 'Aceitar sugestão',
+                        emoji: e.Check,
+                        description: 'Salvar esta sugestão no banco de dados do jogo',
+                        value: 'accept',
+                    },
+                    {
+                        label: 'Recusar sugestão',
+                        emoji: e.Deny,
+                        description: 'Recusar e deletar esta sugestão',
+                        value: 'deny'
+                    },
+                    {
+                        label: 'Editar sugestão',
+                        emoji: '✍',
+                        description: 'Editar o conteúdo da pergunta',
+                        value: 'edit'
+                    }
+                ]
+            }]
+        }
+
+        const sended = await channel.send({ embeds: [embed], components: [selectMenuObject] }).catch(() => null)
+
+        return sended
+            ? await interaction.reply({
+                content: `${e.Check} | Sua sugestão foi enviada com sucesso!`,
+                embeds: [embed],
+                ephemeral: true
+            })
+            : await interaction.reply({
+                content: `${e.Deny} | Não foi possível completar o envio. ~Motivo: Desconhecido`,
+                ephemeral: true
+            })
+    }
+
+    vocePrefereEdit = async ({ interaction, fields, user, message }) => {
+
+        const { embeds } = message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | Embed não encontrada`
+            })
+
+        const questionOne = fields.getTextInputValue('questionOne')
+        const questionTwo = fields.getTextInputValue('questionTwo')
+
+        embed.fields[3] = {
+            name: `(P1) Editado por ${user.tag}`,
+            value: questionOne
+        }
+
+        embed.fields[4] = {
+            name: `(P2) Editado por ${user.tag}`,
+            value: questionTwo
+        }
+
+        return await interaction.update({ embeds: [embed] })
     }
 
     balanceOptions = async ({ interaction, guild, fields, user }) => {
