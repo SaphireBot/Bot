@@ -1,5 +1,6 @@
 import { Modals } from '../../../../classes/index.js'
 import { ApplicationCommandOptionType } from 'discord.js'
+import game from './rather/game.rather.js'
 
 export default {
     name: 'rather',
@@ -21,7 +22,7 @@ export default {
     helpData: {
         description: 'Um simples jogo para escolher o que você prefere'
     },
-    async execute({ interaction, client, e }) {
+    async execute({ interaction }) {
 
         const { options } = interaction
         const subCommand = options.getSubcommand()
@@ -29,7 +30,6 @@ export default {
         if (subCommand === 'suggest')
             return await interaction.showModal(Modals.vocePrefere())
 
-        return await interaction.reply({ content: `${e.Info} | Este jogo precisa de mais perguntas. Mande sua sugestão usando </rather suggest:${interaction.commandId}>` })
         return game(interaction)
 
     }

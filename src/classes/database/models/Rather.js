@@ -6,11 +6,11 @@ export default model("Rather", new Schema({
     authorId: String,
     optionOne: {
         question: String,
-        chooses: { type: Number, default: 0 }
+        users: Array
     },
     optionTwo: {
         question: String,
-        chooses: { type: Number, default: 0 }
+        users: Array
     },
     edited: Boolean
 }))
