@@ -7,9 +7,9 @@ import { Emojis as e } from "../../../../util/util.js"
 
 export default async (interaction) => {
 
-    // return await interaction.reply({ content: `${e.Info} | Este jogo precisa de mais perguntas. Mande sua sugestão usando </rather suggest:${interaction.commandId}>` })
+    const { user, message } = interaction
+    if (user.id !== message.interaction.user.id) return
 
-    const { user } = interaction
     const allGameData = await Database.Rather.find({})
 
     if (!allGameData || !allGameData.length)
@@ -18,14 +18,10 @@ export default async (interaction) => {
             components: []
         }).catch(() => { })
 
-    const optionsFilter = allGameData.filter(data => ![...data.optionOne.users, ...data.optionTwo.users].includes(user.id))
-
-    // TODO: Modo sem addPoint
-    if (!optionsFilter || !optionsFilter.length)
-        return await interaction.update({
-            content: `${e.Info} | Você já respondeu todas as perguntas presentes no banco de dados.`,
-            components: []
-        }).catch(() => { })
+    const optionsFilter = allGameData.filter(data => ![...data.optionOne.users, ...data.optionTwo.users].includes(user.id)) || []
+    const question = optionsFilter.length > 0 ? optionsFilter.random() : allGameData.random()
+    const starOne = question.optionOne.users.includes(user.id) ? '⭐' : null
+    const starTwo = question.optionTwo.users.includes(user.id) ? '⭐' : null
 
     return await interaction.update({
         embeds: [{
@@ -34,13 +30,14 @@ export default async (interaction) => {
             fields: [
                 {
                     name: '🔵 Opção 1',
-                    value: optionsFilter[0].optionOne.question
+                    value: question.optionOne.question
                 },
                 {
                     name: '🟢 Opção 2',
-                    value: optionsFilter[0].optionTwo.question
+                    value: question.optionTwo.question
                 }
-            ]
+            ],
+            footer: { text: `Questão por: ${client.users.resolve(question.authorId)?.tag || 'Not Found'}` }
         }],
         components: [{
             type: 1,
@@ -48,13 +45,15 @@ export default async (interaction) => {
                 {
                     type: 2,
                     label: 'Opção 1',
-                    custom_id: JSON.stringify({ c: 'rt', src: optionsFilter[0].id, bt: 1 }),
+                    emoji: starOne,
+                    custom_id: JSON.stringify({ c: 'rt', src: question.id, bt: 1 }),
                     style: ButtonStyle.Primary
                 },
                 {
                     type: 2,
                     label: 'Opção 2',
-                    custom_id: JSON.stringify({ c: 'rt', src: optionsFilter[0].id, bt: 2 }),
+                    emoji: starTwo,
+                    custom_id: JSON.stringify({ c: 'rt', src: question.id, bt: 2 }),
                     style: ButtonStyle.Success
                 }
             ]

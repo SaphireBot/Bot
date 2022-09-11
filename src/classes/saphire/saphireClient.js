@@ -37,14 +37,14 @@ export default new class SaphireClient extends Client {
         this.green = 0x57F287
 
         /**
-         * @returns Prefixo padrão "-"
-         */
-        this.prefix = config.prefix
-
-        /**
          * @returns Nova coleção extendida do Map
          */
         this.slashCommands = new Collection()
+
+        /**
+         * @returns Command name and your id [array]
+         */
+        this.slashCommandsData = []
 
         /**
          * @param Nothing
@@ -143,6 +143,10 @@ export default new class SaphireClient extends Client {
         GiveawayManager.setGiveaways()
         PollManager.setPolls()
         await automaticSystems()
+
+        const commands = await this.application.commands.fetch()
+        this.slashCommandsData.push(...commands.map(cmd => ({ name: cmd.name, id: cmd.id })))
+
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
     }
 

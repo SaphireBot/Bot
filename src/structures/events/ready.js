@@ -39,11 +39,11 @@ client.once('ready', async () => {
 
     const guildsLength = await client.allGuildsData() || []
 
-    // return client.user.setPresence({
-    //     activities: [
-    //         { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${shardId}]` }
-    //     ],
-    //     status: 'idle'
-    // })
+    return client.user.setPresence({
+        activities: [
+            { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${shardId}]` }
+        ],
+        status: 'idle'
+    })
 
 })

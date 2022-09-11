@@ -32,10 +32,13 @@ export default {
                 ephemeral: true
             })
 
+        const cmdData = client.slashCommandsData.find(cmd => cmd.name === command.name)
+        const commandMention = `</${command.name}:${cmdData?.id}>`
         const helpData = command.helpData
+
         if (!helpData)
             return await interaction.reply({
-                content: `${e.Deny} | Informações do comando não encontrada.`,
+                content: `${e.Deny} | Informações do comando não encontrada. | ${commandMention}`,
                 ephemeral: true
             })
 
@@ -53,6 +56,7 @@ export default {
         if (helpData.fields.length > 25) helpData.fields.length = 25
 
         return await interaction.reply({
+            content: cmdData ? commandMention : null,
             embeds: [{
                 title: `Comando: ${command.name}`,
                 color: Colors[helpData.color] || Colors.Blue,

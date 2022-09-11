@@ -11,7 +11,7 @@ import { ChannelType } from 'discord.js'
 
 export default
     async ({ interaction, Database, user, guild, channel, client }, err) => {
-        console.log(err)
+
         if (!interaction || !interaction?.commandName) return
 
         const { commandName, commandId } = interaction
@@ -75,7 +75,6 @@ export default
                         name: '⚙ Command',
                         value: `</${commandName}${interaction?.options.getSubcommandGroup() ? ` ${interaction?.options.getSubcommandGroup()}` : ''}${interaction?.options.getSubcommand(false) ? ` ${interaction?.options.getSubcommand(false)}` : ''}:${commandId}>`,
                         inline: true
-
                     }
                 ],
                 footer: {

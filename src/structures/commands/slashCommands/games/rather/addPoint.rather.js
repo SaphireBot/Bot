@@ -6,7 +6,10 @@ export default async (ratherId, option, userId) => {
 
     await Database.Rather.updateOne(
         { id: ratherId },
-        { $addToSet: { [`${option}.users`]: userId } }
+        {
+            $addToSet: { [`${option}.users`]: userId },
+            $pull: { [`${option === 'optionOne' ? 'optionTwo' : 'optionOne'}.users`]: userId }
+        }
     )
 
     const allData = await Database.Rather.find({})

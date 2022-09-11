@@ -32,20 +32,19 @@ export default async (interaction, { src, bt }) => {
         type: 1,
         components: [{
             type: 2,
-            label: optionsFilter.length === 0 ? 'Cabô' : 'Bora pra próxima',
-            emoji: optionsFilter.length === 0 ? e.saphireDesespero : e.saphireRight,
+            label: 'Bora pra próxima',
+            emoji: e.saphireRight,
             custom_id: JSON.stringify({ c: 'rt', src: 'next' }),
-            style: ButtonStyle.Secondary,
-            disabled: optionsFilter.length === 0
+            style: ButtonStyle.Secondary
         }]
     }
 
-    const optionOneUsersLength = gameData.optionOne.users.length
-    const optionTwoUsersLength = gameData.optionTwo.users.length
-    const total = optionOneUsersLength + optionTwoUsersLength
-    embed.fields[0].name += ` - ${parseInt((optionOneUsersLength / total) * 100).toFixed(1)}%`
-    embed.fields[1].name += ` - ${parseInt((optionTwoUsersLength / total) * 100).toFixed(1)}%`
-    embed.footer = { text: `${total || 0} usuários responderam` }
+    const optionOneUsersLength = gameData.optionOne.users?.length || 0
+    const optionTwoUsersLength = gameData.optionTwo.users?.length || 0
+    const total = (optionOneUsersLength + optionTwoUsersLength) || 0
+    embed.fields[0].name += ` - ${parseInt((optionOneUsersLength / total) * 100).toFixed(1) || 0}%`
+    embed.fields[1].name += ` - ${parseInt((optionTwoUsersLength / total) * 100).toFixed(1) || 0}%`
+    embed.footer = { text: `${total || 0} usuários responderam | ${optionsFilter.length === 0 ? 'Você já respondeu todas as perguntas' : `${optionsFilter.length} Perguntas restantes.`}` }
 
     return await interaction.update({ embeds: [embed], components: [button] })
 }

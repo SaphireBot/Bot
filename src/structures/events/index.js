@@ -1,7 +1,7 @@
 import './ready.js'
 import './error.js'
 import './interactionCreate.js'
-import './shardReady.js'
+// import './shardReady.js'
 import './channelCreate.js'
 import './channelDelete.js'
 import './guildCreate.js'
