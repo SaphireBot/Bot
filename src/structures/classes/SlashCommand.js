@@ -17,7 +17,7 @@ export default class SlashCommand extends Base {
     }
 
     async execute(guildData, clientData) {
-
+        
         this.guildData = guildData
         this.clientData = clientData
 

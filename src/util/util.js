@@ -60,7 +60,7 @@ const economy = {
                 Transactions: {
                     $each: [{
                         time: `${Date.format(0, true)}`,
-                        data: message
+                        data: message || '`Not Found`'
                     }],
                     $position: 0
                 }

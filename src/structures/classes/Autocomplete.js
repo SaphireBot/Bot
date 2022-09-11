@@ -20,7 +20,7 @@ export default class Autocomplete extends Base {
         const { name, value } = this.options.getFocused(true)
         let query = name
 
-        if (['search', 'options', 'user'].includes(query)) query = this.commandName
+        if (['search', 'options', 'user', 'delete', 'edit'].includes(query)) query = this.commandName
 
         switch (query) {
             case 'channel': this.blockedChannels(value); break;
@@ -34,6 +34,7 @@ export default class Autocomplete extends Base {
             case 'search_guild': this.allGuilds(value); break;
             case 'search_user': case 'userinfo': this.allUsers(value); break;
             case 'change_background': this.changeLevelBackground(value); break;
+            case 'rather': this.rather(value); break;
             case 'buy_background': this.buyLevelBackground(value); break;
             case 'select_country': this.flagSearch(value); break;
             case 'command': this.commandList(value); break;
@@ -61,6 +62,28 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async rather(value) {
+
+        if (!this.client.staff.includes(this.user.id)) return await this.respond()
+
+        const allData = await this.Database.Rather.find({})
+
+        if (!allData || !allData.length) return await this.respond()
+
+        value = value?.toLowerCase()
+
+        const fill = allData.filter(data => {
+            return data.id.toLowerCase().includes(value)
+                || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
+                || data.authorId.includes(value)
+                || data.optionOne.question.toLowerCase().includes(value)
+                || data.optionTwo.question.toLowerCase().includes(value)
+        })
+
+        const mapped = fill.map(data => ({ name: `${data.id} - ${this.client.users.resolve(data.authorId)?.tag || 'Not Found'} - ${data.optionOne.question}`, value: data.id }))
+        return await this.respond(mapped)
     }
 
     async available_polls(value) {

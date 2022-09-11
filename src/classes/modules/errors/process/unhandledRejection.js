@@ -46,7 +46,7 @@ export default async function (reason) {
                 description: `\`\`\`js\n${reason.stack?.slice(0, 2000)}\`\`\``,
                 footer: { text: `Error Code: ${reason.code || 0}` }
             }],
-            avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
+            avatarURL: config.ErrorWebhookProfileIcon,
             username: 'Unhandled Rejection Reporter'
         })
 
