@@ -3,6 +3,7 @@ import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+import { ButtonStyle } from 'discord.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -21,6 +22,8 @@ export default class ModalInteraction extends Base {
     submitModalFunctions = async () => {
 
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
+
+        if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
         switch (this.customId) {
             case 'BugModalReport': this.BugModalReport(this); break;
@@ -127,7 +130,8 @@ export default class ModalInteraction extends Base {
 
         if (!embed)
             return await interaction.update({
-                content: `${e.Deny} | Embed não encontrada`
+                content: `${e.Deny} | Embed não encontrada`,
+                components: []
             })
 
         const questionOne = fields.getTextInputValue('questionOne')
@@ -143,7 +147,45 @@ export default class ModalInteraction extends Base {
             value: questionTwo
         }
 
-        return await interaction.update({ embeds: [embed] })
+        return await interaction.update({ embeds: [embed] }).catch(() => { })
+    }
+
+    adminEditRather = async ({ interaction, fields, message }) => {
+
+        const { embeds, components } = message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | Embed não encontrada`,
+                components: []
+            })
+
+        const questionOne = fields.getTextInputValue('questionOne')
+        const questionTwo = fields.getTextInputValue('questionTwo')
+
+        embed.fields[3] = {
+            name: `(P1) Editada`,
+            value: questionOne
+        }
+
+        embed.fields[4] = {
+            name: `(P2) Editada`,
+            value: questionTwo
+        }
+
+        const componentsJSON = components[0].toJSON()
+        const objectComponents = componentsJSON.components
+
+        objectComponents[0].style = ButtonStyle.Primary
+        objectComponents[2] = {
+            type: 2,
+            style: ButtonStyle.Success,
+            label: 'Confirmar',
+            custom_id: JSON.stringify({ c: 'redit', src: 'confirm' }),
+        }
+
+        return await interaction.update({ embeds: [embed], components: [componentsJSON] }).catch(() => { })
     }
 
     balanceOptions = async ({ interaction, guild, fields, user }) => {

@@ -30,12 +30,12 @@ export default {
                     type: ApplicationCommandOptionType.String,
                     autocomplete: true
                 },
-                // {
-                //     name: 'edit',
-                //     description: 'Edite uma questão do jogo',
-                //     type: ApplicationCommandOptionType.String,
-                //     autocomplete: true
-                // }
+                {
+                    name: 'edit',
+                    description: 'Edite uma questão do jogo',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                }
             ]
         }
     ],

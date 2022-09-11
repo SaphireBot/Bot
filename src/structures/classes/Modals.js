@@ -41,6 +41,43 @@ export default new class Modals {
         }
     }
 
+    adminEditVocePrefere = (questionOne, questionTwo, customId) => {
+        return {
+            title: 'Você Prefere - Admin Edit Question',
+            custom_id: `rather_${customId}`,
+            components: [
+                {
+                    type: 1,
+                    components: [{
+                        type: 4,
+                        custom_id: 'questionOne',
+                        label: 'Questão 1',
+                        style: 1,
+                        placeholder: 'Ser algo...',
+                        min_length: 5,
+                        max_length: 1024,
+                        required: true,
+                        value: questionOne || null
+                    }]
+                },
+                {
+                    type: 1,
+                    components: [{
+                        type: 4,
+                        custom_id: 'questionTwo',
+                        label: 'Questão 2',
+                        style: 1,
+                        placeholder: 'Ser alguém...',
+                        min_length: 5,
+                        max_length: 1024,
+                        required: true,
+                        value: questionTwo || null
+                    }]
+                }
+            ]
+        }
+    }
+
     BalanceModal = (option, user, userMoney) => {
 
         const label = {

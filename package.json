@@ -23,7 +23,7 @@
     "mercadopago": "^1.5.14",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
-    "mongoose": "^6.5.5",
+    "mongoose": "^6.6.0",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.6",
     "statcord.js": "^3.4.3",

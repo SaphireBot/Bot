@@ -68,7 +68,7 @@ export default new class PollManager {
         this.pull(poll.MessageId)
         message.edit({
             embeds: [embed],
-            components: [componentsJSON]
+            components: []
         }).catch(console.log)
         return
     }
