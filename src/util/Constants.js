@@ -27,7 +27,7 @@ const ConfigurationBase = {
     QrCodeWithoutPrice: "https://media.discordapp.net/attachments/893361065084198954/1007101315832360970/WhatsApp_Image_2022-08-10_at_10.39.05_PM.jpeg",
     ErrorWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1007839310772449400/Saphire_Panic.png",
     PackageLogsWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1018699630998986752/data-management.png?width=484&height=484",
-    vocePrefereChannel: "1017598993162850365",
+    vocePrefereChannel: "1018945013016690708",
     guildsToPrivateCommands: [
         "986292524790464562",
         "888464632291917956",

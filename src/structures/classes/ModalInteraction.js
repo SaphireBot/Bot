@@ -125,7 +125,7 @@ export default class ModalInteraction extends Base {
 
     vocePrefereEdit = async ({ interaction, fields, user, message }) => {
 
-        if (!message || message?.embeds) return
+        if (!message || !message?.embeds) return
 
         const { embeds } = message
         const embed = embeds[0]?.data
@@ -180,12 +180,20 @@ export default class ModalInteraction extends Base {
         const objectComponents = componentsJSON.components
 
         objectComponents[0].style = ButtonStyle.Primary
-        objectComponents[2] = {
-            type: 2,
-            style: ButtonStyle.Success,
-            label: 'Confirmar',
-            custom_id: JSON.stringify({ c: 'redit', src: 'confirm' }),
-        }
+
+        objectComponents[2] = !this.client.staff.includes(this.user.id)
+            ? {
+                type: 2,
+                style: ButtonStyle.Success,
+                label: 'Solicitar alteração',
+                custom_id: JSON.stringify({ c: 'redit', src: 'request' })
+            }
+            : {
+                type: 2,
+                style: ButtonStyle.Success,
+                label: 'Confirmar',
+                custom_id: JSON.stringify({ c: 'redit', src: 'confirm' })
+            }
 
         return await interaction.update({ embeds: [embed], components: [componentsJSON] }).catch(() => { })
     }

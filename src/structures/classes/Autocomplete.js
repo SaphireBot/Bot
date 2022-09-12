@@ -20,7 +20,7 @@ export default class Autocomplete extends Base {
         const { name, value } = this.options.getFocused(true)
         let query = name
 
-        if (['search', 'options', 'user', 'delete', 'edit'].includes(query)) query = this.commandName
+        if (['search', 'options', 'user', 'delete', 'edit', 'view'].includes(query)) query = this.commandName
 
         switch (query) {
             case 'channel': this.blockedChannels(value); break;

@@ -6,6 +6,7 @@ import {
     Modals
 } from "../../../../../classes/index.js"
 import personalListRather from "./functions/personalList.rather.js"
+import viewRather from "./functions/view.rather.js"
 
 export default async interaction => {
 
@@ -22,6 +23,7 @@ export default async interaction => {
     switch (optionName) {
         case 'delete': deleteRather(interaction, optionValue); break;
         case 'edit': editRather(interaction, optionValue); break;
+        case 'view': viewRather(interaction, optionValue); break;
         default:
             await interaction.reply({
                 content: `${e.Deny} | Nenhuma sub-função definida.`,

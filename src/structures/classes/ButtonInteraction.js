@@ -17,7 +17,7 @@ export default class ButtonInteraction extends Base {
         this.user = interaction.user
         this.channel = interaction.channel
         this.guild = interaction.guild
-        this.commandName = this.message.interaction.commandName
+        this.commandName = this.message.interaction?.commandName
         this.command = this.message.interaction
     }
 

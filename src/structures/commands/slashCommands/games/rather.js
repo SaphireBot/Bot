@@ -31,6 +31,12 @@ export default {
                     autocomplete: true
                 },
                 {
+                    name: 'view',
+                    description: 'Veja uma única questão',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+                {
                     name: 'questions',
                     description: 'Mais algumas funções',
                     type: ApplicationCommandOptionType.String,
