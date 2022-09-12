@@ -2,6 +2,7 @@ import Base from './Base.js'
 import error from '../../classes/modules/errors/errors.js'
 import * as Statcord from 'statcord.js'
 import { Emojis, economy } from '../../util/util.js'
+import { Experience } from '../../classes/index.js'
 
 export default class SlashCommand extends Base {
     constructor(interaction) {
@@ -17,9 +18,10 @@ export default class SlashCommand extends Base {
     }
 
     async execute(guildData, clientData) {
-        
+
         this.guildData = guildData
         this.clientData = clientData
+        Experience.addXp(this.user.id, 5)
 
         const command = this.client.slashCommands.get(this.commandName);
         if (!command) return

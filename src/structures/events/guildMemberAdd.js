@@ -2,7 +2,7 @@ import {
     SaphireClient as client,
     Database
 } from '../../classes/index.js'
-import { Permissions } from '../../util/Constants.js'
+// import { Permissions } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 
 client.on('guildMemberAdd', async member => {
@@ -15,7 +15,7 @@ client.on('guildMemberAdd', async member => {
     const guild = await Database.Guild.findOne({ id: member.guild.id }, 'Autorole WelcomeChannel Antifake LogChannel')
     if (!guild) return Database.registerServer(member.guild)
 
-    const clientData = await Database.Client.findOne({ id: client.user.id }, 'PremiumServers')
+    // const clientData = await Database.Client.findOne({ id: client.user.id }, 'PremiumServers')
 
     // if (guild.Antifake && !clientData?.PremiumServers?.includes(member.guild.id)) {
 

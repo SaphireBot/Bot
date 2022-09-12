@@ -719,10 +719,9 @@ export default class Autocomplete extends Base {
     }
 
     async levelOptions() {
-        const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess Administradores')
         const arr = [{ name: 'Esconder mensagem só para mim', value: 'hide' }]
 
-        if (clientData.Administradores?.includes(this.user.id))
+        if (this.client.admins.includes(this.user.id))
             arr.push({ name: 'Usuários que possuem acesso aos Backgrounds', value: 'list' })
 
         return this.respond(arr)

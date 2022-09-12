@@ -12,6 +12,7 @@ import ModalInteraction from '../structures/classes/ModalInteraction.js'
 import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.js'
 import Reminder from '../classes/modules/Reminder.js'
 import GiveawayManager from '../functions/update/giveaway/GiveawayManager.js'
+import Experience from './modules/Experience.js'
 
 export {
     Models,
@@ -27,5 +28,6 @@ export {
     ModalInteraction,
     SelectMenuInteraction,
     Reminder,
-    GiveawayManager
+    GiveawayManager,
+    Experience
 }

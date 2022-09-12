@@ -1,8 +1,6 @@
-import { Database, SaphireClient as client } from '../../classes/index.js'
+import { Database, Experience, SaphireClient as client } from '../../classes/index.js'
 import ReminderSystem from './reminder/index.js'
 import Ranking from './ranking/index.ranking.js'
-// const boostReward = require('../server/boostReward')
-// const RaffleSystem = require('../update/rifasystem')
 
 export default async () => {
 
@@ -23,11 +21,20 @@ export default async () => {
         client.databaseUsers = allDataUsers.map(data => data.id)
     }, 60000 * 5)
 
+    setInterval(() => Experience.setExperience(), 1000 * 30)
+
     // setInterval(() => boostReward(), 60000)
     if (client.shardId === 0) setInterval(async () => await Ranking(), 60000 * 15)
-    // setInterval(() => {
-    //     client.user.setActivity(`${client.commands.size + client.slashCommands.size} comandos em ${client.guilds.cache.size} servidores`, { type: 'PLAYING' })
-    // }, 300000)
+
+    setInterval(async () => {
+        const guildsLength = await client.allGuildsData() || []
+        return client.user.setPresence({
+            activities: [
+                { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${client.shardId}]` }
+            ],
+            status: 'idle'
+        })
+    }, 300000)
 
     const allDataUsers = await Database.User.find({})
     client.databaseUsers = allDataUsers.map(data => data.id)

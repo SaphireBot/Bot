@@ -9,7 +9,7 @@ export default async () => {
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
         { name: 'Likes', emoji: e.Like, title: `${e.Like} Ranking - Global Likes` },
-        { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` },
+        { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` }
     ]
 
     const allUsersData = []

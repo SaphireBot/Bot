@@ -27,6 +27,7 @@
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.6",
     "statcord.js": "^3.4.3",
-    "topgg-autoposter": "^2.0.1"
+    "topgg-autoposter": "^2.0.1",
+    "yuri-canvas": "^4.0.6"
   }
 }
