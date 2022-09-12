@@ -15,6 +15,13 @@ export default async (interaction, optionValue) => {
             ephemeral: true
         })
 
+    const { user } = interaction
+    if (question.id !== user.id && !client.staff.includes(user.id))
+        return await interaction.reply({
+            content: `${e.Deny} | Não tente burlar as regras do universo coisa fofa. Apenas a minha staff pode passar por essas bandas.`,
+            ephemeral: true
+        })
+
     return await interaction.reply({
         embeds: [{
             color: client.blue,

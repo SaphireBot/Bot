@@ -17,6 +17,12 @@ export default async (interaction, optionValue) => {
         })
 
     const { user } = interaction
+    if (question.id !== user.id && !client.staff.includes(user.id))
+        return await interaction.reply({
+            content: `${e.Deny} | Não tente burlar as regras do universo coisa fofa. Apenas a minha staff pode passar por essas bandas.`,
+            ephemeral: true
+        })
+
     const msg = await interaction.reply({
         content: `${e.QuestionMark} | Você tem certeza que deseja deletar a questão \`${optionValue}\`?`,
         embeds: [{

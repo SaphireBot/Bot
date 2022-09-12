@@ -1,4 +1,3 @@
-import { Modals } from '../../../../classes/index.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import game from './rather/game.rather.js'
 import gameOptions from './rather/options.rather.js'
@@ -33,16 +32,12 @@ export default {
                 },
                 {
                     name: 'questions',
-                    description: 'Lista de todas as perguntas',
+                    description: 'Mais algumas funções',
                     type: ApplicationCommandOptionType.String,
                     choices: [
                         {
-                            name: 'Lista completa',
-                            value: 'complete'
-                        },
-                        {
                             name: 'Minhas perguntas',
-                            value: 'myquestions'
+                            value: 'myQuestions'
                         },
                         {
                             name: 'Sugerir uma nova pergunta',

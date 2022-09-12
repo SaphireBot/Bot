@@ -1,6 +1,6 @@
 import { ButtonStyle } from "discord.js"
 import { Emojis as e } from "../../../../util/util.js"
-import addPointRather from "../../../commands/slashCommands/games/rather/addPoint.rather.js"
+import addPointRather from "../../../commands/slashCommands/games/rather/functions/addPoint.rather.js"
 import next from './next.rather.js'
 
 export default async (interaction, { src, bt }) => {

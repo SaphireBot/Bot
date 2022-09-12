@@ -5,6 +5,8 @@ import {
     SaphireClient as client,
     Modals
 } from "../../../../../classes/index.js"
+import personalListRather from "./functions/personalList.rather.js"
+import listRather from "./functions/list.rather.js"
 
 export default async interaction => {
 
@@ -15,12 +17,18 @@ export default async interaction => {
     if (optionValue === 'suggest')
         return await interaction.showModal(Modals.vocePrefere())
 
+    if (optionValue === 'myQuestions')
+        return personalListRather(interaction)
+
+    if (optionValue === 'fullList')
+        return listRather(interaction)
+
     switch (optionName) {
         case 'delete': deleteRather(interaction, optionValue); break;
         case 'edit': editRather(interaction, optionValue); break;
         default:
             await interaction.reply({
-                content: `${e.Deny} | Nenhum sub-função definida.`,
+                content: `${e.Deny} | Nenhuma sub-função definida.`,
                 ephemeral: true
             })
             break;

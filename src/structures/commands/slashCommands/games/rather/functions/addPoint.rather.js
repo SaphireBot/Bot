@@ -1,4 +1,4 @@
-import { Database } from "../../../../../classes/index.js"
+import { Database } from "../../../../../../classes/index.js"
 
 export default async (ratherId, option, userId) => {
 

@@ -125,6 +125,8 @@ export default class ModalInteraction extends Base {
 
     vocePrefereEdit = async ({ interaction, fields, user, message }) => {
 
+        if (!message || message?.embeds) return
+
         const { embeds } = message
         const embed = embeds[0]?.data
 

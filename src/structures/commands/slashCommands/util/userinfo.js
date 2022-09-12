@@ -203,7 +203,7 @@ export default {
                 const embed = embeds[index]
 
                 embed.color = client.red
-                embed.footer = { text: 'Tempo esgatado.' }
+                embed.footer = { text: 'Tempo esgotado.' }
 
                 return await interaction.editReply({
                     embeds: [embed],
