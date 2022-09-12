@@ -66,23 +66,41 @@ export default class Autocomplete extends Base {
 
     async rather(value) {
 
-        if (!this.client.staff.includes(this.user.id)) return await this.respond()
-
         const allData = await this.Database.Rather.find({})
 
-        if (!allData || !allData.length) return await this.respond()
+        if (!allData || !allData.length) return await this.respond([{
+            name: 'Nada por aqui, que tal sugerir uma nova pergunta?',
+            value: 'suggest'
+        }])
 
         value = value?.toLowerCase()
 
-        const fill = allData.filter(data => {
-            return data.id.toLowerCase().includes(value)
-                || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
-                || data.authorId.includes(value)
-                || data.optionOne.question.toLowerCase().includes(value)
-                || data.optionTwo.question.toLowerCase().includes(value)
-        })
+        const fill = this.client.staff.includes(this.user.id)
+            ? allData.filter(data => {
+                return data.id.toLowerCase().includes(value)
+                    || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
+                    || data.authorId.includes(value)
+                    || data.optionOne.question.toLowerCase().includes(value)
+                    || data.optionTwo.question.toLowerCase().includes(value)
+            }) || []
+            : allData
+                .filter(data => data.authorId == this.user.id)
+                .filter(data => {
+                    return data.id.toLowerCase().includes(value)
+                        || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
+                        || data.authorId.includes(value)
+                        || data.optionOne.question.toLowerCase().includes(value)
+                        || data.optionTwo.question.toLowerCase().includes(value)
+                }) || []
 
-        const mapped = fill.map(data => ({ name: `${data.id} - ${this.client.users.resolve(data.authorId)?.tag || 'Not Found'} - ${data.optionOne.question}`, value: data.id }))
+
+        const mapped = fill.length > 0
+            ? fill.map(data => ({ name: `${data.id} - ${this.client.users.resolve(data.authorId)?.tag || 'Not Found'} - ${data.optionOne.question}`, value: data.id }))
+            : [{
+                name: 'Nada por aqui, que tal sugerir uma nova pergunta?',
+                value: 'suggest'
+            }]
+
         return await this.respond(mapped)
     }
 

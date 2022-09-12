@@ -5,6 +5,8 @@ const ConfigurationBase = {
     contentManagerId: "315297741406339083",
     clientId: "837147659898191902",
     guildId: "952214872584749056",
+    guildPackageId: "882475447387054081",
+    packageLogs: "1014911562894544916",
     saphiresHome: "952214872584749056",
     guildCreateChannelId: "981017120206897182",
     guildDeleteChannelId: "981017074723852328",
@@ -24,6 +26,7 @@ const ConfigurationBase = {
     Terms: "https://saphire.gitbook.io/saphire/saphire/termos-de-servicos",
     QrCodeWithoutPrice: "https://media.discordapp.net/attachments/893361065084198954/1007101315832360970/WhatsApp_Image_2022-08-10_at_10.39.05_PM.jpeg",
     ErrorWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1007839310772449400/Saphire_Panic.png",
+    PackageLogsWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1018699630998986752/data-management.png?width=484&height=484",
     vocePrefereChannel: "1017598993162850365",
     guildsToPrivateCommands: [
         "986292524790464562",

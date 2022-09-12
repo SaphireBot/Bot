@@ -32,7 +32,7 @@ export default async function (reason) {
     await client.users.cache.get(config.ownerId)?.send({
         embeds: [{
             color: client.red,
-            title: `${e.Loud} Report de Erro | unhandledRejection`,
+            title: `${e.Loud} Report de Erro | Unhandled Rejection`,
             description: `\`\`\`js\n${reason.stack?.slice(0, 2000)}\`\`\``,
             footer: { text: `Error Code: ${reason.code || 0}` }
         }]
@@ -42,7 +42,7 @@ export default async function (reason) {
         webhook.send({
             embeds: [{
                 color: client.red,
-                title: `${e.Loud} Report de Erro | unhandledRejection`,
+                title: `${e.Loud} Report de Erro | Unhandled Rejection`,
                 description: `\`\`\`js\n${reason.stack?.slice(0, 2000)}\`\`\``,
                 footer: { text: `Error Code: ${reason.code || 0}` }
             }],

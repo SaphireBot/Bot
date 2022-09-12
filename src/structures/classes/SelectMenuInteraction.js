@@ -25,7 +25,7 @@ export default class SelectMenuInteraction extends Base {
         return
     }
 
-    async vocePrefere({ interaction, value, message, e, client }) {
+    async vocePrefere({ interaction, value, message, e }) {
 
         if (value === 'edit') {
 
@@ -69,7 +69,7 @@ export default class SelectMenuInteraction extends Base {
                 optionOne: { question: questionOne },
                 optionTwo: { question: questionTwo },
                 edited: edited
-            }, async function (error, result) {
+            }, async function (error) {
 
                 if (error)
                     return await interaction.reply({
@@ -77,30 +77,10 @@ export default class SelectMenuInteraction extends Base {
                         ephemeral: true
                     })
 
-                const author = client.users.resolve(result.authorId)
-
-                return await interaction.update({
-                    embeds: [{
-                        color: client.green,
-                        title: 'Question View',
-                        description: `Perguntas sugerida por *${author?.tag} - \`${result.authorId}\`*`,
-                        fields: [
-                            {
-                                name: `Pergunta 1 - 0%`,
-                                value: result.optionOne.question
-                            },
-                            {
-                                name: 'Pergunta 2 - 0%',
-                                value: result.optionTwo.question
-                            },
-                            {
-                                name: 'Editado',
-                                value: edited ? 'Sim' : 'Não'
-                            }
-                        ],
-                        footer: { text: `Question ID: ${result.id}` }
-                    }],
-                    components: []
+                await message.delete().catch(() => { })
+                return await interaction.reply({
+                    content: `${e.Check} | Sujestão de pergunta criada com sucesso.`,
+                    ephemeral: true
                 })
 
             })

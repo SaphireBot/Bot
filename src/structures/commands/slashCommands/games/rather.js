@@ -10,11 +10,6 @@ export default {
     type: 1,
     options: [
         {
-            name: 'suggest',
-            description: 'Sugira uma nova pergunta para o jogo',
-            type: ApplicationCommandOptionType.Subcommand
-        },
-        {
             name: 'play',
             description: 'Você prefere isso ou aquilo?',
             type: ApplicationCommandOptionType.Subcommand
@@ -35,6 +30,25 @@ export default {
                     description: 'Edite uma questão do jogo',
                     type: ApplicationCommandOptionType.String,
                     autocomplete: true
+                },
+                {
+                    name: 'questions',
+                    description: 'Lista de todas as perguntas',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Lista completa',
+                            value: 'complete'
+                        },
+                        {
+                            name: 'Minhas perguntas',
+                            value: 'myquestions'
+                        },
+                        {
+                            name: 'Sugerir uma nova pergunta',
+                            value: 'suggest'
+                        }
+                    ]
                 }
             ]
         }
@@ -46,9 +60,6 @@ export default {
 
         const { options } = interaction
         const subCommand = options.getSubcommand()
-
-        if (subCommand === 'suggest')
-            return await interaction.showModal(Modals.vocePrefere())
 
         if (subCommand === 'options')
             return gameOptions(interaction)
