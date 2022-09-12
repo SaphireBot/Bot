@@ -19,7 +19,7 @@ export default async interaction => {
     const embeds = EmbedGenerator(allData)
 
     if (embeds.length <= 1)
-        return await interaction.reply({ embeds: embeds[0] })
+        return await interaction.reply({ embeds: embeds[0], ephemeral: true })
 
     const buttons = [{
         type: 1,
@@ -51,7 +51,8 @@ export default async interaction => {
     const msg = await interaction.reply({
         embeds: embeds[0],
         components: buttons,
-        fetchReply: true
+        fetchReply: true,
+        ephemeral: true
     })
 
     let index = 0

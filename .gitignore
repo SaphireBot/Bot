@@ -109,6 +109,7 @@ dist
 
 # Discloud
 discloud.config
+discloud/
 
 # Docusaurus cache and generated files
 .docusaurus

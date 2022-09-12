@@ -6,7 +6,6 @@ import {
     Modals
 } from "../../../../../classes/index.js"
 import personalListRather from "./functions/personalList.rather.js"
-import listRather from "./functions/list.rather.js"
 
 export default async interaction => {
 
@@ -19,9 +18,6 @@ export default async interaction => {
 
     if (optionValue === 'myQuestions')
         return personalListRather(interaction)
-
-    if (optionValue === 'fullList')
-        return listRather(interaction)
 
     switch (optionName) {
         case 'delete': deleteRather(interaction, optionValue); break;
