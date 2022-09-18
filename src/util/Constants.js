@@ -8,6 +8,7 @@ const ConfigurationBase = {
     guildPackageId: "882475447387054081",
     packageLogs: "1014911562894544916",
     saphiresHome: "952214872584749056",
+    wallpaperIndicateChannelId: "1021089841460559983",
     guildCreateChannelId: "981017120206897182",
     guildDeleteChannelId: "981017074723852328",
     clientErrorChannelId: "1007819488584028180",

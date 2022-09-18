@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import searchAnime from '../../functions/anime/search.anime.js'
+import wallpaperAnime from '../../functions/anime/wallpaper.anime.js'
 
 export default {
     name: 'anime',
@@ -35,13 +36,39 @@ export default {
                     required: true
                 }
             ]
+        },
+        {
+            name: 'wallpaper',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[util] Olhe os melhores wallpapers de animes aqui',
+            options: [
+                {
+                    name: 'search',
+                    description: 'Pesquise por um wallpaper',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+                {
+                    name: 'indicate',
+                    description: 'Indique um anime para a Saphire\'s Team adicionar ao pacote.',
+                    max_length: '200',
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
         }
     ],
     helpData: {
         description: 'Tudo sobre anime aqui'
     },
     async execute({ interaction }) {
-        return searchAnime(interaction)
+
+        const { options } = interaction
+        const subCommand = options.getSubcommand()
+
+        if (subCommand === 'search')
+            return searchAnime(interaction)
+
+        if (subCommand === 'wallpaper')
+            return wallpaperAnime(interaction)
     }
 }
-

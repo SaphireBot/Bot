@@ -50,7 +50,7 @@ export default class Autocomplete extends Base {
             case 'select_giveaway': this.select_giveaway(value); break;
             case 'available_bets': this.available_bets(value); break;
             case 'blackjacks': this.blackjacks(value); break;
-            case 'wallpaper': this.wallpapers(value); break;
+            case 'wallpaper': case 'anime': this.wallpapers(value); break;
             case 'flag-adminstration': this.flagAdminOptions(); break;
             case 'ranking': this.rankingOptions(); break;
             case 'daily': this.dailyOptions(); break;
