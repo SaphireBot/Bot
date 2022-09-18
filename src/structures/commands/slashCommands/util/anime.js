@@ -1,0 +1,36 @@
+import { ApplicationCommandOptionType } from 'discord.js'
+import searchAnime from '../../functions/anime/search.anime.js'
+
+export default {
+    name: 'anime',
+    description: '[util] Comandos referente a animes',
+    dm_permission: false,
+    type: 1,
+    options: [
+        {
+            name: 'search',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[util] Pesquise algúm anime usando este comando',
+            options: [
+                {
+                    name: 'input',
+                    description: 'Qual anime você quer pesquisar?',
+                    type: ApplicationCommandOptionType.String,
+                    required: true
+                }
+            ]
+        }
+    ],
+    helpData: {
+        description: 'Tudo sobre anime aqui'
+    },
+    async execute({ interaction }) {
+
+        const { options } = interaction
+        const subCommand = options.getSubcommand()
+
+        if (subCommand === 'search') return searchAnime(interaction)
+
+    }
+}
+

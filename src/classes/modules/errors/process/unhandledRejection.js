@@ -4,7 +4,7 @@ import { SaphireClient as client } from '../../../index.js'
 import createWebhook from '../functions/createWebhook.errors.js'
 
 export default async function (reason) {
-
+    console.log(reason)
     /**
      * 500 Internal Server Error
      * 10004 Unknown Guild
