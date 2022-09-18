@@ -49,7 +49,13 @@ export default {
         const { BgLevel: LevelWallpapers } = Database
         const { options, user: author, guild } = interaction
 
-        const user = options.getUser('user') || author
+        const user = await (async () => {
+            let userFetch = undefined
+            if (options.getString('search_user'))
+                userFetch = await client.users.fetch(options.getString('search_user')).catch(() => null)
+            return userFetch || options.getUser('user') || author
+        })()
+
         const level_options = options.getString('level_options')
         const hide = level_options === 'hide'
         const bg = options.getString('change_background')
@@ -152,13 +158,13 @@ export default {
             await build()
 
             return await rankCard(interaction, {
-                member: user, // String
+                user: user, // String
                 level: data.level || 0, // Number
                 currentXP: data.exp || 0, // Number
                 neededXP: data.xpNeeded || 0, // Number
                 rank: data.rank || 0, // Number
                 color: userData?.Color?.Set, // String
-                backgroundUrl: userData.Walls?.Set || LevelWallpapers?.bg0?.Image || null // String
+                backgroundUrl: userData.Walls?.Set || LevelWallpapers['bg0']?.Image || null // String
             })
                 .catch(console.log)
 
