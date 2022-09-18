@@ -692,11 +692,11 @@ export default class Autocomplete extends Base {
 
         const userData = await this.Database.User.findOne({ id: this.user.id }, 'Walls') || []
         const userBackgrounds = userData.Walls?.Bg || []
-        const backgrounds = Object.entries(Database.BgLevel.get('LevelWallpapers') || {})
+        const backgrounds = Object.entries(this.Database.BgLevel || {})
         const walls = backgrounds
             .sort((a, b) => {
-                let num = parseInt(a[0].slice(2, 5))
-                let num2 = parseInt(b[0].slice(2, 5))
+                const num = parseInt(a[0].slice(2, 5))
+                const num2 = parseInt(b[0].slice(2, 5))
                 return num - num2
             })
             .filter(bg =>
