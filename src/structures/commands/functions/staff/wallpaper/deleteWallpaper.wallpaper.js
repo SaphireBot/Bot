@@ -1,8 +1,8 @@
 import { Emojis as e } from "../../../../../util/util.js"
 import { Config as config } from "../../../../../util/Constants.js"
 import { SaphireClient as client } from "../../../../../classes/index.js"
-import fs from 'fs'
 import { ButtonStyle } from "discord.js"
+import fs from 'fs'
 
 export default async interaction => {
 
