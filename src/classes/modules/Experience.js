@@ -1,4 +1,3 @@
-import { GuildScheduledEventPrivacyLevel } from "discord.js"
 import Database from "../database/Database.js"
 
 export default new class Experience {
@@ -25,28 +24,28 @@ export default new class Experience {
 
         const dataToUpdate = []
 
-        for (let data of this.users) {
+        for await (let data of this.users) {
 
             const user = usersData.find(d => d.id === data.id)
             let level = user?.Level || 1
             let xp = data.xp += (user?.Xp || 0)
 
             do {
-                if (xp <= 0) break;
 
                 if (xp >= parseInt((level || 1) * 275)) {
                     level++
                     xp -= parseInt((level) * 275)
                     if (xp < 0) xp = 0
-                } else break;
-            } while (xp <= parseInt((level) * 275))
+                }
+
+            } while (xp >= parseInt((level) * 275))
 
             dataToUpdate.push({
                 updateOne: {
                     filter: { id: data.id },
                     update: {
                         $set: {
-                            Xp: data.xp,
+                            Xp: xp,
                             Level: level
                         }
                     },

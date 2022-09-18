@@ -7,7 +7,7 @@ import { Emojis as e } from '../../../util/util.js'
 
 export default async () => {
 
-    Experience.setExperience()
+    await Experience.setExperience().catch(console.log)
 
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
