@@ -17,6 +17,22 @@ export default {
                     description: 'Qual anime você quer pesquisar?',
                     type: ApplicationCommandOptionType.String,
                     required: true
+                },
+                {
+                    name: 'in',
+                    description: 'Você está pesquisando por...',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Anime',
+                            value: 'anime'
+                        },
+                        {
+                            name: 'Manga',
+                            value: 'manga'
+                        }
+                    ],
+                    required: true
                 }
             ]
         }

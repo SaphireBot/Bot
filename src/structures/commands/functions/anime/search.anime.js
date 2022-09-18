@@ -9,9 +9,16 @@ export default async interaction => {
 
     const { options } = interaction
     const search = options.getString('input')
+    const lookingFor = options.getString('in')
+
+    if (!['anime', 'manga'].includes(lookingFor))
+        return await interaction.reply({
+            content: `${e.Deny} | Parâmetro de busca incorreto.`,
+            ephemeral: true
+        })
 
     return axios({
-        baseURL: `https://kitsu.io/api/edge/anime?filter[text]=${search}`,
+        baseURL: `https://kitsu.io/api/edge/${lookingFor}?filter[text]=${search}`,
         headers: {
             Accept: 'application/vnd.api+json',
             'Content-Type': 'application/vnd.api+json'
@@ -30,13 +37,22 @@ export default async interaction => {
                 .then(async res => {
 
                     const Subtype = {
+                        // Anime
                         ONA: 'Animação Original da Net (ONA)',
                         OVA: 'Video de Animação Original (OVA)',
                         TV: 'Televisão',
                         movie: 'Filme',
                         music: 'Música',
-                        special: 'Especial'
-                    }[anime.showType] || '\`Not Found\`'
+                        special: 'Especial',
+                        // Manga
+                        doujin: 'Doujin',
+                        manga: 'Manga',
+                        manhua: 'Manhua',
+                        manhwa: 'Manhwa',
+                        novel: 'Novel',
+                        oel: 'Oel',
+                        oneshot: 'Oneshot',
+                    }[anime.showType || anime.mangaType] || '\`Not Found\`'
 
                     const Sinopse = res.text?.limit('MessageEmbedDescription') || '\`Synopsis Not Found\`'
 
@@ -68,6 +84,7 @@ export default async interaction => {
                     const AnimeRanking = anime.ratingRank || '0'
                     const AnimePop = anime.popularityRank || '0'
                     const Epsodios = anime.episodeCount || 'N/A'
+                    const Volumes = anime.volumeCount || null
 
                     const Create = anime.createdAt
                         ? Date.Timestamp(new Date(anime.createdAt), 'f', true)
@@ -92,11 +109,11 @@ export default async interaction => {
                                 fields: [
                                     {
                                         name: '🗂️ Informações',
-                                        value: `Nome Japonês: ${Name.original}\nNome Inglês: ${Name.en}\nNome Mundial: ${Name.en_jp}\nNome Canônico: ${Name.canonical}\nNome abreviado: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}\nTempo médio por epsódio: ${anime.episodeLength} minutos`
+                                        value: `Nome Japonês: ${Name.original}\nNome Inglês: ${Name.en}\nNome Mundial: ${Name.en_jp}\nNome Canônico: ${Name.canonical}\nNome abreviado: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
                                     },
                                     {
                                         name: `📊 Status - ${Status}`,
-                                        value: `Nota Média: ${Nota}\nRank Kitsu: ${AnimeRanking}\nPopularidade: ${AnimePop}\nEpisódios: ${Epsodios}\nCriação: ${Create}\nÚltima atualização: ${LastUpdate}\nLançamento: ${Lancamento}\nTérmino: ${Termino}`
+                                        value: `Nota Média: ${Nota}\nRank Kitsu: ${AnimeRanking}\nPopularidade: ${AnimePop}${Volumes ? `\nVolumes: ${Volumes}` : `\nEpisódios: ${Epsodios}`}\nCriação: ${Create}\nÚltima atualização: ${LastUpdate}\nLançamento: ${Lancamento}\nTérmino: ${Termino}`
                                     }
                                 ],
                                 image: { url: anime.posterImage?.original ? anime.posterImage.original : null }
