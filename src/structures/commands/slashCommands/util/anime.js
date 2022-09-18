@@ -41,12 +41,7 @@ export default {
         description: 'Tudo sobre anime aqui'
     },
     async execute({ interaction }) {
-
-        const { options } = interaction
-        const subCommand = options.getSubcommand()
-
-        if (subCommand === 'search') return searchAnime(interaction)
-
+        return searchAnime(interaction)
     }
 }
 
