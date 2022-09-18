@@ -28,8 +28,8 @@ export default new class Experience {
         for (let data of this.users) {
 
             const user = usersData.find(d => d.id === data.id)
-            let level = user.Level || 1
-            let xp = data.xp += (user.Xp || 0)
+            let level = user?.Level || 1
+            let xp = data.xp += (user?.Xp || 0)
 
             do {
                 if (xp <= 0) break;
