@@ -112,12 +112,12 @@ export default async ({ interaction, code }) => {
 
 function subtractWallpaper(code, quantity) {
 
-    const allJsonData = JSON.parse(fs.readFileSync('./src/JSON/levelwallpapers.json'))
+    const allJsonData = JSON.parse(fs.readFileSync('./JSON/levelwallpapers.json'))
 
     allJsonData[code].Limit -= quantity
 
     fs.writeFile(
-        './src/JSON/levelwallpapers.json',
+        './JSON/levelwallpapers.json',
         JSON.stringify(allJsonData, null, 4),
         (err) => {
             if (err) console.log(err)

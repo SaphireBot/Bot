@@ -48,7 +48,7 @@ export default {
                 },
                 {
                     name: 'delete_anime',
-                    description: '[bot] Delete um anime do pacote',
+                    description: '[bot] Deletar um anime do pacote',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
@@ -62,7 +62,7 @@ export default {
                 },
                 {
                     name: 'delete_wallpaper',
-                    description: '[bot] Delete um wallpaper de um anime',
+                    description: '[bot] Deletar um wallpaper de um anime',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {

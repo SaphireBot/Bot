@@ -9,7 +9,7 @@ export default async (interaction, playersAvailable = []) => {
 
     const { options, user } = interaction
 
-    const allWords = JSON.parse(fs.readFileSync('./src/JSON/frases.json')).Mix
+    const allWords = JSON.parse(fs.readFileSync('./JSON/frases.json')).Mix
     const optionGiven = options.getInteger('letras') || 4
     const length = optionGiven >= 1 || optionGiven <= 7 ? optionGiven : 4
     const wordsInLength = allWords.filter(word =>

@@ -8,7 +8,7 @@ export default async interaction => {
 
     const { options, user } = interaction
     const anime = options.getString('anime')
-    const wallpapers = JSON.parse(fs.readFileSync('./src/JSON/wallpaperanime.json'))
+    const wallpapers = JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     const allKeys = Object.keys(wallpapers || {}) || []
 
     if (!allKeys.includes(anime))
@@ -17,7 +17,7 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const animeData = wallpapers[anime]
+    let animeData = wallpapers[anime]
 
     if (!animeData || !animeData.length)
         return await interaction.reply({
@@ -85,10 +85,9 @@ export default async interaction => {
             const { customId } = int
 
             if (customId === 'delete') {
-                collector.stop()
-                return deleteWallpaper()
+                await deleteWallpaper()
+                if (index >= animeData.length) index = animeData.length - 1
             }
-
             if (customId === 'cancel') return collector.stop()
 
             if (customId === 'right') {
@@ -112,10 +111,11 @@ export default async interaction => {
 
     async function deleteWallpaper() {
 
-        wallpapers[anime] = wallpapers[anime].filter(data => data !== animeData[index])
+        wallpapers[anime] = animeData.filter(data => data !== animeData[index])
+        animeData = wallpapers[anime]
 
         return fs.writeFile(
-            './src/JSON/wallpaperanime.json',
+            './JSON/wallpaperanime.json',
             JSON.stringify(wallpapers, null, 4),
             async (err) => {
                 if (err) {
@@ -125,11 +125,6 @@ export default async interaction => {
                         ephemeral: true
                     })
                 }
-
-                await interaction.followUp({
-                    content: `${e.Trash} | O wallpaper anime \`${anime}\` foi deletado com sucesso.`,
-                    ephemeral: true
-                })
                 return success()
             }
         )

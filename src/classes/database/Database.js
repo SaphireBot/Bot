@@ -13,13 +13,6 @@ const { connect } = Mongoose
 class Database extends Models {
     constructor() {
         super()
-        this.BgLevel = JSON.parse(fs.readFileSync('./src/JSON/levelwallpapers.json'))
-        this.Frases = JSON.parse(fs.readFileSync('./src/JSON/frases.json'))
-        this.Characters = JSON.parse(fs.readFileSync('./src/JSON/characters.json'))
-        this.Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
-        this.Logomarca = JSON.parse(fs.readFileSync('./src/JSON/logomarca.json'))
-        this.Quiz = JSON.parse(fs.readFileSync('./src/JSON/quiz.json'))
-        this.Wallpapers = JSON.parse(fs.readFileSync('./src/JSON/wallpaperanime.json'))
         this.Cache = Cache
         this.Names = {
             Rody: "451619591320371213",
@@ -32,6 +25,34 @@ class Database extends Models {
             San: "327496267007787008",
             Khetlyn: "428088706533031938"
         }
+    }
+
+    get BgLevel() {
+        return JSON.parse(fs.readFileSync('./JSON/levelwallpapers.json'))
+    }
+
+    get Frases() {
+        return JSON.parse(fs.readFileSync('./JSON/frases.json'))
+    }
+
+    get Characters() {
+        return JSON.parse(fs.readFileSync('./JSON/characters.json'))
+    }
+
+    get Flags() {
+        return JSON.parse(fs.readFileSync('./JSON/flags.json'))
+    }
+
+    get Logomarca() {
+        return JSON.parse(fs.readFileSync('./JSON/logomarca.json'))
+    }
+
+    get Quiz() {
+        return JSON.parse(fs.readFileSync('./JSON/quiz.json'))
+    }
+    
+    get Wallpapers() {
+        return JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     }
 
     MongoConnect = async (client) => {
@@ -336,7 +357,7 @@ class Database extends Models {
 
         if (g || g?.id === guild.id) return
 
-        const emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json'))
+        const emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
 
         await this.Guild.updateOne(
             { id: guild.id },

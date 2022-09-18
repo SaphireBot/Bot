@@ -8,7 +8,7 @@ export default async interaction => {
     const { options, user } = interaction
     const anime = options.getString('anime')
     const url = options.getString('url')
-    const wallpapers = JSON.parse(fs.readFileSync('./src/JSON/wallpaperanime.json'))
+    const wallpapers = JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     const allKeys = Object.keys(wallpapers || {}) || []
     const allValues = Object.values(wallpapers || {}) || []
     const allData = Object.entries(wallpapers || {}) || []
@@ -43,7 +43,7 @@ export default async interaction => {
     wallpapers[anime].push(url)
 
     return fs.writeFile(
-        './src/JSON/wallpaperanime.json',
+        './JSON/wallpaperanime.json',
         JSON.stringify(wallpapers, null, 4),
         async (err) => {
             if (err) {

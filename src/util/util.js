@@ -32,9 +32,9 @@ const ClientOptions = {
     ]
 }
 
-const Emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json'))
-const Gifs = JSON.parse(fs.readFileSync('./src/JSON/gifs.json'))
-const Flags = JSON.parse(fs.readFileSync('./src/JSON/flags.json'))
+const Emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
+const Gifs = JSON.parse(fs.readFileSync('./JSON/gifs.json'))
+const Flags = JSON.parse(fs.readFileSync('./JSON/flags.json'))
 
 const economy = {
     async add(userId, amount, message) {

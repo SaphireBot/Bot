@@ -4,7 +4,7 @@ import * as Constants from '../../util/Constants.js'
 
 export default class Base {
     constructor() {
-        this.emojis = JSON.parse(fs.readFileSync('./src/JSON/emojis.json')) // Ideia por: Jack - 904891162362519562
+        this.emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json')) // Ideia por: Jack - 904891162362519562
         this.modals = Modals.modals
         this.client = client
         this.Database = Database

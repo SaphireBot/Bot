@@ -8,7 +8,7 @@ export default async interaction => {
 
     const { options, user } = interaction
     const anime = options.getString('anime')
-    const wallpapers = JSON.parse(fs.readFileSync('./src/JSON/wallpaperanime.json'))
+    const wallpapers = JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     const allKeys = Object.keys(wallpapers || {}) || []
 
     if (!allKeys.includes(anime))
@@ -59,7 +59,7 @@ export default async interaction => {
     function executeDelete() {
         delete wallpapers[anime]
         return fs.writeFile(
-            './src/JSON/wallpaperanime.json',
+            './JSON/wallpaperanime.json',
             JSON.stringify(wallpapers, null, 4),
             async (err) => {
                 if (err) {
