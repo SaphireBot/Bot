@@ -1,5 +1,5 @@
 import rankCard from './level/build.level.js'
-import { Permissions } from '../../../../util/Constants.js'
+import { HexColors, ColorsTranslate, Permissions } from '../../../../util/Constants.js'
 import buyBackground from './level/buy.level.js'
 
 export default {
@@ -13,12 +13,18 @@ export default {
             description: 'Selecione um membro para ver o level dele',
             type: 6
         },
-        // {
-        //     name: 'search_user',
-        //     description: 'Pesquise por um usuário',
-        //     type: 3,
-        //     autocomplete: true
-        // },
+        {
+            name: 'search_user',
+            description: 'Pesquise por um usuário',
+            type: 3,
+            autocomplete: true
+        },
+        {
+            name: 'color',
+            description: 'Defina a cor em que o seu card é apresentado',
+            type: 3,
+            autocomplete: true
+        },
         {
             name: 'change_background',
             description: 'Mude seu background para ficar estiloso.',
@@ -38,7 +44,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, Database, emojis: e, clientData }) {
+    async execute({ interaction, client, Database, clientData, emojis: e }) {
 
         const { BgLevel: LevelWallpapers } = Database
         const { options, user: author, guild } = interaction
@@ -47,12 +53,15 @@ export default {
         const level_options = options.getString('level_options')
         const hide = level_options === 'hide'
         const bg = options.getString('change_background')
+        const changeColor = options.getString('color')
         const showList = level_options === 'list'
+
+        if (changeColor) return defineColor(changeColor)
 
         const bgCode = options.getString('buy_background')
         if (bgCode) return buyBackground({ interaction, code: bgCode })
 
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance Walls Level Xp')
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance Walls Level Xp Color.Set')
         const data = {}
 
         if (showList) return bgAcess()
@@ -148,8 +157,8 @@ export default {
                 currentXP: data.exp || 0, // Number
                 neededXP: data.xpNeeded || 0, // Number
                 rank: data.rank || 0, // Number
-                slash: true, // Boolean
-                background: userData.Walls?.Set || LevelWallpapers?.bg0?.Image || null // String
+                color: userData?.Color?.Set, // String
+                backgroundUrl: userData.Walls?.Set || LevelWallpapers?.bg0?.Image || null // String
             })
                 .catch(console.log)
 
@@ -167,6 +176,47 @@ export default {
 
             data.rank = usersAllData.query.findIndex(author => author?.id === user.id) + 1 || '2000^'
             return
+        }
+
+        async function defineColor(colorName) {
+
+            const color = HexColors[colorName]
+
+            if (!color)
+                return await interaction.reply({
+                    content: `${e.Deny} | Cor não existente ou não cadastrada código fonte.`,
+                    ephemeral: true
+                })
+
+            return await Database.User.updateOne(
+                { id: user.id },
+                { $set: { "Color.Set": color } },
+                {
+                    new: true,
+                    upsert: true
+                }
+            )
+                .then(async result => {
+
+                    const { modifiedCount } = result
+
+                    if (modifiedCount === 0)
+                        return await interaction.reply({
+                            content: `${e.Deny} | Esta cor já está configurada no perfil.`,
+                            ephemeral: true
+                        })
+
+                    return await interaction.reply({
+                        content: `${e.Check} | A cor \`${ColorsTranslate[colorName]}\` foi definida com sucesso no seu perfil.`
+                    })
+                })
+                .catch(async err => {
+                    console.log(err)
+                    return await interaction.reply({
+                        content: `${e.Warn} | Houve um erro ao editar a cor do seu perfil.`
+                    })
+                })
+
         }
 
     }

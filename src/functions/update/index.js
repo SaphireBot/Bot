@@ -11,7 +11,6 @@ export default async () => {
 
     setInterval(() => {
         ReminderSystem()
-        // RaffleSystem()
     }, 3000)
 
     setInterval(async () => {
@@ -23,7 +22,6 @@ export default async () => {
 
     setInterval(() => Experience.setExperience(), 1000 * 30)
 
-    // setInterval(() => boostReward(), 60000)
     if (client.shardId === 0) setInterval(async () => await Ranking(), 60000 * 15)
 
     setInterval(async () => {

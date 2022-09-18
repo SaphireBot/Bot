@@ -105,6 +105,40 @@ const BitColors = {
     LuminousVividRed: 0xff0000
 }
 
+const HexColors = {
+    Default: "#000000",
+    White: "#ffffff",
+    Aqua: "#1abc9c",
+    Green: "#57f287",
+    Blue: "#3498db",
+    Yellow: "#fee75c",
+    Purple: "#9b59b6",
+    LuminousVividPink: "#e91e63",
+    Fuchsia: "#eb459e",
+    Gold: "#f1c40f",
+    Orange: "#e67e22",
+    Red: "#ed4245",
+    Grey: "#95a5a6",
+    Navy: "#34495e",
+    DarkAqua: "#11806a",
+    DarkGreen: "#1f8b4c",
+    DarkBlue: "#206694",
+    DarkPurple: "#71368a",
+    DarkVividPink: "#ad1457",
+    DarkGold: "#c27c0e",
+    DarkOrange: "#a84300",
+    DarkRed: "#992d22",
+    DarkGrey: "#979c9f",
+    DarkerGrey: "#7f8c8d",
+    LightGrey: "#bcc0c0",
+    DarkNavy: "#2c3e50",
+    Blurple: "#5865f2",
+    Greyple: "#99aab5",
+    DarkButNotBlack: "#2c2f33",
+    NotQuiteBlack: "#23272a",
+    LuminousVividRed: "#ff0000"
+}
+
 const Languages = {
     af: "Africano",
     am: "Amárico",
@@ -619,6 +653,7 @@ export {
     ConfigurationBase as Config,
     DiscordColors as ColorsTranslate,
     BitColors as Colors,
+    HexColors,
     Languages,
     Flags as DiscordFlags,
     PermissionsAsFlagBits as Permissions,

@@ -1,10 +1,13 @@
 import {
     Database,
+    Experience,
     SaphireClient as client
 } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
 export default async () => {
+
+    Experience.setExperience()
 
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
