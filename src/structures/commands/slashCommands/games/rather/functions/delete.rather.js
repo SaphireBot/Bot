@@ -17,7 +17,7 @@ export default async (interaction, optionValue) => {
         })
 
     const { user } = interaction
-    
+
     if (question.authorId !== user.id && !client.staff.includes(user.id))
         return await interaction.reply({
             content: `${e.Deny} | Não tente burlar as regras do universo coisa fofa. Apenas a minha staff pode passar por essas bandas.`,
@@ -102,13 +102,12 @@ export default async (interaction, optionValue) => {
                 components: []
             })
 
-        const guild = await client.guilds.fetch(Config.guildPackageId).catch(() => null)
-
         await interaction.followUp({
             content: `${e.Check} | A questão **\`${question.id}\`** foi deletada com sucesso.`,
             ephemeral: true
         })
 
+        const guild = await client.guilds.fetch(Config.guildPackageId).catch(() => null)
         if (!guild) return
 
         const channelLogs = guild.channels.cache.get(Config.packageLogs)
