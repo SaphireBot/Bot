@@ -1,4 +1,4 @@
-import ranking from '../../../../functions/update/ranking/index.ranking.js'
+import { Database } from "../../../../classes/index.js"
 
 export default {
     name: 'test',
@@ -11,8 +11,6 @@ export default {
         description: 'Apenas um comando de teste exclusivo para o meu'
     },
     async execute({ interaction, client, e }) {
-
-        return await interaction.reply({ content: 'ok', ephemeral: true })
 
     }
 }

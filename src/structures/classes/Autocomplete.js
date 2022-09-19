@@ -20,7 +20,7 @@ export default class Autocomplete extends Base {
         const { name, value } = this.options.getFocused(true)
         let query = name
 
-        if (['search', 'options', 'user', 'delete', 'edit', 'view'].includes(query)) query = this.commandName
+        if (['search', 'options', 'delete', 'edit', 'view'].includes(query)) query = this.commandName
 
         switch (query) {
             case 'channel': this.blockedChannels(value); break;
@@ -31,8 +31,8 @@ export default class Autocomplete extends Base {
             case 'database_users': this.databaseUsers(value); break;
             case 'balance': this.balanceOptions(value); break;
             case 'de': case 'para': this.translateLanguages(value); break;
-            case 'search_guild': this.allGuilds(value); break;
-            case 'search_user': case 'userinfo': this.allUsers(value); break;
+            case 'search_guild': case 'server': this.allGuilds(value); break;
+            case 'search_user': case 'user': this.allUsers(value); break;
             case 'change_background': this.changeLevelBackground(value); break;
             case 'rather': this.rather(value); break;
             case 'buy_background': this.buyLevelBackground(value); break;

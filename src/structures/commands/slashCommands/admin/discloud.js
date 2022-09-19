@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { logs, backup, user, restart, stop, start, update, apps } from './functions/functions.discloud.js'
+import { logs, backup, user, restart, stop, start, update, apps } from './discloud/functions.discloud.js'
 
 export default {
     name: 'discloud',

@@ -16,12 +16,6 @@ export default async function (reason) {
      * 10062 Unknow Interaction
      */
 
-    if (reason.code === 50001)
-        return await interaction.reply({
-            content: `${e.Deny} | Não tenho acesso ou permissão suficiente para executar este comando.`,
-            ephemeral: true
-        }).catch(() => { })
-
     if ([500, 10004, 10008, 11000, 50001, 10062].includes(reason.code)) return
 
     const guild = await client.guilds.fetch(config.guildId).catch(() => null)
