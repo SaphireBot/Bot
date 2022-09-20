@@ -17,19 +17,18 @@
     "canvacord": "^5.4.7",
     "canvas": "^2.10.1",
     "dicionario.js": "^1.1.1-b",
-    "discloud.app": "^0.0.19",
+    "discloud.app": "^0.1.1",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "mercadopago": "^1.5.14",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
-    "mongoose": "^6.6.0",
+    "mongoose": "^6.6.1",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.6",
-    "simply-djs": "^2.0.99",
+    "simply-djs": "^3.0.2",
     "statcord.js": "^3.4.3",
-    "topgg-autoposter": "^2.0.1",
-    "yuri-canvas": "^4.0.6"
+    "topgg-autoposter": "^2.0.1"
   }
 }

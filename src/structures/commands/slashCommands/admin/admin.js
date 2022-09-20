@@ -25,7 +25,26 @@ export default {
                     autocomplete: true
                 },
             ]
-        }
+        },
+        {
+            name: 'delete',
+            description: '[admin] Delete algo do banco de dados',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'user',
+                    description: 'ID do usuário a ser deletado',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+                {
+                    name: 'server',
+                    description: 'ID do servidor a ser deletado',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+            ]
+        },
     ],
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'

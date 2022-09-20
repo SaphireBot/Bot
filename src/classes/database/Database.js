@@ -326,7 +326,7 @@ class Database extends Models {
 
         if (!user || user?.bot) return
 
-        const u = await this.User.findOne({ id: user.id })
+        const u = await this.User.exists({ id: user.id })
         if (u || u?.id === user.id) return
 
         new this.User({ id: user.id }).save()
@@ -353,7 +353,7 @@ class Database extends Models {
 
         if (!guild || !guild?.id) return
 
-        const g = await this.Guild.findOne({ id: guild.id })
+        const g = await this.Guild.exists({ id: guild.id })
 
         if (g || g?.id === guild.id) return
 
