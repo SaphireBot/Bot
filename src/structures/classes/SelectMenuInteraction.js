@@ -149,7 +149,10 @@ export default class SelectMenuInteraction extends Base {
                         })
 
                     interaction.message.delete().catch(() => { })
-                    return await interaction.reply({ content: `${e.Check} | O anime \`${name}\` foi salvo com sucesso.`, })
+                    return await interaction.reply({
+                        content: `${e.Check} | O anime \`${name}\` foi salvo com sucesso.`,
+                        ephemeral: true
+                    })
 
                 }
             )

@@ -29,6 +29,7 @@ const ConfigurationBase = {
     ErrorWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1007839310772449400/Saphire_Panic.png",
     PackageLogsWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1018699630998986752/data-management.png?width=484&height=484",
     vocePrefereChannel: "1018945013016690708",
+    animeSuggetionsChannel: "1022307959436492941",
     guildsToPrivateCommands: [
         "986292524790464562",
         "888464632291917956",
