@@ -29,6 +29,7 @@ export default async interaction => {
 
     if (!option) {
         const anime = animes.random()
+        const animeIndex = animes.findIndex(an => an.name === anime.name)
 
         return await interaction.reply({
             embeds: [{
@@ -37,7 +38,7 @@ export default async interaction => {
                 description: 'Todos os animes presentes neste comando foram sugeridos pelos próprios usuários e aprovados pela Administração da Saphire.',
                 fields: [
                     {
-                        name: 'Anime',
+                        name: `Anime - ${animeIndex + 1}/${animes.length}`,
                         value: anime.name
                     },
                     {
@@ -59,17 +60,33 @@ export default async interaction => {
                         },
                         {
                             type: 2,
-                            label: 'Indicar um anime',
+                            label: 'Indicar',
                             emoji: e.saphireLendo,
                             custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
                             style: ButtonStyle.Primary
                         },
                         {
                             type: 2,
-                            label: 'Ver Informações',
+                            label: 'Informações',
                             emoji: '🔎',
                             custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
                             style: ButtonStyle.Primary
+                        },
+                        {
+                            type: 2,
+                            label: anime.up || 0,
+                            emoji: e.Upvote,
+                            custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
+                            style: ButtonStyle.Success,
+                            disabled: true
+                        },
+                        {
+                            type: 2,
+                            label: anime.down || 0,
+                            emoji: e.DownVote,
+                            custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
+                            style: ButtonStyle.Danger,
+                            disabled: true
                         }
                     ]
                 }

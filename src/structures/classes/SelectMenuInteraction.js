@@ -135,7 +135,7 @@ export default class SelectMenuInteraction extends Base {
                     embeds: []
                 })
 
-            animesIndications.push({ name, category, authorId })
+            animesIndications.push({ name, category, authorId, up: 0, down: 0 })
 
             return fs.writeFile(
                 './JSON/indications.json',
