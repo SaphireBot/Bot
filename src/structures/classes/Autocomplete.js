@@ -51,6 +51,7 @@ export default class Autocomplete extends Base {
             case 'available_bets': this.available_bets(value); break;
             case 'blackjacks': this.blackjacks(value); break;
             case 'wallpaper': case 'anime': this.wallpapers(value); break;
+            case 'more_options': this.animeSuggestionOptions(); break;
             case 'flag-adminstration': this.flagAdminOptions(); break;
             case 'ranking': this.rankingOptions(); break;
             case 'daily': this.dailyOptions(); break;
@@ -62,6 +63,34 @@ export default class Autocomplete extends Base {
         }
 
         return
+    }
+
+    async animeSuggestionOptions() {
+
+        const defaultOptions = [
+            {
+                name: 'Indicar um anime',
+                value: 'indicate'
+            },
+            {
+                name: 'Ver todos os animes',
+                value: 'all'
+            }
+        ]
+
+        if (this.client.staff.includes(this.user.id))
+            defaultOptions.push(...[
+                {
+                    name: 'Editar um anime',
+                    value: 'edit'
+                },
+                {
+                    name: 'Deletar um anime',
+                    value: 'delete'
+                }
+            ])
+
+        return await this.respond(defaultOptions)
     }
 
     async rather(value) {
@@ -538,8 +567,15 @@ export default class Autocomplete extends Base {
     async blockCommands(value) {
         const data = await this.Database.Client.findOne({ id: this.client.user.id }, 'ComandosBloqueadosSlash')
         const bugs = data?.ComandosBloqueadosSlash || []
-        const fill = bugs.filter(bug => bug.cmd?.toLowerCase().includes(value.toLowerCase()))
+        const fill = bugs.filter(bug => bug.cmd?.toLowerCase().includes(value.toLowerCase()) || bug.error?.toLowerCase().includes(value.toLowerCase()))
         const mapped = fill.map(bug => ({ name: `${bug.cmd} | ${bug.error}`, value: bug.cmd }))
+
+        if (mapped.length > 1)
+            mapped.unshift({
+                name: 'Desbloquear todos os comandos',
+                value: 'all'
+            })
+
         return this.respond(mapped)
     }
 

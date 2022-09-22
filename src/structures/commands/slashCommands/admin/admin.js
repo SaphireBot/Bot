@@ -45,6 +45,25 @@ export default {
                 },
             ]
         },
+        {
+            name: 'commands',
+            description: '[admin] Libere e bloqueie comandos',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'blocked_commands',
+                    description: 'Selecione um comando para liberar',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+                {
+                    name: 'command',
+                    description: 'Selecione um comando para bloquear',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+            ]
+        },
     ],
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'

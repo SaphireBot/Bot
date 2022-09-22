@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import searchAnime from '../../functions/anime/search.anime.js'
 import wallpaperAnime from '../../functions/anime/wallpaper.anime.js'
+import indications from '../../functions/anime/indications.anime.js'
 
 export default {
     name: 'anime',
@@ -55,6 +56,19 @@ export default {
                     type: ApplicationCommandOptionType.String
                 }
             ]
+        },
+        {
+            name: 'indications',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[util] Receba indicações de animes',
+            options: [
+                {
+                    name: 'more_options',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Mais opções do comando de indicações aqui',
+                    autocomplete: true
+                }
+            ]
         }
     ],
     helpData: {
@@ -70,5 +84,8 @@ export default {
 
         if (subCommand === 'wallpaper')
             return wallpaperAnime(interaction)
+
+        if (subCommand === 'indications')
+            return indications(interaction)
     }
 }

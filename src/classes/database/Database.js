@@ -4,13 +4,12 @@ import Cache from './CacheManager.js'
 import 'dotenv/config'
 import { Config as config } from '../../util/Constants.js'
 import { Models, SaphireClient as client } from '../index.js'
-
 const { connect } = Mongoose
 
 /**
  * Classe central da Database
  */
-class Database extends Models {
+export default new class Database extends Models {
     constructor() {
         super()
         this.Cache = Cache
@@ -50,9 +49,13 @@ class Database extends Models {
     get Quiz() {
         return JSON.parse(fs.readFileSync('./JSON/quiz.json'))
     }
-    
+
     get Wallpapers() {
         return JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
+    }
+
+    get animeIndications() {
+        return JSON.parse(fs.readFileSync('./JSON/indications.json'))
     }
 
     MongoConnect = async (client) => {
@@ -410,5 +413,3 @@ class Database extends Models {
         return new this.Client({ id: clientId }).save()
     }
 }
-
-export default new Database()

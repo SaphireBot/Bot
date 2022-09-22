@@ -33,6 +33,8 @@ export default class ModalInteraction extends Base {
             case 'balance': this.balanceOptions(this); break;
             case 'rather': this.vocePrefere(this); break;
             case 'ratherEdit': this.vocePrefereEdit(this); break;
+            case 'animeIndicationsEdit': this.animeIndicationsEdit(this); break;
+            case 'animeIndications': this.animeIndications(this); break;
             case 'transactionsModalReport': this.transactionsModalReport(); break;
             case 'botSugest': this.botSugest(); break;
             case 'serverSugest': this.serverSugest(); break;
@@ -47,9 +49,86 @@ export default class ModalInteraction extends Base {
         return
     }
 
+    async animeIndications({ interaction, fields, user, guild }) {
+
+        const channel = await client.channels.fetch(config.animeSuggetionsChannel).catch(() => null)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Canal de sugestões de animes não encontrado.`,
+                ephemeral: true
+            })
+
+        const animeName = fields.getTextInputValue('name')
+        const category = fields.getTextInputValue('category')
+
+        const embed = {
+            color: client.blue,
+            title: `${e.Info} Nova sugestão de Anime`,
+            fields: [
+                {
+                    name: '👤 Usuário',
+                    value: `${user.tag} - \`${user.id}\`\nEnviado do servidor ${guild.name} \`${guild.id}\``
+                },
+                {
+                    name: 'Anime',
+                    value: animeName
+                },
+                {
+                    name: 'categoria',
+                    value: category
+                }
+            ],
+            footer: { text: user.id }
+        }
+
+        const selectMenuObject = {
+            type: 1,
+            components: [{
+                type: 3,
+                custom_id: 'animeSuggestions',
+                placeholder: 'Admin Options',
+                options: [
+                    {
+                        label: 'Aceitar sugestão',
+                        emoji: e.Check,
+                        description: 'Salvar esta sugestão no banco de dados do jogo',
+                        value: 'accept',
+                    },
+                    {
+                        label: 'Recusar sugestão',
+                        emoji: e.Deny,
+                        description: 'Recusar e deletar esta sugestão',
+                        value: 'deny'
+                    },
+                    {
+                        label: 'Editar sugestão',
+                        emoji: '✍',
+                        description: 'Editar o conteúdo da sugestão',
+                        value: 'edit'
+                    }
+                ]
+            }]
+        }
+
+        const sended = await channel.send({ embeds: [embed], components: [selectMenuObject] }).catch(() => null)
+
+        return sended
+            ? await interaction.reply({
+                content: `${e.Check} | Sua sugestão foi enviada com sucesso!`,
+                embeds: [embed],
+                ephemeral: true
+            })
+            : await interaction.reply({
+                content: `${e.Deny} | Não foi possível completar o envio. ~Motivo: Desconhecido`,
+                ephemeral: true
+            })
+
+    }
+
     vocePrefere = async ({ interaction, fields, user, guild }) => {
 
-        const channel = await client.channels.fetch(config.vocePrefereChannel)
+        const channel = await client.channels.fetch(config.vocePrefereChannel).catch(() => null)
 
         if (!channel)
             return await interaction.reply({
@@ -123,6 +202,34 @@ export default class ModalInteraction extends Base {
             })
     }
 
+    animeIndicationsEdit = async ({ interaction, fields, user, message }) => {
+
+        if (!message || !message?.embeds) return
+
+        const { embeds } = message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | Embed não encontrada`,
+                components: []
+            })
+
+        const name = fields.getTextInputValue('name')
+        const category = fields.getTextInputValue('category')
+
+        embed.fields[3] = {
+            name: `(N) Editado por ${user.tag}`,
+            value: name
+        }
+
+        embed.fields[4] = {
+            name: `(C) Editado por ${user.tag}`,
+            value: category
+        }
+
+        return await interaction.update({ embeds: [embed] }).catch(() => { })
+    }
     vocePrefereEdit = async ({ interaction, fields, user, message }) => {
 
         if (!message || !message?.embeds) return

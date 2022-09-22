@@ -1,6 +1,7 @@
 import { Database } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import Base from './Base.js'
+import fs from 'fs'
 
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
@@ -20,6 +21,7 @@ export default class SelectMenuInteraction extends Base {
 
         switch (this.customId) {
             case 'vocePrefere': this.vocePrefere(this); break;
+            case 'animeSuggestions': this.animeSuggestions(this); break;
         }
 
         return
@@ -84,6 +86,73 @@ export default class SelectMenuInteraction extends Base {
                 })
 
             })
+
+        }
+
+    }
+
+    async animeSuggestions({ interaction, value, message, e, Database }) {
+
+        if (value === 'edit') {
+
+            const { embeds } = message
+            const embed = embeds[0]?.data
+
+            if (!embed)
+                return await interaction.update({
+                    content: `${e.Deny} | Embed não encontrada.`,
+                    components: []
+                })
+
+            const name = embed.fields[3]?.value || embed.fields[1].value
+            const category = embed.fields[4]?.value || embed.fields[2].value
+
+            return await interaction.showModal(this.modals.indicateAnime('animeIndicationsEdit', name, category))
+        }
+
+        if (value === 'deny') return await message.delete().catch(() => { })
+
+        if (value === 'accept') {
+
+            const { embeds } = message
+            const embed = embeds[0]?.data
+
+            if (!embed)
+                return await interaction.update({
+                    content: `${e.Deny} | Embed não encontrada.`,
+                    components: []
+                })
+
+            const authorId = embed.footer.text
+            const name = embed.fields[3]?.value || embed.fields[1].value
+            const category = embed.fields[4]?.value || embed.fields[2].value
+            const animesIndications = Database.animeIndications || []
+
+            if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase() || anime.name?.toLowerCase().includes(name?.toLowerCase())))
+                return await interaction.update({
+                    content: `${e.Deny} | Este anime já existe no banco de dados - \`${name}\``,
+                    components: [],
+                    embeds: []
+                })
+
+            animesIndications.push({ name, category, authorId })
+
+            return fs.writeFile(
+                './JSON/indications.json',
+                JSON.stringify(animesIndications, null, 4),
+                async function (err) {
+
+                    if (err)
+                        return await interaction.update({
+                            content: `${e.Deny} | Houve um erro ao salvar esta sugestão.`,
+                            components: []
+                        })
+
+                    interaction.message.delete().catch(() => { })
+                    return await interaction.reply({ content: `${e.Check} | O anime \`${name}\` foi salvo com sucesso.`, })
+
+                }
+            )
 
         }
 

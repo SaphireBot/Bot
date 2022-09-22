@@ -3,13 +3,13 @@ import { Emojis as e } from '../../../../util/util.js'
 import translate from '@iamtraction/google-translate'
 import { SaphireClient as client } from '../../../../classes/index.js'
 
-export default async interaction => {
+export default async (interaction, animeName) => {
 
-    await interaction.reply({ content: `${e.Loading} | Buscando anime...` })
+    await interaction.reply({ content: `${e.Loading} | Buscando anime...`, ephemeral: animeName ? true : false })
 
     const { options } = interaction
-    const search = options.getString('input')
-    const lookingFor = options.getString('in')
+    const search = options?.getString('input') || animeName
+    const lookingFor = options?.getString('in') || 'anime'
 
     if (!['anime', 'manga'].includes(lookingFor))
         return await interaction.reply({
@@ -18,7 +18,15 @@ export default async interaction => {
         })
 
     return axios({
-        baseURL: `https://kitsu.io/api/edge/${lookingFor}?filter[text]=${search}`,
+        baseURL: `https://kitsu.io/api/edge/${lookingFor}?filter[text]=${
+            search
+                .replace(/[ãâáàä]/gi, 'a')
+                .replace(/[êéèë]/gi, 'e')
+                .replace(/[îíìï]/gi, 'i')
+                .replace(/[õôóòö]/gi, 'o')
+                .replace(/[ûúùü]/gi, 'u')
+                .replace(/[ç]/gi, 'c')
+            }`,
         headers: {
             Accept: 'application/vnd.api+json',
             'Content-Type': 'application/vnd.api+json'
@@ -127,6 +135,10 @@ export default async interaction => {
                     return await interaction.editReply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
                 })
 
-        }).catch(console.log)
+        }).catch(async () => {
+            return await interaction.editReply({
+                content: `${e.Deny} | Anime não encontrado.`
+            }).catch(() => { })
+        })
 
 }
