@@ -6,6 +6,7 @@ import ModelRaffle from './models/Raffle.js'
 import ModelReminders from './models/Reminders.js'
 import ModelUser from './models/User.js'
 import Rather from './models/Rather.js'
+import Indications from './models/Indications.js'
 
 /**
  * Unificação de todos os Models para extensão da Classe Database
@@ -21,6 +22,7 @@ class Models {
         this.Reminder = ModelReminders
         this.User = ModelUser
         this.Rather = Rather
+        this.Indications = Indications
     }
 }
 
@@ -33,5 +35,6 @@ export {
     ModelReminders as Reminders,
     ModelUser as User,
     Models,
-    Rather
+    Rather,
+    Indications
 }

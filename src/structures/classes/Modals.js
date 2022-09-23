@@ -31,11 +31,11 @@ export default new class Modals {
                         {
                             type: 4,
                             custom_id: "category",
-                            label: "Categoria do anime",
+                            label: "Categorias do anime (separadas por vírgulas)",
                             style: 1,
                             min_length: 3,
                             max_length: 100,
-                            placeholder: "Ação, aventura, rômance...",
+                            placeholder: "Ação, aventura, romance...",
                             value: category || null,
                             required: true
                         }

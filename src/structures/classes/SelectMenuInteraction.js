@@ -1,7 +1,6 @@
 import { Database } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import Base from './Base.js'
-import fs from 'fs'
 
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
@@ -125,8 +124,16 @@ export default class SelectMenuInteraction extends Base {
 
             const authorId = embed.footer.text
             const name = embed.fields[3]?.value || embed.fields[1].value
-            const category = embed.fields[4]?.value || embed.fields[2].value
-            const animesIndications = Database.animeIndications || []
+            let category = embed.fields[4]?.value || embed.fields[2].value
+            const animesIndications = await Database.animeIndications() || []
+
+            category = category.split(', ')
+
+            if (category.constructor !== Array)
+                return await interaction.reply({
+                    content: `${e.Deny} | As categorias devem ser separas por \`,\``,
+                    ephemeral: true
+                })
 
             if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase() || anime.name?.toLowerCase().includes(name?.toLowerCase())))
                 return await interaction.update({
@@ -135,12 +142,8 @@ export default class SelectMenuInteraction extends Base {
                     embeds: []
                 })
 
-            animesIndications.push({ name, category, authorId, up: 0, down: 0 })
-
-            return fs.writeFile(
-                './JSON/indications.json',
-                JSON.stringify(animesIndications, null, 4),
-                async function (err) {
+            return new Database.Indications({ name, category, authorId })
+                .save(async function (err) {
 
                     if (err)
                         return await interaction.update({
@@ -154,8 +157,7 @@ export default class SelectMenuInteraction extends Base {
                         ephemeral: true
                     })
 
-                }
-            )
+                })
 
         }
 

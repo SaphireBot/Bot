@@ -600,12 +600,10 @@ export default class Autocomplete extends Base {
     async balanceOptions(value) {
 
         const isStaff = this.client.admins.includes(this.user.id)
-        const options = [
-            {
-                name: 'Esconder só pra mim',
-                value: 'hide'
-            }
-        ]
+        const options = [{
+            name: 'Esconder só pra mim',
+            value: 'hide'
+        }]
 
         if (isStaff)
             options.push(
@@ -676,8 +674,8 @@ export default class Autocomplete extends Base {
 
         const fill = users
             .filter(user => {
-                return user?.tag.toLowerCase().includes(value.toLowerCase())
-                    || user?.id.includes(value)
+                return user?.tag?.toLowerCase().includes(value?.toLowerCase())
+                    || user?.id?.includes(value)
             })
 
         const mapped = fill

@@ -4,8 +4,11 @@ import { Emojis as e } from "../../../../util/util.js"
 
 export default async interaction => {
 
-    const animes = Database.animeIndications || []
+    const { options } = interaction
+    const option = options.getString('more_options')
+    if (option === 'indicate') return await interaction.showModal(Modals.indicateAnime())
 
+    const animes = await Database.animeIndications() || []
     if (!animes || !animes.length)
         return await interaction.reply({
             content: `${e.Deny} | Não existe nenhum anime para ser indicado ainda.`,
@@ -24,9 +27,6 @@ export default async interaction => {
             }]
         })
 
-    const { options } = interaction
-    const option = options.getString('more_options')
-
     if (!option) {
         const anime = animes.random()
         const animeIndex = animes.findIndex(an => an.name === anime.name)
@@ -43,7 +43,7 @@ export default async interaction => {
                     },
                     {
                         name: 'Dados',
-                        value: `Categoria: \`${anime.category}\`\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
+                        value: `Categoria: \`${anime.category?.map(cat => `\`${cat}\``)?.join(', ') || 'Not Found'}\`\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
                     }
                 ]
             }],
@@ -74,27 +74,23 @@ export default async interaction => {
                         },
                         {
                             type: 2,
-                            label: anime.up || 0,
+                            label: anime.up?.length || 0,
                             emoji: e.Upvote,
                             custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
-                            style: ButtonStyle.Success,
-                            disabled: true
+                            style: ButtonStyle.Success
                         },
                         {
                             type: 2,
-                            label: anime.down || 0,
+                            label: anime.down?.length || 0,
                             emoji: e.DownVote,
                             custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
-                            style: ButtonStyle.Danger,
-                            disabled: true
+                            style: ButtonStyle.Danger
                         }
                     ]
                 }
             ]
         })
     }
-
-    if (option === 'indicate') return await interaction.showModal(Modals.indicateAnime())
 
     return await interaction.reply({
         content: `${e.Loading} | Comando em construção.`,

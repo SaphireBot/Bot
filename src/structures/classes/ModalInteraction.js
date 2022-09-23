@@ -49,7 +49,7 @@ export default class ModalInteraction extends Base {
         return
     }
 
-    async animeIndications({ interaction, fields, user, guild }) {
+    async animeIndications({ interaction, fields, user, guild, Database }) {
 
         const channel = await client.channels.fetch(config.animeSuggetionsChannel).catch(() => null)
 
@@ -61,6 +61,14 @@ export default class ModalInteraction extends Base {
 
         const animeName = fields.getTextInputValue('name')
         const category = fields.getTextInputValue('category')
+        const allAnimes = Database.Indications.find()
+        const alreadyExist = allAnimes.find(anime => anime?.name?.toLowerCase() === animeName?.toLowerCase())
+
+        if (alreadyExist)
+            return await interaction.reply({
+                content: `${e.Deny} | O anime \`${animeName}\` já existe no banco de dados.`,
+                ephemeral: true
+            })
 
         const embed = {
             color: client.blue,
@@ -75,7 +83,7 @@ export default class ModalInteraction extends Base {
                     value: animeName
                 },
                 {
-                    name: 'categoria',
+                    name: 'Categoria',
                     value: category
                 }
             ],
@@ -230,6 +238,7 @@ export default class ModalInteraction extends Base {
 
         return await interaction.update({ embeds: [embed] }).catch(() => { })
     }
+
     vocePrefereEdit = async ({ interaction, fields, user, message }) => {
 
         if (!message || !message?.embeds) return

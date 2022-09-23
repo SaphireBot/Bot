@@ -54,8 +54,8 @@ export default new class Database extends Models {
         return JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     }
 
-    get animeIndications() {
-        return JSON.parse(fs.readFileSync('./JSON/indications.json'))
+    async animeIndications() {
+        return await this.Indications.find({})
     }
 
     MongoConnect = async (client) => {
