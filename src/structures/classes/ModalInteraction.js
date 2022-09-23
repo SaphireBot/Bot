@@ -61,7 +61,7 @@ export default class ModalInteraction extends Base {
 
         const animeName = fields.getTextInputValue('name')
         const category = fields.getTextInputValue('category')
-        const allAnimes = Database.Indications.find()
+        const allAnimes = await Database.animeIndications() || []
         const alreadyExist = allAnimes.find(anime => anime?.name?.toLowerCase() === animeName?.toLowerCase())
 
         if (alreadyExist)

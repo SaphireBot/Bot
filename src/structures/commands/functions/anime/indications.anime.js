@@ -43,7 +43,7 @@ export default async interaction => {
                     },
                     {
                         name: 'Dados',
-                        value: `Categoria: \`${anime.category?.map(cat => `\`${cat}\``)?.join(', ') || 'Not Found'}\`\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
+                        value: `Categoria: ${anime.category?.map(cat => `\`${cat}\``)?.join(', ') || 'Not Found'}\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
                     }
                 ]
             }],
