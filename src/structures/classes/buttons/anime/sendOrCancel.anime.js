@@ -56,7 +56,7 @@ export default async (interaction, customId) => {
                 {
                     label: 'Aceitar sugestão',
                     emoji: e.Check,
-                    description: 'Salvar esta sugestão no banco de dados do jogo',
+                    description: 'Salvar esta sugestão no banco de dados',
                     value: 'accept',
                 },
                 {
