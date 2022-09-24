@@ -73,8 +73,8 @@ export default class Autocomplete extends Base {
                 value: 'indicate'
             },
             {
-                name: 'Ver todos os animes',
-                value: 'all'
+                name: 'Meus animes indicados',
+                value: 'myAnimes'
             }
         ]
 

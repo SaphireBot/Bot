@@ -5,9 +5,6 @@ import { ButtonStyle } from "discord.js"
 export default async (interaction, upOrDown) => {
 
     const { message, user } = interaction
-    const authorId = message.interaction.user.id
-    if (user.id !== authorId) return
-
     const { embeds } = message
     const embed = embeds[0]?.data
 

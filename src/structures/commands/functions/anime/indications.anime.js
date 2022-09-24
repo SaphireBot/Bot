@@ -42,8 +42,20 @@ export default async interaction => {
                         value: anime.name
                     },
                     {
-                        name: 'Dados',
-                        value: `Categoria: ${anime.category?.map(cat => `\`${cat}\``)?.join(', ') || 'Not Found'}\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
+                        name: '🧩 Gêneros',
+                        value: anime.gender?.map(gen => `\`${gen}\``)?.join(', ') || '\`Not Found\`'
+                    },
+                    {
+                        name: '🎞 Categorias',
+                        value: anime.category?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
+                    },
+                    {
+                        name: '👥 Público Alvo',
+                        value: anime.targetPublic?.map(pub => `\`${pub}\``)?.join(', ') || '\`Not Found\`'
+                    },
+                    {
+                        name: '👤 Sugerido por',
+                        value: `${client.users.resolve(anime.authorId)?.tag || 'Not Found'} - \`${anime.authorId}\``
                     }
                 ]
             }],
@@ -91,6 +103,9 @@ export default async interaction => {
             ]
         })
     }
+
+    // if (option === 'myAnimes')
+    //     return showMyAnimes(interaction)
 
     return await interaction.reply({
         content: `${e.Loading} | Comando em construção.`,

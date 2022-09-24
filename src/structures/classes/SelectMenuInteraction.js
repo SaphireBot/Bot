@@ -14,9 +14,15 @@ export default class SelectMenuInteraction extends Base {
         this.guild = interaction.guild
         this.channel = interaction.channel
         this.value = this.values[0]
+        this.values = this.values
     }
 
     filterAndChooseFunction() {
+
+        const animesIndicationIds = ['animeSuggestionsGender', 'animeSuggestionsCategory', 'animeSuggestionsMatchPublic']
+
+        if (animesIndicationIds.includes(this.customId))
+            return this.animeSetSuggestions(this)
 
         switch (this.customId) {
             case 'vocePrefere': this.vocePrefere(this); break;
@@ -90,6 +96,45 @@ export default class SelectMenuInteraction extends Base {
 
     }
 
+    async animeSetSuggestions({ interaction, values, message, e, customId }) {
+
+        const { embeds } = message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | Embed não encontrada.`,
+                components: []
+            }).catch(() => { })
+
+        const field = {
+            animeSuggestionsGender: 1,
+            animeSuggestionsCategory: 2,
+            animeSuggestionsMatchPublic: 3
+        }[customId]
+
+        if (isNaN(field))
+            return await interaction.update({
+                content: `${e.Deny} | Valores não encontrados.`,
+                components: [],
+                embeds: []
+            }).catch(() => { })
+
+        embed.fields[field].value = values.map(value => `\`${value}\``).join(', ')
+
+        if (
+            !embed.fields[1].value.includes(e.Loading)
+            && !embed.fields[2].value.includes(e.Loading)
+            && !embed.fields[3].value.includes(e.Loading)
+        ) {
+            const components = message.components
+            components[0].components[0].data.disabled = false
+            return await interaction.update({ embeds: [embed], components }).catch(() => { })
+        }
+
+        return await interaction.update({ embeds: [embed] }).catch(() => { })
+    }
+
     async animeSuggestions({ interaction, value, message, e, Database }) {
 
         if (value === 'edit') {
@@ -103,10 +148,9 @@ export default class SelectMenuInteraction extends Base {
                     components: []
                 })
 
-            const name = embed.fields[3]?.value || embed.fields[1].value
-            const category = embed.fields[4]?.value || embed.fields[2].value
+            const name = embed.fields[0].value
 
-            return await interaction.showModal(this.modals.indicateAnime('animeIndicationsEdit', name, category))
+            return await interaction.showModal(this.modals.indicateAnime('animeIndicationsEdit', name))
         }
 
         if (value === 'deny') return await message.delete().catch(() => { })
@@ -122,27 +166,21 @@ export default class SelectMenuInteraction extends Base {
                     components: []
                 })
 
-            const authorId = embed.footer.text
-            const name = embed.fields[3]?.value || embed.fields[1].value
-            let category = embed.fields[4]?.value || embed.fields[2].value
             const animesIndications = await Database.animeIndications() || []
+            const name = embed.fields[0].value
+            const category = embed.fields[2].value.replace(/`/g, '').split(', ')
+            const gender = embed.fields[1].value.replace(/`/g, '').split(', ')
+            const targetPublic = embed.fields[3].value.replace(/`/g, '').split(', ')
+            const authorId = embed.footer.text
 
-            category = category.split(', ')
-
-            if (category.constructor !== Array)
-                return await interaction.reply({
-                    content: `${e.Deny} | As categorias devem ser separas por \`,\``,
-                    ephemeral: true
-                })
-
-            if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase() || anime.name?.toLowerCase().includes(name?.toLowerCase())))
+            if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase()))
                 return await interaction.update({
                     content: `${e.Deny} | Este anime já existe no banco de dados - \`${name}\``,
                     components: [],
                     embeds: []
                 })
 
-            return new Database.Indications({ name, category, authorId })
+            return new Database.Indications({ name, category, gender, targetPublic, authorId })
                 .save(async function (err) {
 
                     if (err)

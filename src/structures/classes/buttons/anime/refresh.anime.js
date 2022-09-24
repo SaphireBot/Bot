@@ -22,12 +22,24 @@ export default async interaction => {
             description: 'Todos os animes presentes neste comando foram sugeridos pelos próprios usuários e aprovados pela Administração da Saphire.',
             fields: [
                 {
-                    name: `Anime - ${animeIndex + 1}/${allAnimes.length}`,
+                    name: `📺 Anime - ${animeIndex + 1}/${allAnimes.length}`,
                     value: anime.name
                 },
                 {
-                    name: 'Dados',
-                    value: `Categoria: ${anime.category?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'}\nSugerido por: \`${client.users.resolve(anime.authorId)?.tag || 'Not Found'}\``
+                    name: '🧩 Gêneros',
+                    value: anime.gender?.map(gen => `\`${gen}\``)?.join(', ') || '\`Not Found\`'
+                },
+                {
+                    name: '🎞 Categorias',
+                    value: anime.category?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
+                },
+                {
+                    name: '👥 Público Alvo',
+                    value: anime.targetPublic?.map(pub => `\`${pub}\``)?.join(', ') || '\`Not Found\`'
+                },
+                {
+                    name: '👤 Sugerido por',
+                    value: `${client.users.resolve(anime.authorId)?.tag || 'Not Found'} - \`${anime.authorId}\``
                 }
             ]
         }],

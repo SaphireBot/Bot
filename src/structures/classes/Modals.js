@@ -4,7 +4,7 @@ export default new class Modals {
         return { ...this }
     }
 
-    indicateAnime = (customId, name, category) => {
+    indicateAnime = (customId, name) => {
         return {
             title: "Anime Indications",
             custom_id: customId || "animeIndications",
@@ -24,23 +24,7 @@ export default new class Modals {
                             required: true
                         }
                     ]
-                },
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 4,
-                            custom_id: "category",
-                            label: "Categorias do anime (separadas por vírgulas)",
-                            style: 1,
-                            min_length: 3,
-                            max_length: 100,
-                            placeholder: "Ação, aventura, romance...",
-                            value: category || null,
-                            required: true
-                        }
-                    ]
-                } // MAX: 5 Fields
+                }
             ]
         }
     }
