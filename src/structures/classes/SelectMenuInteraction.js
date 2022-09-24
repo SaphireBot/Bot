@@ -96,7 +96,7 @@ export default class SelectMenuInteraction extends Base {
 
     }
 
-    async animeSetSuggestions({ interaction, values, message, e, customId }) {
+    async animeSetSuggestions({ interaction, values, message, e, customId, user }) {
 
         const { embeds } = message
         const embed = embeds[0]?.data
@@ -106,6 +106,8 @@ export default class SelectMenuInteraction extends Base {
                 content: `${e.Deny} | Embed não encontrada.`,
                 components: []
             }).catch(() => { })
+
+        if (user.id !== embed.footer.text) return
 
         const field = {
             animeSuggestionsGender: 1,

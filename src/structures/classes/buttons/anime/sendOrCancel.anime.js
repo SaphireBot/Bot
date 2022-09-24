@@ -8,8 +8,16 @@ import { Emojis as e } from "../../../../util/util.js"
 export default async (interaction, customId) => {
 
     const { user, message } = interaction
+    const { embeds } = message
+    const embed = embeds[0]?.data
 
-    if (user.id !== message.interaction.user.id) return
+    if (!embed)
+        return await interaction.update({
+            content: `${e.Deny} | Embed não encontrada.`,
+            components: []
+        }).catch(() => { })
+
+    if (user.id !== embed.footer.text) return
 
     if (customId === 'cancel')
         return message.delete().catch(() => { })
@@ -21,15 +29,6 @@ export default async (interaction, customId) => {
             content: `${e.Deny} | Canal de sugestões de animes não encontrado.`,
             ephemeral: true
         })
-
-    const { embeds } = message
-    const embed = embeds[0]?.data
-
-    if (!embed)
-        return await interaction.update({
-            content: `${e.Deny} | Embed não encontrada.`,
-            components: []
-        }).catch(() => { })
 
     const allAnimes = await Database.animeIndications() || []
     const animeName = embed.fields[0]?.value
