@@ -18,14 +18,13 @@ export default async (interaction, animeName) => {
         })
 
     return axios({
-        baseURL: `https://kitsu.io/api/edge/${lookingFor}?filter[text]=${
-            search
-                .replace(/[ãâáàä]/gi, 'a')
-                .replace(/[êéèë]/gi, 'e')
-                .replace(/[îíìï]/gi, 'i')
-                .replace(/[õôóòö]/gi, 'o')
-                .replace(/[ûúùü]/gi, 'u')
-                .replace(/[ç]/gi, 'c')
+        baseURL: `https://kitsu.io/api/edge/${lookingFor}?filter[text]=${search
+            .replace(/[ãâáàä]/gi, 'a')
+            .replace(/[êéèë]/gi, 'e')
+            .replace(/[îíìï]/gi, 'i')
+            .replace(/[õôóòö]/gi, 'o')
+            .replace(/[ûúùü]/gi, 'u')
+            .replace(/[ç]/gi, 'c')
             }`,
         headers: {
             Accept: 'application/vnd.api+json',
@@ -117,7 +116,7 @@ export default async (interaction, animeName) => {
                                 fields: [
                                     {
                                         name: '🗂️ Informações',
-                                        value: `Nome Japonês: ${Name.original}\nNome Inglês: ${Name.en}\nNome Mundial: ${Name.en_jp}\nNome Canônico: ${Name.canonical}\nNome abreviado: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
+                                        value: `Nome Japonês: ${Name.original || 'Não possue'}\nNome Inglês: ${Name.en || 'Não possue'}\nNome Mundial: ${Name.en_jp || 'Não possue' || 'Não possue'}\nNome Canônico: ${Name.canonical || 'Não possue'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
                                     },
                                     {
                                         name: `📊 Status - ${Status}`,

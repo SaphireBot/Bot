@@ -4,6 +4,43 @@ export default new class Modals {
         return { ...this }
     }
 
+    logomarcaBug = {
+        title: "Logomarca Bug Reporter",
+        custom_id: "logomarcaReporter",
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "bug",
+                        label: "Erro/Bug",
+                        style: 1,
+                        min_length: 3,
+                        max_length: 200,
+                        placeholder: "Imagem não aparece...",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "description",
+                        label: "Descrição do Erro/Bug",
+                        style: 2,
+                        min_length: 3,
+                        max_length: 4000,
+                        placeholder: "Quando eu clico no botão certo, a Saphire não vê isso e aquilo...",
+                        required: true
+                    }
+                ]
+            }
+        ]
+    }
+
     indicateAnime = (customId, name) => {
         return {
             title: "Anime Indications",

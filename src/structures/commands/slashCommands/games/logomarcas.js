@@ -1,5 +1,6 @@
-import { Permissions } from '../../../../util/Constants.js';
-import { Emojis as e } from '../../../../util/util.js';
+import { Modals } from '../../../../classes/index.js'
+import { Permissions } from '../../../../util/Constants.js'
+import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'logomarcas',
@@ -105,6 +106,7 @@ export default {
 
             const func = options.getString('option')
             if (func === 'liberate') return liberate()
+            if (func === 'bug') return await interaction.showModal(Modals.logomarcaBug)
 
             if (func === 'info')
                 return await interaction.reply({
