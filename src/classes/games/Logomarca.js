@@ -38,8 +38,8 @@ export default class Logomarca extends Base {
         }]
 
         this.msg = this.interaction.replied
-            ? await this.channel.send({ embeds: embed })
-            : await this.interaction.reply({ embeds: embed, fetchReply: true })
+            ? await this.channel.send({ embeds: embed }).catch(() => { })
+            : await this.interaction.reply({ embeds: embed, fetchReply: true }).catch(() => { })
 
         return setTimeout(() => this.game(), 2000)
     }
@@ -64,7 +64,7 @@ export default class Logomarca extends Base {
                             url: 'https://media.discordapp.net/attachments/893361065084198954/1023672587286495333/unknown.png'
                         }
                     }]
-                })
+                }).catch(() => { })
             }
 
             this.logoData = [...this.Database.Logomarca]?.randomize()
@@ -89,8 +89,8 @@ export default class Logomarca extends Base {
         this.msg.delete().catch(() => { })
 
         this.msg = this.interaction.replied
-            ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] })
-            : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true })
+            ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] }).catch(() => { })
+            : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true }).catch(() => { })
 
         return this.initCollectors()
     }
@@ -114,8 +114,8 @@ export default class Logomarca extends Base {
                 this.collectors.collectorRightAnswer.stop()
 
                 this.msg = this.interaction.replied
-                    ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] })
-                    : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true })
+                    ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] }).catch(() => { })
+                    : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true }).catch(() => { })
 
                 return this.initCollectors()
 
@@ -168,6 +168,8 @@ export default class Logomarca extends Base {
             ? has.points++
             : this.gameData.users.push({ id: userId, points: 1 })
 
+        await this.Database.Cache.Logomarca.add(`Points.${userId}`, 1)
+
         return this.format()
     }
 
@@ -201,7 +203,29 @@ export default class Logomarca extends Base {
                     }]
                 }
             ]
-        })
+        }).catch(() => { })
+
+        const dataToUpdate = []
+        const cachedPointsData = await this.Database.Cache.Logomarca.get('Points') || {}
+        const usersPointData = Object.entries(cachedPointsData || {}).map(([a, b]) => ({ id: a, points: b }))
+
+        //       [{ id: userId, points: Number }]
+        for (let data of usersPointData)
+            dataToUpdate.push({
+                updateOne: {
+                    filter: { id: data.id },
+                    update: {
+                        $inc: { ['GamingCount.Logomarca']: data.points }
+                    },
+                    upsert: true
+                }
+            })
+
+        this.Database.User.collection.bulkWrite(dataToUpdate, { ordered: true }, () => { })
+
+        for await (let data of usersPointData)
+            await this.Database.Cache.Logomarca.delete(`Points.${data.id}`)
+
         return this.resetGame()
     }
 
@@ -220,7 +244,8 @@ export default class Logomarca extends Base {
                     round: 1,
                     users: [],
                     replied: [],
-                    sandBox: false
+                    sandBox: false,
+                    sandBoxActive: false
                 }
                 this.collectors = {}
                 this.msg = undefined

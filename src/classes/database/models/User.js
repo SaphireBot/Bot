@@ -23,7 +23,8 @@ export default model("User", new Schema({
     },
     GamingCount: {
         FlagCount: Number,
-        AnimeThemeCount: Number
+        AnimeThemeCount: Number,
+        Logomarca: Number
     },
     Timeouts: {
         Bug: Number,

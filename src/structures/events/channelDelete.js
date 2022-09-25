@@ -9,6 +9,10 @@ client.on('channelDelete', async channel => {
     if (channel.id === config.LoteriaChannel)
         return Notify(config.guildId, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **Lotery Result At Principal Server** foi deletado.`)
 
+    const inLogomarcaGameChannel = await Database.Cache.Logomarca.get(`${client.shardId}.Channels`, channel.id) || []
+    if (inLogomarcaGameChannel.includes(channel.id))
+        await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)
+
     const guildData = await Database.Guild.findOne({ id: channel.guild.id })
     if (!guildData) return
 
