@@ -34,21 +34,30 @@ export default async interaction => {
             components: [
                 {
                     type: 2,
+                    label: 'Pra lá',
                     emoji: e.saphireLeft,
                     custom_id: 'left',
                     style: ButtonStyle.Primary
                 },
                 {
                     type: 2,
+                    label: 'Pra cá',
                     emoji: e.saphireRight,
                     custom_id: 'right',
                     style: ButtonStyle.Primary
                 },
                 {
                     type: 2,
+                    label: 'Deletar',
+                    emoji: e.Trash,
+                    custom_id: 'delete',
+                    style: ButtonStyle.Danger
+                },
+                {
+                    type: 2,
                     label: 'Cancelar',
                     custom_id: 'cancel',
-                    style: ButtonStyle.Danger
+                    style: ButtonStyle.Secondary
                 }
             ]
         }],
@@ -66,6 +75,8 @@ export default async interaction => {
 
             if (customId === 'cancel') return collector.stop()
 
+            if (customId === 'delete') return deleteAnime(int)
+
             if (customId === 'right') {
                 index++
                 if (index >= embeds.length) index = 0
@@ -76,7 +87,7 @@ export default async interaction => {
                 if (index < 0) index = embeds.length - 1
             }
 
-            return await int.update({ embeds: [embeds[index]] }).catch(() => { })
+            return await int.update({ content: null, embeds: [embeds[index]] }).catch(() => { })
         })
         .on('end', async () => {
 
@@ -90,6 +101,7 @@ export default async interaction => {
                 return await interaction.deleteReply().catch(() => { })
 
             return await interaction.editReply({
+                content: null,
                 embeds: [embed],
                 components: []
             }).catch(() => { })
@@ -124,16 +136,38 @@ export default async interaction => {
                     {
                         name: '👥 Público Alvo',
                         value: anime.targetPublic?.map(pub => `\`${pub}\``)?.join(', ') || '\`Not Found\`'
-                    },
-                    {
-                        name: '👤 Sugerido por',
-                        value: `${client.users.resolve(anime.authorId)?.tag || 'Not Found'} - \`${anime.authorId}\``
                     }
                 ]
             })
         }
 
         return embeds
+    }
+
+    async function deleteAnime(int) {
+
+        const animeName = embeds[index].fields[0].value
+
+        return Database.Indications.findOneAndDelete(
+            { name: animeName }
+        )
+            .then(async result => {
+
+                if (!result)
+                    return int.deferUpdate({})
+
+                embeds[index].color = client.red
+                return await int.update({ embeds: [embeds[index]] }).catch(() => { })
+            })
+            .catch(async () => {
+                return await interaction.editReply({
+                    content: `${e.Deny} | Não foi possível deletar este anime.`,
+                    embeds: [],
+                    components: []
+                }).catch(() => { })
+
+            })
+
     }
 
 }
