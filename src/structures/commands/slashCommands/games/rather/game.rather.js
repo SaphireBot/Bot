@@ -53,6 +53,13 @@ export default async (interaction) => {
                     emoji: starTwo,
                     custom_id: JSON.stringify({ c: 'rt', src: question.id, bt: 2 }),
                     style: ButtonStyle.Success
+                },
+                {
+                    type: 2,
+                    label: 'Sugerir uma questão',
+                    emoji: e.saphireLendo,
+                    custom_id: JSON.stringify({ c: 'rt', src: 'suggest', bt: 1 }),
+                    style: ButtonStyle.Secondary
                 }
             ]
         }]
