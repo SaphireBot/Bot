@@ -19,6 +19,7 @@ client.on('guildDelete', async guild => {
     const owner = guild.members.cache.get(guild.ownerId)
     const channel = await client.channels.fetch(config.LogChannelId).catch(() => null)
     if (!channel) return
+    
     const fetchWebhook = await channel.fetchWebhooks()
     const webhook = fetchWebhook.find(web => web.name === 'Saphire Database Logs')
 

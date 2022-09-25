@@ -78,7 +78,7 @@ export default {
             fields: [
                 {
                     name: '👤 Usuário',
-                    value: `✏️ Nome: ${user.tag} | \`${user.id}\`\n🤖 Bot: ${userData.bot}\n🏳️ Bandeiras: ${userData.Bandeiras}${userData.system}\n📆 Criou a conta em ${userData.createAccount}\n⏱️ Conta criada ${userData.timeoutAccount}`
+                    value: `✏️ Nome: ${user.tag} | \`${user.id}\`\n🤖 Bot: ${userData.bot}\n🏳️ Bandeiras: ${userData.Bandeiras}${userData.system}\n📆 Criou a conta em ${userData.createAccount}\n⏱️ Conta criada ${userData.timeoutAccount}`.limit('MessageEmbedFieldValue')
                 }
             ],
             thumbnail: { url: userData.avatar }
@@ -103,11 +103,11 @@ export default {
                 fields: [
                     {
                         name: '🔰 Servidor',
-                        value: `✏️ Nome no servidor: ${member?.displayName}\n${e.OwnerCrow} Dono: ${memberData?.onwer}\n${e.ModShield} Administrador: ${memberData?.adm}\n🎨 Cor: \`${member?.displayHexColor}\`\n🤝 Associado: ${memberData?.associado}${memberData?.premiumSince}\n📅 Entrada: ${memberData?.joinedAt}\n⏱️ Membro ${memberData?.joinedTimestamp}`
+                        value: `✏️ Nome no servidor: ${member?.displayName}\n${e.OwnerCrow} Dono: ${memberData?.onwer}\n${e.ModShield} Administrador: ${memberData?.adm}\n🎨 Cor: \`${member?.displayHexColor}\`\n🤝 Associado: ${memberData?.associado}${memberData?.premiumSince}\n📅 Entrada: ${memberData?.joinedAt}\n⏱️ Membro ${memberData?.joinedTimestamp}`.limit('MessageEmbedFieldValue')
                     },
                     {
                         name: '@ Cargos',
-                        value: memberData?.roles
+                        value: memberData?.roles.limit('MessageEmbedFieldValue')
                     }
                 ]
             },
@@ -117,7 +117,7 @@ export default {
                     fields: [
                         {
                             name: '⚙️ Permissões',
-                            value: `${memberData?.permissions}`
+                            value: `${memberData?.permissions}`.limit('MessageEmbedFieldValue')
                         }
                     ]
                 })

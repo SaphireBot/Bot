@@ -1,6 +1,7 @@
 import { ButtonStyle } from "discord.js"
 import { Database, Modals, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
+import showMyAnimes from "./my.anime.js"
 
 export default async interaction => {
 
@@ -104,11 +105,15 @@ export default async interaction => {
         })
     }
 
-    // if (option === 'myAnimes')
-    //     return showMyAnimes(interaction)
+    switch (option) {
+        case 'myAnimes': showMyAnimes(interaction); break;
+        default:
+            await interaction.reply({
+                content: `${e.Loading} | Comando em construção.`,
+                ephemeral: true
+            });
+            break;
+    }
 
-    return await interaction.reply({
-        content: `${e.Loading} | Comando em construção.`,
-        ephemeral: true
-    })
+    return
 }
