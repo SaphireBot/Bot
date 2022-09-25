@@ -4,6 +4,7 @@ import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle } from 'discord.js'
+import axios from 'axios'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -57,266 +58,300 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        const embed = {
-            color: client.blue,
-            title: '💭 Nova Indicação',
-            fields: [
-                {
-                    name: '📺 Anime',
-                    value: animeName
-                },
-                {
-                    name: '🧩 Gêneros',
-                    value: `${e.Loading} Esperando seleção de gêneros...`
-                },
-                {
-                    name: '🎞 Categorias',
-                    value: `${e.Loading} Esperando seleção de categorias...`
-                },
-                {
-                    name: '👥 Público Alvo',
-                    value: `${e.Loading} Esperando seleção de público alvo...`
-
-                }
-            ],
-            footer: { text: user.id }
-        }
-
-        const optionsGender = [
-            {
-                label: 'Ação',
-                value: 'Ação'
-            },
-            {
-                label: 'Aventura',
-                value: 'Aventura'
-            },
-            {
-                label: 'Comédia',
-                value: 'Comédia'
-            },
-            {
-                label: 'Drama',
-                value: 'Drama'
-            },
-            {
-                label: 'Mistério',
-                value: 'Mistério'
-            },
-            {
-                label: 'Romance',
-                value: 'Romance'
-            },
-            {
-                label: 'Sci-Fi / Ficção Científica',
-                value: 'Sci-Fi'
-            },
-            {
-                label: 'Terror',
-                value: 'Terror'
+        return await axios({
+            baseURL: `https://kitsu.io/api/edge/anime?filter[text]=${animeName
+                .replace(/[ãâáàä]/gi, 'a')
+                .replace(/[êéèë]/gi, 'e')
+                .replace(/[îíìï]/gi, 'i')
+                .replace(/[õôóòö]/gi, 'o')
+                .replace(/[ûúùü]/gi, 'u')
+                .replace(/[ç]/gi, 'c')
+                }`,
+            headers: {
+                Accept: 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json'
             }
-        ]
+        })
+            .then(async result => {
 
-        const optionsCategory = [
-            {
-                label: 'Artes Marciais',
-                description: 'Envolve personagens que utilizam técnicas de artes marciais',
-                value: 'Artes Marciais'
-            },
-            {
-                label: 'Avant-Garde',
-                description: 'Apresentam temas experimentais, inovadores e filosóficos',
-                value: 'Avant-Garde'
-            },
-            {
-                label: 'Boys Love (BL)',
-                description: 'A história gira em torno de um romance homoafetivo entre garotos.',
-                value: 'Boys Love (BL)'
-            },
-            {
-                label: 'Girls Love (GL)',
-                description: 'A história gira em torno de um romance homoafetivo entre garotas.',
-                value: 'Girls Love (GL)'
-            },
-            {
-                label: 'Cyberpunk',
-                description: 'Apresenta um mundo em que a sociedade está mais arraigada à tecnologia.',
-                value: 'Cyberpunk'
-            },
-            {
-                label: 'Esporte',
-                description: 'Animes onde o assunto alvo é um ou mais esportes',
-                value: 'Esporte'
-            },
-            {
-                label: 'Faroeste',
-                description: 'Acontece em um lugar semelhante ao Velho-Oeste americano.',
-                value: 'Faroeste'
-            },
-            {
-                label: 'Fantasia',
-                description: 'Magia. Apresenta uma variedade de monstros e poderes mágicos.',
-                value: 'Fantasia'
-            },
-            {
-                label: 'Isekai',
-                description: 'Animes onde a história ocorre em outro mundo',
-                value: 'Isekai'
-            },
-            {
-                label: 'Jogos',
-                description: 'São focados em jogos eletrônicos, RPG, etc.',
-                value: 'Jogos'
-            },
-            {
-                label: 'Histórico',
-                description: 'Em sua maioria contam a história de um Japão da época feudal.',
-                value: 'Histórico'
-            },
-            {
-                label: 'Musical',
-                description: 'Focado na música, canto ou instrumento musicais.',
-                value: 'Musical'
-            },
-            {
-                label: 'Policial/Investigação',
-                description: 'Focado em ações policiais/investigativas.',
-                value: 'Policial/Investigação'
-            },
-            {
-                label: 'Pós-Apocalíptico',
-                description: 'Focado em um mundo depois de um apocalípse',
-                value: 'Pós-Apocalíptico'
-            },
-            {
-                label: 'Psicológico',
-                description: 'Abordagem em nível psicológico, jogos mentais.',
-                value: 'Psicológico'
-            },
-            {
-                label: 'Slice-of-life',
-                description: 'É centrado no dia a dia de pessoas comuns.',
-                value: 'Slice-of-life'
-            },
-            {
-                label: 'Sobrenatural',
-                description: 'Animes onde o sobrenatural é presente',
-                value: 'Sobrenatural'
-            },
-            {
-                label: 'Superpoderes',
-                description: 'Animes onde os personagens possuem superpoderes',
-                value: 'Superpoderes'
-            },
-            {
-                label: 'Vida escolar',
-                description: 'Geralmente os personagens vão a escola.',
-                value: 'Vida escolar'
-            },
-            {
-                label: 'Ecchi',
-                description: 'O foco são cenas sexualmente provocativas.',
-                value: 'Ecchi'
-            },
-            {
-                label: 'Hentai',
-                description: 'Animes onde possuem cenas de cunho adulto/nudez/sexo.',
-                value: 'Hentai'
-            },
-            {
-                label: 'Harém',
-                description: 'O personagem principal possui um harém.',
-                value: 'Harém'
-            }
-        ]
+                if (!result || !result?.data?.data || !result?.data?.data?.length)
+                    return await interaction.reply({
+                        content: `${e.Deny} | Eu não achei nenhum anime com a sua indicação.`,
+                        ephemeral: true
+                    }).catch(() => { })
 
-        const selectMenuGender = {
-            type: 1,
-            components: [{
-                type: 3,
-                custom_id: 'animeSuggestionsGender',
-                placeholder: 'Selecionar Gêneros',
-                min_values: 0,
-                max_values: optionsGender.length,
-                options: optionsGender
-            }]
-        }
+                return await sendIndication()
+            })
+            .catch(async () => {
+                return await interaction.reply({
+                    content: `${e.Deny} | O anime indicado não existe ou eu não achei ele na lista de animes da Kitsu.`,
+                    ephemeral: true
+                })
+            })
 
-        const selectMenuCategory = {
-            type: 1,
-            components: [{
-                type: 3,
-                custom_id: 'animeSuggestionsCategory',
-                placeholder: 'Selecionar Categorias',
-                min_values: 0,
-                max_values: optionsCategory.length,
-                options: optionsCategory
-            }]
-        }
+        async function sendIndication() {
 
-        const selectMenuMatchPublic = {
-            type: 1,
-            components: [{
-                type: 3,
-                custom_id: 'animeSuggestionsMatchPublic',
-                placeholder: 'Selecionar Público Alvo',
-                min_values: 0,
-                max_values: 5,
-                options: [
+            const embed = {
+                color: client.blue,
+                title: '💭 Nova Indicação',
+                fields: [
                     {
-                        label: 'Shōjo',
-                        description: 'Animes focado ao público feminino jovem.',
-                        value: 'Shōjo'
+                        name: '📺 Anime',
+                        value: animeName
                     },
                     {
-                        label: 'Josei',
-                        description: 'Foca-se em histórias e experiências de mulheres japonesas.',
-                        value: 'Josei'
+                        name: '🧩 Gêneros',
+                        value: `${e.Loading} Esperando seleção de gêneros...`
                     },
                     {
-                        label: 'Shounen',
-                        description: 'Animes direcionados ao público masculino jovem.',
-                        value: 'Shounen'
+                        name: '🎞 Categorias',
+                        value: `${e.Loading} Esperando seleção de categorias...`
                     },
                     {
-                        label: 'Seinen',
-                        description: 'Animes com assuntos mais sérios e pesados.',
-                        value: 'Seinen'
-                    },
-                    {
-                        label: 'Kodomo',
-                        description: 'Animes com assuntos infantis',
-                        value: 'Kodomo'
+                        name: '👥 Público Alvo',
+                        value: `${e.Loading} Esperando seleção de público alvo...`
+
                     }
-                ]
-            }]
-        }
+                ],
+                footer: { text: user.id }
+            }
 
-        const buttons = {
-            type: 1,
-            components: [
+            const optionsGender = [
                 {
-                    type: 2,
-                    label: 'Enviar',
-                    emoji: '📨',
-                    custom_id: JSON.stringify({ c: 'anime', src: 'send' }),
-                    style: ButtonStyle.Success,
-                    disabled: true,
+                    label: 'Ação',
+                    value: 'Ação'
                 },
                 {
-                    type: 2,
-                    label: 'Cancelar',
-                    emoji: '❌',
-                    custom_id: JSON.stringify({ c: 'anime', src: 'cancel' }),
-                    style: ButtonStyle.Danger
+                    label: 'Aventura',
+                    value: 'Aventura'
+                },
+                {
+                    label: 'Comédia',
+                    value: 'Comédia'
+                },
+                {
+                    label: 'Drama',
+                    value: 'Drama'
+                },
+                {
+                    label: 'Mistério',
+                    value: 'Mistério'
+                },
+                {
+                    label: 'Romance',
+                    value: 'Romance'
+                },
+                {
+                    label: 'Sci-Fi / Ficção Científica',
+                    value: 'Sci-Fi'
+                },
+                {
+                    label: 'Terror',
+                    value: 'Terror'
                 }
             ]
-        }
 
-        return await interaction.reply({
-            embeds: [embed],
-            components: [buttons, selectMenuGender, selectMenuCategory, selectMenuMatchPublic]
-        })
+            const optionsCategory = [
+                {
+                    label: 'Artes Marciais',
+                    description: 'Envolve personagens que utilizam técnicas de artes marciais',
+                    value: 'Artes Marciais'
+                },
+                {
+                    label: 'Avant-Garde',
+                    description: 'Apresentam temas experimentais, inovadores e filosóficos',
+                    value: 'Avant-Garde'
+                },
+                {
+                    label: 'Boys Love (BL)',
+                    description: 'A história gira em torno de um romance homoafetivo entre garotos.',
+                    value: 'Boys Love (BL)'
+                },
+                {
+                    label: 'Girls Love (GL)',
+                    description: 'A história gira em torno de um romance homoafetivo entre garotas.',
+                    value: 'Girls Love (GL)'
+                },
+                {
+                    label: 'Cyberpunk',
+                    description: 'Apresenta um mundo em que a sociedade está mais arraigada à tecnologia.',
+                    value: 'Cyberpunk'
+                },
+                {
+                    label: 'Esporte',
+                    description: 'Animes onde o assunto alvo é um ou mais esportes',
+                    value: 'Esporte'
+                },
+                {
+                    label: 'Faroeste',
+                    description: 'Acontece em um lugar semelhante ao Velho-Oeste americano.',
+                    value: 'Faroeste'
+                },
+                {
+                    label: 'Fantasia',
+                    description: 'Magia. Apresenta uma variedade de monstros e poderes mágicos.',
+                    value: 'Fantasia'
+                },
+                {
+                    label: 'Isekai',
+                    description: 'Animes onde a história ocorre em outro mundo',
+                    value: 'Isekai'
+                },
+                {
+                    label: 'Jogos',
+                    description: 'São focados em jogos eletrônicos, RPG, etc.',
+                    value: 'Jogos'
+                },
+                {
+                    label: 'Histórico',
+                    description: 'Em sua maioria contam a história de um Japão da época feudal.',
+                    value: 'Histórico'
+                },
+                {
+                    label: 'Musical',
+                    description: 'Focado na música, canto ou instrumento musicais.',
+                    value: 'Musical'
+                },
+                {
+                    label: 'Policial/Investigação',
+                    description: 'Focado em ações policiais/investigativas.',
+                    value: 'Policial/Investigação'
+                },
+                {
+                    label: 'Pós-Apocalíptico',
+                    description: 'Focado em um mundo depois de um apocalípse',
+                    value: 'Pós-Apocalíptico'
+                },
+                {
+                    label: 'Psicológico',
+                    description: 'Abordagem em nível psicológico, jogos mentais.',
+                    value: 'Psicológico'
+                },
+                {
+                    label: 'Slice-of-life',
+                    description: 'É centrado no dia a dia de pessoas comuns.',
+                    value: 'Slice-of-life'
+                },
+                {
+                    label: 'Sobrenatural',
+                    description: 'Animes onde o sobrenatural é presente',
+                    value: 'Sobrenatural'
+                },
+                {
+                    label: 'Superpoderes',
+                    description: 'Animes onde os personagens possuem superpoderes',
+                    value: 'Superpoderes'
+                },
+                {
+                    label: 'Vida escolar',
+                    description: 'Geralmente os personagens vão a escola.',
+                    value: 'Vida escolar'
+                },
+                {
+                    label: 'Ecchi',
+                    description: 'O foco são cenas sexualmente provocativas.',
+                    value: 'Ecchi'
+                },
+                {
+                    label: 'Hentai',
+                    description: 'Animes onde possuem cenas de cunho adulto/nudez/sexo.',
+                    value: 'Hentai'
+                },
+                {
+                    label: 'Harém',
+                    description: 'O personagem principal possui um harém.',
+                    value: 'Harém'
+                }
+            ]
+
+            const selectMenuGender = {
+                type: 1,
+                components: [{
+                    type: 3,
+                    custom_id: 'animeSuggestionsGender',
+                    placeholder: 'Selecionar Gêneros',
+                    min_values: 0,
+                    max_values: optionsGender.length,
+                    options: optionsGender
+                }]
+            }
+
+            const selectMenuCategory = {
+                type: 1,
+                components: [{
+                    type: 3,
+                    custom_id: 'animeSuggestionsCategory',
+                    placeholder: 'Selecionar Categorias',
+                    min_values: 0,
+                    max_values: optionsCategory.length,
+                    options: optionsCategory
+                }]
+            }
+
+            const selectMenuMatchPublic = {
+                type: 1,
+                components: [{
+                    type: 3,
+                    custom_id: 'animeSuggestionsMatchPublic',
+                    placeholder: 'Selecionar Público Alvo',
+                    min_values: 0,
+                    max_values: 5,
+                    options: [
+                        {
+                            label: 'Shōjo',
+                            description: 'Animes focado ao público feminino jovem.',
+                            value: 'Shōjo'
+                        },
+                        {
+                            label: 'Josei',
+                            description: 'Foca-se em histórias e experiências de mulheres japonesas.',
+                            value: 'Josei'
+                        },
+                        {
+                            label: 'Shounen',
+                            description: 'Animes direcionados ao público masculino jovem.',
+                            value: 'Shounen'
+                        },
+                        {
+                            label: 'Seinen',
+                            description: 'Animes com assuntos mais sérios e pesados.',
+                            value: 'Seinen'
+                        },
+                        {
+                            label: 'Kodomo',
+                            description: 'Animes com assuntos infantis',
+                            value: 'Kodomo'
+                        }
+                    ]
+                }]
+            }
+
+            const buttons = {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Enviar',
+                        emoji: '📨',
+                        custom_id: JSON.stringify({ c: 'anime', src: 'send' }),
+                        style: ButtonStyle.Success,
+                        disabled: true,
+                    },
+                    {
+                        type: 2,
+                        label: 'Cancelar',
+                        emoji: '❌',
+                        custom_id: JSON.stringify({ c: 'anime', src: 'cancel' }),
+                        style: ButtonStyle.Danger
+                    }
+                ]
+            }
+
+            return await interaction.reply({
+                embeds: [embed],
+                components: [buttons, selectMenuGender, selectMenuCategory, selectMenuMatchPublic]
+            })
+        }
 
     }
 

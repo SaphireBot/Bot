@@ -63,10 +63,25 @@ export default {
             description: '[util] Receba indicações de animes',
             options: [
                 {
+                    name: 'search',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Veja um anime específico presente no banco de dedos.',
+                    autocomplete: true
+                },
+                {
                     name: 'more_options',
                     type: ApplicationCommandOptionType.String,
-                    description: 'Mais opções do comando de indicações aqui',
-                    autocomplete: true
+                    description: 'Mais opções do comando de indicações aqui.',
+                    choices: [
+                        {
+                            name: 'Indicar um anime',
+                            value: 'indicate'
+                        },
+                        {
+                            name: 'Meus animes indicados',
+                            value: 'myAnimes'
+                        }
+                    ]
                 }
             ]
         }

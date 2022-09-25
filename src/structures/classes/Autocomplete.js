@@ -20,9 +20,12 @@ export default class Autocomplete extends Base {
         const { name, value } = this.options.getFocused(true)
         let query = name
 
+        if (query === 'search' && this.commandName === 'anime') return this.indications(value)
+
         if (['search', 'options', 'delete', 'edit', 'view'].includes(query)) query = this.commandName
 
         switch (query) {
+            case 'look': this.indications(value); break;
             case 'channel': this.blockedChannels(value); break;
             case 'users_banned': this.usersBanned(value); break;
             case 'color': case 'cor': this.utilColors(value); break;
@@ -51,7 +54,6 @@ export default class Autocomplete extends Base {
             case 'available_bets': this.available_bets(value); break;
             case 'blackjacks': this.blackjacks(value); break;
             case 'wallpaper': case 'anime': this.wallpapers(value); break;
-            case 'more_options': this.animeSuggestionOptions(); break;
             case 'flag-adminstration': this.flagAdminOptions(); break;
             case 'ranking': this.rankingOptions(); break;
             case 'daily': this.dailyOptions(); break;
@@ -65,32 +67,33 @@ export default class Autocomplete extends Base {
         return
     }
 
-    async animeSuggestionOptions() {
+    async indications(value) {
 
-        const defaultOptions = [
-            {
-                name: 'Indicar um anime',
+        const allAnimes = await this.Database.animeIndications() || []
+
+        if (!allAnimes || !allAnimes.length)
+            return await this.respond([{
+                name: 'Nenhum anime por aqui, que tal indicar um novo?',
                 value: 'indicate'
-            },
-            {
-                name: 'Meus animes indicados',
-                value: 'myAnimes'
-            }
-        ]
+            }])
 
-        if (this.client.staff.includes(this.user.id))
-            defaultOptions.push(...[
-                {
-                    name: 'Editar um anime',
-                    value: 'edit'
-                },
-                {
-                    name: 'Deletar um anime',
-                    value: 'delete'
-                }
-            ])
+        const fill = allAnimes.filter(anime => {
+            return RegExp(value, "i").test(anime.name)
+                || anime.authorId === value
+                || anime.category.find(cat => cat?.toLowerCase() === value?.toLowerCase())
+                || anime.gender.find(gen => gen?.toLowerCase() === value?.toLowerCase())
+                || anime.targetPublic.find(pub => pub?.toLowerCase() === value?.toLowerCase())
+                || RegExp(value, "i").test(this.client.users.resolve(anime.authorId)?.tag || '0')
+        })
 
-        return await this.respond(defaultOptions)
+        if (!fill || !fill.length)
+            return await this.respond([{
+                name: 'Nenhum anime por aqui, que tal indicar um novo?',
+                value: 'indicate'
+            }])
+
+        const mapped = fill.map(anime => ({ name: anime.name, value: anime.name }))
+        return await this.respond(mapped)
     }
 
     async rather(value) {

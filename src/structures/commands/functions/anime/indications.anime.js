@@ -6,7 +6,7 @@ import showMyAnimes from "./my.anime.js"
 export default async interaction => {
 
     const { options } = interaction
-    const option = options.getString('more_options')
+    const option = options.getString('search') || options.getString('more_options')
     if (option === 'indicate') return await interaction.showModal(Modals.indicateAnime())
 
     const animes = await Database.animeIndications() || []
@@ -28,9 +28,17 @@ export default async interaction => {
             }]
         })
 
-    if (!option) {
-        const anime = animes.random()
-        const animeIndex = animes.findIndex(an => an.name === anime.name)
+    switch (option) {
+        case 'myAnimes': showMyAnimes(interaction); break;
+        default:
+            const index = animes.findIndex(an => an.name === option)
+            showAnimesIndicates(index)
+            break;
+    }
+
+    async function showAnimesIndicates(index) {
+        const anime = index < 0 ? animes.random() : animes[index]
+        const animeIndex = index < 0 ? animes.findIndex(an => an.name === anime.name) : index
 
         return await interaction.reply({
             embeds: [{
@@ -103,16 +111,6 @@ export default async interaction => {
                 }
             ]
         })
-    }
-
-    switch (option) {
-        case 'myAnimes': showMyAnimes(interaction); break;
-        default:
-            await interaction.reply({
-                content: `${e.Loading} | Comando em construção.`,
-                ephemeral: true
-            });
-            break;
     }
 
     return

@@ -136,6 +136,10 @@ export default async interaction => {
                     {
                         name: '👥 Público Alvo',
                         value: anime.targetPublic?.map(pub => `\`${pub}\``)?.join(', ') || '\`Not Found\`'
+                    },
+                    {
+                        name: '⭐ Votos',
+                        value: `${e.Upvote} ${anime.up?.length || 0} x ${anime.down?.length || 0} ${e.DownVote}`
                     }
                 ]
             })

@@ -34,7 +34,7 @@ export default async (interaction, animeName) => {
     })
         .then(async result => {
 
-            if (!result.data.data || !result.data.data.length)
+            if (!result || !result?.data?.data || !result?.data?.data?.length)
                 return await interaction.editReply({
                     content: `${e.Deny} | Nenhum resultado obtido para a sua busca.`
                 }).catch(() => { })
