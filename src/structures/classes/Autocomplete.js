@@ -344,8 +344,8 @@ export default class Autocomplete extends Base {
     }
     async select_logo_marca(value) {
         const logoData = this.Database.Logomarca || []
-        const fill = logoData.filter(marca => marca?.name.find(x => x.includes(value.toLowerCase())))
-        const mapped = fill.map(marca => ({ name: formatString(marca?.name[0]), value: marca?.name[0] }))
+        const fill = logoData.filter(marca => marca?.answers.find(x => x.includes(value.toLowerCase())))
+        const mapped = fill.map(marca => ({ name: formatString(marca?.answers[0]), value: marca?.answers[0] }))
         return this.respond(mapped)
     }
 

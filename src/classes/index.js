@@ -13,6 +13,7 @@ import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.j
 import Reminder from '../classes/modules/Reminder.js'
 import GiveawayManager from '../functions/update/giveaway/GiveawayManager.js'
 import Experience from './modules/Experience.js'
+import Logomarca from './games/Logomarca.js'
 
 export {
     Models,
@@ -29,5 +30,6 @@ export {
     SelectMenuInteraction,
     Reminder,
     GiveawayManager,
-    Experience
+    Experience,
+    Logomarca
 }
