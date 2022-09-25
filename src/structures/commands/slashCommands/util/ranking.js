@@ -27,6 +27,10 @@ export default {
                 {
                     name: 'Experiência',
                     value: 'Xp'
+                },
+                {
+                    name: 'Logomarca Game',
+                    value: 'GamingCount.Logomarca'
                 }
             ]
         },
@@ -61,7 +65,6 @@ export default {
             })
 
         const { query, embed } = rankingData
-
         const nextUpdate = await Database.Cache.General.get('updateTime')
         const moeda = await guild?.getCoin() || `${e.Coin} Safiras`
         const userRanking = query.findIndex(q => q.id === user.id) + 1 || '^2000'
@@ -71,7 +74,8 @@ export default {
         const emojis = {
             Balance: moeda,
             Likes: '',
-            Xp: ''
+            Xp: '',
+            'GamingCount.Logomarca': 'Acertos'
         }
 
         const format = query

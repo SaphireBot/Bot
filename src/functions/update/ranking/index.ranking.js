@@ -12,7 +12,8 @@ export default async () => {
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
         { name: 'Likes', emoji: e.Like, title: `${e.Like} Ranking - Global Likes` },
-        { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` }
+        { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` },
+        { name: 'GamingCount.Logomarca', emoji: e.logomarca, title: `${e.logomarca} Ranking - Logomarca Game` }
     ]
 
     const allUsersData = []
@@ -37,17 +38,32 @@ export default async () => {
 
     async function getData({ name, emoji }) {
 
-        return [...allUsersData]
-            .filter(data => data[name] && data[name] > 0)
-            .sort((a, b) => b[name] - a[name])
-            .map(data => ({
-                id: data.id,
-                emoji: emoji,
-                tag: client.users.resolve(data.id)?.tag || null,
-                [name]: data[name]
-            }))
-            .filter(data => data.tag)
-            .slice(0, 2000)
+        return name.includes('.')
+            ? (() => {
+                const broke = name.split('.')
+                return [...allUsersData]
+                    .filter(data => data[broke[0]][broke[1]] && data[broke[0]][broke[1]] > 0)
+                    .sort((a, b) => b[broke[0]][broke[1]] - a[broke[0]][broke[1]])
+                    .map(data => ({
+                        id: data.id,
+                        emoji: emoji,
+                        tag: client.users.resolve(data.id)?.tag || null,
+                        [`${broke[0]}.${broke[1]}`]: data[broke[0]][broke[1]]
+                    }))
+                    .filter(data => data.tag)
+                    .slice(0, 2000)
+            })()
+            : [...allUsersData]
+                .filter(data => data[name] && data[name] > 0)
+                .sort((a, b) => b[name] - a[name])
+                .map(data => ({
+                    id: data.id,
+                    emoji: emoji,
+                    tag: client.users.resolve(data.id)?.tag || null,
+                    [name]: data[name]
+                }))
+                .filter(data => data.tag)
+                .slice(0, 2000)
 
     }
 
