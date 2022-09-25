@@ -11,7 +11,20 @@ export default async interaction => {
     const authorId = message.interaction.user.id
     if (user.id !== authorId) return
 
-    const allAnimes = await Database.animeIndications() || []
+    const animesFromDatabase = await Database.animeIndications() || []
+
+    if (!animesFromDatabase || !animesFromDatabase.length)
+        return await interaction.update({
+            content: `${e.Deny} | Não há nenhum anime presente no banco de dados`,
+            embeds: [],
+            components: []
+        }).catch(() => { })
+
+    const { embeds } = message
+    const embed = embeds[0]?.data
+    const animeName = embed?.fields[0]?.value
+
+    const allAnimes = animeName ? animesFromDatabase.filter(anime => anime.name !== animeName) : animesFromDatabase
     const anime = allAnimes.random()
     const animeIndex = allAnimes.findIndex(an => an.name === anime.name)
 
@@ -22,7 +35,7 @@ export default async interaction => {
             description: 'Todos os animes presentes neste comando foram sugeridos pelos próprios usuários e aprovados pela Administração da Saphire.',
             fields: [
                 {
-                    name: `📺 Anime - ${animeIndex + 1}/${allAnimes.length}`,
+                    name: `📺 Anime - ${animeIndex + 1}/${animesFromDatabase.length}`,
                     value: anime.name
                 },
                 {
