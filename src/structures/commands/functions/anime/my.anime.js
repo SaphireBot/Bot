@@ -118,7 +118,7 @@ export default async interaction => {
             const anime = myAnimes[i]
             embeds.push({
                 color: client.blue,
-                title: `💭 Minhas indicações de animes - ${i + 1}/${allAnimes.length}`,
+                title: `💭 Minhas indicações de animes - ${i + 1}/${myAnimes.length}`,
                 description: `Você tem um total de **${myAnimes.length}** animes indicados.`,
                 fields: [
                     {
