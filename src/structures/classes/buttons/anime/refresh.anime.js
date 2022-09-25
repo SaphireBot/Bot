@@ -28,7 +28,68 @@ export default async interaction => {
     const anime = allAnimes.random()
     const animeIndex = allAnimes.findIndex(an => an.name === anime.name)
 
+    if (!anime)
+        return await interaction.update({
+            content: `${e.Deny} | Nenhum outro anime foi encontrado.`
+        })
+
+    const buttons = [{
+        type: 1,
+        components: [
+            {
+                type: 2,
+                label: 'Atualizar',
+                emoji: '🔄',
+                custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
+                style: ButtonStyle.Primary
+            },
+            {
+                type: 2,
+                label: 'Indicar',
+                emoji: e.saphireLendo,
+                custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
+                style: ButtonStyle.Primary
+            },
+            {
+                type: 2,
+                label: 'Informações',
+                emoji: '🔎',
+                custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
+                style: ButtonStyle.Primary
+            },
+            {
+                type: 2,
+                label: anime?.up?.length || 0,
+                emoji: e.Upvote,
+                custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
+                style: ButtonStyle.Success
+            },
+            {
+                type: 2,
+                label: anime?.down?.length || 0,
+                emoji: e.DownVote,
+                custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
+                style: ButtonStyle.Danger
+            }
+        ]
+    }]
+
+    if (client.admins.includes(user.id))
+        buttons.push({
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Deletar anime',
+                    emoji: e.Trash,
+                    custom_id: JSON.stringify({ c: 'anime', src: 'delete' }),
+                    style: ButtonStyle.Danger
+                }
+            ]
+        })
+
     return await interaction.update({
+        content: null,
         embeds: [{
             color: client.blue,
             title: `💭 ${client.user.username}'s Indica Anime`,
@@ -56,48 +117,7 @@ export default async interaction => {
                 }
             ]
         }],
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 2,
-                        label: 'Atualizar',
-                        emoji: '🔄',
-                        custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
-                        style: ButtonStyle.Primary
-                    },
-                    {
-                        type: 2,
-                        label: 'Indicar',
-                        emoji: e.saphireLendo,
-                        custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
-                        style: ButtonStyle.Primary
-                    },
-                    {
-                        type: 2,
-                        label: 'Informações',
-                        emoji: '🔎',
-                        custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
-                        style: ButtonStyle.Primary
-                    },
-                    {
-                        type: 2,
-                        label: anime.up?.length || 0,
-                        emoji: e.Upvote,
-                        custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
-                        style: ButtonStyle.Success
-                    },
-                    {
-                        type: 2,
-                        label: anime.down?.length || 0,
-                        emoji: e.DownVote,
-                        custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
-                        style: ButtonStyle.Danger
-                    }
-                ]
-            }
-        ]
-    }).catch(() => { })
+        components: buttons
+    })
 
 }

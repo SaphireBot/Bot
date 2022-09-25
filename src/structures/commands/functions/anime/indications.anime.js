@@ -5,7 +5,7 @@ import showMyAnimes from "./my.anime.js"
 
 export default async interaction => {
 
-    const { options } = interaction
+    const { options, user } = interaction
     const option = options.getString('search') || options.getString('more_options')
     if (option === 'indicate') return await interaction.showModal(Modals.indicateAnime())
 
@@ -40,6 +40,61 @@ export default async interaction => {
         const anime = index < 0 ? animes.random() : animes[index]
         const animeIndex = index < 0 ? animes.findIndex(an => an.name === anime.name) : index
 
+        const buttons = [{
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Atualizar',
+                    emoji: '🔄',
+                    custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Indicar',
+                    emoji: e.saphireLendo,
+                    custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Informações',
+                    emoji: '🔎',
+                    custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: anime.up?.length || 0,
+                    emoji: e.Upvote,
+                    custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
+                    style: ButtonStyle.Success
+                },
+                {
+                    type: 2,
+                    label: anime.down?.length || 0,
+                    emoji: e.DownVote,
+                    custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
+                    style: ButtonStyle.Danger
+                }
+            ]
+        }]
+    
+        if (client.admins.includes(user.id))
+            buttons.push({
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Deletar anime',
+                        emoji: e.Trash,
+                        custom_id: JSON.stringify({ c: 'anime', src: 'delete' }),
+                        style: ButtonStyle.Danger
+                    }
+                ]
+            })
+
         return await interaction.reply({
             embeds: [{
                 color: client.blue,
@@ -68,48 +123,7 @@ export default async interaction => {
                     }
                 ]
             }],
-            components: [
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 2,
-                            label: 'Atualizar',
-                            emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: 'Indicar',
-                            emoji: e.saphireLendo,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: 'Informações',
-                            emoji: '🔎',
-                            custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: anime.up?.length || 0,
-                            emoji: e.Upvote,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
-                            style: ButtonStyle.Success
-                        },
-                        {
-                            type: 2,
-                            label: anime.down?.length || 0,
-                            emoji: e.DownVote,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
-                            style: ButtonStyle.Danger
-                        }
-                    ]
-                }
-            ]
+            components: buttons
         })
     }
 

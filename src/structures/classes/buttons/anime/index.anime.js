@@ -1,8 +1,9 @@
 import { Modals } from "../../../../classes/index.js"
-import infoAnime from "./info.anime.js"
 import refreshAnime from "./refresh.anime.js"
-import sendOrCancelAnime from "./sendOrCancel.anime.js"
+import infoAnime from "./info.anime.js"
+import deleteAnime from "./delete.anime.js"
 import voteAnime from "./vote.anime.js"
+import sendOrCancelAnime from "./sendOrCancel.anime.js"
 
 export default async (interaction, { src: customId }) => {
 
@@ -14,6 +15,9 @@ export default async (interaction, { src: customId }) => {
 
     if (customId === 'info')
         return infoAnime(interaction)
+
+    if (customId === 'delete')
+        return deleteAnime(interaction)
 
     if (['up', 'down'].includes(customId))
         return voteAnime(interaction, customId)

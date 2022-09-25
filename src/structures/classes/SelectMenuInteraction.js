@@ -175,12 +175,13 @@ export default class SelectMenuInteraction extends Base {
             const targetPublic = embed.fields[3].value.replace(/`/g, '').split(', ')
             const authorId = embed.footer.text
 
-            if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase()))
-                return await interaction.update({
-                    content: `${e.Deny} | Este anime já existe no banco de dados - \`${name}\``,
-                    components: [],
-                    embeds: []
+            if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase())) {
+                await interaction.message.delete().catch(() => { })
+                return await interaction.reply({
+                    content: `${e.Deny} | O anime \`${name}\` já existe no banco de dados.`,
+                    ephemeral: true
                 })
+            }
 
             return new Database.Indications({ name, category, gender, targetPublic, authorId })
                 .save(async function (err) {
