@@ -342,9 +342,10 @@ export default class Autocomplete extends Base {
 
         return this.respond(mapped)
     }
+
     async select_logo_marca(value) {
         const logoData = this.Database.Logomarca || []
-        const fill = logoData.filter(marca => marca?.answers.find(x => x.includes(value.toLowerCase())))
+        const fill = logoData.filter(marca => marca?.answers.find(name => name?.toLowerCase()?.includes(value.toLowerCase())))
         const mapped = fill.map(marca => ({ name: formatString(marca?.answers[0]), value: marca?.answers[0] }))
         return this.respond(mapped)
     }
@@ -355,14 +356,14 @@ export default class Autocomplete extends Base {
 
         if (!selectLogo) return this.respond()
 
-        const logo = logoData.find(data => data.name[0] === selectLogo)
+        const logo = logoData.find(data => data.answers[0] === selectLogo)
 
-        if (!logo || logo?.name.length === 1) return this.respond()
+        if (!logo || logo?.answers.length <= 1) return this.respond()
 
-        const mapped = logo.name
+        const mapped = logo.answers
             .slice(1)
-            .filter(name => name?.toLowerCase()?.includes(value?.toLowerCase()))
             .map(name => ({ name: formatString(name), value: name }))
+            .filter(logo => logo.name?.toLowerCase()?.includes(value?.toLowerCase()))
 
         return this.respond(mapped)
     }

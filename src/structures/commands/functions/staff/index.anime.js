@@ -12,26 +12,25 @@ export default async interaction => {
     const subCommandGroup = options.getSubcommandGroup()
     const subCommand = options.getSubcommand()
 
-    // if (subCommandGroup === 'logomarca') return logoMarca()
+    if (subCommandGroup === 'logomarca') return logoMarca()
     // if (subCommandGroup === 'quiz') return quiz()
     if (subCommandGroup === 'wallpaper') return wallpaper()
 
-    // async function logoMarca() {
+    async function logoMarca() {
 
-    //     switch (subCommand) {
-    //         case 'new': require('./logomarca/new.LogoMarca')(interaction); break;
-    //         case 'view': require('./logomarca/view.LogoMarca')(interaction); break;
-    //         case 'edit': require('./logomarca/edit.LogoMarca')(interaction); break;
-    //         case 'delete': require('./logomarca/delete.LogoMarca')(interaction); break;
-    //         default: await interaction.reply({
-    //             content: `${e.Deny} | Nenhuma função foi encontrada`,
-    //             ephemeral: true
-    //         });
-    //             break;
-    //     }
+        switch (subCommand) {
+            case 'new': import('./logomarca/new.logomarca.js').then(newLogo => newLogo.default(interaction)); break;
+            case 'edit': import('./logomarca/edit.logomarca.js').then(edit => edit.default(interaction)); break;
+            case 'delete': import('./logomarca/delete.logomarca.js').then(del => del.default(interaction)); break;
+            default: await interaction.reply({
+                content: `${e.Deny} | Nenhuma função foi encontrada.`,
+                ephemeral: true
+            });
+                break;
+        }
 
-    //     return
-    // }
+        return
+    }
 
     // async function quiz() {
 
