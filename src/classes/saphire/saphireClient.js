@@ -96,17 +96,17 @@ export default new class SaphireClient extends Client {
         /**
          * @returns [adminId1, adminId2]
          */
-        this.admins = []
+        this.admins = [config.ownerId]
 
         /**
          * @returns [modId1, modId2]
          */
-        this.mods = []
+        this.mods = [config.ownerId]
 
         /**
          * @returns [staff1, staff2]
          */
-        this.staff = []
+        this.staff = [config.ownerId]
     }
 
     /**

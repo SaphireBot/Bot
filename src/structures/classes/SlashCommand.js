@@ -26,16 +26,13 @@ export default class SlashCommand extends Base {
         const command = this.client.slashCommands.get(this.commandName);
         if (!command) return
 
-        const admins = [...clientData.Administradores, this.config.ownerId]
-        const staff = [...clientData.Administradores, ...clientData.Moderadores, this.config.ownerId, '327496267007787008']
-
-        if (command.admin && !admins.includes(this.user.id))
+        if (command.admin && !this.client.admins.includes(this.user.id))
             return await this.interaction.reply({
                 content: `${this.e.Deny} | Este comando é exclusivo para meus administradores.`,
                 ephemeral: true
             })
 
-        if (command.staff && !staff.includes(this.user.id))
+        if (command.staff && !this.client.staff.includes(this.user.id))
             return await this.interaction.reply({
                 content: `${this.e.Deny} | Este comando é exclusivo para os membros da equipe Saphire's Team.`,
                 ephemeral: true

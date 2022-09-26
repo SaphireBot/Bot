@@ -26,6 +26,7 @@ export default async () => {
 
     setInterval(async () => {
         const guildsLength = await client.allGuildsData() || []
+        client.refreshStaff()
         return client.user.setPresence({
             activities: [
                 { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${client.shardId}]` }

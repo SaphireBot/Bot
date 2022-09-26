@@ -6,7 +6,7 @@ export default {
     description: '[bot] Comando exclusívo para a Saphire\'s Team',
     dm_permission: false,
     type: 1,
-    admin: true,
+    staff: true,
     options: [
         {
             name: 'wallpaper',
