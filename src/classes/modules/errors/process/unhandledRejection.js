@@ -3,8 +3,8 @@ import { Config as config } from '../../../../util/Constants.js'
 import { SaphireClient as client } from '../../../index.js'
 import createWebhook from '../functions/createWebhook.errors.js'
 
-export default async function (reason) {
-    console.log(reason)
+export default async reason => {
+
     /**
      * 500 Internal Server Error
      * 10004 Unknown Guild
@@ -16,7 +16,8 @@ export default async function (reason) {
      * 10062 Unknow Interaction
      */
 
-    if ([500, 10004, 10008, 11000, 50001, 10062].includes(reason.code)) return
+    if ([500, 10004, 10008, 10062].includes(reason.code)) return
+    console.log(reason)
 
     const guild = await client.guilds.fetch(config.guildId).catch(() => null)
     if (!guild) return

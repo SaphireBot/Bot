@@ -48,5 +48,5 @@ export default async (interaction, { src, bt }) => {
     embed.fields[1].name += ` - ${parseInt((optionTwoUsersLength / total) * 100).toFixed(1) || 0}%`
     embed.footer = { text: `${total || 0} usuários responderam | ${optionsFilter.length === 0 ? 'Você já respondeu todas as perguntas' : `${optionsFilter.length} Perguntas restantes.`}` }
 
-    return await interaction.update({ embeds: [embed], components: [button] })
+    return await interaction.update({ embeds: [embed], components: [button] }).catch(() => { })
 }
