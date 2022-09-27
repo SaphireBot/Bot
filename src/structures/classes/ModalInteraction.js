@@ -1,4 +1,8 @@
-import { Base, SaphireClient as client } from '../../classes/index.js'
+import {
+    Base,
+    SaphireClient as client,
+    Database
+} from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
@@ -26,25 +30,89 @@ export default class ModalInteraction extends Base {
 
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
-        switch (this.customId) {
-            case 'BugModalReport': this.BugModalReport(this); break;
-            case 'editProfile': this.editProfile(this); break;
-            case 'logomarcaReporter': this.logomarcaReporter(this); break;
-            case 'newLetter': this.newLetter(this); break;
-            case 'lettersReport': this.lettersReport(this); break;
-            case 'balance': this.balanceOptions(this); break;
-            case 'rather': this.vocePrefere(this); break;
-            case 'ratherEdit': this.vocePrefereEdit(this); break;
-            case 'animeIndicationsEdit': this.animeIndicationsEdit(this); break;
-            case 'animeIndications': this.animeIndications(this); break;
-            case 'transactionsModalReport': this.transactionsModalReport(); break;
-            case 'botSugest': this.botSugest(); break;
-            case 'serverSugest': this.serverSugest(); break;
-            case 'serverReport': this.serverReport(); break;
-            default:
-                break;
-        }
+        const ModalInteractionFunctions = {
+            BugModalReport: [this.BugModalReport, this],
+            editProfile: [this.editProfile, this],
+            logomarcaReporter: [this.logomarcaReporter, this],
+            newLetter: [this.newLetter, this],
+            lettersReport: [this.lettersReport, this],
+            balance: [this.balanceOptions, this],
+            indicationsLogomarca: [this.indicateLogomarca, this],
+            rather: [this.vocePrefere, this],
+            ratherEdit: [this.vocePrefereEdit, this],
+            animeIndicationsEdit: [this.animeIndicationsEdit, this],
+            animeIndications: [this.animeIndications, this],
+            transactionsModalReport: [this.transactionsModalReport],
+            botSugest: [this.botSugest],
+            serverSugest: [this.serverSugest],
+            serverReport: [this.serverReport],
+        }[this.customId]
+
+        if (ModalInteractionFunctions)
+            return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
+
         return
+    }
+
+    async indicateLogomarca({ interaction, fields, user }) {
+
+        const marca = fields.getTextInputValue('marca')
+        const logos = Database.Logomarca
+
+        if (logos.find(lg => lg.answers.find(name => name.toLowerCase().includes(marca.toLowerCase()))))
+            return await interaction.reply({
+                content: `${e.Deny} | Está logomarca já existe no banco de dados.`,
+                components: [
+                    {
+                        type: 1,
+                        components: [{
+                            type: 2,
+                            label: 'Tentar outra marca',
+                            custom_id: JSON.stringify({ c: 'logomarca', src: 'again' }),
+                            style: ButtonStyle.Primary
+                        }]
+                    }
+                ],
+                ephemeral: true
+            })
+
+        const channel = await client.channels.fetch(config.logomarcaIndicateChannelId).catch(() => null)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu não achei o canal de envio`,
+                ephemeral: true
+            })
+
+        return channel.send({
+            embeds: [{
+                color: client.blue,
+                title: '💭 Nova Indicação de Logomarca',
+                fields: [
+                    {
+                        name: '👤 Usuário',
+                        value: `${user.tag} - \`${user.id}\``
+                    },
+                    {
+                        name: '✍ Indicação ou Indicações',
+                        value: `\`${marca}\``
+                    }
+                ]
+            }]
+        })
+            .then(async () => {
+                return await interaction.reply({
+                    content: `${e.Check} | Sua indicação de logomarca foi enviada com sucesso para a minha equipe de designers.`,
+                    ephemeral: true
+                })
+            })
+            .catch(async () => {
+                return await interaction.reply({
+                    content: `${e.Deny} | Ocorreu um erro ao enviar sua indicação de logomarca.`,
+                    ephemeral: true
+                })
+            })
+
     }
 
     async logomarcaReporter({ interaction, fields, user, client }) {
@@ -870,8 +938,8 @@ export default class ModalInteraction extends Base {
 
         const textExplain = fields.getTextInputValue('bugTextInfo')
         const commandWithError = fields.getTextInputValue('commandBuggued') || 'Nenhum'
-        let ChannelInvite = await channel.createInvite({ maxAge: 0 }).catch(() => { }) || null
-        let guildName = ChannelInvite?.url ? `[${guild.name}](${ChannelInvite.url})` : guild.name
+        const ChannelInvite = await channel.createInvite({ maxAge: 0 }).catch(() => nulll)
+        const guildName = ChannelInvite?.url ? `[${guild.name}](${ChannelInvite.url})` : guild.name
 
         const embed = {
             color: client.red,
@@ -887,7 +955,7 @@ export default class ModalInteraction extends Base {
             timestamp: new Date()
         }
 
-        const guildChannel = client.channels.cache.get(config.BugsChannelId)
+        const guildChannel = await client.channels.fetch(config.BugsChannelId).catch(() => null)
 
         if (!guildChannel)
             return await interaction.reply({
@@ -896,19 +964,21 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        await guildChannel.send({ embeds: [embed] }).catch(async err => {
-            return await interaction.reply({
-                content: `❌ | Houve um erro ao enviar o reporte para o canal designado. Por favor, fale diretamente com meu criador: ${client.users.resolve(Config.OwnerId)?.tag || 'Não encontrado'}\n${err}`,
-                embeds: [embed],
-                ephemeral: true
+        return guildChannel.send({ embeds: [embed] })
+            .then(async () => {
+                return await interaction.reply({
+                    content: `✅ | Reporte enviado com sucesso! Muito obrigada pelo seu apoio.`,
+                    embeds: [embed],
+                    ephemeral: true
+                })
             })
-        })
-
-        return await interaction.reply({
-            content: `✅ | Reporte enviado com sucesso! Muito obrigada pelo seu apoio.`,
-            embeds: [embed],
-            ephemeral: true
-        })
+            .catch(async err => {
+                return await interaction.reply({
+                    content: `❌ | Houve um erro ao enviar o reporte para o canal designado. Por favor, fale diretamente com meu criador: ${client.users.resolve(Config.OwnerId)?.tag || 'Não encontrado'}\n${err}`,
+                    embeds: [embed],
+                    ephemeral: true
+                })
+            })
 
     }
 

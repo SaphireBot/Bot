@@ -148,7 +148,7 @@ export default class Logomarca extends Base {
 
                 if (this.gameData.replied.includes(int.user.id))
                     return await int.reply({
-                        content: `${e.Deny} | Você errou a logomarca nesta rodada. Espere a próxima para responder novamente.`,
+                        content: `${e.saphireRight} | Você errou a logomarca nesta rodada. Espere a próxima para responder novamente.`,
                         ephemeral: true
                     })
 

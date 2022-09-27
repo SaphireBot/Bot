@@ -623,39 +623,64 @@ export default new class Modals {
         ]
     }
 
-    reportBug = {
-        title: "Bugs & Errors Reporting",
-        custom_id: "BugModalReport",
+    indicateLogomarca = {
+        title: "Logomarca Indications",
+        custom_id: "indicationsLogomarca",
         components: [
             {
                 type: 1,
                 components: [
                     {
                         type: 4,
-                        custom_id: "commandBuggued",
-                        label: "Qual é o comando/sistema?",
-                        placeholder: "Balance, Giveaway, AFk, Hug...",
+                        custom_id: "marca",
+                        label: "Logos ou Marcas a serem adicionados",
                         style: 1,
-                        max_length: 50
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "bugTextInfo",
-                        label: "O que aconteceu?",
-                        style: 2,
-                        min_length: 20,
-                        max_length: 3900,
-                        placeholder: "Quando tal recurso é usado acontece...",
+                        min_length: 2,
+                        max_length: 1020,
+                        placeholder: "Toddy, Nescau, Coca-Cola...",
                         required: true
                     }
                 ]
-            }
+            } // MAX: 5 Fields
         ]
+    }
+
+    reportBug = command => {
+        return {
+            title: "Bugs & Errors Reporting",
+            custom_id: "BugModalReport",
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "commandBuggued",
+                            label: "Qual é o comando/sistema?",
+                            placeholder: "Balance, Giveaway...",
+                            style: 1,
+                            max_length: 50,
+                            value: command?.name || null
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "bugTextInfo",
+                            label: "O que aconteceu?",
+                            style: 2,
+                            min_length: 20,
+                            max_length: 3900,
+                            placeholder: "Quando tal recurso é usado acontece...",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
     }
 
     setNewStatus = {

@@ -5,7 +5,7 @@ import { ButtonStyle } from 'discord.js'
 export default async interaction => {
 
     const { user } = interaction
-    const allCommands = [...client.slashCommands.toJSON()] // { name: '', description: '' }
+    const allCommands = client.slashCommands.toJSON() // { name: '', description: '' }
         .map(cmd => ({
             name: cmd.description ? `/${cmd.name.toLowerCase()}` : `APP: ${cmd.name}`,
             description: cmd.description

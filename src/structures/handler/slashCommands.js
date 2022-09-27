@@ -21,7 +21,6 @@ export default async (client) => {
 
             if (pull && pull.name) {
                 client.slashCommands.set(pull.name, pull);
-                client.allCommands.push({ name: pull.name, description: pull.description || 'no description' });
                 (pull.admin || pull.staff) ? adminCommands.push(pull) : commands.push(pull);
                 continue
             }

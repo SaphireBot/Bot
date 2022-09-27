@@ -67,6 +67,10 @@ export default {
                             value: 'bug'
                         },
                         {
+                            name: 'Enviar uma sugestão de logomarca',
+                            value: 'suggest'
+                        },
+                        {
                             name: '[Admin] Liberar canal para outro jogo',
                             value: 'liberate'
                         }
@@ -89,24 +93,15 @@ export default {
         const { options, channel, member } = interaction
         const subCommand = options.getSubcommand()
 
-        switch (subCommand) {
-            case 'list': import('../../functions/logomarca/list.logomarca.js').then(list => list.default(interaction)); break;
-            case 'view': import('../../functions/logomarca/view.logomarca.js').then(view => view.default(interaction)); break;
-            case 'game': import('../../functions/logomarca/game.logomarca.js').then(game => game.default(interaction)); break;
-            case 'options': adicitionalOptions(); break;
-            default:
-                await interaction.reply({
-                    content: `${e.Loading} | Nenhuma sub-função foi encontrada.`
-                });
-                break;
-        }
-        return
+        if (subCommand === 'options') return adicitionalOptions()
+        return import(`../../functions/logomarca/${subCommand}.logomarca.js`).then(execute => execute.default(interaction))
 
         async function adicitionalOptions() {
 
             const func = options.getString('option')
             if (func === 'liberate') return liberate()
             if (func === 'bug') return await interaction.showModal(Modals.logomarcaBug)
+            if (func === 'suggest') return await interaction.showModal(Modals.indicateLogomarca)
 
             if (func === 'info')
                 return await interaction.reply({

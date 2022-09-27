@@ -23,21 +23,20 @@ export default async interaction => {
         if (options.get(optionName))
             command.push(options.get(optionName)?.name)
 
-    switch (command[0]) {
-        case 'add_sinonimo': add_sinonimo(); break;
-        case 'name': editName(); break;
-        case 'remove_sinonimo': remove_sinonimo(); break;
-        case 'editar_imagem_com_censura': editImage(); break;
-        case 'editar_imagem_sem_censura': editImage(true); break;
-        default:
-            await interaction.reply({
-                content: `${e.Deny} | Nenhuma função foi encontrada.`,
-                ephemeral: true
-            });
-            break;
-    }
+    const func = {
+        add_sinonimo: [add_sinonimo],
+        name: [editName],
+        remove_sinonimo: [remove_sinonimo],
+        editar_imagem_com_censura: [editImage],
+        editar_imagem_sem_censura: [editImage, true]
+    }[command[0]]
 
-    return
+    if (func) return func[0](func[1])
+
+    return await interaction.reply({
+        content: `${e.Deny} | Nenhuma função foi encontrada.`,
+        ephemeral: true
+    })
 
     async function editImage(noCensor = false) {
 

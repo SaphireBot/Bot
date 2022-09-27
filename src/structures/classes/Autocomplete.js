@@ -17,54 +17,60 @@ export default class Autocomplete extends Base {
 
     async build() {
 
-        const { name, value } = this.options.getFocused(true)
-        let query = name
+        let { name, value } = this.options.getFocused(true)
 
-        if (query === 'search' && this.commandName === 'anime') return this.indications(value)
+        if (name === 'search' && this.commandName === 'anime') return this.indications(value)
 
-        if (['search', 'options', 'delete', 'edit', 'view'].includes(query)) query = this.commandName
+        if (['search', 'options', 'delete', 'edit', 'view'].includes(name)) name = this.commandName
 
-        switch (query) {
-            case 'look': this.indications(value); break;
-            case 'channel': this.blockedChannels(value); break;
-            case 'users_banned': this.usersBanned(value); break;
-            case 'color': case 'cor': this.utilColors(value); break;
-            case 'betchoice': this.betChoices(value); break;
-            case 'blocked_commands': this.blockCommands(value); break;
-            case 'database_users': this.databaseUsers(value); break;
-            case 'balance': this.balanceOptions(value); break;
-            case 'de': case 'para': this.translateLanguages(value); break;
-            case 'search_guild': case 'server': this.allGuilds(value); break;
-            case 'search_user': case 'user': this.allUsers(value); break;
-            case 'change_background': this.changeLevelBackground(value); break;
-            case 'rather': this.rather(value); break;
-            case 'buy_background': this.buyLevelBackground(value); break;
-            case 'select_country': this.flagSearch(value); break;
-            case 'command': this.commandList(value); break;
-            case 'sugest_channel': this.ideiaChannels(value); break;
-            case 'available_polls': this.available_polls(value); break;
-            case 'report_channel': this.reportChannels(value); break;
-            case 'log_channel': this.logChannels(value); break;
-            case 'select_logo_marca': this.select_logo_marca(value); break;
-            case 'remove_sinonimo': this.remove_sinonimo(value); break;
-            case 'roles_in_autorole': this.roles_in_autorole(value); break;
-            case 'delete_lembrete': this.delete_lembrete(value); break;
-            case 'quiz_question': this.quiz_question(value); break;
-            case 'select_giveaway': this.select_giveaway(value); break;
-            case 'available_bets': this.available_bets(value); break;
-            case 'blackjacks': this.blackjacks(value); break;
-            case 'wallpaper': case 'anime': this.wallpapers(value); break;
-            case 'flag-adminstration': this.flagAdminOptions(); break;
-            case 'ranking': this.rankingOptions(); break;
-            case 'daily': this.dailyOptions(); break;
-            case 'answers': this.answers(); break;
-            case 'level_options': this.levelOptions(); break;
-            case 'option': this.ideaCommandOptions(); break;
-            case 'editar_imagem_com_censura': this.editImageLogoMarca(); break;
-            default: this.respond(); break;
-        }
+        const autocompleteFunctions = {
+            look: ['indications', value],
+            channel: ['blockedChannels', value],
+            users_banned: ['usersBanned', value],
+            color: ['utilColors', value],
+            cor: ['utilColors', value],
+            betchoice: ['betChoices', value],
+            blocked_commands: ['blockCommands', value],
+            database_users: ['databaseUsers', value],
+            balance: ['balanceOptions', value],
+            de: ['translateLanguages', value],
+            para: ['translateLanguages', value],
+            search_guild: ['allGuilds', value],
+            server: ['allGuilds', value],
+            search_user: ['allUsers', value],
+            user: ['allUsers', value],
+            change_background: ['changeLevelBackground', value],
+            rather: ['rather', value],
+            buy_background: ['buyLevelBackground', value],
+            select_country: ['flagSearch', value],
+            command: ['commandList', value],
+            sugest_channel: ['ideiaChannels', value],
+            available_polls: ['available_polls', value],
+            report_channel: ['reportChannels', value],
+            log_channel: ['logChannels', value],
+            select_logo_marca: ['select_logo_marca', value],
+            remove_sinonimo: ['remove_sinonimo', value],
+            roles_in_autorole: ['roles_in_autorole', value],
+            delete_lembrete: ['delete_lembrete', value],
+            quiz_question: ['quiz_question', value],
+            select_giveaway: ['select_giveaway', value],
+            available_bets: ['available_bets', value],
+            blackjacks: ['blackjacks', value],
+            wallpaper: ['wallpapers', value],
+            anime: ['wallpapers', value],
+            flagadminstration: ['flagAdminOptions'],
+            ranking: ['rankingOptions'],
+            daily: ['dailyOptions'],
+            answers: ['answers'],
+            level_options: ['levelOptions'],
+            option: ['ideaCommandOptions'],
+            editar_imagem_com_censura: ['editImageLogoMarca']
+        }[name]
 
-        return
+        if (autocompleteFunctions)
+            return this[autocompleteFunctions[0]](autocompleteFunctions[1])
+
+        return await this.respond()
     }
 
     async indications(value) {
@@ -584,7 +590,7 @@ export default class Autocomplete extends Base {
     }
 
     async commandList(value) {
-        const cmds = [...this.client.allCommands]
+        const cmds = this.client.slashCommands.toJSON()
         const fill = cmds.filter(cmdName => cmdName.name?.toLowerCase().includes(value.toLowerCase()))
         const mapped = fill.map(cmdName => ({ name: cmdName.name, value: cmdName.name }))
 

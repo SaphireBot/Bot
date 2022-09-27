@@ -89,11 +89,6 @@ export default new class SaphireClient extends Client {
         this.subdomain = 'saphire'
 
         /**
-         * @returns [command1, command2]
-         */
-        this.allCommands = []
-
-        /**
          * @returns [adminId1, adminId2]
          */
         this.admins = [config.ownerId]

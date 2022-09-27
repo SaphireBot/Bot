@@ -10,7 +10,14 @@ export default {
         const { targetMessage } = interaction
 
         const user = targetMessage.author
-        const MsgsPraDeletar = await targetMessage.channel.messages.fetch({ limit: 50 })
+        const MsgsPraDeletar = await targetMessage.channel.messages.fetch({ limit: 50 }).catch(() => null)
+
+        if (!MsgsPraDeletar)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu não achei nenhuma mensagem para deletar ou eu não tenho permissão o suficiente.`,
+                ephemeral: true
+            })
+
         const userFilter = MsgsPraDeletar.filter(msg => msg.author.id === user.id && !msg.pinned)
 
         return targetMessage.channel.bulkDelete(userFilter)

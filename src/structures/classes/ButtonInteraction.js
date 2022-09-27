@@ -8,6 +8,7 @@ import payment from './buttons/payment/new.pay.js'
 import rather from './buttons/rather/game.rather.js'
 import ratherAdminEdit from './buttons/rather/admin/edit.rather.js'
 import anime from './buttons/anime/index.anime.js'
+import wordleGameInfoModal from './modals/wordleGame/wordleGame.info.modal.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -29,26 +30,32 @@ export default class ButtonInteraction extends Base {
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
-        if (commandData.c === 'mg') return memoryGame(this.interaction, this.customId)
-        if (commandData.c === 'ttt') return tictactoe(this.interaction, this.customId)
-        if (commandData.c === 'bj') return blackjack(this.interaction, this.customId)
-        if (commandData.c === 'bjm') return blackjackMultiplayer(this.interaction, this.customId)
-        if (commandData.c === 'like') return likePerfil(this.interaction, this.customId)
-        if (commandData.c === 'pay') return payment(this.interaction, this.customId)
-        if (commandData.c === 'rt') return rather(this.interaction, commandData)
-        if (commandData.c === 'redit') return ratherAdminEdit(this)
-        if (commandData.c === 'anime') return anime(this.interaction, commandData)
+        if (commandData.src === 'again') return await this.interaction.showModal(this.modals.indicateLogomarca)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
 
-        switch (this.customId) {
-            case 'editProfile': this.editProfile(); break;
-            case 'newProof': this.newProof(); break;
-            case 'cancelVote': this.cancelVote(); break;
-            case 'WordleGameInfo': import('./modals/wordleGame/wordleGame.info.modal.js').then(commandInfo => commandInfo.default(this)); break;
-            default:
-                break;
-        }
+        const result = {
+            mg: [memoryGame, this.interaction, this.customId],
+            ttt: [tictactoe, this.interaction, this.customId],
+            bj: [blackjack, this.interaction, this.customId],
+            bjm: [blackjackMultiplayer, this.interaction, this.customId],
+            like: [likePerfil, this.interaction, this.customId],
+            pay: [payment, this.interaction, this.customId],
+            rt: [rather, this.interaction, commandData],
+            redit: [ratherAdminEdit, this],
+            anime: [anime, this.interaction, commandData]
+        }[commandData.c]
+
+        if (result) return result[0](...result.slice(1))
+
+        const byCustomId = {
+            editProfile: [this.editProfile],
+            newProof: [this.newProof],
+            cancelVote: [this.cancelVote],
+            WordleGameInfo: [wordleGameInfoModal, this],
+        }[this.customId]
+
+        if (byCustomId) return byCustomId[0](byCustomId[1])
 
         return
     }

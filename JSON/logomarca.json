@@ -889,15 +889,6 @@
     },
     {
         "answers": [
-            "lego"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/995328255240437900/Picsart_22-07-09_09-50-28-510.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/995328246549860372/logo-lego-512.png"
-        }
-    },
-    {
-        "answers": [
             "lenovo"
         ],
         "images": {
@@ -989,24 +980,6 @@
         "images": {
             "censored": "https://media.discordapp.net/attachments/991029755367292948/995328866786746378/Picsart_22-07-09_10-26-22-801.png",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/995328854581325844/logo-melitta-512.png"
-        }
-    },
-    {
-        "answers": [
-            "mercado livre"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/993626173433196674/ml2.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/993626173164765294/ml.jpg"
-        }
-    },
-    {
-        "answers": [
-            "mercado pago"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/995433201415766016/Picsart_22-07-09_17-43-26-753.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/995433201080213614/Picsart_22-07-09_17-43-51-897.png"
         }
     },
     {
@@ -1136,15 +1109,6 @@
         "images": {
             "censored": null,
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/993556703922630687/images__1_-removebg-preview.png?width=408&height=408"
-        }
-    },
-    {
-        "answers": [
-            "netshoes"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/995417493877305467/Picsart_22-07-09_16-52-36-634.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/995417480262598778/logo-netshoes-512.png"
         }
     },
     {
@@ -1335,15 +1299,6 @@
     },
     {
         "answers": [
-            "petrobras"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/995452578894708736/Picsart_22-07-09_19-12-08-948.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/995452578592735373/logo-petrobras-512.png"
-        }
-    },
-    {
-        "answers": [
             "pic pay",
             "banco picpay",
             "picpay",
@@ -1396,7 +1351,7 @@
         ],
         "images": {
             "censored": null,
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/993575105324122172/ps_1.png?width=408&height=408"
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023916152201695272/google-play.png"
         }
     },
     {
@@ -1433,15 +1388,6 @@
         "images": {
             "censored": null,
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/994284759612141648/imagem_2022-07-06_135219633.png"
-        }
-    },
-    {
-        "answers": [
-            "r7"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/997712526932463636/147_Sem_Titulo_20220716005303.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/997712526575943742/images.jpeg"
         }
     },
     {
@@ -1671,15 +1617,6 @@
         "images": {
             "censored": null,
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/993630173125693580/imagem_2022-07-04_183058766.png?width=408&height=408"
-        }
-    },
-    {
-        "answers": [
-            "terra"
-        ],
-        "images": {
-            "censored": "https://media.discordapp.net/attachments/991029755367292948/1000591803726184469/158_Sem_Titulo_20220723233420.png",
-            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1000591803466121246/images_3.png"
         }
     },
     {
@@ -2075,6 +2012,78 @@
         "images": {
             "censored": "https://media.discordapp.net/attachments/991029755367292948/1010627507298508912/174_Sem_Titulo_20220820161228.png",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1010627507025883196/logo-cafe-3-coracoes.webp"
+        }
+    },
+    {
+        "answers": [
+            "r7"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1023775351471624293/unknown.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023775351043801158/unknown.png"
+        }
+    },
+    {
+        "answers": [
+            "netshoes"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023919806136733716/1664191641564-removebg-preview.png"
+        }
+    },
+    {
+        "answers": [
+            "lego"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1023921573729685554/5_Sem_Titulo_20220926083749.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023921573503180861/images_1.png"
+        }
+    },
+    {
+        "answers": [
+            "petrobras"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023952443530285076/imagem_2022-09-26_103946019_1.png?width=412&height=408"
+        }
+    },
+    {
+        "answers": [
+            "mercado livre"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023955893940924527/imagem_2022-09-26_105505425.png"
+        }
+    },
+    {
+        "answers": [
+            "mercado pago"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1023956668855369798/imagem_2022-09-26_105754696.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "portal terra"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024043840098799768/imagem_2022-09-26_164202772_1.png?width=441&height=408"
+        }
+    },
+    {
+        "answers": [
+            "trakinas"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1024145071534252092/7_Sem_Titulo_20220926232622.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024145071324540928/images-removebg-preview.png"
         }
     }
 ]

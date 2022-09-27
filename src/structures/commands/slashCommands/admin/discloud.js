@@ -56,25 +56,12 @@ export default {
 
         const { options } = interaction
         const query = options.getString('options')
+        const func = { logs, backup, user, restart, stop, start, update, apps }[query]
+        if (func) return func(interaction)
 
-        switch (query) {
-            case 'logs': logs(interaction); break;
-            case 'backup': backup(interaction); break;
-            case 'user': user(interaction); break;
-            case 'restart': restart(interaction); break;
-            case 'stop': stop(interaction); break;
-            case 'start': start(interaction); break;
-            case 'update': update(interaction); break;
-            case 'apps': apps(interaction); break;
-            default:
-                await interaction.reply({
-                    content: `${e.Deny} | ID da OPTION não encontrado ou sem função definida.`,
-                    ephemeral: true
-                });
-                break;
-        }
-
-        return
-
+        return await interaction.reply({
+            content: `${e.Deny} | ID da OPTION não encontrado ou sem função definida.`,
+            ephemeral: true
+        })
     }
 }
