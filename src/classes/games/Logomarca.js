@@ -12,6 +12,7 @@ export default class Logomarca extends Base {
         this.channel = interaction.channel
         this.channelId = interaction.channel.id
         this.buttons = undefined
+        this.collected = false
         this.gameData = {
             counter: 0,
             round: 1,
@@ -38,8 +39,10 @@ export default class Logomarca extends Base {
         }]
 
         this.msg = this.interaction.replied
-            ? await this.channel.send({ embeds: embed }).catch(() => { })
-            : await this.interaction.reply({ embeds: embed, fetchReply: true }).catch(() => { })
+            ? await this.channel.send({ embeds: embed })
+                .catch(() => { })
+            : await this.interaction.reply({ embeds: embed, fetchReply: true })
+                .catch(() => { })
 
         return setTimeout(() => this.game(), 2000)
     }
@@ -64,7 +67,9 @@ export default class Logomarca extends Base {
                             url: 'https://media.discordapp.net/attachments/893361065084198954/1023672587286495333/unknown.png'
                         }
                     }]
-                }).catch(() => { })
+                })
+
+                    .catch(() => { })
             }
 
             this.logoData = [...this.Database.Logomarca]?.randomize()
@@ -80,17 +85,21 @@ export default class Logomarca extends Base {
         const logo = this.getLogo()
         if (!logo) return this.finish()
 
+        this.collected = false
         this.gameData.logo = logo
         this.embed.image = { url: logo.images.censored ?? logo.images.uncensored }
         this.embed.title = `${e.logomarca} ${this.client.user.username}'s Logo & Marca Quiz`
         this.embed.description = `${e.Loading} Qual o nome desta marca?`
         this.embed.footer = { text: `Round: ${this.gameData.round} | ${this.gameData.sandBox ? 'SANDBOX ATIVADO' : `${this.logoData.length} Imagens Restantes`}` }
         this.generateButtons(logo)
-        this.msg.delete().catch(() => { })
+        this.msg?.delete()
+            .catch(() => { })
 
         this.msg = this.interaction.replied
-            ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] }).catch(() => { })
-            : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true }).catch(() => { })
+            ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] })
+                .catch(() => { })
+            : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true })
+                .catch(() => { })
 
         return this.initCollectors()
     }
@@ -107,15 +116,19 @@ export default class Logomarca extends Base {
 
                 this.gameData.counter++
                 if (this.gameData.counter < 10) return
-                this.msg.delete().catch(() => { })
+                this.msg.delete()
+                    .catch(() => { })
+
                 this.gameData.counter = 0
 
                 this.collectors.collectorCounter.stop()
                 this.collectors.collectorRightAnswer.stop()
 
                 this.msg = this.interaction.replied
-                    ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] }).catch(() => { })
-                    : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true }).catch(() => { })
+                    ? await this.channel.send({ embeds: [this.embed], components: [this.buttons] })
+                        .catch(() => { })
+                    : await this.interaction.reply({ embeds: [this.embed], components: [this.buttons], fetchReply: true })
+                        .catch(() => { })
 
                 return this.initCollectors()
 
@@ -127,15 +140,22 @@ export default class Logomarca extends Base {
             })
 
         this.collectors.collectorRightAnswer = this.msg.createMessageComponentCollector({
-            filter: int => !int.user.bot && !this.gameData.replied.includes(int.user.id),
+            filter: int => !int.user.bot,
             time: 20000,
             errors: ['time']
         })
             .on('collect', async int => {
 
+                if (this.gameData.replied.includes(int.user.id))
+                    return await int.reply({
+                        content: `${e.Deny} | Você errou a logomarca nesta rodada. Espere a próxima para responder novamente.`,
+                        ephemeral: true
+                    })
+
                 const { customId } = int
 
                 if (customId !== 'correct') {
+
                     this.gameData.replied.push(int.user.id)
                     return await int.reply({
                         content: `${e.Deny} | Logomarca Quiz | Resposta errada.`,
@@ -143,13 +163,17 @@ export default class Logomarca extends Base {
                     })
                 }
 
+                if (this.collected) return
+
+                this.collected = true
                 this.collectors.collectorCounter?.stop()
                 this.gameData.counter = 0
                 this.gameData.replied = []
                 this.addAccept(int.user.id)
                 this.embed.image = { url: this.gameData.logo.images.uncensored }
                 this.embed.description = `${e.Check} | ${int.user} acertou a marca \`${formatString(this.gameData.logo.answers[0])}\`\n${e.Loading} | Carregando próximo round...`
-                this.msg.delete().catch(() => { })
+                this.msg.delete()
+                    .catch(() => { })
 
                 this.msg = await int.reply({
                     embeds: [this.embed],
@@ -168,9 +192,10 @@ export default class Logomarca extends Base {
             ? has.points++
             : this.gameData.users.push({ id: userId, points: 1 })
 
+        this.format()
         await this.Database.Cache.Logomarca.add(`Points.${userId}`, 1)
 
-        return this.format()
+        return
     }
 
     async format() {
@@ -188,7 +213,10 @@ export default class Logomarca extends Base {
         this.embed.color = this.client.red
         this.embed.description = `${e.Deny} | Ninguém acertou a marca \`${formatString(this.gameData.logo.answers[0])}\``
         this.embed.image = { url: this.gameData.logo.images.uncensored }
-        this.msg.delete().catch(() => { })
+        this.msg.delete()
+            .catch(() => { })
+
+
         this.msg = await this.channel.send({
             embeds: [this.embed],
             components: [
@@ -203,7 +231,8 @@ export default class Logomarca extends Base {
                     }]
                 }
             ]
-        }).catch(() => { })
+        })
+            .catch(() => { })
 
         const dataToUpdate = []
         const cachedPointsData = await this.Database.Cache.Logomarca.get('Points') || {}
@@ -248,6 +277,7 @@ export default class Logomarca extends Base {
                     sandBoxActive: false
                 }
                 this.collectors = {}
+
                 this.msg = undefined
                 this.embed = { color: Colors[this.interaction.options.getString('color')] || 0x9bff85, fields: [] }
 
@@ -262,7 +292,6 @@ export default class Logomarca extends Base {
     generateButtons(logo) {
 
         const buttons = { type: 1, components: [] }
-
         const correct = logo.answers.random()
         const incorrect = this.Database.Logomarca.random(5).filter(logomarca => !logomarca.answers.includes(correct))
 

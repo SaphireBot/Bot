@@ -49,10 +49,11 @@ export default {
 
         const { options, guild, user: author } = interaction
         const searchUser = options.getString('user') || null
-        
+
         const user = options.getUser('member')
             || await client.users.fetch(searchUser, { force: true })
                 .catch(() => author)
+            || author
 
         const member = guild.members.cache.get(user.id) || null
         const hide = options.getString('hide') === 'hide'
@@ -127,7 +128,7 @@ export default {
 
         if (guild.clientHasPermission(DiscordPermissons.ManageGuild)) {
             const integrations = await guild.fetchIntegrations() || []
-            application = integrations.find(data => data.application.id === user.id)?.application
+            application = integrations.find(data => data?.application?.id === user?.id)?.application
         }
 
         if (application) {

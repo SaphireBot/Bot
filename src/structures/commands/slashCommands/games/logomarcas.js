@@ -117,16 +117,20 @@ export default {
                             description: `O jogo Logo & Marca é um Quiz. O objetivo é simples, acertar o máximo de logos e marcas que aparecer.`,
                             fields: [
                                 {
-                                    name: '❤ Vidas ou Reset 🔄',
-                                    value: 'Para cada jogo existem 3 vidas e o reset. Quando ninguém acertar a marca, você pode recomeçar de onde parou. Porém, apenas 3 vezes. E claro, o reset é para começar tudo novamente.'
+                                    name: '🔄 Reset',
+                                    value: 'Quando ninguém acertar a marca, você pode recomeçar um novo jogo sem ter que usar o comando novamente. E claro, o reset é para começar tudo novamente.'
                                 },
                                 {
                                     name: '😨 HO MEU DEUS, EU NÃO APAREÇO NO RANKING',
-                                    value: 'Calma aí coisinha fofa! Apenas os 5 primeiros com mais pontos aparecem no ranking.'
+                                    value: 'Calma aí coisinha fofa! Apenas os 7 primeiros com mais pontos aparecem no ranking, mas o pontos são contatos e vai pro ranking assim que o jogo terminar.'
                                 },
                                 {
                                     name: `${e.bug} Bugou, e agora?`,
                                     value: `Reporte o problema atráves do comando </logomarcas options:${interaction.commandId}> e use a opção \`Reportar um erro/bug\``
+                                },
+                                {
+                                    name: `${e.saphireOlhadinha} Intelligence`,
+                                    value: 'Já pensou você com mais de 100 pontos e meu criador me reinicia ou por algum motivo no universo o comando buga? Então, com o Intelligence, você não irá perder seus pontos. É só começar outro jogo e ao final dele, todos os pontos de todos os seus jogos serão adicionados ao seu perfil. Legal, né?'
                                 },
                                 {
                                     name: `${e.logomarca} Créditos`,
