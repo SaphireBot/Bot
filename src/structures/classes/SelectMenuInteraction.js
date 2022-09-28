@@ -1,6 +1,7 @@
 import { Database } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import Base from './Base.js'
+import translateSearch from './selectmenu/translate.search.js'
 
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
@@ -24,12 +25,24 @@ export default class SelectMenuInteraction extends Base {
         if (animesIndicationIds.includes(this.customId))
             return this.animeSetSuggestions(this)
 
-        switch (this.customId) {
-            case 'vocePrefere': this.vocePrefere(this); break;
-            case 'animeSuggestions': this.animeSuggestions(this); break;
-        }
+        const result = {
+            vocePrefere: 'vocePrefere',
+            animeSuggestions: 'animeSuggestions',
+            animeChoosen: 'animeChoosen',
+            mangaChoosen: 'mangaChoosen'
+        }[this.customId]
 
-        return
+        if (!result) return
+
+        return this[result](this)
+    }
+
+    async animeChoosen() {
+        return translateSearch(this)
+    }
+
+    async mangaChoosen() {
+        return translateSearch(this)
     }
 
     async vocePrefere({ interaction, value, message, e }) {

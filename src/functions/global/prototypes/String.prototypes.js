@@ -91,7 +91,10 @@ String.prototype.limit = function (param) {
         MessageEmbedAuthorName: 256,
         MessageContent: 4096,
         AutocompleteName: 100,
-        AutocompleteValue: 100
+        AutocompleteValue: 100,
+        SelectMenuLabel: 100,
+        SelectMenuDescription: 100,
+        SelectMenuValue: 100
     }[param] || this.length
 
     if (this.length > limit)

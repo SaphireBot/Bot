@@ -1,11 +1,9 @@
 import axios from 'axios'
 import { Emojis as e } from '../../../../util/util.js'
-import translate from '@iamtraction/google-translate'
-import { SaphireClient as client } from '../../../../classes/index.js'
 
 export default async (interaction, animeName) => {
 
-    await interaction.reply({ content: `${e.Loading} | Buscando anime...`, ephemeral: animeName ? true : false })
+    await interaction.reply({ content: `${e.Loading} | Pesquisando animes com nomes parecidos...`, ephemeral: animeName ? true : false })
 
     const { options } = interaction
     const search = options?.getString('input') || animeName
@@ -33,111 +31,81 @@ export default async (interaction, animeName) => {
     })
         .then(async result => {
 
-            if (!result || !result?.data?.data || !result?.data?.data?.length)
+            const animes = result?.data?.data || []
+
+            if (!animes || !animes?.length)
                 return await interaction.editReply({
                     content: `${e.Deny} | Nenhum resultado obtido para a sua busca.`
                 }).catch(() => { })
 
-            const { attributes: anime } = result.data.data[0]
+            const selectMenu = selectMenuGenerator(animes)
 
-            translate(`${anime.synopsis.replace(/<[^>]*>/g, '').split('\n')[0]}`, { to: 'pt' })
-                .then(async res => {
+            return await interaction.editReply({
+                content: `${e.Loading} | Escolha um dos animes que eu encontrei.`,
+                components: [selectMenu]
+            })
 
-                    const Subtype = {
-                        // Anime
-                        ONA: 'Animação Original da Net (ONA)',
-                        OVA: 'Video de Animação Original (OVA)',
-                        TV: 'Televisão',
-                        movie: 'Filme',
-                        music: 'Música',
-                        special: 'Especial',
-                        // Manga
-                        doujin: 'Doujin',
-                        manga: 'Manga',
-                        manhua: 'Manhua',
-                        manhwa: 'Manhwa',
-                        novel: 'Novel',
-                        oel: 'Oel',
-                        oneshot: 'Oneshot',
-                    }[anime.showType || anime.mangaType] || '\`Not Found\`'
-
-                    const Sinopse = res.text?.limit('MessageEmbedDescription') || '\`Synopsis Not Found\`'
-
-                    const Status = {
-                        current: 'Atual',
-                        finished: 'Finalizado',
-                        tba: 'Em Breve',
-                        unreleased: "Inédito",
-                        upcoming: 'Em Lançamento'
-                    }[anime.status] || 'Sem status definido'
-
-                    const Name = {
-                        en: anime.titles.en,
-                        en_jp: anime.titles.en_jp,
-                        original: anime.titles.ja_jp,
-                        canonical: anime.canonicalTitle,
-                        abreviated: anime.abbreviatedTitles
-                    }
-
-                    const IdadeRating = {
-                        G: 'Livre',
-                        PG: '+10 - Orientação dos Pais Sugerida',
-                        R: '+16 Anos',
-                        R18: '+18 Anos'
-                    }[anime.ageRating] || 'Sem faixa etária'
-
-                    const NSFW = anime.nsfw ? 'Sim' : 'Não'
-                    const Nota = anime.averageRating || '??'
-                    const AnimeRanking = anime.ratingRank || '0'
-                    const AnimePop = anime.popularityRank || '0'
-                    const Epsodios = anime.episodeCount || 'N/A'
-                    const Volumes = anime.volumeCount || null
-
-                    const Create = anime.createdAt
-                        ? Date.Timestamp(new Date(anime.createdAt), 'f', true)
-                        : 'Não criado ainda'
-
-                    const LastUpdate = anime.updatedAt
-                        ? Date.Timestamp(new Date(anime.updatedAt), 'f', true)
-                        : 'Sem atualização'
-
-                    const Lancamento = anime.startDate ? `${new Date(anime.startDate).toLocaleDateString("pt-br")}` : 'Em lançamento'
-                    const Termino = anime.endDate
-                        ? new Date(anime.endDate).toLocaleDateString("pt-br")
-                        : anime.startDate ? 'Ainda no ar' : 'Não lançado'
-
-                    return await interaction.editReply({
-                        content: null,
-                        embeds: [
-                            {
-                                color: client.green,
-                                title: `🔍 Pesquisa Requisitada: ${search}`,
-                                description: `**📑 Sinopse**\n${Sinopse}`,
-                                fields: [
-                                    {
-                                        name: '🗂️ Informações',
-                                        value: `Nome Japonês: ${Name.original || 'Não possue'}\nNome Inglês: ${Name.en || 'Não possue'}\nNome Mundial: ${Name.en_jp || 'Não possue' || 'Não possue'}\nNome Canônico: ${Name.canonical || 'Não possue'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
-                                    },
-                                    {
-                                        name: `📊 Status - ${Status}`,
-                                        value: `Nota Média: ${Nota}\nRank Kitsu: ${AnimeRanking}\nPopularidade: ${AnimePop}${Volumes ? `\nVolumes: ${Volumes}` : `\nEpisódios: ${Epsodios}`}\nCriação: ${Create}\nÚltima atualização: ${LastUpdate}\nLançamento: ${Lancamento}\nTérmino: ${Termino}`
-                                    }
-                                ],
-                                image: { url: anime.posterImage?.original ? anime.posterImage.original : null }
-                            }
-                        ]
-                    }).catch(async err => {
-                        return await interaction.editReply('Ocorreu um erro no comando "anime"\n`' + err + '`')
-                    })
-
-                }).catch(async err => {
-                    return await interaction.editReply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
-                })
-
-        }).catch(async () => {
+        })
+        .catch(async err => {
+            console.log(err)
             return await interaction.editReply({
                 content: `${e.Deny} | Anime não encontrado.`
             }).catch(() => { })
         })
+
+    function selectMenuGenerator(animes) {
+
+        const selectMenuObject = {
+            type: 1,
+            components: [{
+                type: 3,
+                custom_id: lookingFor === 'anime' ? 'animeChoosen' : 'mangaChoosen',
+                placeholder: 'Selecione um anime',
+                options: []
+            }]
+        }
+
+        const values = []
+
+        for (let animeData of animes) {
+
+            const anime = animeData.attributes
+
+            const IdadeRating = {
+                G: 'Livre',
+                PG: '+10 - Orientação dos Pais Sugerida',
+                R: '+16 Anos',
+                R18: '+18 Anos'
+            }[anime.ageRating] || 'Sem faixa etária'
+
+            const emoji = {
+                G: e.livre,
+                PG: e['+10'],
+                R: e['+16'],
+                R18: '🔞'
+            }[anime.ageRating] || e.QuestionMark
+
+            const animeName = anime?.titles?.en || anime?.titles?.en_jp || anime?.canonicalTitle || null
+            if (!animeName || animeName.length > 100) continue
+
+            if (values.includes(animeName)) continue
+
+            selectMenuObject.components[0].options.push({
+                emoji,
+                label: animeName,
+                description: IdadeRating.limit('SelectMenuDescription'),
+                value: animeName,
+            })
+
+            values.push(animeName)
+
+            continue
+        }
+
+        if (selectMenuObject.components[0].options.length > 25)
+            selectMenuObject.components[0].options.length = 25
+
+        return selectMenuObject
+    }
 
 }

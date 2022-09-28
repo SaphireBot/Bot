@@ -17,7 +17,7 @@ export default {
     helpData: {
         description: 'Report bugs em comandos para meus administradores',
     },
-    async execute({ interaction, client, e }) {
+    async execute({ interaction, client }) {
 
         const { options } = interaction
         const commandQuery = options.getString('command')
