@@ -68,24 +68,23 @@ export default async (anime, res, interaction, search) => {
 
     return await interaction.editReply({
         content: null,
-        embeds: [
-            {
-                color: client.green,
-                title: `🔍 Pesquisa Requisitada: ${search}`.limit('MessageEmbedTitle'),
-                description: `**📑 Sinopse**\n${Sinopse}`,
-                fields: [
-                    {
-                        name: '🗂️ Informações',
-                        value: `Nome Japonês: ${Name.original || 'Não possue'}\nNome Inglês: ${Name.en || 'Não possue'}\nNome Mundial: ${Name.en_jp || 'Não possue' || 'Não possue'}\nNome Canônico: ${Name.canonical || 'Não possue'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
-                    },
-                    {
-                        name: `📊 Status - ${Status}`,
-                        value: `Nota Média: ${Nota}\nRank Kitsu: ${AnimeRanking}\nPopularidade: ${AnimePop}${Volumes ? `\nVolumes: ${Volumes}` : `\nEpisódios: ${Epsodios}`}\nCriação: ${Create}\nÚltima atualização: ${LastUpdate}\nLançamento: ${Lancamento}\nTérmino: ${Termino}`
-                    }
-                ],
-                image: { url: anime.posterImage?.original ? anime.posterImage.original : null }
-            }
-        ],
+        embeds: [{
+            color: client.green,
+            title: `🔍 Pesquisa Requisitada: ${search}`.limit('MessageEmbedTitle'),
+            description: `**📑 Sinopse**\n${Sinopse}`,
+            fields: [
+                {
+                    name: '🗂️ Informações',
+                    value: `Nome Japonês: ${Name.original || 'Não possue'}\nNome Inglês: ${Name.en || 'Não possue'}\nNome Mundial: ${Name.en_jp || 'Não possue' || 'Não possue'}\nNome Canônico: ${Name.canonical || 'Não possue'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
+                },
+                {
+                    name: `📊 Status - ${Status}`,
+                    value: `Nota Média: ${Nota}\nRank Kitsu: ${AnimeRanking}\nPopularidade: ${AnimePop}${Volumes ? `\nVolumes: ${Volumes}` : `\nEpisódios: ${Epsodios}`}\nCriação: ${Create}\nÚltima atualização: ${LastUpdate}\nLançamento: ${Lancamento}\nTérmino: ${Termino}`
+                }
+            ],
+            image: { url: anime.posterImage?.original ? anime.posterImage.original : null },
+            footer: { text: 'Info by: Kitsu API' }
+        }],
         components: []
     })
         .catch(async err => {

@@ -9,7 +9,7 @@ import rather from './buttons/rather/game.rather.js'
 import ratherAdminEdit from './buttons/rather/admin/edit.rather.js'
 import anime from './buttons/anime/index.anime.js'
 import wordleGameInfoModal from './modals/wordleGame/wordleGame.info.modal.js'
-
+import channelIndex from './buttons/channel/channel.index.js'
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
         super()
@@ -43,7 +43,8 @@ export default class ButtonInteraction extends Base {
             pay: [payment, this.interaction, this.customId],
             rt: [rather, this.interaction, commandData],
             redit: [ratherAdminEdit, this],
-            anime: [anime, this.interaction, commandData]
+            anime: [anime, this.interaction, commandData],
+            channel: [channelIndex, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return result[0](...result.slice(1))

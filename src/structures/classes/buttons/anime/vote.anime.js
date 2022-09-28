@@ -1,4 +1,7 @@
-import { Database } from "../../../../classes/index.js"
+import {
+    SaphireClient as client,
+    Database
+} from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { ButtonStyle } from "discord.js"
 
@@ -40,51 +43,64 @@ export default async (interaction, upOrDown) => {
     )
         .then(async anime => {
 
-            return await interaction.update({
-                components: [{
+            const buttons = [{
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Atualizar',
+                        emoji: '🔄',
+                        custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
+                        style: ButtonStyle.Primary
+                    },
+                    {
+                        type: 2,
+                        label: 'Indicar',
+                        emoji: e.saphireLendo,
+                        custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
+                        style: ButtonStyle.Primary
+                    },
+                    {
+                        type: 2,
+                        label: 'Informações',
+                        emoji: '🔎',
+                        custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
+                        style: ButtonStyle.Primary
+                    },
+                    {
+                        type: 2,
+                        label: anime?.up?.length || 0,
+                        emoji: e.Upvote,
+                        custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
+                        style: ButtonStyle.Success
+                    },
+                    {
+                        type: 2,
+                        label: anime?.down?.length || 0,
+                        emoji: e.DownVote,
+                        custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
+                        style: ButtonStyle.Danger
+                    }
+                ]
+            }]
+
+            if (client.admins.includes(user.id))
+                buttons.push({
                     type: 1,
                     components: [
                         {
                             type: 2,
-                            label: 'Atualizar',
-                            emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'anime', src: 'refresh' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: 'Indicar',
-                            emoji: e.saphireLendo,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'indicate' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: 'Informações',
-                            emoji: '🔎',
-                            custom_id: JSON.stringify({ c: 'anime', src: 'info' }),
-                            style: ButtonStyle.Primary
-                        },
-                        {
-                            type: 2,
-                            label: anime.up?.length || 0,
-                            emoji: e.Upvote,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'up' }),
-                            style: ButtonStyle.Success
-                        },
-                        {
-                            type: 2,
-                            label: anime.down?.length || 0,
-                            emoji: e.DownVote,
-                            custom_id: JSON.stringify({ c: 'anime', src: 'down' }),
+                            label: 'Deletar anime',
+                            emoji: e.Trash,
+                            custom_id: JSON.stringify({ c: 'anime', src: 'delete' }),
                             style: ButtonStyle.Danger
                         }
                     ]
-                }]
-            }).catch(() => { })
+                })
+
+            return await interaction.update({ components: buttons }).catch(() => { })
         })
         .catch(async () => {
-
             return await interaction.reply({
                 content: `${e.Deny} | Anime não encontrado no banco de dados ou não foi possível computar seu voto`,
                 ephemeral: true
