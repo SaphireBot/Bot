@@ -7,7 +7,7 @@ import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import * as moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
-import { ButtonStyle } from 'discord.js'
+import { ButtonStyle, ChannelType } from 'discord.js'
 import axios from 'axios'
 
 export default class ModalInteraction extends Base {
@@ -26,7 +26,7 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
-        if (this.customId.includes('channel')) return this.editChannelName(this)
+        if (this.customId.includes('channel')) return this.ChannelRedirect(this)
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
@@ -54,6 +54,110 @@ export default class ModalInteraction extends Base {
         return
     }
 
+    async ChannelRedirect({ interaction, customId }) {
+
+        const channelData = JSON.parse(customId)
+        const method = channelData?.method
+
+        const execute = {
+            editName: 'editChannelName',
+            clone: 'channelClone',
+            topic: 'channelTopic'
+        }[method]
+
+        if (!execute)
+            return await interaction.reply({
+                content: `${e.Deny} | SubModalInteractionFunction not found.`,
+                ephemeral: true
+            })
+
+        return this[execute](this)
+    }
+
+    async channelTopic({ interaction, fields, user, customId, guild }) {
+
+        const newTopic = fields.getTextInputValue('channelTopic')
+        const channelIdData = JSON.parse(customId)
+        const channelId = channelIdData?.id
+
+        if (!channelId)
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível localizar o ID do canal para editar o tópico.`,
+                ephemeral: true
+            })
+
+        const channel = guild.channels.cache.get(channelId)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu não encontrei o canal selecionado.`,
+                ephemeral: true
+            })
+
+        const fail = await channel.edit({
+            topic: newTopic,
+            reason: `${user.tag} editou o tópico deste canal.`
+        })
+            .catch(err => err.code)
+
+        if (fail.constructor === Number) {
+
+            const content = {
+                10003: `${e.Deny} | Este canal é desconhecido. Por favor, tente em outro canal.`,
+                50024: `${e.Deny} | Essa ação não pode ser executada nesse tipo de canal.`
+            }[fail] || `${e.Deny} | Não foi possível editar o tópico do canal ${channel}.`
+
+            return await interaction.reply({ content: content, ephemeral: true })
+        }
+
+        return await interaction.reply({
+            content: `${e.Check} | O tópico do canal ${channel} foi editado com sucesso.`,
+            ephemeral: true
+        })
+    }
+
+    async channelClone({ interaction, fields, user, customId, guild }) {
+
+        const newName = fields.getTextInputValue('channelName')
+        const channelIdData = JSON.parse(customId)
+        const channelId = channelIdData?.id
+
+        if (!channelId)
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível localizar o ID do canal para efetuar a clonagem.`,
+                ephemeral: true
+            })
+
+        const channel = guild.channels.cache.get(channelId)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu não encontrei o canal selecionado.`,
+                ephemeral: true
+            })
+
+        const fail = await channel.clone({
+            name: newName,
+            reason: `${user.tag} clonou este canal.`
+        })
+            .catch(err => err.code)
+
+        if (fail.constructor === Number) {
+
+            const content = {
+                10003: `${e.Deny} | Este canal é desconhecido. Por favor, tente em outro canal.`,
+                50024: `${e.Deny} | Essa ação não pode ser executada nesse tipo de canal.`
+            }[fail] || `${e.Deny} | Não foi possível clonar o canal ${channel}.`
+
+            return await interaction.reply({ content: content, ephemeral: true })
+        }
+
+        return await interaction.reply({
+            content: `${e.Check} | O canal ${channel} foi clonado com sucesso. Aqui está ele: ${fail}`,
+            ephemeral: true
+        })
+    }
+
     async editChannelName({ interaction, fields, user, customId, guild }) {
 
         const newName = fields.getTextInputValue('channelName')
@@ -78,14 +182,23 @@ export default class ModalInteraction extends Base {
             .catch(err => err.code)
 
         if (fail.constructor === Number) {
-            return await interaction.reply({
-                content: `${e.Deny} | Não foi possível editar o nome do canal.`,
-                ephemeral: true
-            })
+
+            const content = {
+                10003: `${e.Deny} | Este canal é desconhecido. Por favor, tente em outro canal.`,
+                50024: `${e.Deny} | Essa ação não pode ser executada nesse tipo de canal.`
+            }[fail] || `${e.Deny} | Não foi possível editar o nome do canal ${channel}.`
+
+            return await interaction.reply({ content: content, ephemeral: true })
         }
 
+        const channelDataName = {
+            [ChannelType.GuildCategory]: 'da categoria',
+            [ChannelType.GuildVoice]: 'do canal de voz',
+            [ChannelType.GuildText]: 'do canal de texto'
+        }[channel.type] || 'do canal'
+
         return await interaction.reply({
-            content: `${e.Check} | O nome do canal ${channel} foi editado com sucesso.`,
+            content: `${e.Check} | O nome ${channelDataName} ${channel} foi editado com sucesso.`,
             ephemeral: true
         })
     }

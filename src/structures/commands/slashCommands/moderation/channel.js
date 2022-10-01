@@ -1,7 +1,9 @@
-import { ApplicationCommandOptionType } from "discord.js"
+import { ApplicationCommandOptionType, ChannelType } from "discord.js"
 import { Modals } from "../../../../classes/index.js"
-import { Permissions, DiscordPermissons } from "../../../../util/Constants.js"
+import { Permissions, DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
+import categoryChannel from "../../functions/channel/category.channel.js"
 import deleteChannel from "../../functions/channel/delete.channel.js"
+import inviteChannel from "../../functions/channel/invite.channel.js"
 import lockChannel from "../../functions/channel/lock.channel.js"
 import nsfwDisableChannel from "../../functions/channel/nsfw-disable.channel.js"
 import nsfwActiveChannel from "../../functions/channel/nsfw-enable.channel.js"
@@ -48,19 +50,15 @@ export default {
                 },
                 {
                     name: 'Editar tópico',
-                    value: 'topic' // Modal
+                    value: 'topic'
                 },
                 {
                     name: 'Editar nome',
-                    value: 'name' // Modal
+                    value: 'name'
                 },
                 {
-                    name: 'Editar categoria',
+                    name: 'Mudar canal de categoria',
                     value: 'category' // Select menu
-                },
-                {
-                    name: 'Editar tempo de resposta (cooldown)',
-                    value: 'cooldown'
                 }
             ],
             required: true
@@ -68,25 +66,23 @@ export default {
         {
             name: 'channel',
             description: 'Canal que receberá a função',
-            type: ApplicationCommandOptionType.Channel,
-            // channel_types: [ChannelType.GuildText, ChannelType.GuildAnnouncement, ChannelType.GuildVoice],
-            required: true
+            type: ApplicationCommandOptionType.Channel
         }
     ],
     helpData: {
         description: 'Comando para administrar o canal facilmente'
     },
-    async execute({ interaction, e, client }) {
+    async execute({ interaction, e }) {
 
-        const { options, guild } = interaction
+        const { options, guild, channel: currentChannel } = interaction
 
         if (!guild.clientHasPermission(DiscordPermissons.ManageChannels))
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **\`${DiscordPermissons.ManageChannels}\`** para liberar este comando.`,
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ManageChannels}\`** para liberar este comando.`,
                 ephemeral: true
             })
 
-        const channel = options.getChannel('channel')
+        const channel = options.getChannel('channel') || currentChannel
         const method = options.getString('method')
 
         if (!channel || !method)
@@ -101,8 +97,22 @@ export default {
                 ephemeral: true
             })
 
-        if (method === 'name')
-            return await interaction.showModal(Modals.editChannelName(channel))
+        const showModal = {
+            name: 'editChannelName',
+            clone: 'ChannelClone',
+            topic: 'editTopic',
+        }[method]
+
+        if (showModal) {
+
+            if (showModal === 'editTopic' && [ChannelType.GuildVoice, ChannelType.GuildCategory].includes(channel.type))
+                return await interaction.reply({
+                    content: `${e.Deny} | Canais de voz e categorias não possuem tópicos a serem editados.`,
+                    ephemeral: true
+                })
+
+            return await interaction.showModal(Modals[showModal](channel))
+        }
 
         const execute = {
             // lock: lockChannel,
@@ -110,6 +120,8 @@ export default {
             delete: deleteChannel,
             "nsfw-enable": nsfwActiveChannel,
             "nsfw-disable": nsfwDisableChannel,
+            invite: inviteChannel,
+            category: categoryChannel
         }[method] || null
 
         if (!execute)

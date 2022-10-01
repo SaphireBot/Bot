@@ -4,7 +4,7 @@ import { PermissionsBitToString } from '../../../util/Constants.js'
 import { Emojis as e } from '../../../util/util.js'
 
 Guild.prototype.clientHasPermission = function (Permission) {
-    return this.members.me.permissions.has(PermissionsBitToString[Permission]) || this.members.me.permissions.has('Administrator')
+    return this.members.me.permissions.has(PermissionsBitToString[Permission], true)
 }
 
 Guild.prototype.getCoin = async function () {

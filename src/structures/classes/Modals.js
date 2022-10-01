@@ -4,10 +4,60 @@ export default new class Modals {
         return { ...this }
     }
 
+    ChannelClone(channel) {
+        return {
+            title: "Clone Channel",
+            custom_id: JSON.stringify({ c: 'channel', id: channel.id, method: 'clone' }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'channelName',
+                            label: "Novo nome do canal (1~100 Caracteres)",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Novo nome...",
+                            required: true,
+                            value: channel?.name || null
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
+    editTopic(channel) {
+        return {
+            title: "Edit Channel Topic",
+            custom_id: JSON.stringify({ c: 'channel', id: channel.id, method: 'topic' }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'channelTopic',
+                            label: "Editar tópico (1~1024 caracteres)",
+                            style: 2,
+                            min_length: 1,
+                            max_length: 1024,
+                            placeholder: "Novo tópico...",
+                            required: true,
+                            value: channel?.topic || null
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     editChannelName(channel) {
         return {
             title: "Edit Channel Name",
-            custom_id: JSON.stringify({ c: 'channel', id: channel.id }),
+            custom_id: JSON.stringify({ c: 'channel', id: channel.id, method: 'editName' }),
             components: [
                 {
                     type: 1,

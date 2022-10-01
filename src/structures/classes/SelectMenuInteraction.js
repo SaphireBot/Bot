@@ -1,8 +1,9 @@
 import { Database } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
+import { Emojis as e } from '../../util/util.js'
 import Base from './Base.js'
 import translateSearch from './selectmenu/translate.search.js'
-
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
         super()
@@ -21,7 +22,6 @@ export default class SelectMenuInteraction extends Base {
     filterAndChooseFunction() {
 
         const animesIndicationIds = ['animeSuggestionsGender', 'animeSuggestionsCategory', 'animeSuggestionsMatchPublic']
-
         if (animesIndicationIds.includes(this.customId))
             return this.animeSetSuggestions(this)
 
@@ -29,12 +29,66 @@ export default class SelectMenuInteraction extends Base {
             vocePrefere: 'vocePrefere',
             animeSuggestions: 'animeSuggestions',
             animeChoosen: 'animeChoosen',
-            mangaChoosen: 'mangaChoosen'
+            mangaChoosen: 'mangaChoosen',
+            changeCategory: 'editCategoryChannel',
+            changeCategory2: 'editCategoryChannel'
         }[this.customId]
 
         if (!result) return
 
         return this[result](this)
+    }
+
+    async editCategoryChannel({ interaction }) {
+
+        const { guild, member, user, values, message } = interaction
+
+        if (user.id !== message?.interaction.user.id) return
+
+        if (!guild.clientHasPermission(Permissions.ManageChannels))
+            return await interaction.update({
+                content: `${e.Check} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageChannels}\`**. Não posso continuar com o comando.`,
+                components: []
+            })
+
+        if (!member.memberPermissions(Permissions.ManageChannels))
+            return await interaction.update({
+                content: `${e.Check} | Você não tem a permissão **\`${PermissionsTranslate.ManageChannels}\`**. Comando encerrado, ok?`,
+                components: []
+            })
+
+        const { pId: parentId, cId: channelId } = JSON.parse(values[0])
+
+        const channel = guild.channels.cache.get(channelId)
+        const parent = guild.channels.cache.get(parentId)
+
+        if (!channel)
+            return await interaction.update({
+                content: `${e.Deny} | Canal não encontrado.`,
+                components: []
+            }).catch(() => { })
+
+        if (!parent)
+            return await interaction.update({
+                content: `${e.Deny} | Categoria não encontrada.`,
+                components: []
+            }).catch(() => { })
+
+        const changed = await channel.setParent(parent.id, {
+            lockPermissions: true,
+            reason: `${user.tag} alterou a categoria.`
+        }).catch(err => err.code)
+
+        if (changed.constructor === Number)
+            return await interaction.update({
+                content: `${e.Deny} | Não possível alterar a categoria do canal ${channel}. \`${changed}\``,
+                components: []
+            }).catch(() => { })
+
+        return await interaction.update({
+            content: `${e.Check} | O canal ${channel} foi movido para a categoria **${parent.name?.toUpperCase()}**.`,
+            components: []
+        }).catch(() => { })
     }
 
     async animeChoosen() {
