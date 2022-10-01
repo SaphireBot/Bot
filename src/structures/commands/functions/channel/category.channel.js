@@ -74,7 +74,7 @@ export default async (interaction, channel) => {
             const channelsLength = channels?.filter(ch => ch.parentId === parent.id)?.length || 0
 
             components[0].components[0].options.push({
-                label: parent.name,
+                label: parent.name.toUpperCase(),
                 emoji: channelsLength > 0 ? '📂' : '📁',
                 description: channelsLength === 1 ? `${channelsLength} Canal` : `${channelsLength} Canais`,
                 value: JSON.stringify({ c: 'channel', pId: parent.id, cId: channel.id })
@@ -82,7 +82,7 @@ export default async (interaction, channel) => {
         }
 
     return await interaction.reply({
-        content: `${e.Loading} | Escolha uma categoria para mover o canal.`,
+        content: `${e.Loading} | O canal ${channel} vai para qual categoria?`,
         components
     })
 }
