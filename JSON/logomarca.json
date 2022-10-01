@@ -1013,7 +1013,7 @@
     {
         "answers": [
             "minecraft",
-            "mine"
+            "Mojang Minecraft"
         ],
         "images": {
             "censored": null,
@@ -2084,6 +2084,61 @@
         "images": {
             "censored": "https://media.discordapp.net/attachments/991029755367292948/1024145071534252092/7_Sem_Titulo_20220926232622.png",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024145071324540928/images-removebg-preview.png"
+        }
+    },
+    {
+        "answers": [
+            "cup noodles"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1024359368575168532/cn22.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024359368176717944/cn2.png"
+        }
+    },
+    {
+        "answers": [
+            "omo"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1024368093310488666/omo31.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024368092920414359/omo3.png"
+        }
+    },
+    {
+        "answers": [
+            "chocolates garoto",
+            "garoto"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1024442085698445322/9_Sem_Titulo_20220927190447.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1024442085450973265/8_Sem_Titulo_20220927190055.png"
+        }
+    },
+    {
+        "answers": [
+            "talento"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1025504774252134450/talentoII.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1025504773883043950/imagem_2022-09-30_172946254.png"
+        }
+    },
+    {
+        "answers": [
+            "bis"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1025542002718281828/bisII.png?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1025542002340810843/bis.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "finish"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1025545151898194012/12_Sem_Titulo_20220930201002.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1025545151529111612/11_Sem_Titulo_20220930200926.png"
         }
     }
 ]
