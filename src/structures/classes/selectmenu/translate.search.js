@@ -48,7 +48,7 @@ export default async ({ interaction, value, customId }) => {
                     components: []
                 }).catch(() => { })
 
-            return responseSearch(anime, res, interaction, customId)
+            return responseSearch(anime, res, interaction, value)
         })
         .catch(async err => {
             console.log(err)
