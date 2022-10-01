@@ -323,6 +323,50 @@ const PermissionsAsFlagBits = {
     ModerateMembers: 1099511627776
 }
 
+const PermissionsBitToString = {
+    1: "CreateInstantInvite",
+    2: "KickMembers",
+    4: "BanMembers",
+    8: "Administrator",
+    16: "ManageChannels",
+    32: "ManageGuild",
+    64: "AddReactions",
+    128: "ViewAuditLog",
+    256: "PrioritySpeaker",
+    512: "Stream",
+    1024: "ViewChannel",
+    2048: "SendMessages",
+    4096: "SendTTSMessages",
+    8192: "ManageMessages",
+    16384: "EmbedLinks",
+    32768: "AttachFiles",
+    65536: "ReadMessageHistory",
+    131072: "MentionEveryone",
+    262144: "UseExternalEmojis",
+    524288: "ViewGuildInsights",
+    1048576: "Connect",
+    2097152: "Speak",
+    4194304: "MuteMembers",
+    8388608: "DeafenMembers",
+    16777216: "MoveMembers",
+    33554432: "UseVAD",
+    67108864: "ChangeNickname",
+    134217728: "ManageNicknames",
+    268435456: "ManageRoles",
+    536870912: "ManageWebhooks",
+    1073741824: "ManageEmojisAndStickers",
+    2147483648: "UseApplicationCommands",
+    4294967296: "RequestToSpeak",
+    8589934592: "ManageEvents",
+    17179869184: "ManageThreads",
+    34359738368: "CreatePublicThreads",
+    68719476736: "CreatePrivateThreads",
+    137438953472: "UseExternalStickers",
+    274877906944: "SendMessagesInThreads",
+    549755813888: "UseEmbeddedActivities",
+    1099511627776: "ModerateMembers"
+}
+
 const DiscordPermissons = {
     AddReactions: "AddReactions",
     Administrator: "Administrator",
@@ -664,5 +708,6 @@ export {
     DiscordErrors,
     DiscordPermissons,
     ErrorsToIgnore,
-    ErrorResponse
+    ErrorResponse,
+    PermissionsBitToString
 }

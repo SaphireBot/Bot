@@ -106,6 +106,7 @@ export default class Logomarca extends Base {
 
     async initCollectors() {
 
+        if (!this.msg) return
         this.gameData.round++
 
         this.collectors.collectorCounter = this.channel.createMessageCollector({
@@ -213,9 +214,11 @@ export default class Logomarca extends Base {
         this.embed.color = this.client.red
         this.embed.description = `${e.Deny} | Ninguém acertou a marca \`${formatString(this.gameData.logo.answers[0])}\``
         this.embed.image = { url: this.gameData.logo.images.uncensored }
+        
+        if (!this.msg) return
+
         this.msg.delete()
             .catch(() => { })
-
 
         this.msg = await this.channel.send({
             embeds: [this.embed],

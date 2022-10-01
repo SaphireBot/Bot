@@ -108,7 +108,7 @@ export default async interaction => {
                         disabled: true
                     }]
                 }]
-            })
+            }).catch(() => { })
         })
 }
 

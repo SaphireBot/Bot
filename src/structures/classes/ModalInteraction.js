@@ -26,8 +26,8 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
+        if (this.customId.includes('channel')) return this.editChannelName(this)
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
-
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
         const ModalInteractionFunctions = {
@@ -52,6 +52,42 @@ export default class ModalInteraction extends Base {
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
 
         return
+    }
+
+    async editChannelName({ interaction, fields, user, customId, guild }) {
+
+        const newName = fields.getTextInputValue('channelName')
+        const channelIdData = JSON.parse(customId)
+        const channelId = channelIdData?.id
+
+        if (!channelId)
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível localizar o ID do canal para a edição do nome.`,
+                ephemeral: true
+            })
+
+        const channel = guild.channels.cache.get(channelId)
+
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu não encontrei o canal selecionado.`,
+                ephemeral: true
+            })
+
+        const fail = await channel.setName(newName, `${user.tag} editou o nome deste canal`)
+            .catch(err => err.code)
+
+        if (fail.constructor === Number) {
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível editar o nome do canal.`,
+                ephemeral: true
+            })
+        }
+
+        return await interaction.reply({
+            content: `${e.Check} | O nome do canal ${channel} foi editado com sucesso.`,
+            ephemeral: true
+        })
     }
 
     async indicateLogomarca({ interaction, fields, user }) {

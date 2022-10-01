@@ -1,4 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js"
+import { Modals } from "../../../../classes/index.js"
 import { Permissions, DiscordPermissons } from "../../../../util/Constants.js"
 import deleteChannel from "../../functions/channel/delete.channel.js"
 import lockChannel from "../../functions/channel/lock.channel.js"
@@ -99,6 +100,9 @@ export default {
                 content: `${e.Deny} | Eu não tenho permissão suficiente para gerenciar o canal ${channel}.`,
                 ephemeral: true
             })
+
+        if (method === 'name')
+            return await interaction.showModal(Modals.editChannelName(channel))
 
         const execute = {
             // lock: lockChannel,

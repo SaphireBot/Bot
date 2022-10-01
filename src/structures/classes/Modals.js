@@ -4,6 +4,31 @@ export default new class Modals {
         return { ...this }
     }
 
+    editChannelName(channel) {
+        return {
+            title: "Edit Channel Name",
+            custom_id: JSON.stringify({ c: 'channel', id: channel.id }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'channelName',
+                            label: "Editar nome (1~100 caracteres)",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Novo nome...",
+                            required: true,
+                            value: channel?.name || null
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     logomarcaBug = {
         title: "Logomarca Bug Reporter",
         custom_id: "logomarcaReporter",
