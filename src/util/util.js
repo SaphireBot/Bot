@@ -66,7 +66,7 @@ const SaphireClientOptions = {
         voiceStates: {
             filter: () => () => true,
             interval: 14400
-        },
+        }
     },
     partials: [
         Partials.Channel,

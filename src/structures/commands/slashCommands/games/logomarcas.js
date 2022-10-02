@@ -117,7 +117,7 @@ export default {
                                 },
                                 {
                                     name: '😨 HO MEU DEUS, EU NÃO APAREÇO NO RANKING',
-                                    value: 'Calma aí coisinha fofa! Apenas os 7 primeiros com mais pontos aparecem no ranking, mas o pontos são contatos e vai pro ranking assim que o jogo terminar.'
+                                    value: 'Calma aí coisinha fofa! Apenas os 7 primeiros com mais pontos aparecem no ranking, mas o pontos serão contados e irão pro ranking assim que o jogo terminar.'
                                 },
                                 {
                                     name: `${e.bug} Bugou, e agora?`,
