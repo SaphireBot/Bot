@@ -29,7 +29,7 @@ export default async (interaction, channel) => {
         }]
     }]
 
-    if (allParents.length > 24) {
+    if (allParents.length > 25) {
         allParents = [allParents.slice(0, 25), allParents.slice(25, 50)]
 
         for (const parent of allParents[0]) {
