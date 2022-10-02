@@ -1,4 +1,5 @@
 import translate from '@iamtraction/google-translate'
+import { Languages } from '../../../../util/Constants.js'
 
 export default {
     name: 'Translate Message',
@@ -6,17 +7,14 @@ export default {
         color: 'Blue',
         description: 'Clique na mensagem e traduza ela para a língua padrão do seu Discord.',
         permissions: [],
-        fields: [
-            {
-                name: 'Linguagens suportadas',
-                value: 'Quase todas. Vou detectar a língua da mensagem automáticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
-            }
-        ]
+        fields: [{
+            name: 'Linguagens suportadas',
+            value: 'Quase todas. Vou detectar a língua da mensagem automáticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
+        }]
     },
     type: 3,
-    async execute({ interaction, e, client, Constants }) {
+    async execute({ interaction, e, client }) {
 
-        const { Languages } = Constants
         const { targetMessage, locale } = interaction
         const text = targetMessage.content?.slice(0, 1000)
         const formatedLocale = locale.split('-')[0]
@@ -33,18 +31,20 @@ export default {
             fields: [{
                 name: 'Texto',
                 value: `\`\`\`txt\n${text}\n\`\`\``
-            }],
-            footer: { text: `Traduzido para ${Languages[formatedLocale]}` }
+            }]
         }
 
         await interaction.deferReply({})
 
-        return await translate(text, { to: formatedLocale, from: 'pt' })
+        return translate(text, { to: formatedLocale })
             .then(async res => {
+
                 Embed.fields[1] = {
                     name: 'Tradução',
                     value: `\`\`\`txt\n${res.text}\n\`\`\``
                 }
+
+                Embed.footer = { text: `Traduzido de ${Languages[res.from.language.iso]} para ${Languages[formatedLocale]}` }
 
                 return await interaction.editReply({ embeds: [Embed] }).catch(() => { })
 

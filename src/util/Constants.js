@@ -186,7 +186,7 @@ const Languages = {
     is: "Islandês",
     it: "Italiano",
     iw: "Hebraico Antigo",
-    ja: "Japanês",
+    ja: "Japonês",
     jw: "Javanês",
     ka: "Georgiano",
     kk: "Cazaque",
