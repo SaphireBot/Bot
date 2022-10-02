@@ -1,4 +1,4 @@
-import { DiscordFlags as flags, PermissionsTranslate, DiscordPermissons } from '../../../../util/Constants.js'
+import { DiscordFlags as flags, PermissionsTranslate, Permissions } from '../../../../util/Constants.js'
 import { ButtonStyle } from 'discord.js'
 
 export default {
@@ -84,7 +84,7 @@ export default {
 
         let application = null
 
-        if (guild.clientHasPermission(DiscordPermissons.ManageGuild)) {
+        if (guild.clientHasPermission(Permissions.ManageGuild)) {
             const integrations = await guild.fetchIntegrations() || []
             application = integrations.find(data => data.application.id === user.id)?.application
         }
