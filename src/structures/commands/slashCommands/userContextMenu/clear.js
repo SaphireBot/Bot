@@ -25,7 +25,7 @@ export default {
                 ephemeral: true
             })
 
-        const messagesDeleted = channel.bulkDelete(toDelete.filter(msg => !msg.pinned), true).catch(err => err.code)
+        const messagesDeleted = await channel.bulkDelete(toDelete.filter(msg => !msg.pinned), true).catch(err => err.code)
 
         if (messagesDeleted.constructor === Number) {
 
@@ -58,7 +58,7 @@ export default {
         const deletedMessagesCount = messagesDeleted.size || 0
         const availableMessagesFilterCount = toDelete.size || 0
 
-        if (!deletedMessagesCount)
+        if (!deletedMessagesCount || deletedMessagesCount === 0)
             return await interaction.reply({
                 content: `${e.Info} | ${toDelete.size === 1 ? `A única mensagem encontrada de ${user || '`Not Found`'} não pode ser delatada.` : `Nenhuma das ${toDelete.size} mensagens de ${user || '`Not Found`'} podem ser deletadas.`}${pinnedMessagesCount > 0 ? `\n📌 | ${pinnedMessagesCount} mensagens fixadas.` : ''}${oldMessagesCount > 0 ? `\n📆 | ${oldMessagesCount} mensagens são mais antigas que 14 dias.` : ''}`,
                 ephemeral: true
