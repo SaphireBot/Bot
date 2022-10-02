@@ -1,7 +1,7 @@
+import 'dotenv/config'
 import { Client, Collection } from 'discord.js'
 import { ClientOptions } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import 'dotenv/config'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import { Database, Discloud } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'

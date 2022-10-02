@@ -21,18 +21,18 @@ export default async (interaction, channel) => {
     const channelResponse = await channel.permissionOverwrites.edit(
         guild.roles.everyone.id,
         {
-            [Permissions.SendMessages]: false,
-            [Permissions.AddReactions]: false
+            [Permissions.SendMessages]: null,
+            [Permissions.AddReactions]: null
         },
         {
-            reason: `${user.tag} trancou este canal.`
+            reason: `${user.tag} destrancou este canal.`
         }
     ).catch(err => err.code)
 
     if (channelResponse.constructor === Number) {
 
         return await interaction.reply({
-            content: `${e.Deny} | Não foi possível editar as permissões para trancar o canal. \`(${channelResponse})\``,
+            content: `${e.Deny} | Não foi possível editar as permissões para destrancar o canal. \`(${channelResponse})\``,
             ephemeral: true
         })
 
@@ -47,6 +47,6 @@ export default async (interaction, channel) => {
         }[channelResponse.type]
 
     return await interaction.reply({
-        content: `🔒 | ${user} trancou ${channelResponseString}`
+        content: `🔒 | ${user} destrancou ${channelResponseString}`
     })
 }

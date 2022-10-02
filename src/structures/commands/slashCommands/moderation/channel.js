@@ -7,6 +7,7 @@ import inviteChannel from "../../functions/channel/invite.channel.js"
 import lockChannel from "../../functions/channel/lock.channel.js"
 import nsfwDisableChannel from "../../functions/channel/nsfw-disable.channel.js"
 import nsfwActiveChannel from "../../functions/channel/nsfw-enable.channel.js"
+import unlockChannel from "../../functions/channel/unlock.channel.js"
 
 export default {
     name: 'channel',
@@ -115,8 +116,8 @@ export default {
         }
 
         const execute = {
-            // lock: lockChannel,
-            // unlock: undefined,
+            lock: lockChannel,
+            unlock: unlockChannel,
             delete: deleteChannel,
             "nsfw-enable": nsfwActiveChannel,
             "nsfw-disable": nsfwDisableChannel,

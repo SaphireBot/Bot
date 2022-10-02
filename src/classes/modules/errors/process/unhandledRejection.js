@@ -37,7 +37,7 @@ export default async reason => {
             description: `\`\`\`js\n${reason.stack?.slice(0, 2000)}\`\`\``,
             footer: { text: `Error Code: ${reason.code || 0}` }
         }]
-    }).catch(() => console.log(reason))
+    }).catch(() => { })
 
     if (webhook)
         webhook.send({

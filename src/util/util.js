@@ -1,12 +1,10 @@
-import DiscordJS, { GatewayIntentBits, Partials } from 'discord.js'
+import { GatewayIntentBits, Partials } from 'discord.js'
 import { Database } from '../classes/index.js'
 import * as fs from 'fs'
+import { Config as config } from './Constants.js'
 
-/**
- * @type {DiscordJS.ClientOptions} 
- */
-
-const ClientOptions = {
+const SaphireClientOptions = {
+    shards: 'auto',
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
@@ -20,7 +18,56 @@ const ClientOptions = {
         GatewayIntentBits.GuildMessageTyping,
         GatewayIntentBits.GuildScheduledEvents
     ],
-    allowedMentions: { parse: ['users'] },
+    sweepers: {
+        users: {
+            filter: () => user => user.id !== config.ownerId,
+            interval: 14400
+        },
+        bans: {
+            filter: () => () => true,
+            interval: 3600 // 1H
+        },
+        invites: {
+            lifetime: 0,
+            interval: 14400
+        },
+        guildMembers: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        presences: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        messages: {
+            lifetime: 3600,
+            interval: 3600
+        },
+        reactions: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        stageInstances: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        stickers: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        threadMembers: {
+            filter: () => () => true,
+            interval: 14400
+        },
+        threads: {
+            lifetime: 3600,
+            interval: 14400
+        },
+        voiceStates: {
+            filter: () => () => true,
+            interval: 14400
+        },
+    },
     partials: [
         Partials.Channel,
         Partials.GuildMember,
@@ -29,7 +76,12 @@ const ClientOptions = {
         Partials.Reaction,
         Partials.ThreadMember,
         Partials.User
-    ]
+    ],
+    allowedMentions: { parse: ['users'] },
+    closeTimeout: 6000,
+    shardCount: 1,
+    failIfNotExists: false,
+    waitGuildTimeout: 20000
 }
 
 const Emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
@@ -94,7 +146,7 @@ const economy = {
 
 export {
     Emojis,
-    ClientOptions,
+    SaphireClientOptions as ClientOptions,
     Flags,
     Gifs,
     economy

@@ -3,7 +3,7 @@ import { Emojis as e } from '../../util/util.js'
 import { PermissionFlagsBits as Permissions } from 'discord.js'
 
 client.on('channelCreate', async channel => {
-    channel.setParent(c, {  })
+
     if (!channel || !channel.guild || !channel.guild.available || !channel.permissionsFor(channel.guild.members.me)?.has(Permissions.SendMessages)) return
 
     const data = await Database.Guild.findOne({ id: channel.guild.id }, 'FirstSystem')

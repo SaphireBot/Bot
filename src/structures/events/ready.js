@@ -28,8 +28,8 @@ client.once('ready', async () => {
         return message.edit({
             content: `${e.Check} | Reboot concluído.`
         })
-        .then(deleteRestartData)
-        .catch(() => { })
+            .then(deleteRestartData)
+            .catch(() => { })
 
         async function deleteRestartData() {
             return await Database.Cache.Client.delete(`${client.shardId}.RESTART`)
