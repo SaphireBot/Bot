@@ -15,6 +15,7 @@ export default new class CacheManager extends Cache {
         this.Blackjack = this.table('Blackjack')
         this.Logomarca = this.table('Logomarca')
         this.EmojiBetRescue = this.table('EmojiBetRescue')
+        this.Running = this.table('Running')
     }
 
     async clearTables(shardId) {
@@ -22,6 +23,7 @@ export default new class CacheManager extends Cache {
         await this.Giveaways.delete(shardId)
         await this.Polls.delete(shardId)
         await this.Logomarca.delete(shardId)
+        await this.Running.delete(shardId)
         await this.Ranking.deleteAll()
         await this.General.delete('Looped')
         return true
