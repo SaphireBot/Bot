@@ -643,14 +643,14 @@ export default class Autocomplete extends Base {
     async databaseUsers(value) {
 
         const dataUsers = this.client.databaseUsers
-        const users = this.client.allUsers
+        const users = this.client.users.cache
         if (!dataUsers || dataUsers.length === 0) return this.respond()
 
         const fill = dataUsers
             .map(id => users.find(data => data.id === id))
             .filter(user => {
-                return user?.tag.toLowerCase().includes(value.toLowerCase())
-                    || user?.id.includes(value)
+                return user?.tag?.toLowerCase().includes(value.toLowerCase())
+                    || user?.id?.includes(value)
             })
 
         const mapped = fill
@@ -659,7 +659,7 @@ export default class Autocomplete extends Base {
                 name: `${user.tag} | ${user.id}`,
                 value: user.id
             }))
-        return this.respond(mapped)
+        return await this.respond(mapped)
     }
 
     async allGuilds(value) {
