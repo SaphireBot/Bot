@@ -1,5 +1,4 @@
 import { GatewayIntentBits, Partials } from 'discord.js'
-import { Database } from '../classes/index.js'
 import * as fs from 'fs'
 import { Config as config } from './Constants.js'
 
@@ -88,66 +87,9 @@ const Emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
 const Gifs = JSON.parse(fs.readFileSync('./JSON/gifs.json'))
 const Flags = JSON.parse(fs.readFileSync('./JSON/flags.json'))
 
-const economy = {
-    async add(userId, amount, message) {
-
-        if (!userId || !amount || isNaN(amount)) return
-
-        const saveData = [
-            { id: userId },
-            {
-                $inc: {
-                    Balance: parseInt(amount)
-                }
-            },
-            {
-                upsert: true,
-                new: true,
-                fields: 'Balance'
-            }
-        ]
-
-        if (message)
-            saveData[1].$push = {
-                Transactions: {
-                    $each: [{
-                        time: `${Date.format(0, true)}`,
-                        data: message || '`Not Found`'
-                    }],
-                    $position: 0
-                }
-            }
-
-        const data = await Database.User.findOneAndUpdate(...saveData)
-
-        return data
-    },
-    async sub(userId, amount) {
-
-        if (!userId || !amount || isNaN(amount)) return
-
-        const data = await Database.User.findOneAndUpdate(
-            { id: userId },
-            {
-                $inc: {
-                    Balance: -parseInt(amount)
-                }
-            },
-            {
-                upsert: true,
-                new: true,
-                fields: 'Balance'
-            }
-        )
-
-        return data
-    }
-}
-
 export {
     Emojis,
     SaphireClientOptions as ClientOptions,
     Flags,
-    Gifs,
-    economy
+    Gifs
 }

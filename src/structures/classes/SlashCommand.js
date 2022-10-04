@@ -1,7 +1,7 @@
 import Base from './Base.js'
 import error from '../../classes/modules/errors/errors.js'
 import * as Statcord from 'statcord.js'
-import { Emojis, economy } from '../../util/util.js'
+import { Emojis } from '../../util/util.js'
 import { Experience } from '../../classes/index.js'
 
 export default class SlashCommand extends Base {
@@ -14,7 +14,6 @@ export default class SlashCommand extends Base {
         this.channel = interaction.channel
         this.commandName = interaction.commandName
         this.e = Emojis
-        this.economy = economy
     }
 
     async execute(guildData, clientData) {

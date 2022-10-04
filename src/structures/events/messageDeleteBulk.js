@@ -1,11 +1,8 @@
+import { Emojis as e } from '../../util/util.js'
 import {
     Database,
     SaphireClient as client
 } from '../../classes/index.js'
-import {
-    Emojis as e,
-    economy
-} from '../../util/util.js'
 
 client.on('messageDeleteBulk', async (messages) => {
 
@@ -45,7 +42,7 @@ client.on('messageDeleteBulk', async (messages) => {
                 continue
             }
 
-            economy.add(game.value.userId, game.value.bet, `${e.gain} Recebeu ${game.value.bet} Safiras via *Blackjack Refund*`)
+            Database.add(game.value.userId, game.value.bet, `${e.gain} Recebeu ${game.value.bet} Safiras via *Blackjack Refund*`)
             await Database.Cache.Blackjack.delete(game.id)
             continue
         }

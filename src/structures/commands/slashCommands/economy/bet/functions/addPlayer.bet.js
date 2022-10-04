@@ -1,5 +1,5 @@
 import { Database, SaphireClient as client } from "../../../../../../classes/index.js"
-import { Emojis as e, economy } from "../../../../../../util/util.js"
+import { Emojis as e } from "../../../../../../util/util.js"
 import realizeBet from './realize.bet.js'
 
 export default async (cachedData, message, userId, finalize) => {
@@ -39,7 +39,7 @@ export default async (cachedData, message, userId, finalize) => {
         })
     }
 
-    economy.sub(userId, cachedData.amount)
+    Database.sub(userId, cachedData.amount)
     if (finalize) return realizeBet(await Database.Cache.Bet.get(`Bet.${message.id}`), message)
 
 }

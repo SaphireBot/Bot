@@ -1,12 +1,9 @@
 import { ButtonStyle } from "discord.js"
+import { Emojis as e } from "../../../../../../util/util.js"
 import {
     SaphireClient as client,
     Database
 } from "../../../../../../classes/index.js"
-import {
-    Emojis as e,
-    economy
-} from "../../../../../../util/util.js"
 
 export default async ({ interaction, BlackJackEmojis }) => {
 
@@ -28,7 +25,7 @@ export default async ({ interaction, BlackJackEmojis }) => {
             })
 
         authorMoney += parseInt(userMoney)
-        economy.sub(user.id, betValue, `${e.loss} Gastou ${betValue} Safiras iniciando um *Blackjack Multiplayer*`)
+        Database.sub(user.id, betValue, `${e.loss} Gastou ${betValue} Safiras iniciando um *Blackjack Multiplayer*`)
     }
 
     for (let i = 0; i < packsAmount; i++)

@@ -1,4 +1,4 @@
-import { economy, Emojis as e } from '../../../../../util/util.js'
+import { Emojis as e } from '../../../../../util/util.js'
 import { Database } from '../../../../../classes/index.js'
 
 export default async (interaction, message, gameData) => {
@@ -22,7 +22,7 @@ export default async (interaction, message, gameData) => {
                 ephemeral: true
             })
 
-        economy.sub(user.id, gameData.bet, `${e.loss} Apostou ${gameData.bet} Safiras em um *Blackjack Multiplayer*.`)
+        Database.sub(user.id, gameData.bet, `${e.loss} Apostou ${gameData.bet} Safiras em um *Blackjack Multiplayer*.`)
     }
 
     if (gameData.deniedPlayers.includes(user.id))

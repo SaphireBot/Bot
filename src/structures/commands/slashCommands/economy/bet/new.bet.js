@@ -1,6 +1,7 @@
-import { economy, Gifs } from '../../../../../util/util.js'
+import { Gifs } from '../../../../../util/util.js'
 import { Colors } from '../../../../../util/Constants.js'
 import BetClass from './class.bet.js'
+import { Database } from '../../../../../classes/index.js'
 
 export default async ({ interaction, e, amount, client }) => {
 
@@ -57,5 +58,5 @@ export default async ({ interaction, e, amount, client }) => {
         playersCount: playersCount
     })
 
-    return economy.sub(author.id, amount)
+    return Database.sub(author.id, amount)
 }

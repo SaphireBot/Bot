@@ -1,4 +1,4 @@
-import { economy, Emojis as e } from '../../../../../util/util.js'
+import { Emojis as e } from '../../../../../util/util.js'
 import {
     SaphireClient as client,
     Database
@@ -12,9 +12,7 @@ export default async (interaction, message, gameData) => {
     const embed = embeds[0]?.data
 
     if (gameData.availablePlayers.includes(user.id)) {
-
-        if (gameData.bet > 0) economy.add(user.id, gameData.bet)
-
+        if (gameData.bet > 0) Database.add(user.id, gameData.bet)
         gameData.availablePlayers = gameData.availablePlayers.filter(id => id !== user.id)
     }
 

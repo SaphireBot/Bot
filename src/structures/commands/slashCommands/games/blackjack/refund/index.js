@@ -1,11 +1,8 @@
+import { Emojis as e } from '../../../../../../util/util.js'
 import {
     Database,
     SaphireClient as client
 } from '../../../../../../classes/index.js'
-import {
-    Emojis as e,
-    economy
-} from '../../../../../../util/util.js'
 
 export default async ({ interaction }) => {
 
@@ -37,7 +34,7 @@ export default async ({ interaction }) => {
     await Database.Cache.Blackjack.delete(query)
 
     if (gameData.bet > 0) {
-        economy.add(user.id, gameData.bet)
+        Database.add(user.id, gameData.bet)
         return await interaction.reply({
             content: `${e.Check} | Prontinho! Você resgatou um blackjack perdido no valor de **${gameData.bet} ${await guild.getCoin()}**`
         })
@@ -68,7 +65,7 @@ export default async ({ interaction }) => {
                 ephemeral: true
             })
 
-        economy.add(user.id, totalAmount, `${e.gain} Recebeu ${totalAmount} Safiras via *Blackjack Refund*`)
+        Database.add(user.id, totalAmount, `${e.gain} Recebeu ${totalAmount} Safiras via *Blackjack Refund*`)
 
         return await interaction.reply({
             content: `${e.Check} | Tudo foi um sucesso! A soma dos ${availableGamesRefund.length} Blackjacks totalizaram **${totalAmount} ${await guild.getCoin()}**.\n${e.Info} | Todos os jogos resgatados foram deletados.\n${e.saphireRight} | Se você tentar jogar qualquer jogo que foi resgatado, ele será cancelado.`

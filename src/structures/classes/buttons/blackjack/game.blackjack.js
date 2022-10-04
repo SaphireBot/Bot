@@ -1,8 +1,5 @@
 import { Database } from '../../../../classes/index.js'
-import {
-    Emojis as e,
-    economy
-} from '../../../../util/util.js'
+import { Emojis as e } from '../../../../util/util.js'
 
 export default async (interaction, customId) => {
 
@@ -23,7 +20,7 @@ export default async (interaction, customId) => {
     const embed = message.embeds[0]?.data
 
     if (!embed) {
-        economy.add(gameData.userId, gameData.bet, `${e.gain} Recebeu ${gameData.bet} Safiras via *Blackjack Refund*`)
+        Database.add(gameData.userId, gameData.bet, `${e.gain} Recebeu ${gameData.bet} Safiras via *Blackjack Refund*`)
         await Database.Cache.Blackjack.delete(message.id)
         return await interaction.update({
             content: `${e.Deny} | Embed do jogo não encontrada.`,

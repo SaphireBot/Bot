@@ -1,5 +1,5 @@
 import { SaphireClient as client, Database } from "../../../../../../classes/index.js"
-import { economy, Emojis as e } from '../../../../../../util/util.js'
+import { Emojis as e } from '../../../../../../util/util.js'
 
 export default async (cachedData, message) => {
 
@@ -38,7 +38,7 @@ export default async (cachedData, message) => {
         value: `<@${winner}> ganhou ${prize} ${await message.guild.getCoin()}`
     }
 
-    economy.add(winner, prize)
+    Database.add(winner, prize)
     await Database.Cache.Bet.delete(`Bet.${message.id}`)
 
     message.delete(() => { })

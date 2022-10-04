@@ -1,7 +1,4 @@
-import {
-    Emojis as e,
-    economy
-} from '../../../../../util/util.js'
+import { Emojis as e } from '../../../../../util/util.js'
 import {
     SaphireClient as client,
     Database
@@ -40,7 +37,7 @@ export default async (interaction, message, gameData) => {
         }
 
         if (gameData.bet > 0)
-            economy.add(user.id, gameData.bet * 2, `${e.gain} Ganhou ${gameData.bet * 2} Safiras jogando *Blackjack* contra o *Dealer*`)
+            Database.add(user.id, gameData.bet * 2, `${e.gain} Ganhou ${gameData.bet * 2} Safiras jogando *Blackjack* contra o *Dealer*`)
 
         return editReply()
     }
@@ -56,7 +53,7 @@ export default async (interaction, message, gameData) => {
 
         if (gameData.bet > 0) {
             embed.fields[2].value = embed.fields[2].value + ` -> ${parseInt(gameData.bet / 2)} ${await guild.getCoin()}`
-            economy.add(user.id, parseInt(gameData.bet / 2))
+            Database.add(user.id, parseInt(gameData.bet / 2))
         }
 
         return editReply()
@@ -72,7 +69,7 @@ export default async (interaction, message, gameData) => {
             name: `${e.Deny} Derrota`,
             value: `A pontuação do Dealer foi maior que a sua.`
         }
-        
+
         return editReply()
     }
 

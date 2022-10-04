@@ -4,7 +4,7 @@ import {
     ErrorsToIgnore,
     ErrorResponse
 } from '../../../util/Constants.js'
-import { economy, Emojis as e } from '../../../util/util.js'
+import { Emojis as e } from '../../../util/util.js'
 import createWebhook from './functions/createWebhook.errors.js'
 import reply from './functions/reply.errors.js'
 import { ChannelType } from 'discord.js'
@@ -124,7 +124,7 @@ export default
                 username: `${client.user.username} Error Reporter`
             }).catch(() => { })
 
-        economy.add(user.id, 1500, `${e.gain} Ganhou 1500 Safiras descobrindo um bug no comando *${commandName}*`)
+        Database.add(user.id, 1500, `${e.gain} Ganhou 1500 Safiras descobrindo um bug no comando *${commandName}*`)
 
         return await interaction.reply({
             content: `${e.Warn} | Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.gain} | Te dei **+1500 ${moeda}** por ter descoberto esse bug.`,

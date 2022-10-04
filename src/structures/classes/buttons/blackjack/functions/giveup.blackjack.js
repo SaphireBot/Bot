@@ -1,5 +1,5 @@
 import { Database, SaphireClient as client } from '../../../../../classes/index.js'
-import { economy, Emojis as e } from '../../../../../util/util.js'
+import { Emojis as e } from '../../../../../util/util.js'
 
 export default async (interaction, message, gameData) => {
 
@@ -18,7 +18,7 @@ export default async (interaction, message, gameData) => {
     }
 
     if (gameData.bet > 0)
-        economy.add(user.id, gameData.bet)
+        Database.add(user.id, gameData.bet)
 
     await Database.Cache.Blackjack.delete(message.id)
 

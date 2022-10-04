@@ -78,7 +78,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, e, economy, client }) {
+    async execute({ interaction, e, client }) {
 
         const { options, user } = interaction
         const amount = options.getInteger('amount')
@@ -92,7 +92,7 @@ export default {
             })
 
         switch (subCommand) {
-            case 'simple': simpleBet({ interaction, economy, e, amount, client }); break;
+            case 'simple': simpleBet({ interaction, e, amount, client }); break;
             case 'refund': refundValues({ interaction, e }); break
             default:
                 await interaction.reply({

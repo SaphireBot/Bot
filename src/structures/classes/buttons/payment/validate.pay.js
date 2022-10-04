@@ -1,11 +1,8 @@
+import { Emojis as e } from "../../../../util/util.js"
 import {
     SaphireClient as client,
     Database
 } from "../../../../classes/index.js"
-import {
-    Emojis as e,
-    economy
-} from "../../../../util/util.js"
 
 export default async (interaction, { confirmated, value }) => {
 
@@ -15,7 +12,7 @@ export default async (interaction, { confirmated, value }) => {
     const userId = confirmated.filter(id => id !== author.id)[0]
     const user = client.users.resolve(userId)
 
-    economy.add(userId, value, `${e.gain} Recebeu um pagamento de ${value} Safiras de ${author.tag} \`${author.id}\``)
+    Database.add(userId, value, `${e.gain} Recebeu um pagamento de ${value} Safiras de ${author.tag} \`${author.id}\``)
 
     await Database.User.updateOne(
         { id: author.id },
