@@ -83,7 +83,7 @@ export default async (anime, res, interaction, search) => {
                 }
             ],
             image: { url: anime.posterImage?.original ? anime.posterImage.original : null },
-            footer: { text: 'Info by: Kitsu API' }
+            footer: { text: '📚 Powered By Kitsu API' }
         }],
         components: []
     })

@@ -135,7 +135,6 @@ Date.prototype.constructor.stringDate = (ms) => {
     for (let d of entries)
         if (d[1] > 0 && translate[d[0]])
             result += `${d[1]} ${translate[d[0]](d[1])} `
-        else continue
 
     return result
 }
