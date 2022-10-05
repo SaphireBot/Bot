@@ -68,8 +68,25 @@ export default async (interaction, animeName) => {
         const values = []
 
         for (let animeData of animes) {
+            const anime = animeData?.attributes
+            if (!anime) continue
 
-            const anime = animeData.attributes
+            const age = {
+                G: 1,
+                PG: 10,
+                R: 16,
+                R18: 18
+            }[anime.ageRating] || 20
+
+            animeData.age = age
+            continue
+        }
+        
+        animes = animes.sort((a, b) => a.age - b.age)
+
+        for (let animeData of animes) {
+            const anime = animeData?.attributes
+            if (!anime) continue
 
             const IdadeRating = {
                 G: 'Livre',
