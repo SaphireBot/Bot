@@ -1,7 +1,7 @@
 import {
     DiscordFlags as flags,
     PermissionsTranslate,
-    DiscordPermissons
+    Permissions
 } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType, ButtonStyle, UserPremiumType } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
@@ -126,7 +126,7 @@ export default {
 
         let application = null
 
-        if (guild.clientHasPermission(DiscordPermissons.ManageGuild)) {
+        if (guild.clientHasPermission(Permissions.ManageGuild)) {
             const integrations = await guild.fetchIntegrations() || []
             application = integrations.find(data => data?.application?.id === user?.id)?.application
         }
