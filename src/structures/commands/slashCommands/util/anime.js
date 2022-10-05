@@ -35,6 +35,15 @@ export default {
                         }
                     ],
                     required: true
+                },
+                {
+                    name: 'options',
+                    description: 'Mais opções do comando Anime Search',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [{
+                        name: 'Esconder a mensagem só pra mim',
+                        value: 'hide'
+                    }]
                 }
             ]
         },
@@ -95,7 +104,7 @@ export default {
         const subCommand = options.getSubcommand()
 
         if (subCommand === 'search')
-            return searchAnime(interaction)
+            return searchAnime(interaction, options.getString('options') === 'hide')
 
         if (subCommand === 'wallpaper')
             return wallpaperAnime(interaction)

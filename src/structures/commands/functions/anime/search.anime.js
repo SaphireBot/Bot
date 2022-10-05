@@ -3,7 +3,10 @@ import { Emojis as e } from '../../../../util/util.js'
 
 export default async (interaction, animeName) => {
 
-    await interaction.reply({ content: `${e.Loading} | Pesquisando animes com nomes parecidos...`, ephemeral: animeName ? true : false })
+    await interaction.reply({
+        content: `${e.Loading} | Pesquisando animes com nomes parecidos...`,
+        ephemeral: animeName ? true : false
+    })
 
     const { options } = interaction
     const search = options?.getString('input') || animeName
@@ -81,7 +84,7 @@ export default async (interaction, animeName) => {
             animeData.age = age
             continue
         }
-        
+
         animes = animes.sort((a, b) => a.age - b.age)
 
         for (let animeData of animes) {
