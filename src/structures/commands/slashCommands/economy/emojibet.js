@@ -1,29 +1,51 @@
 import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import removeBet from "./emojibet/remove.bet.js"
 import rescueBet from "./emojibet/rescue.bet.js"
+import viewEmoji from "./emojibet/view.emoji.js"
+
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
 export default {
-    name: 'emojibet',
-    description: '[economy] Um linda luta de emojis',
+    name: 'emoji',
+    description: '[economy/util] Um linda luta de emojis',
     dm_permission: false,
     type: 1,
     options: [
         {
-            name: 'value',
-            description: 'Valor do emojibet',
-            type: ApplicationCommandOptionType.Integer,
-            min_value: 1,
-            required: true
+            name: 'bet',
+            description: '[economy] Aposte em uma linda lutinha entre emojis',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'value',
+                    description: 'Valor do emojibet',
+                    type: ApplicationCommandOptionType.Integer,
+                    min_value: 1,
+                    required: true
+                },
+                {
+                    name: 'options',
+                    description: 'Outras opções do emojibet',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Resgatar dinheiro ocasionalmente perdido',
+                            value: 'rescue'
+                        }
+                    ]
+                }
+            ]
         },
         {
-            name: 'options',
-            description: 'Outras opções do emojibet',
-            type: ApplicationCommandOptionType.String,
-            choices: [
+            name: 'view',
+            description: '[util] Veja um emoji de uma forma maior',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
                 {
-                    name: 'Resgatar dinheiro ocasionalmente perdido',
-                    value: 'rescue'
+                    name: 'emoji',
+                    description: 'Escolha um emoji personalizado para ve-lô de forma maior',
+                    type: ApplicationCommandOptionType.String,
+                    required: true
                 }
             ]
         }
@@ -34,6 +56,9 @@ export default {
     async execute({ interaction, Database, e, client, guildData }) {
 
         const { options, user } = interaction
+
+        if (options.getSubcommand() === 'view') return viewEmoji(interaction, options.getString('emoji'))
+
         const emojisChoosen = emojis.random(20)
         const buttons = getButtons()
         const participants = []

@@ -1,6 +1,10 @@
-import * as util from '../../util/Constants.js'
 import Base from './Base.js'
 import { formatString } from '../../functions/plugins/plugins.js'
+import {
+    Colors,
+    ColorsTranslate,
+    Languages
+} from '../../util/Constants.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -542,9 +546,9 @@ export default class Autocomplete extends Base {
     }
 
     utilColors(value) {
-        const colors = Object.keys(util.Colors || {})
-        const fill = colors.filter(data => util.ColorsTranslate[data].toLowerCase().includes(value.toLowerCase()))
-        const mapped = fill.map(data => ({ name: util.ColorsTranslate[data], value: data }))
+        const colors = Object.keys(Colors || {})
+        const fill = colors.filter(data => ColorsTranslate[data].toLowerCase().includes(value.toLowerCase()))
+        const mapped = fill.map(data => ({ name: ColorsTranslate[data], value: data }))
         return this.respond(mapped)
     }
 
@@ -601,7 +605,7 @@ export default class Autocomplete extends Base {
     }
 
     translateLanguages(value) {
-        const languages = Object.entries(util.Languages)
+        const languages = Object.entries(Languages)
         const fill = languages.filter(([a, b]) => a.includes(value.toLowerCase()) || b.toLowerCase().includes(value.toLowerCase()))
         const mapped = fill.map(([_, b]) => ({ name: b, value: b }))
         return this.respond(mapped)
