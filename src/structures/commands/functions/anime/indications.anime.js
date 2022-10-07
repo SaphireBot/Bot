@@ -196,8 +196,8 @@ export default async interaction => {
                         value: `A base para os gêneros e categorias foram vistas na [Crunchyroll](https://beta.crunchyroll.com/) e [AniList](https://anilist.co/search/anime) com uma ajudinha do poder de busca da [Kitsu](https://kitsu.io/explore/anime) para as informações.`
                     },
                     {
-                        name: '👥 Participantes',
-                        value: `Desde a ideia inicial, staff e todos que indicaram, chegamos a um total de ${people.length} pessoas que contribuiram para este comando chegar até aqui.`
+                        name: '👥 Participantes e Animes',
+                        value: `Desde a ideia inicial, staff e todos que indicaram, chegamos a um total de ${people.length} pessoas que contribuiram para este comando chegar até aqui com uma quantia de ${animes.length} animes indicados.`
                     }
                 ]
             }]
