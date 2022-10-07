@@ -497,6 +497,12 @@ export default class ModalInteraction extends Base {
                     value: 'Suspense'
                 },
                 {
+                    label: 'Mistério',
+                    description: 'Animes onde tudo é um mistério',
+                    emoji: '🔍',
+                    value: 'Mistério'
+                },
+                {
                     label: 'Luta',
                     description: 'Lutas e brigas faz parte da história',
                     emoji: '🥊',

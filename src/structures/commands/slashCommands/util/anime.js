@@ -89,6 +89,10 @@ export default {
                         {
                             name: 'Meus animes indicados',
                             value: 'myAnimes'
+                        },
+                        {
+                            name: 'Créditos',
+                            value: 'credits'
                         }
                     ]
                 }
