@@ -1,5 +1,5 @@
 import dicio from 'dicionario.js'
-import { DiscordPermissons } from '../../../../util/Constants.js'
+import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'dicionario',
@@ -31,9 +31,9 @@ export default {
 
         const { options, guild, channel } = interaction
 
-        if (!guild.clientHasPermission('ManageWebhooks'))
+        if (!guild.clientHasPermission(Permissions.ManageWebhooks))
             return await interaction.reply({
-                content: `${e.Info} | Eu preciso da permissão **\`GERENCIAR WEBHOOK\`** para executar este comando.`
+                content: `${e.Info} | Eu preciso da permissão **\`${PermissionsTranslate.ManageWebhooks}\`** para executar este comando.`
             })
 
         const query = options.getString('palavra')
