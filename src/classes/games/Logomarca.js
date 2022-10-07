@@ -56,8 +56,6 @@ export default class Logomarca extends Base {
             if (!this.gameData.sandBoxActive) {
                 this.gameData.sandBoxActive = true
 
-                this.embed.thumbnail = { url: 'https://media.discordapp.net/attachments/893361065084198954/1023675995414331462/mission_complete.gif' }
-
                 this.channel.send({
                     embeds: [{
                         color: this.client.green,

@@ -116,6 +116,33 @@ export default async interaction => {
 
         for (let i = 0; i < myAnimes.length; i++) {
             const anime = myAnimes[i]
+
+            const categories = anime.category
+            const tags = []
+
+            if (!categories.length)
+                tags.push({
+                    name: `${e.Deny} Tags`,
+                    value: 'Nenhuma tag foi definida'
+                })
+
+            if (categories.length > 25) {
+
+                const divide = [categories.slice(0, 25), categories.slice(25, categories.length)]
+
+                for (let cats of divide) {
+                    tags.push({
+                        name: '🏷️ Tags',
+                        value: cats?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
+                    })
+                }
+
+            } else
+                tags.push({
+                    name: '🏷️ Tags',
+                    value: categories?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
+                })
+
             embeds.push({
                 color: client.blue,
                 title: `💭 Minhas indicações de animes - ${i + 1}/${myAnimes.length}`,
@@ -129,10 +156,7 @@ export default async interaction => {
                         name: '🧩 Gêneros',
                         value: anime.gender?.map(gen => `\`${gen}\``)?.join(', ') || '\`Not Found\`'
                     },
-                    {
-                        name: '🎞 Categorias',
-                        value: anime.category?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
-                    },
+                    ...tags,
                     {
                         name: '👥 Público Alvo',
                         value: anime.targetPublic?.map(pub => `\`${pub}\``)?.join(', ') || '\`Not Found\`'

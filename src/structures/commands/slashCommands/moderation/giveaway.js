@@ -129,9 +129,9 @@ export default {
     ],
     async execute({ interaction }) {
 
-        const { options, guild, user } = interaction
+        const { options, guild } = interaction
 
-        for (let perm of [{ discord: 'ManageChannels', user: 'GERENCIAR CANAIS' }, { discord: 'ManageMessages', user: 'GERENCIAR MENSAGENS' }])
+        for (let perm of [{ discord: Permissions.ManageChannels, user: 'GERENCIAR CANAIS' }, { discord: Permissions.ManageMessages, user: 'GERENCIAR MENSAGENS' }])
             if (!guild.clientHasPermission(perm.discord))
                 return await interaction.reply({
                     content: `❌ | Eu preciso da permissão **\`${perm.user}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
