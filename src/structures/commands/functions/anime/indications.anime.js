@@ -110,7 +110,7 @@ export default async interaction => {
                         value: anime.gender?.map(gen => `\`${gen}\``)?.join(', ') || '\`Not Found\`'
                     },
                     {
-                        name: '🎞 Categorias',
+                        name: '🏷️ Tags',
                         value: anime.category?.map(cat => `\`${cat}\``)?.join(', ') || '\`Not Found\`'
                     },
                     {
@@ -121,7 +121,8 @@ export default async interaction => {
                         name: '👤 Sugerido por',
                         value: `${client.users.resolve(anime.authorId)?.tag || 'Not Found'} - \`${anime.authorId}\``
                     }
-                ]
+                ],
+                footer: { text: `Powered By ${client.user.username}'s Community` }
             }],
             components: buttons
         })

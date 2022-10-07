@@ -383,8 +383,12 @@ export default class ModalInteraction extends Base {
                         value: `${e.Loading} Esperando seleção de gêneros...`
                     },
                     {
-                        name: '🎞 Categorias',
-                        value: `${e.Loading} Esperando seleção de categorias...`
+                        name: '🏷️ Tags (1)',
+                        value: `${e.Loading} Esperando seleção de tags...`
+                    },
+                    {
+                        name: '🏷️ Tags (2)',
+                        value: `${e.Loading} Esperando seleção de tags...`
                     },
                     {
                         name: '👥 Público Alvo',
@@ -398,39 +402,109 @@ export default class ModalInteraction extends Base {
             const optionsGender = [
                 {
                     label: 'Ação',
+                    description: 'Adrenalina, cenas de gelar o coração',
+                    emoji: '🤸‍♂️',
                     value: 'Ação'
                 },
                 {
                     label: 'Aventura',
+                    description: 'Viagens, conhecimento e coisas novas',
+                    emoji: '🏂',
                     value: 'Aventura'
                 },
                 {
                     label: 'Comédia',
+                    description: 'Risadas, coisas engraçadas e divertidas',
+                    emoji: '😂',
                     value: 'Comédia'
                 },
                 {
                     label: 'Drama',
+                    description: 'História ou cenas que mexe com o emocional',
+                    emoji: '😭',
                     value: 'Drama'
                 },
                 {
-                    label: 'Mistério',
-                    value: 'Mistério'
+                    label: 'Ecchi/Hentai',
+                    description: 'Conteúdo não recomendado para menores de 18 anos',
+                    emoji: '🔞',
+                    value: 'Ecchi/Hentai'
+                },
+                {
+                    label: 'Fantasia',
+                    description: 'Magia, poderes, coisas não reais',
+                    emoji: '🧙‍♂️',
+                    value: 'Fantasia'
+                },
+                {
+                    label: 'Terror',
+                    description: 'Medo, susto, fantasmas, coisas horriveis',
+                    emoji: '😱',
+                    value: 'Terror'
+                },
+                {
+                    label: 'Robôs',
+                    description: 'Algo bem pro futuro, robos e tecnologia',
+                    emoji: '🤖',
+                    value: 'Robôs'
+                },
+                {
+                    label: 'Musical',
+                    description: 'Canto, melodia e música',
+                    emoji: '🎶',
+                    value: 'Musical'
+                },
+                {
+                    label: 'Psicológico',
+                    description: 'Conteúdo refente ao psicológico humano',
+                    emoji: '🧠',
+                    value: 'Psicológico'
                 },
                 {
                     label: 'Romance',
+                    description: 'Amor, timidez e borboletas no estomago',
+                    emoji: '💏',
                     value: 'Romance'
                 },
                 {
                     label: 'Sci-Fi / Ficção Científica',
+                    description: 'Nada aqui é real, é tudo uma ficção',
+                    emoji: '🧪',
                     value: 'Sci-Fi'
                 },
                 {
-                    label: 'Terror',
-                    value: 'Terror'
+                    label: 'Vida Cotidiana',
+                    description: 'Um anime que qualquer um poderia viver',
+                    emoji: '👨‍💼',
+                    value: 'Vida Cotidiana'
+                },
+                {
+                    label: 'Esportes',
+                    description: 'Desde futebol, até ping-pong',
+                    emoji: '⚽',
+                    value: 'Esportes'
+                },
+                {
+                    label: 'Supernatural',
+                    description: 'Não é a série, é conteúdo supernatural',
+                    emoji: '👻',
+                    value: 'Supernatural'
+                },
+                {
+                    label: 'Suspense',
+                    description: 'Animes onde o suspense ataca a ansiedade',
+                    emoji: '🕵️‍♂️',
+                    value: 'Suspense'
+                },
+                {
+                    label: 'Luta',
+                    description: 'Lutas e brigas faz parte da história',
+                    emoji: '🥊',
+                    value: 'Luta'
                 }
             ]
 
-            const optionsCategory = [
+            const optionsTags = [
                 {
                     label: 'Artes Marciais',
                     description: 'Envolve personagens que utilizam técnicas de artes marciais',
@@ -457,19 +531,9 @@ export default class ModalInteraction extends Base {
                     value: 'Cyberpunk'
                 },
                 {
-                    label: 'Esporte',
-                    description: 'Animes onde o assunto alvo é um ou mais esportes',
-                    value: 'Esporte'
-                },
-                {
                     label: 'Faroeste',
                     description: 'Acontece em um lugar semelhante ao Velho-Oeste americano.',
                     value: 'Faroeste'
-                },
-                {
-                    label: 'Fantasia',
-                    description: 'Magia. Apresenta uma variedade de monstros e poderes mágicos.',
-                    value: 'Fantasia'
                 },
                 {
                     label: 'Isekai',
@@ -487,11 +551,6 @@ export default class ModalInteraction extends Base {
                     value: 'Histórico'
                 },
                 {
-                    label: 'Musical',
-                    description: 'Focado na música, canto ou instrumento musicais.',
-                    value: 'Musical'
-                },
-                {
                     label: 'Policial/Investigação',
                     description: 'Focado em ações policiais/investigativas.',
                     value: 'Policial/Investigação'
@@ -500,11 +559,6 @@ export default class ModalInteraction extends Base {
                     label: 'Pós-Apocalíptico',
                     description: 'Focado em um mundo depois de um apocalípse',
                     value: 'Pós-Apocalíptico'
-                },
-                {
-                    label: 'Psicológico',
-                    description: 'Abordagem em nível psicológico, jogos mentais.',
-                    value: 'Psicológico'
                 },
                 {
                     label: 'Slice-of-life',
@@ -527,21 +581,102 @@ export default class ModalInteraction extends Base {
                     value: 'Vida escolar'
                 },
                 {
-                    label: 'Ecchi',
+                    label: 'Ecchi/Hentai',
                     description: 'O foco são cenas sexualmente provocativas.',
                     value: 'Ecchi'
-                },
-                {
-                    label: 'Hentai',
-                    description: 'Animes onde possuem cenas de cunho adulto/nudez/sexo.',
-                    value: 'Hentai'
                 },
                 {
                     label: 'Harém',
                     description: 'O personagem principal possui um harém.',
                     value: 'Harém'
+                },
+                {
+                    label: 'Crianças',
+                    description: 'Contém crianças neste anime',
+                    value: 'Crianças'
+                },
+                {
+                    label: 'Viagem',
+                    description: 'Ocorrem viagens ao desenrolar da história',
+                    value: 'Viagem'
+                },
+                {
+                    label: 'Flash Black',
+                    description: 'Ocorre muito flash black ao decorrer do anime',
+                    value: 'Flash Black'
+                },
+                {
+                    label: 'Fuga/Perseguição',
+                    description: 'O/A protagonista é alguém que está sob constante fuga/perseguição',
+                    value: 'Fuga/Perseguição'
+                },
+                {
+                    label: 'Battle Royale',
+                    description: 'Luta em uma arena ou algo parecido é presente nesta história',
+                    value: 'Battle Royale'
+                },
+                {
+                    label: 'Bullying',
+                    description: 'O anime fala/trata sobre bullying',
+                    value: 'Bullying'
+                },
+                {
+                    label: 'Parkour',
+                    description: 'O esporte parkour é praticado por aqui',
+                    value: 'Parkour'
+                },
+                {
+                    label: 'Tortura',
+                    description: 'Esse anime contém cenas de tortura',
+                    value: 'Tortura'
                 }
             ]
+
+            const optionsTags2 = [
+                {
+                    label: 'Agricultura/Natureza',
+                    description: 'O cuidado com a natureza é um abordado',
+                    value: 'Agricultura/Natureza'
+                },
+                {
+                    label: 'Vida Familiar',
+                    description: 'Temas como familia é presente na história',
+                    value: 'Vida Familiar'
+                },
+                {
+                    label: 'Depressão/Ansiedade',
+                    description: 'Personagens sofre destes problemas',
+                    value: 'Depressão/Ansiedade'
+                },
+                {
+                    label: 'Carros/Motos/Aviões',
+                    description: 'Os personagens se envolvem no ramo automobilístico',
+                    value: 'Carros/Motos/Aviões'
+                },
+                {
+                    label: 'Guerra',
+                    description: 'O anime acontece no contexto de uma guerra',
+                    value: 'Guerra'
+                },
+                {
+                    label: 'Religião',
+                    description: 'A religião é abordada durante a história',
+                    value: 'Religião'
+                },
+                {
+                    label: 'Política',
+                    description: 'O governo ou membros dele tem um pedaço da história',
+                    value: 'Política'
+                },
+                {
+                    label: 'Médico/Medicina',
+                    description: 'O ramo hospitalar é bem comúm aqui',
+                    value: 'Médico/Medicina'
+                }
+            ]
+
+            for (let cat of [...optionsTags, ...optionsTags2])
+                cat.emoji = '🏷️'
 
             const selectMenuGender = {
                 type: 1,
@@ -555,15 +690,27 @@ export default class ModalInteraction extends Base {
                 }]
             }
 
-            const selectMenuCategory = {
+            const selectMenuTags = {
                 type: 1,
                 components: [{
                     type: 3,
-                    custom_id: 'animeSuggestionsCategory',
-                    placeholder: 'Selecionar Categorias',
+                    custom_id: 'animeSuggestionsTags',
+                    placeholder: 'Selecionar Tags (1)',
                     min_values: 0,
-                    max_values: optionsCategory.length,
-                    options: optionsCategory
+                    max_values: optionsTags.length,
+                    options: optionsTags
+                }]
+            }
+
+            const selectMenuTags2 = {
+                type: 1,
+                components: [{
+                    type: 3,
+                    custom_id: 'animeSuggestionsTags2',
+                    placeholder: 'Selecionar Tags (2)',
+                    min_values: 0,
+                    max_values: optionsTags2.length,
+                    options: optionsTags2
                 }]
             }
 
@@ -579,26 +726,31 @@ export default class ModalInteraction extends Base {
                         {
                             label: 'Shōjo',
                             description: 'Animes focado ao público feminino jovem.',
+                            emoji: '👧',
                             value: 'Shōjo'
                         },
                         {
                             label: 'Josei',
                             description: 'Foca-se em histórias e experiências de mulheres japonesas.',
+                            emoji: '🎎',
                             value: 'Josei'
                         },
                         {
                             label: 'Shounen',
                             description: 'Animes direcionados ao público masculino jovem.',
+                            emoji: '👱‍♂️',
                             value: 'Shounen'
                         },
                         {
                             label: 'Seinen',
                             description: 'Animes com assuntos mais sérios e pesados.',
+                            emoji: '👓',
                             value: 'Seinen'
                         },
                         {
                             label: 'Kodomo',
                             description: 'Animes com assuntos infantis',
+                            emoji: '👶',
                             value: 'Kodomo'
                         }
                     ]
@@ -628,7 +780,7 @@ export default class ModalInteraction extends Base {
 
             return await interaction.reply({
                 embeds: [embed],
-                components: [buttons, selectMenuGender, selectMenuCategory, selectMenuMatchPublic]
+                components: [buttons, selectMenuGender, selectMenuTags, selectMenuTags2, selectMenuMatchPublic]
             })
         }
 

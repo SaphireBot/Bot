@@ -75,6 +75,12 @@ export default async (interaction, customId) => {
         }]
     }
 
+    if (embed.fields[3].value.includes(e.Loading))
+        embed.fields.splice(3, 1)
+
+    if (embed.fields[2].value.includes(e.Loading))
+        embed.fields.splice(2, 1)
+
     const sended = await channel.send({ embeds: [embed], components: [selectMenuObject] }).catch(() => null)
 
     embed.color = client.green

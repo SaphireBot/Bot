@@ -21,7 +21,7 @@ export default class SelectMenuInteraction extends Base {
 
     filterAndChooseFunction() {
 
-        const animesIndicationIds = ['animeSuggestionsGender', 'animeSuggestionsCategory', 'animeSuggestionsMatchPublic']
+        const animesIndicationIds = ['animeSuggestionsGender', 'animeSuggestionsTags', 'animeSuggestionsTags2', 'animeSuggestionsMatchPublic']
         if (animesIndicationIds.includes(this.customId))
             return this.animeSetSuggestions(this)
 
@@ -178,8 +178,9 @@ export default class SelectMenuInteraction extends Base {
 
         const field = {
             animeSuggestionsGender: 1,
-            animeSuggestionsCategory: 2,
-            animeSuggestionsMatchPublic: 3
+            animeSuggestionsTags: 2,
+            animeSuggestionsTags2: 3,
+            animeSuggestionsMatchPublic: 4
         }[customId]
 
         if (isNaN(field))
@@ -189,12 +190,12 @@ export default class SelectMenuInteraction extends Base {
                 embeds: []
             }).catch(() => { })
 
-        embed.fields[field].value = values.map(value => `\`${value}\``).join(', ')
+        embed.fields[field].value = values.map(value => `\`${value}\``).join(', ').limit('MessageEmbedFieldValue')
 
         if (
             !embed.fields[1].value.includes(e.Loading)
-            && !embed.fields[2].value.includes(e.Loading)
-            && !embed.fields[3].value.includes(e.Loading)
+            && (!embed.fields[2].value.includes(e.Loading) || !embed.fields[3].value.includes(e.Loading))
+            && !embed.fields[4].value.includes(e.Loading)
         ) {
             const components = message.components
             components[0].components[0].data.disabled = false
@@ -237,9 +238,10 @@ export default class SelectMenuInteraction extends Base {
 
             const animesIndications = await Database.animeIndications() || []
             const name = embed.fields[0].value
-            const category = embed.fields[2].value.replace(/`/g, '').split(', ')
             const gender = embed.fields[1].value.replace(/`/g, '').split(', ')
-            const targetPublic = embed.fields[3].value.replace(/`/g, '').split(', ')
+            const category = embed.fields[2].value.replace(/`/g, '').split(', ')
+            const category2 = embed.fields[3]?.value.replace(/`/g, '').split(', ')
+            const targetPublic = embed.fields[4].value.replace(/`/g, '').split(', ')
             const authorId = embed.footer.text
 
             if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase())) {
@@ -250,7 +252,7 @@ export default class SelectMenuInteraction extends Base {
                 })
             }
 
-            return new Database.Indications({ name, category, gender, targetPublic, authorId })
+            return new Database.Indications({ name, category: [...category, ...category2], gender, targetPublic, authorId })
                 .save(async function (err) {
 
                     if (err)
