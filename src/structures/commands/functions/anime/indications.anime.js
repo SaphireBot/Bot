@@ -148,7 +148,6 @@ export default async interaction => {
         //                    André                 Gorniack              Lewd
         const improviments = ['648389538703736833', '395669252121821227', '140926143783108610']
 
-
         return await interaction.reply({
             embeds: [{
                 color: client.blue,
