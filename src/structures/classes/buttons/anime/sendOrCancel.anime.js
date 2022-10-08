@@ -66,6 +66,12 @@ export default async (interaction, customId) => {
                     value: 'deny'
                 },
                 {
+                    label: 'Verificar Informações',
+                    emoji: '🔎',
+                    description: 'Verificar informações do anime recomendado',
+                    value: 'info'
+                },
+                {
                     label: 'Editar nome do anime',
                     emoji: '✍',
                     description: 'Corrigir o nome do anime',

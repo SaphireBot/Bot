@@ -2,6 +2,7 @@ import { Database } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
+import searchAnime from '../commands/functions/anime/search.anime.js'
 import Base from './Base.js'
 import translateSearch from './selectmenu/translate.search.js'
 export default class SelectMenuInteraction extends Base {
@@ -177,6 +178,7 @@ export default class SelectMenuInteraction extends Base {
         if (user.id !== embed.footer.text) return
 
         const field = {
+            animeSuggestionName: 0,
             animeSuggestionsGender: 1,
             animeSuggestionsTags: 2,
             animeSuggestionsTags2: 3,
@@ -271,5 +273,27 @@ export default class SelectMenuInteraction extends Base {
 
         }
 
+        if (value === 'info') {
+
+            const { embeds } = message
+            const embed = embeds[0]?.data
+
+            if (!embed)
+                return await interaction.update({
+                    content: `${e.Deny} | Embed não encontrada.`,
+                    components: []
+                }).catch(() => { })
+
+            const animeName = embed.fields[0]?.value
+
+            if (!animeName)
+                return await interaction.update({
+                    content: `${e.Deny} | Nome não encontrado.`,
+                    components: []
+                }).catch(() => { })
+
+            return await searchAnime(interaction, animeName)
+
+        }
     }
 }
