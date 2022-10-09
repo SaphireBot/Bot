@@ -9,8 +9,8 @@ import { Emojis as e } from "../../../../../util/util.js"
 export default async interaction => {
 
     const { user, guild } = interaction
-    const document = await Database.Economy.find({}, 'Rifa')
-    const rifaData = document[0]?.Rifa
+    const document = await Database.Economy.findOne({ id: client.user.id }, 'Rifa')
+    const rifaData = document?.Rifa
 
     if (!rifaData)
         return await interaction.reply({

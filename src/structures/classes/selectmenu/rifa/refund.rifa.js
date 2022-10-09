@@ -14,8 +14,8 @@ export default async ({
     if (user.id !== messageAuthorId) return
 
     const number = parseInt(value)
-    const document = await Database.Economy.find({}, 'Rifa')
-    const rifaData = document[0]?.Rifa
+    const document = await Database.Economy.findOne({ id: client.user.id }, 'Rifa')
+    const rifaData = document?.Rifa
 
     if (!rifaData)
         return await interaction.update({
@@ -92,7 +92,7 @@ export default async ({
                     },
                     {
                         name: '♻️ Conversão',
-                        value: `Ao solicitar o reembolso, você irá ter um retorno de **${(userNumbers.length * 1000)?.currency()} ${moeda}**`
+                        value: `Ao solicitar o reembolso total, você irá ter um retorno de **${(userNumbers.length * 1000)?.currency()} ${moeda}**`
                     },
                     {
                         name: '🔢 Números',
@@ -146,7 +146,7 @@ export default async ({
     async function removePrize() {
 
         Database.Economy.findOneAndUpdate(
-            {},
+            { id: client.user.id },
             {
                 $pull: {
                     ['Rifa.Numbers']: {

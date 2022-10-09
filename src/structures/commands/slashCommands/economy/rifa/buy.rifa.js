@@ -3,6 +3,7 @@ import {
     Database
 } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
+import makeTheSuperGiveaway from "./giveaway.rifa.js"
 
 export default async interaction => {
 
@@ -24,8 +25,8 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const rifaData = await Database.Economy.find({}, 'Rifa') || []
-    const numbers = rifaData[0]?.Rifa?.Numbers || []
+    const rifaData = await Database.Economy.findOne({ id: client.user.id }, 'Rifa') || []
+    const numbers = rifaData?.Rifa?.Numbers || []
 
     if (numbers?.filter(nums => nums?.userId === user.id)?.length >= 5)
         return await interaction.reply({
@@ -33,8 +34,8 @@ export default async interaction => {
             ephemeral: true
         })
 
-    return Database.Economy.updateOne(
-        {},
+    return Database.Economy.findOneAndUpdate(
+        { id: client.user.id },
         {
             $addToSet: {
                 'Rifa.Numbers': {
@@ -45,12 +46,13 @@ export default async interaction => {
         },
         {
             upsert: true,
-            new: true
+            new: true,
+            fields: ['Rifa']
         }
     )
         .then(async updateResult => {
 
-            if (updateResult.modifiedCount === 0)
+            if (updateResult.Rifa.Numbers.length === numbers.length)
                 return await interaction.reply({
                     content: `${e.Deny} | Alguém já comprou este número. Por favor, tente um outro número.`,
                     ephemeral: true
@@ -59,6 +61,9 @@ export default async interaction => {
             await interaction.reply({
                 content: `${e.Check} | Você comprou o número **${number}** da ${client.user.username}'s Rifa. Agora é só esperar o resultado. Boa sorte!`
             })
+
+            if (updateResult.Rifa.Numbers.length >= 2)
+                makeTheSuperGiveaway(updateResult)
 
             return addPrize()
         })
@@ -70,16 +75,6 @@ export default async interaction => {
         })
 
     async function addPrize() {
-
-        await Database.Economy.updateOne(
-            {},
-            {
-                $inc: {
-                    'Rifa.Prize': 1000
-                }
-            },
-            { upsert: true }
-        )
 
         await Database.User.updateOne(
             { id: user.id },

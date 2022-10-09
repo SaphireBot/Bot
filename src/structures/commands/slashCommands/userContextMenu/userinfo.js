@@ -66,7 +66,7 @@ export default {
                     },
                     {
                         name: '@ Cargos',
-                        value: memberData?.roles
+                        value: memberData?.roles.limit('MessageEmbedFieldValue')
                     }
                 ]
             },

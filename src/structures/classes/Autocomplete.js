@@ -88,15 +88,15 @@ export default class Autocomplete extends Base {
                 value: 0
             }])
 
-        const rifaDocument = await this.Database.Economy.find({}, 'Rifa')
-
-        if (!rifaDocument || !rifaDocument.length)
+        const rifaDocument = await this.Database.Economy.findOne({ id: this.client.user.id }, 'Rifa')
+        
+        if (!rifaDocument)
             return await this.respond([{
                 name: '[Database Find Document Error (0)] Mongoose Document Not Found',
                 value: 0
             }])
 
-        const allNumbers = rifaDocument[0]?.Rifa?.Numbers || []
+        const allNumbers = rifaDocument.Rifa?.Numbers || []
         const numbers = [...Array(91).keys()].slice(1)
         const availableNumbers = numbers.filter(num => !allNumbers.find(rifa => rifa.number === num))
         const usersRifa = allNumbers.filter(rifa => rifa?.userId === this.user.id)?.length || 0
@@ -110,7 +110,7 @@ export default class Autocomplete extends Base {
         if (!availableNumbers || !availableNumbers.length)
             return await this.respond()
 
-        const quantity = (3 - usersRifa <= 1) ? 'Você só pode comprar +1 número' : `Você pode comprar mais ${3 - usersRifa} números`
+        const quantity = (5 - usersRifa <= 1) ? 'Você só pode comprar +1 número' : `Você pode comprar mais ${5 - usersRifa} números`
         let mapped = availableNumbers.map(num => ({
             name: num < 10 ? `N° 0${num} - ${quantity}` : `N° ${num} - ${quantity}`,
             value: num

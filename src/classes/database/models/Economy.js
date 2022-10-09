@@ -2,8 +2,8 @@ import Mongoose from 'mongoose'
 const { Schema, model } = Mongoose
 
 export default model("Economy", new Schema({
+    id: String,
     Lotery: {
-        id: { type: String, unique: true },
         Close: Boolean,
         Prize: Number,
         Users: Array,
@@ -12,9 +12,9 @@ export default model("Economy", new Schema({
     Rifa: {
         // [ { number: Number, userId: String } ]
         Numbers: Array,
-        Prize: Number,
+        TempPrize: Number,
         LastWinner: String,
-        LastPrize: Number,
-        AlreadyRaffle: Boolean
+        LastNumber: Number,
+        LastPrize: Number
     }
 }))

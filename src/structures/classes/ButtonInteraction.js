@@ -31,6 +31,9 @@ export default class ButtonInteraction extends Base {
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
+        if (commandData.c === 'delete')
+            return await this.message?.delete().catch(() => { })
+
         if (commandData.src === 'again') return await this.interaction.showModal(this.modals.indicateLogomarca)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
@@ -49,13 +52,13 @@ export default class ButtonInteraction extends Base {
             rifaRefund: [rifa, this.interaction, commandData]
         }[commandData.c]
 
-        if (result) return result[0](...result.slice(1))
+        if (result) return result[0](...result?.slice(1))
 
         const byCustomId = {
             editProfile: [this.editProfile],
             newProof: [this.newProof],
             cancelVote: [this.cancelVote],
-            WordleGameInfo: [wordleGameInfoModal, this],
+            WordleGameInfo: [wordleGameInfoModal, this]
         }[this.customId]
 
         if (byCustomId) return byCustomId[0](byCustomId[1])

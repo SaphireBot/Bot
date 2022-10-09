@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from "discord.js"
 import buyRifa from "./rifa/buy.rifa.js"
 import refundRifa from "./rifa/refund.rifa.js"
+import tableRifa from "./rifa/table.rifa.js"
 
 export default {
     name: 'rifa',
@@ -38,7 +39,6 @@ export default {
     },
     async execute({ interaction, e }) {
 
-
         const { options } = interaction
         let command = options?.data[0]?.name || null
 
@@ -54,7 +54,7 @@ export default {
         const execute = {
             comprar: buyRifa,
             refund: refundRifa,
-            // table: tableRifa
+            table: tableRifa
         }[command] || null
 
         if (!execute)

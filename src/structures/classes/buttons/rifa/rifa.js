@@ -13,8 +13,8 @@ export default async (interaction, { src: customId }) => {
     if (customId === 'deny')
         return await message?.delete().catch(() => { })
 
-    const document = await Database.Economy.find({}, 'Rifa')
-    const rifaData = document[0]?.Rifa
+    const document = await Database.Economy.findOne({ id: client.user.id }, 'Rifa')
+    const rifaData = document?.Rifa
 
     if (!rifaData)
         return await interaction.update({
@@ -68,7 +68,7 @@ export default async (interaction, { src: customId }) => {
     async function removePrize() {
 
         await Database.Economy.updateOne(
-            {},
+            { id: client.user.id },
             {
                 $pull: {
                     'Rifa.Numbers': {
