@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType } from "discord.js"
 import buyRifa from "./rifa/buy.rifa.js"
 import refundRifa from "./rifa/refund.rifa.js"
 import tableRifa from "./rifa/table.rifa.js"
+import verifyRifa from "./rifa/verify.rifa.js"
 
 export default {
     name: 'rifa',
@@ -25,6 +26,10 @@ export default {
                 {
                     name: 'Visualizar tabela de números',
                     value: 'table'
+                },
+                {
+                    name: 'Verificar último sorteio',
+                    value: 'verify'
                 },
                 {
                     name: 'Reembolsar números comprados',
@@ -54,7 +59,8 @@ export default {
         const execute = {
             comprar: buyRifa,
             refund: refundRifa,
-            table: tableRifa
+            table: tableRifa,
+            verify: verifyRifa
         }[command] || null
 
         if (!execute)

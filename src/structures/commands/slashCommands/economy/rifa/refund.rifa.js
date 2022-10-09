@@ -37,7 +37,7 @@ export default async interaction => {
         type: 1,
         components: [{
             type: 3,
-            custom_id: 'rifaRefund',
+            custom_id: 'rifa',
             placeholder: 'Resgatar apenas um número',
             options: []
         }]
@@ -66,7 +66,7 @@ export default async interaction => {
                 },
                 {
                     name: '♻️ Conversão',
-                    value: `Ao solicitar o reembolso, você irá ter um retorno de **${(userNumbers.length * 1000)?.currency()} ${moeda}**`
+                    value: `Ao solicitar o reembolso total, você irá ter um retorno de **${(userNumbers.length * 1000)?.currency()} ${moeda}**`
                 },
                 {
                     name: '🔢 Números',
@@ -86,7 +86,7 @@ export default async interaction => {
                         type: 2,
                         label: 'Solicitar Reembolso Completo',
                         custom_id: JSON.stringify({
-                            c: 'rifaRefund',
+                            c: 'rifa',
                             src: 'accept'
                         }),
                         style: ButtonStyle.Success
@@ -95,7 +95,7 @@ export default async interaction => {
                         type: 2,
                         label: 'Cancelar Solicitação',
                         custom_id: JSON.stringify({
-                            c: 'rifaRefund',
+                            c: 'rifa',
                             src: 'deny'
                         }),
                         style: ButtonStyle.Danger

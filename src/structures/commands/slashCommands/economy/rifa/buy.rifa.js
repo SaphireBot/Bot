@@ -62,7 +62,7 @@ export default async interaction => {
                 content: `${e.Check} | Você comprou o número **${number}** da ${client.user.username}'s Rifa. Agora é só esperar o resultado. Boa sorte!`
             })
 
-            if (updateResult.Rifa.Numbers.length >= 2)
+            if (updateResult.Rifa.Numbers.length >= 90)
                 makeTheSuperGiveaway(updateResult)
 
             return addPrize()

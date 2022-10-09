@@ -35,7 +35,7 @@ export default class SelectMenuInteraction extends Base {
             mangaChoosen: 'mangaChoosen',
             changeCategory: 'editCategoryChannel',
             changeCategory2: 'editCategoryChannel',
-            rifaRefund: 'refundFunction'
+            rifa: 'refundFunction'
         }[this.customId]
 
         if (!result) return

@@ -49,7 +49,7 @@ export default class ButtonInteraction extends Base {
             redit: [ratherAdminEdit, this],
             anime: [anime, this.interaction, commandData],
             channel: [channelIndex, this.interaction, commandData],
-            rifaRefund: [rifa, this.interaction, commandData]
+            rifa: [rifa, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return result[0](...result?.slice(1))

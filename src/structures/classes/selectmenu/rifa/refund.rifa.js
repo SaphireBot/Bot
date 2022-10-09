@@ -63,7 +63,7 @@ export default async ({
                     type: 2,
                     label: 'Solicitar Reembolso Completo',
                     custom_id: JSON.stringify({
-                        c: 'rifaRefund',
+                        c: 'rifa',
                         src: 'accept'
                     }),
                     style: ButtonStyle.Success
@@ -72,7 +72,7 @@ export default async ({
                     type: 2,
                     label: 'Cancelar Solicitação',
                     custom_id: JSON.stringify({
-                        c: 'rifaRefund',
+                        c: 'rifa',
                         src: 'deny'
                     }),
                     style: ButtonStyle.Danger
@@ -118,7 +118,7 @@ export default async ({
                 type: 1,
                 components: [{
                     type: 3,
-                    custom_id: 'rifaRefund',
+                    custom_id: 'rifa',
                     placeholder: 'Resgatar apenas um número',
                     options: []
                 }]

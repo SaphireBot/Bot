@@ -3,12 +3,16 @@ import {
     Database
 } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
+import verifyRifa from "../../../commands/slashCommands/economy/rifa/verify.rifa.js"
 
 export default async (interaction, { src: customId }) => {
 
     const { user, message } = interaction
     const messageAuthorId = message.interaction.user.id
     if (user.id !== messageAuthorId) return
+
+    if (customId === 'refresh')
+        return verifyRifa(interaction)
 
     if (customId === 'deny')
         return await message?.delete().catch(() => { })
