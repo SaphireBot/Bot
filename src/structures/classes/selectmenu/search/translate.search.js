@@ -1,6 +1,6 @@
 import translate from "@iamtraction/google-translate"
 import axios from "axios"
-import { Emojis as e } from "../../../util/util.js"
+import { Emojis as e } from "../../../../util/util.js"
 import responseSearch from "./response.search.js"
 
 export default async ({ interaction, value, customId }) => {

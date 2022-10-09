@@ -7,7 +7,7 @@ import { Emojis as e } from "../../../../../util/util.js"
 export default async interaction => {
 
     const { options, user, guild } = interaction
-    const number = options.getInteger('numero')
+    const number = options.getInteger('comprar')
 
     if (number < 1 || number > 90)
         return await interaction.reply({
@@ -27,9 +27,9 @@ export default async interaction => {
     const rifaData = await Database.Economy.find({}, 'Rifa') || []
     const numbers = rifaData[0]?.Rifa?.Numbers || []
 
-    if (numbers?.filter(nums => nums?.userId === user.id)?.length >= 3)
+    if (numbers?.filter(nums => nums?.userId === user.id)?.length >= 5)
         return await interaction.reply({
-            content: `${e.Deny} | Você já atingiu o limite de 3 rifas compradas.`,
+            content: `${e.Deny} | Você já atingiu o limite de 5 rifas compradas.`,
             ephemeral: true
         })
 
@@ -78,9 +78,7 @@ export default async interaction => {
                     'Rifa.Prize': 1000
                 }
             },
-            {
-                upsert: true
-            }
+            { upsert: true }
         )
 
         await Database.User.updateOne(
@@ -88,11 +86,18 @@ export default async interaction => {
             {
                 $inc: {
                     Balance: -1000
+                },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.loss} Gastou 1000 Safiras comprando o número ${number} na Rifa`
+                        }],
+                        $position: 0
+                    }
                 }
             },
-            {
-                upsert: true
-            }
+            { upsert: true }
         )
 
         return

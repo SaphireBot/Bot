@@ -69,7 +69,7 @@ export default class Autocomplete extends Base {
             level_options: ['levelOptions'],
             option: ['ideaCommandOptions'],
             editar_imagem_com_censura: ['editImageLogoMarca'],
-            numero: ['rifaNumero', value]
+            comprar: ['rifaNumero', value]
         }[name]
 
         if (autocompleteFunctions)
@@ -101,9 +101,9 @@ export default class Autocomplete extends Base {
         const availableNumbers = numbers.filter(num => !allNumbers.find(rifa => rifa.number === num))
         const usersRifa = allNumbers.filter(rifa => rifa?.userId === this.user.id)?.length || 0
 
-        if (usersRifa >= 3)
+        if (usersRifa >= 5)
             return await this.respond([{
-                name: 'Você já atingiu o limite de 3 Rifas compradas',
+                name: 'Você já atingiu o limite de 5 Rifas compradas',
                 value: 0
             }])
 

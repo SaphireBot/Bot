@@ -4,7 +4,9 @@ import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
 import Base from './Base.js'
-import translateSearch from './selectmenu/translate.search.js'
+import refundRifa from './selectmenu/rifa/refund.rifa.js'
+import translateSearch from './selectmenu/search/translate.search.js'
+
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
         super()
@@ -32,12 +34,17 @@ export default class SelectMenuInteraction extends Base {
             animeChoosen: 'animeChoosen',
             mangaChoosen: 'mangaChoosen',
             changeCategory: 'editCategoryChannel',
-            changeCategory2: 'editCategoryChannel'
+            changeCategory2: 'editCategoryChannel',
+            rifaRefund: 'refundFunction'
         }[this.customId]
 
         if (!result) return
 
         return this[result](this)
+    }
+
+    refundFunction() {
+        refundRifa(this)
     }
 
     async editCategoryChannel({ interaction }) {

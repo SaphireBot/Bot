@@ -34,7 +34,7 @@ export default async (interaction, { src, id }) => {
         return await interaction.update({ content, components: [] }).catch(() => { })
     }
 
-    if (interaction.channel.id === channel.id) return
+    if (!interaction.channel?.id || interaction.channel?.id === channel?.id) return
     return await interaction.update({
         content: `${e.Check} | O canal **${channel?.name}** foi deletado com sucesso.`,
         components: []

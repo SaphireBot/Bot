@@ -10,6 +10,7 @@ import ratherAdminEdit from './buttons/rather/admin/edit.rather.js'
 import anime from './buttons/anime/index.anime.js'
 import wordleGameInfoModal from './modals/wordleGame/wordleGame.info.modal.js'
 import channelIndex from './buttons/channel/channel.index.js'
+import rifa from './buttons/rifa/rifa.js'
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
         super()
@@ -44,7 +45,8 @@ export default class ButtonInteraction extends Base {
             rt: [rather, this.interaction, commandData],
             redit: [ratherAdminEdit, this],
             anime: [anime, this.interaction, commandData],
-            channel: [channelIndex, this.interaction, commandData]
+            channel: [channelIndex, this.interaction, commandData],
+            rifaRefund: [rifa, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return result[0](...result.slice(1))
