@@ -68,13 +68,58 @@ export default class Autocomplete extends Base {
             answers: ['answers'],
             level_options: ['levelOptions'],
             option: ['ideaCommandOptions'],
-            editar_imagem_com_censura: ['editImageLogoMarca']
+            editar_imagem_com_censura: ['editImageLogoMarca'],
+            numero: ['rifaNumero', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async rifaNumero(value) {
+
+        const userBalance = await this.user.balance() || 0
+
+        if (!userBalance || userBalance < 1000)
+            return await this.respond([{
+                name: 'Você precisa ter mais de 1000 Safiras para comprar um número',
+                value: 0
+            }])
+
+        const rifaDocument = await this.Database.Economy.find({}, 'Rifa')
+
+        if (!rifaDocument || !rifaDocument.length)
+            return await this.respond([{
+                name: '[Database Find Document Error (0)] Mongoose Document Not Found',
+                value: 0
+            }])
+
+        const allNumbers = rifaDocument[0]?.Rifa?.Numbers || []
+        const numbers = [...Array(91).keys()].slice(1)
+        const availableNumbers = numbers.filter(num => !allNumbers.find(rifa => rifa.number === num))
+        const usersRifa = allNumbers.filter(rifa => rifa?.userId === this.user.id)?.length || 0
+
+        if (usersRifa >= 3)
+            return await this.respond([{
+                name: 'Você já atingiu o limite de 3 Rifas compradas',
+                value: 0
+            }])
+
+        if (!availableNumbers || !availableNumbers.length)
+            return await this.respond()
+
+        const quantity = (3 - usersRifa <= 1) ? 'Você só pode comprar +1 número' : `Você pode comprar mais ${3 - usersRifa} números`
+        let mapped = availableNumbers.map(num => ({
+            name: num < 10 ? `N° 0${num} - ${quantity}` : `N° ${num} - ${quantity}`,
+            value: num
+        }))
+
+        if (value)
+            mapped = mapped.filter(opt => opt.name?.toLowerCase().includes(value?.toLowerCase()))
+
+        return await this.respond(mapped)
     }
 
     async indications(value) {
@@ -781,7 +826,9 @@ export default class Autocomplete extends Base {
 
         const mappedArray = arrayData.map(data => ({
             name: data?.name.limit('AutocompleteName'),
-            value: data?.value.limit('AutocompleteValue')
+            value: data?.value.constructor === Number
+                ? data?.value
+                : data?.value.limit('AutocompleteValue')
         }))
 
         return await this.interaction.respond(mappedArray)
