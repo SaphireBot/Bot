@@ -1,4 +1,4 @@
-import { ChannelType } from "discord.js"
+import { ButtonStyle, ChannelType } from "discord.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 export default async (interaction, channel) => {
@@ -83,6 +83,19 @@ export default async (interaction, channel) => {
 
     return await interaction.reply({
         content: `${e.Loading} | O canal ${channel} vai para qual categoria?`,
-        components
+        components: [
+            ...components,
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Cancelar comando',
+                        custom_id: JSON.stringify({ c: 'delete' }),
+                        style: ButtonStyle.Danger
+                    }
+                ]
+            }
+        ]
     })
 }

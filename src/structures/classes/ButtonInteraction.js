@@ -31,7 +31,7 @@ export default class ButtonInteraction extends Base {
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
-        if (commandData.c === 'delete')
+        if (commandData.c === 'delete' && this.user.id === this.command.user.id)
             return await this.message?.delete().catch(() => { })
 
         if (commandData.src === 'again') return await this.interaction.showModal(this.modals.indicateLogomarca)
