@@ -2140,5 +2140,15 @@
             "censored": "https://media.discordapp.net/attachments/991029755367292948/1025545151898194012/12_Sem_Titulo_20220930201002.png",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1025545151529111612/11_Sem_Titulo_20220930200926.png"
         }
+    },
+    {
+        "answers": [
+            "tv alterosa",
+            "rede alterosa"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1028833738831958066/images-removebg-preview.png"
+        }
     }
 ]
