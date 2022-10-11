@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import removeBet from "./emojibet/remove.bet.js"
 import rescueBet from "./emojibet/rescue.bet.js"
 import viewEmoji from "./emojibet/view.emoji.js"
+import investEmoji from "./emojibet/invest.emoji.js"
 
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
@@ -37,6 +38,29 @@ export default {
             ]
         },
         {
+            name: 'invest',
+            description: '[economy] Invista em um emoji e faça seu lucro',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'options',
+                    description: 'Escolha uma das opções',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    choices: [
+                        {
+                            name: 'Investir/apostar em um emoji',
+                            value: 'bet'
+                        },
+                        // {
+                        //     name: 'Visualizar status geral',
+                        //     value: 'view'
+                        // }
+                    ]
+                }
+            ]
+        },
+        {
             name: 'view',
             description: '[util] Veja um emoji de uma forma maior',
             type: ApplicationCommandOptionType.Subcommand,
@@ -58,6 +82,7 @@ export default {
         const { options, user } = interaction
 
         if (options.getSubcommand() === 'view') return viewEmoji(interaction, options.getString('emoji'))
+        if (options.getSubcommand() === 'invest') return investEmoji(interaction, options.getString('options'))
 
         const emojisChoosen = emojis.random(20)
         const buttons = getButtons()

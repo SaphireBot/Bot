@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType, ChannelType } from "discord.js"
 import { Modals } from "../../../../classes/index.js"
-import { Permissions, DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
+import { Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import categoryChannel from "../../functions/channel/category.channel.js"
 import deleteChannel from "../../functions/channel/delete.channel.js"
 import inviteChannel from "../../functions/channel/invite.channel.js"
@@ -77,7 +77,7 @@ export default {
 
         const { options, guild, channel: currentChannel } = interaction
 
-        if (!guild.clientHasPermission(DiscordPermissons.ManageChannels))
+        if (!guild.clientHasPermission(Permissions.ManageChannels))
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ManageChannels}\`** para liberar este comando.`,
                 ephemeral: true

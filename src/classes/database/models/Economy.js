@@ -16,5 +16,19 @@ export default model("Economy", new Schema({
         LastWinner: String,
         LastNumber: Number,
         LastPrize: Number
-    }
+    },
+    Emojis: [{
+        Emoji: {
+            type: String,
+            unique: true
+        },
+        Users: [{
+            type: Object,
+            id: {
+                type: String,
+                unique: true
+            },
+            value: Number
+        }]
+    }]
 }))
