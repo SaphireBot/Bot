@@ -7,8 +7,8 @@ import { Emojis as e } from "../../../../util/util.js"
 export default async (interaction, userId) => {
 
     const { user: author, message } = interaction
-    let user = client.users.resolve(userId)
-        || await client.users.fetch(searchId, { force: true })
+    const user = client.users.resolve(userId)
+        || await client.users.fetch(userId, { force: true })
             .catch(() => null)
 
     if (!user)

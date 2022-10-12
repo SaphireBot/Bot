@@ -44,7 +44,7 @@ export default {
                 image: { url: banner }
             })
 
-        return interaction.reply({ embeds: [...embeds], ephemeral: true })
+        return await interaction.reply({ embeds: [...embeds], ephemeral: true })
 
         async function get(userId) {
             return await fetch(`https://discord.com/api/v10/users/${userId}`, {

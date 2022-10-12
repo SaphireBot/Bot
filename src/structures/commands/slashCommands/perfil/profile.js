@@ -1,5 +1,7 @@
+import fetch from 'node-fetch'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
+import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
 
 export default {
@@ -22,10 +24,10 @@ export default {
                     name: 'Atualizar perfil',
                     value: 'refresh'
                 },
-                // {
-                //     name: 'Editar perfil',
-                //     value: 'edit'
-                // },
+                {
+                    name: 'Editar perfil',
+                    value: 'edit'
+                },
                 {
                     name: 'Esconder só pra mim',
                     value: 'hide'
@@ -45,6 +47,7 @@ export default {
         const ephemeral = query === 'hide'
 
         if (query === 'refresh') return refreshProfile(interaction)
+        if (query === 'edit') return showModal()
 
         const user = options.getUser('user') || author
 
@@ -236,9 +239,12 @@ export default {
             })()
             : 'Nenhum membro na família'
 
+        const banner = await get(user.id, 2048, "png", true)
+
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
         Embed.thumbnail = { url: user.displayAvatarURL({ dynamic: true }) }
+        Embed.image = { url: banner }
         Embed.fields = [
             {
                 name: '👤 Pessoal ' + stars,
@@ -309,6 +315,40 @@ export default {
         })
 
         return await interaction.editReply({ embeds: [Embed], components: buttons }).catch(() => { })
+
+        async function showModal() {
+
+            const data = await Database.User.findOne({ id: author.id }, 'Perfil')
+
+            if (!data) {
+                await Database.registerUser(author)
+                return await interaction.reply({
+                    content: `${e.Database} | DATABASE | Por favor, tente novamente.`,
+                    ephemeral: true
+                })
+            }
+
+            const title = data?.Perfil?.Titulo || null
+            const job = data?.Perfil?.Trabalho || null
+            const niver = data?.Perfil?.Aniversario || null
+            const status = data?.Perfil?.Status || null
+            const modal = Modals.editProfileModal(title, job, niver, status)
+
+            return await interaction.showModal(modal)
+        }
+
+        async function get(userId) {
+            return await fetch(`https://discord.com/api/v10/users/${userId}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
+            })
+                .then(res => res.json())
+                .then(user => {
+                    if (user.code === 50035 || !user.banner) return null
+                    if (user.banner) return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
+                })
+                .catch(() => null)
+        }
 
     }
 }
