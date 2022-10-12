@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { logs, backup, user, restart, stop, start, update, apps } from './discloud/functions.discloud.js'
+import * as Discloud from './discloud/functions.discloud.js'
 
 export default {
     name: 'discloud',
@@ -48,6 +48,10 @@ export default {
                 {
                     name: 'Novo commit',
                     value: 'update'
+                },
+                {
+                    name: 'Limpar terminal',
+                    value: 'clear'
                 }
             ]
         }
@@ -56,7 +60,7 @@ export default {
 
         const { options } = interaction
         const query = options.getString('options')
-        const func = { logs, backup, user, restart, stop, start, update, apps }[query]
+        const func = Discloud[query]
         if (func) return func(interaction)
 
         return await interaction.reply({
