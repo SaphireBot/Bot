@@ -48,7 +48,7 @@ String.prototype.random = function (times = 0, repeat = false) {
     return this[~~(Math.random() * this.length)]
 }
 
-String.prototype.captalize = function formatString() {
+String.prototype.captalize = function formatString(withTrace = true) {
 
     let string = this
 
@@ -72,7 +72,7 @@ String.prototype.captalize = function formatString() {
         else result += word + ' '
 
     if (tras) {
-        result = result.replace(/ /g, '-')
+        result = result.replace(/ /g, withTrace ? '-' : ' ')
         tras = false
     }
 

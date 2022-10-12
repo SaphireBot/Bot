@@ -29,6 +29,7 @@
     "quick.db": "^9.0.6",
     "simply-djs": "^3.0.2",
     "statcord.js": "^3.4.3",
-    "topgg-autoposter": "^2.0.1"
+    "topgg-autoposter": "^2.0.1",
+    "weather-js": "^2.0.0"
   }
 }

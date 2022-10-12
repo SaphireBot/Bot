@@ -5,17 +5,6 @@ export default {
     name: 'dicionario',
     description: '[util] Pesquise por significados de palavras',
     dm_permission: false,
-    helpData: {
-        color: 'Blue',
-        description: 'Pesquise pelos significados das palavras usando este comando.',
-        permissions: [DiscordPermissons.ManageWebhooks],
-        fields: [
-            {
-                name: 'Campo: Palavra',
-                value: 'Escreva a palavra que você deseja pegar o significado neste campo. Exemplo: `/dicionario palavra: céu`'
-            }
-        ]
-    },
     type: 1,
     options: [
         {
@@ -27,6 +16,17 @@ export default {
             max_length: 46
         }
     ],
+    helpData: {
+        color: 'Blue',
+        description: 'Pesquise pelos significados das palavras usando este comando.',
+        permissions: [DiscordPermissons.ManageWebhooks],
+        fields: [
+            {
+                name: 'Campo: Palavra',
+                value: 'Escreva a palavra que você deseja pegar o significado neste campo. Exemplo: `/dicionario palavra: céu`'
+            }
+        ]
+    },
     async execute({ interaction, client, e }) {
 
         const { options, guild, channel } = interaction

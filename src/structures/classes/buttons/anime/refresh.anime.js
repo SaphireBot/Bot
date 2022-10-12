@@ -140,7 +140,7 @@ export default async interaction => {
                     value: `${client.users.resolve(anime.authorId)?.tag || 'Not Found'} - \`${anime.authorId}\``
                 }
             ],
-            footer: { text: `Powered By ${client.user.username}'s Community` }
+            footer: { text: `❤ Powered By ${client.user.username}'s Community` }
         }],
         components: buttons
     })
