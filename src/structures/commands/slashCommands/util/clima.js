@@ -56,6 +56,7 @@ export default {
 
             const skytext = {
                 'Clear': 'Com o céu limpo',
+                'Mostly Clear': 'Com o céu completamente limpo',
                 'Sunny': 'Com o céu ensolarado',
                 'Mostly Sunny': 'Com o céu super ensolarado',
                 'Partly Sunny': 'Com o céu parcialmente ensolarado',
@@ -92,6 +93,7 @@ export default {
 
             const skyEmoji = {
                 'Clear': '☁',
+                'Mostly Clear': '✨',
                 'Sunny': '🌞',
                 'Partly Sunny': '🌤',
                 'Mostly Sunny': '☀',
