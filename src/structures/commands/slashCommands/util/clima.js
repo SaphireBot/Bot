@@ -55,17 +55,21 @@ export default {
             }[weather.day] || 'Not Found'
 
             const skytext = {
-                'Mostly Sunny': 'Com o céu super ensolarado',
-                'Sunny': 'Com o céu ensolarado',
-                'Partly Sunny': 'Com o céu parcialmente ensolarado',
                 'Clear': 'Com o céu limpo',
+                'Sunny': 'Com o céu ensolarado',
+                'Mostly Sunny': 'Com o céu super ensolarado',
+                'Partly Sunny': 'Com o céu parcialmente ensolarado',
                 'Cloudy': 'Com o céu nublado',
+                'Partly Cloudy': 'Com o céu parcialmente nublado',
                 'Mostly Cloudy': 'Com o céu muito nublado',
                 'Rain': 'Com chuva',
                 'Rain Showers': 'Com pancadas de chuvas',
                 'Light Rain': 'Com chuvas leves',
                 'T-Storms': 'Com tempestades'
             }
+
+            if (!skytext[weather.skytext])
+                console.log(weather.skytext)
 
             const embed = {
                 color: client.blue,
@@ -87,15 +91,16 @@ export default {
                 forecast.length = 5
 
             const skyEmoji = {
-                'Mostly Sunny': '☀',
+                'Clear': '☁',
                 'Sunny': '🌞',
                 'Partly Sunny': '🌤',
-                'Clear': '☁',
+                'Mostly Sunny': '☀',
                 'Cloudy': '🌫',
-                'Mostly Cloudy': '🌫🌫',
+                'Partly Cloudy': '🌫🌫',
+                'Mostly Cloudy': '🌫🌫🌫',
                 'Rain': '🌧',
-                'Rain Showers': '🌧🌧',
                 'Light Rain': '🌦',
+                'Rain Showers': '🌧🌧',
                 'T-Storms': '⛈'
             }
 
