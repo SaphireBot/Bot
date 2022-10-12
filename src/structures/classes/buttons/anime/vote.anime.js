@@ -84,7 +84,7 @@ export default async (interaction, upOrDown) => {
                 ]
             }]
 
-            if (client.admins.includes(user.id))
+            if (client.admins.includes(interaction?.message?.interaction?.user?.id))
                 buttons.push({
                     type: 1,
                     components: [
