@@ -95,7 +95,7 @@ export default {
         if (user.bot)
             return await interaction.reply({
                 content: `${e.Deny} | Bots não possuem perfil.`,
-                ephemeral
+                ephemeral: true
             })
 
         const data = await Database.User.findOne({ id: user.id })
@@ -163,8 +163,7 @@ export default {
         if (clientData.Titles?.Halloween?.includes(user.id))
             titles.push("🎃 **Halloween 2021**")
 
-        const Titulo = data.Perfil?.Titulo || `Sem título definido \`/perfil options: Editar perfil\``
-        const titulo = data.Perfil?.TitlePerm ? `🔰 ${Titulo}` : `${e.Deny} Não possui título`
+        const titulo = data.Perfil?.Titulo ? `🔰 ${data.Perfil?.Titulo}` : `${e.Deny} Sem título definido`
 
         const Estrelas = {
             Um: data.Perfil.Estrela?.Um,
@@ -282,28 +281,26 @@ export default {
         if (warns.length > 0)
             Embed.footer = { text: `${warns.length} avisos neste servidor` }
 
-        const buttons = [{ type: 1, components: [] }]
-
-        if (ephemeral && user.id !== author.id)
-            buttons[0].components.push({
+        const buttons = [{
+            type: 1, components: [{
                 type: 2,
                 label: `${likes} likes`,
                 emoji: e.Like,
                 custom_id: JSON.stringify({ c: 'like', src: user.id }),
                 style: ButtonStyle.Primary
-            })
+            }]
+        }]
 
         if (author.id === user.id)
             buttons[0].components.push({
                 type: 2,
                 label: 'Editar Perfil',
                 emoji: '📝',
-                custom_id: 'editProfile',
-                style: ButtonStyle.Success,
-                disabled: true
+                custom_id: JSON.stringify({ c: 'perfil', src: 'editProfile' }),
+                style: ButtonStyle.Success
             })
 
-        await interaction.editReply({ embeds: [Embed], components: buttons[0].components.length > 0 ? buttons : [] }).catch(() => { })
+        return await interaction.editReply({ embeds: [Embed], components: buttons }).catch(() => { })
 
     }
 }

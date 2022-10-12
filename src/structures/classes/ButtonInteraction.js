@@ -52,16 +52,22 @@ export default class ButtonInteraction extends Base {
             rifa: [rifa, this.interaction, commandData]
         }[commandData.c]
 
-        if (result) return result[0](...result?.slice(1))
+        if (result) return await result[0](...result?.slice(1))
 
         const byCustomId = {
-            editProfile: [this.editProfile],
-            newProof: [this.newProof],
-            cancelVote: [this.cancelVote],
             WordleGameInfo: [wordleGameInfoModal, this]
         }[this.customId]
 
-        if (byCustomId) return byCustomId[0](byCustomId[1])
+        if (byCustomId) return await byCustomId[0](byCustomId[1])
+
+        const byThis = {
+            newProof: ['newProof'],
+            cancelVote: ['cancelVote'],
+            editProfile: ['editProfile']
+        }[this.customId]
+
+        if (byThis)
+            return await this[byThis]()
 
         return
     }
@@ -138,7 +144,16 @@ export default class ButtonInteraction extends Base {
 
     async editProfile() {
 
-        const data = await this.Database.getUser({ user: this.user, filter: 'Perfil' })
+        const data = await this.Database.User.findOne({ id: this.user.id }, 'Perfil')
+
+        if (!data) {
+            await this.Database.registerUser(this.user)
+            return await this.interaction.reply({
+                content: `${e.Database} | DATABASE | Por favor, tente novamente.`,
+                ephemeral: true
+            })
+        }
+
         const title = data?.Perfil?.Titulo || null
         const job = data?.Perfil?.Trabalho || null
         const niver = data?.Perfil?.Aniversario || null
@@ -160,22 +175,21 @@ export default class ButtonInteraction extends Base {
             modal.components[2].components[0].value = status.length >= 5 ? status : null
         }
 
-        if (data?.Perfil?.TitlePerm)
-            modal.components.unshift({
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "profileTitle",
-                        label: title ? "Alterar título" : "Qual seu título?",
-                        style: 1,
-                        min_length: 3,
-                        max_length: 20,
-                        placeholder: "Escrever novo título",
-                        value: title?.length >= 3 && title?.length <= 20 ? title : null
-                    }
-                ]
-            })
+        modal.components.unshift({
+            type: 1,
+            components: [
+                {
+                    type: 4,
+                    custom_id: "profileTitle",
+                    label: title ? "Alterar título" : "Qual seu título?",
+                    style: 1,
+                    min_length: 3,
+                    max_length: 20,
+                    placeholder: "Escrever novo título",
+                    value: title?.length >= 5 && title?.length <= 20 ? title : null
+                }
+            ]
+        })
 
         return await this.interaction.showModal(modal)
     }

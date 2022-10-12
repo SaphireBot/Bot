@@ -49,7 +49,6 @@ export default model("User", new Schema({
         Set: String
     },
     Perfil: {
-        TitlePerm: Boolean,
         Titulo: String,
         Status: String,
         Sexo: String,
@@ -80,7 +79,6 @@ export default model("User", new Schema({
         Permanent: Boolean
     },
     Slot: {
-        TitlePerm: String,
         Cartas: Number,
         Dogname: String,
         Skip: Number,

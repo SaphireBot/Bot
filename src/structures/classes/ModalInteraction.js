@@ -5,7 +5,7 @@ import {
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import * as moment from 'moment'
+import moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle, ChannelType } from 'discord.js'
 import axios from 'axios'
@@ -1074,50 +1074,73 @@ export default class ModalInteraction extends Base {
     editProfile = async ({ interaction, fields, user }) => {
 
         let data = await this.Database.User.findOne({ id: user.id }, 'Perfil')
-        let title = undefined
+        let title = fields.getTextInputValue('profileTitle')
         let job = fields.getTextInputValue('profileJob')
         let status = fields.getTextInputValue('profileStatus')
         let birth = fields.getTextInputValue('profileBirth')
-        let msg = 'ℹ | Validação concluída. Resultado:'
+        let msg = 'ℹ | Alteração concluída.'
+        const saveData = {}
+        const response = []
 
-        if (data?.Perfil?.TitlePerm)
-            title = fields.getTextInputValue('profileTitle')
-
-        if (title && title !== data?.Perfil?.Titulo) {
-            msg += '\n✅ | Título'
-            this.Database.updateUserData(user.id, 'Perfil.Titulo', title)
-        } else msg += '\n❌ | Título'
+        if (title !== data?.Perfil?.Titulo) {
+            response.push('✅ | Título')
+            saveData['Perfil.Titulo'] = title
+        }
 
         if (job && job !== data?.Perfil?.Trabalho) {
-            msg += '\n✅ | Trabalho'
-            this.Database.updateUserData(user.id, 'Perfil.Trabalho', job)
-        } else msg += '\n❌ | Trabalho'
+            response.push('✅ | Trabalho')
+            saveData['Perfil.Trabalho'] = job
+        }
 
-        if (birth && birth !== data?.Profile?.Aniversario) {
+        if (birth && birth !== data?.Perfil?.Aniversario) {
 
             const date = moment(birth, "DDMMYYYY")
             const formatedData = date.locale('BR').format('L')
 
             if (!date.isValid() || date.isBefore(Date.eightyYears()) || date.isAfter(Date.thirteen()))
-                msg += '\n❌ | Aniversário'
+                response.push('❌ | Aniversário contém uma data inválida')
             else {
-                msg += '\n✅ | Aniversário'
-                this.Database.updateUserData(user.id, 'Perfil.Aniversario', formatedData)
+                response.push('✅ | Aniversário')
+                saveData['Perfil.Aniversario'] = formatedData
             }
 
-        } else msg += '\n❌ | Aniversário'
+        }
 
         if (status && status !== data?.Perfil?.Status) {
-            msg += '\n✅ | Status'
-            this.Database.updateUserData(user.id, 'Perfil.Status', status)
-        } else msg += '\n❌ | Status'
+            response.push('✅ | Status')
+            saveData['Perfil.Status'] = status
+        }
 
+        if (!response.length)
+            return await interaction.reply({
+                content: `${e.Deny} | Nada foi alterado.`,
+                ephemeral: true
+            })
 
-        return await interaction.reply({
-            content: msg,
-            ephemeral: true
-        })
+        return Database.User.updateOne(
+            { id: user.id },
+            { $set: saveData },
+            { upsert: true }
+        )
+            .then(async result => {
+                
+                if (result.modifiedCount === 0)
+                    return await interaction.reply({
+                        content: `${e.Deny} | A alteração do seu perfil não foi efetuada com sucesso.`,
+                        ephemeral: true
+                    })
 
+                return await interaction.reply({
+                    content: msg + '\n' + response.join('\n'),
+                    ephemeral: true
+                })
+            })
+            .catch(async () => {
+                return await interaction.reply({
+                    content: `${e.Deny} | Não foi possível concluir a alteração do seu perfil.`,
+                    ephemeral: true
+                })
+            })
     }
 
     botSugest = async ({ interaction, fields, user, client, guild } = this) => {

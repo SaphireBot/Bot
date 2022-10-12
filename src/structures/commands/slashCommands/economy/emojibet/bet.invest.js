@@ -7,11 +7,6 @@ import { Emojis as e } from "../../../../../util/util.js"
 
 export default async interaction => {
 
-    return await interaction.reply({
-        content: `${e.Loading} | Comando em construção...`,
-        ephemeral: true
-    })
-
     const { guild, user } = interaction
     const emojis = [
         ['1️⃣', '2️⃣', '3️⃣'],
@@ -26,7 +21,7 @@ export default async interaction => {
     const emojisData = await Database.Economy.findOne({ id: client.user.id }, 'Emojis')
     const moeda = await guild.getCoin()
     const components = []
-    
+
     const embeds = emojis.map(emojiArray => {
 
         const selectMenuObject = {
@@ -39,13 +34,15 @@ export default async interaction => {
             }]
         }
 
-        for (let emoji of emojiArray)
+        for (let emoji of emojiArray) {
+
             selectMenuObject.components[0].options.push({
                 label: 'Investir neste emoji',
                 emoji: emoji,
-                description: 'Caso de vitória, terá um retorno de x0.00%',
-                value: JSON.stringify({ c: 'invest', src: emoji }),
+                description: '',
+                value: JSON.stringify({ c: 'invest', src: emoji })
             })
+        }
 
         components.push([
             selectMenuObject,

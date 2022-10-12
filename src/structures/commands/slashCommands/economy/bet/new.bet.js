@@ -58,5 +58,5 @@ export default async ({ interaction, e, amount, client }) => {
         playersCount: playersCount
     })
 
-    return Database.sub(author.id, amount)
+    return Database.subtract(author.id, amount)
 }

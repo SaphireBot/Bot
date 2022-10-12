@@ -8,9 +8,7 @@ export default async (interaction, userId) => {
 
     const { user: author, message } = interaction
     let user = client.users.resolve(userId)
-
-    if (!user)
-        user = await client.users.fetch(searchId, { force: true })
+        || await client.users.fetch(searchId, { force: true })
             .catch(() => null)
 
     if (!user)
@@ -19,8 +17,11 @@ export default async (interaction, userId) => {
             ephemeral: true
         })
 
-    if (user.id === author.id || user.bot)
-        return await interaction.deferUpdate().catch(() => { })
+    if (user.id === author.id)
+        return await interaction.reply({
+            content: `${e.Deny} | Você não pode dar likes para você mesmo.`,
+            ephemeral: true
+        })
 
     const dbData = await Database.User.find({ id: { $in: [author.id, user?.id] } }, 'id Timeouts.Rep Likes')
     const data = {}
@@ -43,14 +44,6 @@ export default async (interaction, userId) => {
         })
 
     const uData = dbData.find(d => d.id === user?.id)
-
-    if (!uData) {
-        Database.registerUser(user)
-        return await interaction.reply({
-            content: `${e.Database} | Eu não encontrei **${user.tag} *\`${user.id}\`***. Acabei de efetuar o registro. Por favor, use o comando novamente.`,
-            ephemeral: true
-        })
-    }
 
     data.userLikes = uData?.Likes || 0
     Database.addItem(user.id, 'Likes', 1)
