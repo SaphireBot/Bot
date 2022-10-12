@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ButtonStyle } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
 
 export default async (interaction, animeName) => {
@@ -45,7 +46,21 @@ export default async (interaction, animeName) => {
 
             return await interaction.editReply({
                 content: `${e.Loading} | Escolha um dos animes que eu encontrei.`,
-                components: [selectMenu]
+                components: [
+                    selectMenu,
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Cancelar',
+                                custom_id: JSON.stringify({ c: 'delete' }),
+                                style: ButtonStyle.Danger,
+                                disabled: animeName ? true : false
+                            }
+                        ]
+                    }
+                ]
             })
 
         })
