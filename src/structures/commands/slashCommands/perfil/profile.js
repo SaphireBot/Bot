@@ -145,7 +145,6 @@ export default {
         const level = data?.Level || 0
         const likes = data?.Likes || 0
         const vip = await user.isVip() ? `${e.VipStar}` : '📃'
-        const estrela = 'Indefinido'
         const titles = []
 
         if (clientData.Administradores?.includes(user.id))
@@ -244,7 +243,7 @@ export default {
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
         Embed.thumbnail = { url: user.displayAvatarURL({ dynamic: true }) }
-        Embed.image = { url: banner }
+        Embed.image = { url: banner || data.Walls?.Set || null }
         Embed.fields = [
             {
                 name: '👤 Pessoal ' + stars,
