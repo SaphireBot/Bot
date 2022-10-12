@@ -158,38 +158,7 @@ export default class ButtonInteraction extends Base {
         const job = data?.Perfil?.Trabalho || null
         const niver = data?.Perfil?.Aniversario || null
         const status = data?.Perfil?.Status || null
-        const modal = this.modals.editProfileModal
-
-        if (job) {
-            modal.components[0].components[0].label = job ? 'Alterar Profissão' : 'Qual sua profissão?'
-            modal.components[0].components[0].value = job.length >= 5 ? job : null
-        }
-
-        if (niver) {
-            modal.components[1].components[0].label = niver ? 'Alterar Aniversário' : 'Digite seu aniversário'
-            modal.components[1].components[0].value = niver.length >= 5 ? niver : null
-        }
-
-        if (status) {
-            modal.components[2].components[0].label = status ? 'Alterar Status' : 'Digite seu novo status'
-            modal.components[2].components[0].value = status.length >= 5 ? status : null
-        }
-
-        modal.components.unshift({
-            type: 1,
-            components: [
-                {
-                    type: 4,
-                    custom_id: "profileTitle",
-                    label: title ? "Alterar título" : "Qual seu título?",
-                    style: 1,
-                    min_length: 3,
-                    max_length: 20,
-                    placeholder: "Escrever novo título",
-                    value: title?.length >= 5 && title?.length <= 20 ? title : null
-                }
-            ]
-        })
+        const modal = this.modals.editProfileModal(title, job, niver, status)
 
         return await this.interaction.showModal(modal)
     }

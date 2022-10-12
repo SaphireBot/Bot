@@ -294,11 +294,19 @@ export default {
         if (author.id === user.id)
             buttons[0].components.push({
                 type: 2,
-                label: 'Editar Perfil',
+                label: 'Editar',
                 emoji: '📝',
                 custom_id: JSON.stringify({ c: 'perfil', src: 'editProfile' }),
                 style: ButtonStyle.Success
             })
+
+        buttons[0].components.push({
+            type: 2,
+            emoji: '🔄',
+            custom_id: JSON.stringify({ c: 'perfil', src: 'refesh' }),
+            style: ButtonStyle.Primary,
+            disabled: true
+        })
 
         return await interaction.editReply({ embeds: [Embed], components: buttons }).catch(() => { })
 

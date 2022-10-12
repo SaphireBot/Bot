@@ -542,162 +542,6 @@ export default new class Modals {
         ]
     }
 
-    editCollection = (collection) => {
-        return {
-            title: "Edit Reaction Role Collection",
-            custom_id: collection.name,
-            components: [
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 4,
-                            custom_id: "name",
-                            label: "Trocar o nome da coleção?",
-                            style: 1,
-                            min_length: 1,
-                            max_length: 20,
-                            placeholder: collection.name
-                        }
-                    ]
-                },
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 4,
-                            custom_id: "embedTitle",
-                            label: "Título de apresentação",
-                            style: 1,
-                            min_length: 1,
-                            max_length: 256,
-                            placeholder: 'Nenhum título encontrado',
-                            required: true,
-                            value: collection.embedTitle || null
-                        }
-                    ]
-                },
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 4,
-                            custom_id: "uniqueSelection",
-                            label: "Esta coleção pode entregar mais de 1 cargo?",
-                            style: 1,
-                            min_length: 3,
-                            max_length: 3,
-                            required: true,
-                            value: collection.uniqueSelection ? 'não' : 'sim'
-                        }
-                    ]
-                } // MAX: 5 Fields
-            ]
-        }
-    }
-
-    newCollection = {
-        title: "New Reaction Roles Collection",
-        custom_id: "newCollectionReactionRoles",
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "name",
-                        label: "Qual o nome da sua nova coleção?",
-                        style: 1,
-                        min_length: 1,
-                        max_length: 20,
-                        placeholder: "Cores",
-                        required: true
-                    }
-                ]
-            }, // MAX: 5 Fields
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "embedTitle",
-                        label: "Título de apresentação",
-                        style: 1,
-                        min_length: 1,
-                        max_length: 256,
-                        placeholder: "Selecione a cor do seu nome",
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "uniqueSelection",
-                        label: "Esta coleção pode entregar mais de 1 cargo?",
-                        style: 1,
-                        min_length: 3,
-                        max_length: 3,
-                        placeholder: "sim | não",
-                        required: true
-                    }
-                ]
-            } // MAX: 5 Fields
-        ]
-    }
-
-    newReactionRoleCreate = {
-        title: "Reaction Role Create",
-        custom_id: "reactionRoleCreateModal",
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "roleData",
-                        label: "ID ou nome exato do cargo",
-                        style: 1,
-                        min_length: 1,
-                        max_length: 100,
-                        placeholder: "123456789123456789 | Cor Azul | Viajante",
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "roleTitle",
-                        label: "Título para o cargo",
-                        style: 1,
-                        min_length: 1,
-                        max_length: 25,
-                        placeholder: "Novidades e Notificações | Sorteios e Prêmios",
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "roleDescription",
-                        label: "Descrição da Reaction Role",
-                        style: 1,
-                        max_length: 50,
-                        placeholder: "Novidades e Notificações | Sorteios e Prêmios"
-                    }
-                ]
-            }
-        ]
-    }
-
     indicateLogomarca = {
         title: "Logomarca Indications",
         custom_id: "indicationsLogomarca",
@@ -758,28 +602,6 @@ export default new class Modals {
         }
     }
 
-    setNewStatus = {
-        title: "Set Status Command",
-        custom_id: "setStatusModal",
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "newStatus",
-                        label: "Digite seu novo status",
-                        style: 1,
-                        min_length: 5,
-                        max_length: 80,
-                        placeholder: "No mundo da lua",
-                        required: true
-                    }
-                ]
-            }
-        ]
-    }
-
     wordleGameNewTry = (messageId, length) => {
         return {
             title: "Wordle Game",
@@ -804,73 +626,38 @@ export default new class Modals {
         }
     }
 
-    editProfileModal = {
-        title: "Edit Profile Information",
-        custom_id: "editProfile",
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "profileJob",
-                        label: "Qual sua profissão?",
-                        style: 1,
-                        min_length: 5,
-                        max_length: 30,
-                        placeholder: "Estoquista, Gamer, Terapeuta..."
-                    }
-                ]
-            }, // MAX: 5 Fields
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "profileBirth",
-                        label: "Digite seu aniversário",
-                        style: 2,
-                        min_length: 10,
-                        max_length: 10,
-                        placeholder: "26/06/1999"
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "profileStatus",
-                        label: "Digite seu novo status",
-                        style: 2,
-                        min_length: 5,
-                        max_length: 100,
-                        placeholder: "No mundo da lua..."
-                    }
-                ]
-            }
-        ]
-    }
-
-    editReactionRole = (roleData) => {
+    editProfileModal = (title, job, niver, status) => {
         return {
-            title: "Edit Role in Reaction Role",
-            custom_id: roleData.roleId,
+            title: "Edit Profile Information",
+            custom_id: "editProfile",
             components: [
                 {
                     type: 1,
                     components: [
                         {
                             type: 4,
-                            custom_id: "roleTitle",
-                            label: "Título do cargo",
+                            custom_id: "profileTitle",
+                            label: title ? "Alterar título" : "Qual seu título?",
                             style: 1,
-                            min_length: 1,
-                            max_length: 25,
-                            placeholder: "Sem título",
-                            required: true,
-                            value: roleData.title || null
+                            min_length: 3,
+                            max_length: 20,
+                            placeholder: "Escrever novo título",
+                            value: title?.length >= 5 && title?.length <= 20 ? title : null
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "profileJob",
+                            label: job ? 'Alterar Profissão' : 'Qual sua profissão?',
+                            style: 1,
+                            min_length: 5,
+                            max_length: 30,
+                            placeholder: "Estoquista, Gamer, Terapeuta...",
+                            value: job.length >= 5 ? job : null
                         }
                     ]
                 }, // MAX: 5 Fields
@@ -879,19 +666,33 @@ export default new class Modals {
                     components: [
                         {
                             type: 4,
-                            custom_id: "roleDescription",
-                            label: "Descrição do Cargo",
+                            custom_id: "profileBirth",
+                            label: niver ? 'Alterar Aniversário' : 'Digite seu aniversário',
                             style: 1,
-                            min_length: 0,
-                            max_length: 50,
-                            placeholder: "Escreva \"null\" para remover a descrição",
-                            required: true,
-                            value: roleData.description || null
+                            min_length: 10,
+                            max_length: 10,
+                            placeholder: "26/06/1999",
+                            value: niver.length === 10 ? niver : null
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "profileStatus",
+                            label: status ? 'Alterar Status' : 'Digite seu novo status',
+                            style: 2,
+                            min_length: 5,
+                            max_length: 100,
+                            placeholder: "No mundo da lua...",
+                            value: status.length >= 5 ? status : null
                         }
                     ]
                 }
             ]
         }
-
     }
+
 }

@@ -1074,10 +1074,10 @@ export default class ModalInteraction extends Base {
     editProfile = async ({ interaction, fields, user }) => {
 
         let data = await this.Database.User.findOne({ id: user.id }, 'Perfil')
-        let title = fields.getTextInputValue('profileTitle')
-        let job = fields.getTextInputValue('profileJob')
-        let status = fields.getTextInputValue('profileStatus')
-        let birth = fields.getTextInputValue('profileBirth')
+        let title = fields.getTextInputValue('profileTitle') || ''
+        let job = fields.getTextInputValue('profileJob') || ''
+        let status = fields.getTextInputValue('profileStatus') || ''
+        let birth = fields.getTextInputValue('profileBirth') || ''
         let msg = 'ℹ | Alteração concluída.'
         const saveData = {}
         const response = []
@@ -1123,7 +1123,7 @@ export default class ModalInteraction extends Base {
             { upsert: true }
         )
             .then(async result => {
-                
+
                 if (result.modifiedCount === 0)
                     return await interaction.reply({
                         content: `${e.Deny} | A alteração do seu perfil não foi efetuada com sucesso.`,
