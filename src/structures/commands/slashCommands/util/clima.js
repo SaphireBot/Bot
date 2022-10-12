@@ -61,7 +61,8 @@ export default {
                 'Clear': 'Com o céu limpo',
                 'Cloudy': 'Com o céu nublado',
                 'Mostly Cloudy': 'Com o céu muito nublado',
-                'Rain Showers': 'Com pandas de chuvas',
+                'Rain': 'Com chuva',
+                'Rain Showers': 'Com pancadas de chuvas',
                 'Light Rain': 'Com chuvas leves',
                 'T-Storms': 'Com tempestades'
             }
@@ -92,7 +93,8 @@ export default {
                 'Clear': '☁',
                 'Cloudy': '🌫',
                 'Mostly Cloudy': '🌫🌫',
-                'Rain Showers': '🌧',
+                'Rain': '🌧',
+                'Rain Showers': '🌧🌧',
                 'Light Rain': '🌦',
                 'T-Storms': '⛈'
             }
