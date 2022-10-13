@@ -173,7 +173,7 @@ export default async interaction => {
                     },
                     {
                         name: `${e.Check} Verificação e Aprovação`,
-                        value: client.staff.map(userId => resolve(userId)).filter(i => i).join('\n') || 'Not Found'
+                        value: [...new Set(client.staff)].map(userId => resolve(userId)).filter(i => i).join('\n') || 'Not Found'
                     },
                     {
                         name: '🐥 Beta Testers',
