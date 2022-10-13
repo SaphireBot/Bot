@@ -373,6 +373,7 @@ export default class ModalInteraction extends Base {
             const embed = {
                 color: client.blue,
                 title: '💭 Nova Indicação',
+                description: 'Preencha os campos com todas as TAG\'s que se encaixam ao anime indicado.',
                 fields: [
                     {
                         name: '📺 Anime',

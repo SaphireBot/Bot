@@ -135,14 +135,19 @@ export default async interaction => {
         const people = [...client.staff, '648389538703736833', '395669252121821227', '140926143783108610']
 
         animes.map(ind => {
-            if (!usersThatIndicate.includes(ind.authorId))
-                usersThatIndicate.push(ind.authorId)
+
+            if (!usersThatIndicate.find(d => d?.id === ind.authorId))
+                usersThatIndicate.push({ id: ind.authorId, animes: 1 })
+
+            const u = usersThatIndicate.find(d => d.id === ind.authorId)
+            u.animes++
 
             if (!people.includes(ind.authorId))
                 people.push(ind.authorId)
 
             return
         })
+
         //                                                                                      André      
         const betaTesters = [Database.Names.Gowther, Database.Names.Makol, Database.Names.San, '648389538703736833']
         //                    André                 Gorniack              Lewd
@@ -179,9 +184,11 @@ export default async interaction => {
                         value: usersThatIndicate.length ?
                             (() => {
                                 return usersThatIndicate
-                                    .map(userId => resolve(userId))
-                                    ?.filter(i => i)
+                                    ?.sort((a, b) => b.animes - a.animes)
+                                    ?.map(userData => ({ tag: resolve(userData.id), animes: userData.animes }))
+                                    ?.filter(i => i.tag)
                                     ?.slice(0, 7)
+                                    ?.map(data => `(${data.animes}) ${data.tag}`)
                                     ?.join('\n')
                                     || 'Not Found\n'
                                     + `${usersThatIndicate.length - 7 > 1
