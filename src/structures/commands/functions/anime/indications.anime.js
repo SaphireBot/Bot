@@ -180,7 +180,7 @@ export default async interaction => {
                         value: betaTesters.map(userId => resolve(userId)).filter(i => i).join('\n') || 'Not Found'
                     },
                     {
-                        name: '😎 Indicações',
+                        name: '📝 Indicações',
                         value: usersThatIndicate.length ?
                             (() => {
                                 return usersThatIndicate
