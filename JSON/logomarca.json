@@ -2150,5 +2150,87 @@
             "censored": null,
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1028833738831958066/images-removebg-preview.png"
         }
+    },
+    {
+        "answers": [
+            "red bull"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1029860259541557248/red_bull2.png?width=544&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1029860259214405632/red_bull.png?width=544&height=408"
+        }
+    },
+    {
+        "answers": [
+            "youtube"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030515797866586243/imagem_2022-10-14_132150008.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "youtube music"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030517048738066493/imagem_2022-10-14_132646665.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "youtube kids"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030517585197928448/imagem_2022-10-14_132854999.png"
+        }
+    },
+    {
+        "answers": [
+            "shazam"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030518226309894204/imagem_2022-10-14_133128768.png"
+        }
+    },
+    {
+        "answers": [
+            "mattel"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1030519839883804783/mattel2.png?width=407&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030519839497928824/mattel.png?width=407&height=408"
+        }
+    },
+    {
+        "answers": [
+            "barbie"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030520113499213984/imagem_2022-10-14_133858039.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "mtv",
+            "music television"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1030521184837713990/mtv2.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030521184468619275/mtv.png"
+        }
+    },
+    {
+        "answers": [
+            "activia"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1030523184895770725/activia2.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1030523184346312765/activia.png"
+        }
     }
 ]

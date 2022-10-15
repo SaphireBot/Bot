@@ -39,7 +39,7 @@ export default async (cachedData, message, userId, finalize) => {
         })
     }
 
-    Database.sub(userId, cachedData.amount)
+    Database.subtract(userId, cachedData.amount)
     if (finalize) return realizeBet(await Database.Cache.Bet.get(`Bet.${message.id}`), message)
 
 }

@@ -103,9 +103,27 @@ export default new class Database extends Models {
         )
     }
 
-    subtract = async (userId, amount) => {
+    subtract = async (userId, amount, message = undefined) => {
 
         if (!userId || isNaN(amount)) return
+
+        if (message)
+            await this.User.updateOne(
+                { id: userId },
+                {
+                    $inc: { Balance: -amount },
+                    $push: {
+                        Transactions: {
+                            $each: [{
+                                time: `${Date.format(0, true)}`,
+                                data: message
+                            }],
+                            $position: 0
+                        }
+                    }
+                },
+                { upsert: true }
+            )
 
         return await this.User.updateOne(
             { id: userId },

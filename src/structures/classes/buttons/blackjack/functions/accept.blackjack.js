@@ -22,7 +22,7 @@ export default async (interaction, message, gameData) => {
                 ephemeral: true
             })
 
-        Database.sub(user.id, gameData.bet, `${e.loss} Apostou ${gameData.bet} Safiras em um *Blackjack Multiplayer*.`)
+        Database.subtract(user.id, gameData.bet, `${e.loss} Apostou ${gameData.bet} Safiras em um *Blackjack Multiplayer*.`)
     }
 
     if (gameData.deniedPlayers.includes(user.id))

@@ -25,7 +25,7 @@ export default async ({ interaction, BlackJackEmojis }) => {
             })
 
         authorMoney += parseInt(userMoney)
-        Database.sub(user.id, betValue, `${e.loss} Gastou ${betValue} Safiras iniciando um *Blackjack Multiplayer*`)
+        Database.subtract(user.id, betValue, `${e.loss} Gastou ${betValue} Safiras iniciando um *Blackjack Multiplayer*`)
     }
 
     for (let i = 0; i < packsAmount; i++)

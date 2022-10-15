@@ -23,7 +23,7 @@ export default async ({ interaction, BlackJackEmojis }) => {
                 ephemeral: true
             })
 
-        Database.sub(user.id, bet)
+        Database.subtract(user.id, bet)
     }
 
     for (let i = 0; i < packs; i++)
