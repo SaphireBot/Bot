@@ -93,11 +93,11 @@ export default {
             embed.fields = [
                 {
                     name: '📜 Mensagem Original',
-                    value: text.limit('MessageEmbedFieldValue')
+                    value: `\`\`\`\n${text}\`\`\``.limit('MessageEmbedFieldValue')
                 },
                 {
                     name: '⚙️ Mensagem Criptografada',
-                    value: text.cript(number).limit('MessageEmbedFieldValue')
+                    value: `\`\`\`\n${text.cript(number)}\`\`\``.limit('MessageEmbedFieldValue')
                 }
             ]
 
@@ -134,11 +134,11 @@ export default {
             embed.fields = [
                 {
                     name: '⚙️ Mensagem Criptografada',
-                    value: text.limit('MessageEmbedFieldValue')
+                    value: `\`\`\`\n${text}\`\`\``.limit('MessageEmbedFieldValue')
                 },
                 {
                     name: '📜 Mensagem Descriptografada',
-                    value: text.descript(number).limit('MessageEmbedFieldValue')
+                    value: `\`\`\`\n${text.descript(number)}\`\`\``.limit('MessageEmbedFieldValue')
                 }
             ]
 
