@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { ShardManager as Shard } from './src/classes/index.js'
 import Statcord from 'statcord.js'
-
+// TODO: ATUALIZAR O STATCORD NO SISTEMA PRINCIPAL
 const { ShardingClient } = Statcord
 const { execArgv, env } = process
 

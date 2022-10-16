@@ -22,7 +22,7 @@ export default {
                     description: 'Texto a ser criptografado.',
                     type: ApplicationCommandOptionType.String,
                     min_length: 2,
-                    max_length: 1015,
+                    max_length: 1000,
                     required: true
                 },
                 {
@@ -30,7 +30,7 @@ export default {
                     description: 'Um senha para descriptografar (1~100)',
                     type: ApplicationCommandOptionType.Integer,
                     min_value: 1,
-                    max_value: 100,
+                    max_value: 1000,
                     required: true
                 }
             ]
@@ -93,13 +93,11 @@ export default {
             embed.fields = [
                 {
                     name: '📜 Mensagem Original',
-                    // value: `\`\`\`\n${text}\`\`\``.limit('MessageEmbedFieldValue')
-                    value: text
+                    value: text.limit('MessageEmbedFieldValue')
                 },
                 {
                     name: '⚙️ Mensagem Criptografada',
-                    // value: `\`\`\`\n${text.cript(number)}\`\`\``.limit('MessageEmbedFieldValue')
-                    value: text.cript(number)
+                    value: text.cript(number).limit('MessageEmbedFieldValue')
                 }
             ]
 
@@ -114,7 +112,7 @@ export default {
                         components: [
                             {
                                 type: 2,
-                                label: 'Copia-Cola',
+                                label: 'Copia e Cola',
                                 custom_id: JSON.stringify({ c: 'cripto', src: 'copy' }),
                                 style: ButtonStyle.Primary
                             }
@@ -136,13 +134,11 @@ export default {
             embed.fields = [
                 {
                     name: '⚙️ Mensagem Criptografada',
-                    // value: `\`\`\`\n${text}\`\`\``.limit('MessageEmbedFieldValue')
-                    value: text
+                    value: text.limit('MessageEmbedFieldValue')
                 },
                 {
                     name: '📜 Mensagem Descriptografada',
-                    // value: `\`\`\`\n${text.descript(number)}\`\`\``.limit('MessageEmbedFieldValue')
-                    value: text.descript(number)
+                    value: text.descript(number).limit('MessageEmbedFieldValue')
                 }
             ]
 
