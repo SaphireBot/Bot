@@ -23,5 +23,5 @@ export default async (interaction, customId) => {
     const check = await checkAndAnalyzeButton(interaction, buttons)
     if (check === null) return
 
-    return await interaction.update({ components: buttons })
+    return await interaction.update({ components: buttons }).catch(() => { })
 }

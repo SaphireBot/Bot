@@ -64,6 +64,12 @@ export default {
                 },
             ]
         },
+        {
+            name: 'test',
+            description: '[admin] Comando de teste',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: []
+        }
     ],
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'

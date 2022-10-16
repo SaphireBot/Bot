@@ -13,7 +13,7 @@ export default async (interaction, emoji, buttons) => {
         '🐒': 1000,
         '🐔': 100,
         '🐦': 500,
-        '⭐': await getData()
+        '⭐': emoji === '⭐' ? await getData() : null
     }
 
     const { user, guild } = interaction
@@ -33,13 +33,14 @@ export default async (interaction, emoji, buttons) => {
     return await interaction.update({
         content: finalText,
         components: buttons
-    })
+    }).catch(() => { })
 
     async function getData() {
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'Raspadinhas')
         deletePrize()
         return clientData.Raspadinhas?.totalPrize || 100
         async function deletePrize() {
+            if (emoji !== '⭐') return
             await Database.Client.updateOne(
                 { id: client.user.id },
                 {

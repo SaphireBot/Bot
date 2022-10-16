@@ -1,5 +1,4 @@
 import { ButtonStyle } from "discord.js"
-import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
 
 export default {
     name: 'pay',
@@ -25,8 +24,21 @@ export default {
 
         const { options, guild, user: author } = interaction
 
-        const moeda = await guild.getCoin()
+        if ((Date.now() - author.createdAt.getTime()) < 2592000000)
+            return await interaction.reply({
+                content: `${e.Deny} | A sua conta no Discord precisa ter pelo menos **30 dias** para efetuar pagamentos.`,
+                ephemeral: true
+            })
+
         const user = options.getUser('member')
+
+        if ((Date.now() - user.createdAt.getTime()) < 2592000000)
+            return await interaction.reply({
+                content: `${e.Deny} | ${user.tag} não pode receber pagamentos pois a conta dele foi criada a menos de 30 dias.`,
+                ephemeral: true
+            })
+
+        const moeda = await guild.getCoin()
 
         if (user.id === client.user.id)
             return await interaction.reply({
