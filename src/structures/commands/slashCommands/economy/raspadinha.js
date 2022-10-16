@@ -9,7 +9,7 @@ const prize = {
     '🐒': 1000,
     '🐔': 100,
     '🐦': 500,
-    '🦋': 7000
+    '⭐': 'Prêmio Acumulado'
 }
 
 export default {
@@ -33,6 +33,10 @@ export default {
             {
                 name: '3 - Prêmios',
                 value: Object.entries(prize).sort((a, b) => a[1] - b[1]).map(value => `${value[0]} ${value[1]} MOEDA`).join('\n')
+            },
+            {
+                name: '⭐ Prêmio Acumulado',
+                value: 'O prêmio acumulado é todo o dinheiro pago em raspadinhas. Uma vez ganho, o prêmio é zerado.'
             }
         ],
         footer: { text: `Per Emoji Chance: ${((1 / Object.keys(prize).length) * 100).toFixed(2)}%` }

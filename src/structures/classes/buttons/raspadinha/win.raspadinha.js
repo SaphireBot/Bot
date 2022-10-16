@@ -13,7 +13,7 @@ export default async (interaction, emoji, buttons) => {
         '🐒': 1000,
         '🐔': 100,
         '🐦': 500,
-        '🦋': 7000
+        '⭐': await getData()
     }
 
     const { user, guild } = interaction
@@ -27,17 +27,28 @@ export default async (interaction, emoji, buttons) => {
         Database.subtract(user.id, winPrize, `${e.loss} Perdeu ${winPrize} Safiras em uma *raspadinha*`)
 
     const finalText = winPrize <= 0
-        ? `🦤 | Você encontrou um sequência de dodos e perdeu 1000 ${moeda}`
+        ? `🦤 | Você encontrou uma sequência de dodos e perdeu 1000 ${moeda}`
         : `${e.Check} | Você ganhou **${winPrize} ${moeda}** achando 3 ${emoji}`
-
-    await Database.Client.updateOne(
-        { id: client.user.id },
-        { $inc: { ['Raspadinhas.totalPrize']: winPrize || 0 } }
-    )
 
     return await interaction.update({
         content: finalText,
         components: buttons
     })
+
+    async function getData() {
+        const clientData = await Database.Client.findOne({ id: client.user.id }, 'Raspadinhas')
+        deletePrize()
+        return clientData.Raspadinhas?.totalPrize || 100
+        async function deletePrize() {
+            await Database.Client.updateOne(
+                { id: client.user.id },
+                {
+                    $set: {
+                        'Raspadinhas.totalPrize': 0
+                    }
+                }
+            )
+        }
+    }
 
 }

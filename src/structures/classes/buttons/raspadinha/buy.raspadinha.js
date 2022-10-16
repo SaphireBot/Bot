@@ -36,7 +36,12 @@ export default async interaction => {
 
             await Database.Client.updateOne(
                 { id: client.user.id },
-                { $inc: { ['Raspadinhas.Bought']: 1 } }
+                {
+                    $inc: {
+                        ['Raspadinhas.Bought']: 1,
+                        ['Raspadinhas.totalPrize']: 100
+                    }
+                }
             )
 
             return buildRaspadinha(interaction)

@@ -6,17 +6,7 @@ export default async (interaction, customId) => {
     const { message } = interaction
     if (!message) return
 
-    const prize = {
-        '🦤': -1000,
-        '🐭': 150,
-        '🦆': 5000,
-        '🐒': 1000,
-        '🐔': 100,
-        '🐦': 500,
-        '🦋': 7000
-    }
-
-    const emojis = Object.keys(prize)
+    const emojis = ['🦤', '🐭', '🦆', '🐒', '🐔', '🐦', '⭐']
     const buttonIndex = {
         a1: 0, a2: 0, a3: 0, a4: 0,
         b1: 1, b2: 1, b3: 1, b4: 1,
