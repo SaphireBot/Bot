@@ -102,3 +102,31 @@ String.prototype.limit = function (param) {
 
     return this.slice(0, limit)
 }
+
+String.prototype.cript = function (key, n = 126) {
+
+    if (!(typeof (key) === 'number' && key % 1 === 0)
+        || !(typeof (key) === 'number' && key % 1 === 0)
+    )
+        return this.toString()
+
+    const chars = this.toString().split('');
+
+    for (let i = 0; i < chars.length; i++) {
+        let c = chars[i].charCodeAt(0);
+
+        if (c <= n)
+            chars[i] = String.fromCharCode((chars[i].charCodeAt(0) + key) % n)
+    }
+
+    return chars.join('');
+}
+
+String.prototype.descript = function (key, n = 126) {
+
+    if (!(typeof (key) === 'number' && key % 1 === 0)
+        || !(typeof (key) === 'number' && key % 1 === 0))
+        return this.toString()
+
+    return this.toString().cript(n - key);
+}

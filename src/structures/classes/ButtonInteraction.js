@@ -63,13 +63,40 @@ export default class ButtonInteraction extends Base {
         const byThis = {
             newProof: ['newProof'],
             cancelVote: ['cancelVote'],
-            editProfile: ['editProfile']
+            editProfile: ['editProfile'],
+            copy: ['copyCripto']
         }[this.customId]
 
         if (byThis)
             return await this[byThis]()
 
         return
+    }
+
+    async copyCripto() {
+
+        const { embeds } = this.message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await this.interaction.update({
+                content: `${e.Deny} | Embed não encontrada.`,
+                components: []
+            }).catch(() => { })
+
+        const textCripto = embed.fields[1]?.value
+
+        if (!textCripto)
+            return await this.interaction.update({
+                content: `${e.Deny} | Texto criptografado não encontrado.`,
+                components: []
+            }).catch(() => { })
+
+        return await this.interaction.reply({
+            content: textCripto,
+            ephemeral: true
+        })
+
     }
 
     async cancelVote() {
