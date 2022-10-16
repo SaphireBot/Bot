@@ -11,6 +11,8 @@ import anime from './buttons/anime/index.anime.js'
 import wordleGameInfoModal from './modals/wordleGame/wordleGame.info.modal.js'
 import channelIndex from './buttons/channel/channel.index.js'
 import rifa from './buttons/rifa/rifa.js'
+import raspadinha from './buttons/raspadinha/index.raspadinha.js'
+
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
         super()
@@ -49,7 +51,8 @@ export default class ButtonInteraction extends Base {
             redit: [ratherAdminEdit, this],
             anime: [anime, this.interaction, commandData],
             channel: [channelIndex, this.interaction, commandData],
-            rifa: [rifa, this.interaction, commandData]
+            rifa: [rifa, this.interaction, commandData],
+            rasp: [raspadinha, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

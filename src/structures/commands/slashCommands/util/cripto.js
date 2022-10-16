@@ -78,9 +78,7 @@ export default {
             title: `👨‍💻 ${client.user.username} Cripto`
         }
 
-        return subCommand === 'criptografar'
-            ? cript()
-            : descript()
+        return subCommand === 'criptografar' ? cript() : descript()
 
         async function cript() {
 

@@ -20,9 +20,10 @@ export default {
     ],
     async execute({ interaction, e, client }) {
 
-        const { options } = interaction
+        const { options, guild } = interaction
         const commandOption = options.getString('command')
         const command = client.slashCommands.get(commandOption)
+        const moeda = await guild.getCoin()
 
         if (commandOption === 'all') return allCommands(interaction)
 
@@ -51,17 +52,21 @@ export default {
                 value: !helpData.permissions || !helpData.permissions?.length
                     ? 'Nenhuma'
                     : helpData.permissions.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ').limit('MessageEmbedFieldValue')
-            })
+            });
+
+        if (helpData.fields.length > 0)
+            helpData.fields = helpData.fields.map(data => ({ name: data.name, value: data.value.replace(/MOEDA/g, moeda) }))
 
         if (helpData.fields.length > 25) helpData.fields.length = 25
 
         return await interaction.reply({
             content: cmdData ? commandMention : null,
             embeds: [{
-                title: `Comando: ${command.name}`,
+                title: helpData.title || `Comando: ${command.name}`,
                 color: Colors[helpData.color] || Colors.Blue,
-                description: helpData.description,
-                fields: [...helpData.fields]
+                description: helpData.description.replace(/\$moeda/g, moeda),
+                fields: [...helpData.fields],
+                footer: helpData.footer || null
             }]
         })
             .catch(async () => await interaction.reply({

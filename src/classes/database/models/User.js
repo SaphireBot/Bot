@@ -81,8 +81,7 @@ export default model("User", new Schema({
     Slot: {
         Cartas: Number,
         Dogname: String,
-        Skip: Number,
-        Raspadinhas: Number
+        Skip: Number
     },
     Walls: {
         Bg: Array,
