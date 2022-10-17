@@ -4,6 +4,30 @@ export default new class Modals {
         return { ...this }
     }
 
+    reportBalance(user) {
+        return {
+            title: "Balance Report Central",
+            custom_id: JSON.stringify({ c: 'reportBalance', src: user.id }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'report',
+                            label: "Explique o que aconteceu",
+                            style: 2,
+                            min_length: 10,
+                            max_length: 4000,
+                            placeholder: "Eu tentei iniciar uma rodada de /blackjack e...",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     ChannelClone(channel) {
         return {
             title: "Clone Channel",

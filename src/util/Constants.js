@@ -13,6 +13,7 @@ const ConfigurationBase = {
     guildDeleteChannelId: "981017074723852328",
     clientErrorChannelId: "1007819488584028180",
     logomarcaIndicateChannelId: "995151748148768839",
+    balaceReportChannelId: "1031388957151330344",
     rifaChannel: "987408171708579870",
     LoteriaChannel: "987408234564452393",
     letterChannelReport: "980997922403541012",

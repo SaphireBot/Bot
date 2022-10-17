@@ -27,6 +27,7 @@ export default class ModalInteraction extends Base {
     submitModalFunctions = async () => {
 
         if (this.customId.includes('channel')) return this.ChannelRedirect(this)
+        if (this.customId.includes('reportBalance')) return this.reportBalance(this)
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
@@ -45,13 +46,62 @@ export default class ModalInteraction extends Base {
             transactionsModalReport: [this.transactionsModalReport],
             botSugest: [this.botSugest],
             serverSugest: [this.serverSugest],
-            serverReport: [this.serverReport],
+            serverReport: [this.serverReport]
         }[this.customId]
 
         if (ModalInteractionFunctions)
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
 
         return
+    }
+
+    async reportBalance({ interaction, fields, user }) {
+
+        const report = fields.getTextInputValue('report')
+
+        const embed = {
+            color: client.blue,
+            title: `📑 Balance Report`,
+            description: report,
+            fields: [
+                {
+                    name: '👤 Usuário',
+                    value: `${user.tag} - \`${user.id}\``
+                }
+            ]
+        }
+
+        const channel = await client.channels.fetch(config.balaceReportChannelId).catch(() => null)
+
+        const linkButton = {
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: channel?.guild?.name || 'Servidor Principal',
+                    url: config.MoonServerLink,
+                    style: ButtonStyle.Link
+                }
+            ]
+        }
+
+        if (!channel) return notSend()
+
+        return channel?.send({ embeds: [embed] })
+            .then(async () => await interaction.reply({
+                content: `${e.Check} | O seu report foi enviado com sucesso.\n${e.Info} | Caso queira acompanhar ou se comunicar com a staff, por favor, entre no meu servidor clicando no botão abaixo.`,
+                components: [linkButton],
+                ephemeral: true
+            }))
+            .catch(() => notSend())
+
+        async function notSend() {
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível obter o canal de envio. Por favor, contacte algum membro da minha staff.`,
+                components: [linkButton],
+                ephemeral: true
+            })
+        }
     }
 
     async ChannelRedirect({ interaction, customId }) {

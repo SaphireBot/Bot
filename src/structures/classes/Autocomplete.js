@@ -89,7 +89,7 @@ export default class Autocomplete extends Base {
             }])
 
         const rifaDocument = await this.Database.Economy.findOne({ id: this.client.user.id }, 'Rifa')
-        
+
         if (!rifaDocument)
             return await this.respond([{
                 name: '[Database Find Document Error (0)] Mongoose Document Not Found',
@@ -659,10 +659,16 @@ export default class Autocomplete extends Base {
     async balanceOptions(value) {
 
         const isStaff = this.client.admins.includes(this.user.id)
-        const options = [{
-            name: 'Esconder só pra mim',
-            value: 'hide'
-        }]
+        const options = [
+            {
+                name: 'Esconder só pra mim',
+                value: 'hide'
+            },
+            {
+                name: 'Reportar um erro/bug no meu dinheiro',
+                value: 'report'
+            }
+        ]
 
         if (isStaff)
             options.push(
