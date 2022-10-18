@@ -1,12 +1,11 @@
-import { Emojis as e } from '../../../../util/util.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import Blackjack from './blackjack/blackjack.class.js'
 
 export default {
     name: 'blackjack',
     description: '[games] Um simples jogo de blackjack',
-    dm_permission: false,
     type: 1,
+    dm_permission: false,
     options: [
         {
             name: 'solo',

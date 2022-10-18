@@ -16,7 +16,7 @@ export default async (interaction, option, user) => {
             ephemeral: true
         })
 
-    if (['add', 'remove', 'delete', 'reconfig'].includes(option)) return
+    if (!['add', 'remove', 'delete', 'reconfig'].includes(option)) return
 
     if (option === 'delete') return deleteBalance()
     if (option === 'report') return await interaction.showModal(Modals.reportBalance(author))
