@@ -33,7 +33,7 @@ export default async (interaction, channel) => {
                     {
                         type: 2,
                         label: 'Cancelar',
-                        custom_id: JSON.stringify({ c: 'channel', src: 'cancel' }),
+                        custom_id: JSON.stringify({ c: 'delete' }),
                         style: ButtonStyle.Danger
                     }
                 ]
