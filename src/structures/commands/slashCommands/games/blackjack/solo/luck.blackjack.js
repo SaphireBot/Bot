@@ -71,14 +71,6 @@ export default async ({ interaction, BlackJackEmojis }) => {
                         custom_id: JSON.stringify({ c: 'bj', src: 'stand' }),
                         disabled: true,
                         style: ButtonStyle.Primary
-                    },
-                    {
-                        type: 2,
-                        label: 'Desistir',
-                        emoji: e.saphireDesespero,
-                        custom_id: JSON.stringify({ c: 'bj', src: 'giveup' }),
-                        disabled: true,
-                        style: ButtonStyle.Danger
                     }
                 ]
             }

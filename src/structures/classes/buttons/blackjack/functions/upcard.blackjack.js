@@ -22,7 +22,6 @@ export default async (interaction, message, gameData) => {
 
     let components = message.components[0].toJSON()
     components.components[1].disabled = false
-    components.components[2].disabled = false
 
     if (atualValue > 21) {
         embed.color = client.red

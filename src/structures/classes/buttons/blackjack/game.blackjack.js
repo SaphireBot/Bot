@@ -32,7 +32,6 @@ export default async (interaction, customId) => {
     switch (customId) {
         case 'upcard': import('./functions/upcard.blackjack.js').then(upcard => upcard.default(interaction, message, gameData)); break;
         case 'stand': import('./functions/stand.blackjack.js').then(stand => stand.default(interaction, message, gameData)); break;
-        case 'giveup': import('./functions/giveup.blackjack.js').then(giveup => giveup.default(interaction, message, gameData)); break;
     }
 
     return
