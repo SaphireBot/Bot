@@ -1,4 +1,3 @@
-// import flag from '../../functions/bandeiras/class.bandeiras.js'
 // import { ApplicationCommandOptionType } from 'discord.js'
 
 // export default {

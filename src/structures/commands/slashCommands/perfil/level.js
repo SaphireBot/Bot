@@ -65,7 +65,7 @@ export default {
         if (changeColor) return defineColor(changeColor)
 
         const bgCode = options.getString('buy_background')
-        if (bgCode) return buyBackground({ interaction, code: bgCode })
+        if (bgCode) return buyBackground({ interaction, code: bgCode, clientData })
 
         const userData = await Database.User.findOne({ id: user.id }, 'Balance Walls Level Xp Color.Set')
         const data = {}

@@ -28,6 +28,6 @@ GuildMember.prototype.isModeratableBy = function (member) {
 
 Object.defineProperty(GuildMember.prototype, 'isAdm', {
     get: function () {
-        return this.permissions.has(PermissionFlagsBits.Administrator)
+        return this.permissions.has(PermissionFlagsBits.Administrator, true)
     }
 })

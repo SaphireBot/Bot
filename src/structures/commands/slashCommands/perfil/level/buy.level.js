@@ -5,7 +5,7 @@ import {
 import fs from 'fs'
 import { Emojis as e } from "../../../../../util/util.js"
 
-export default async ({ interaction, code }) => {
+export default async ({ interaction, code, clientData }) => {
 
     const { user, guild } = interaction
     const vip = await user.isVip()
@@ -26,6 +26,12 @@ export default async ({ interaction, code }) => {
     const image = wallpaperData.Image
     const money = userData?.Balance || 0
     let price = wallpaperData.Price
+
+    if (userData.Walls?.Bg?.includes(code) || clientData?.BackgroundAcess?.includes(user.id))
+        return await interaction.reply({
+            content: `${e.Deny} | Você já possui esse background.`,
+            ephemeral: true
+        })
 
     if (vip)
         price -= parseInt(price * 0.3)

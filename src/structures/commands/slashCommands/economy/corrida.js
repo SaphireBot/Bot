@@ -14,13 +14,6 @@ export default {
     type: 1,
     options: [
         {
-            name: 'value',
-            description: 'Valor a ser apostado',
-            type: ApplicationCommandOptionType.Integer,
-            min_value: 1,
-            required: true
-        },
-        {
             name: 'players',
             description: 'Quantos jogadores pode entrar na corrida',
             type: ApplicationCommandOptionType.Integer,
@@ -49,8 +42,34 @@ export default {
                 {
                     name: '4.5',
                     value: 4.5,
+                },
+                {
+                    name: '5.0',
+                    value: 5.0
+                },
+                {
+                    name: '5.5',
+                    value: 5.5
+                },
+                {
+                    name: '6.0',
+                    value: 6.0
+                },
+                {
+                    name: '6.5',
+                    value: 6.5
+                },
+                {
+                    name: '10.0',
+                    value: 10.0
                 }
             ]
+        },
+        {
+            name: 'value',
+            description: 'Valor a ser apostado',
+            type: ApplicationCommandOptionType.Integer,
+            min_value: 1
         },
         {
             name: 'color',
@@ -70,18 +89,34 @@ export default {
     },
     async execute({ interaction, client, e, guildData }) {
 
-        const { options, user: author, channel } = interaction
+        const { options, user: author, channel, guild } = interaction
 
         const runningChannels = await Database.Cache.Running.get(`${client.shardId}.Channels`)
 
         if (runningChannels?.includes(channel.id))
             return await interaction.reply({
                 content: `${e.Deny} | Já tem uma corrida rolando neste chat. Espere ela acabar para iniciar outra, ok?`,
+                components: guild.members.cache.get(author.id).isAdm
+                    ? [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    emoji: '🔄',
+                                    label: 'Resetar',
+                                    custom_id: JSON.stringify({ c: 'corrida', src: 'reset' }),
+                                    style: ButtonStyle.Primary
+                                }
+                            ]
+                        }
+                    ]
+                    : [],
                 ephemeral: true
             })
 
         const buttons = getButtons()
-        const value = options.getInteger('value')
+        const value = options.getInteger('value') || 0
         const players = options.getInteger('players')
         const limitToReach = options.getNumber('distance')
         const color = Colors[options.getString('color')] || client.blue
@@ -174,40 +209,44 @@ export default {
                         ephemeral: true
                     })
 
-                const userMoney = await user.balance()
+                if (value > 0) {
 
-                if (!userMoney || userMoney < value)
-                    return await int.reply({
-                        content: `${e.Deny} | Você não tem dinheiro o suficiente para entrar nesta corrida.`,
-                        ephemeral: true
-                    })
+                    const userMoney = await user.balance()
 
-                await Database.User.updateOne(
-                    { id: user.id },
-                    {
-                        $inc: {
-                            Balance: -value
-                        },
-                        $push: {
-                            Transactions: {
-                                $each: [{
-                                    time: `${Date.format(0, true)}`,
-                                    data: `${e.loss} Apostou ${value} Safiras em uma corrida de animais`
-                                }],
-                                $position: 0
+                    if (!userMoney || userMoney < value)
+                        return await int.reply({
+                            content: `${e.Deny} | Você não tem dinheiro o suficiente para entrar nesta corrida.`,
+                            ephemeral: true
+                        })
+
+                    await Database.User.updateOne(
+                        { id: user.id },
+                        {
+                            $inc: {
+                                Balance: -value
+                            },
+                            $push: {
+                                Transactions: {
+                                    $each: [{
+                                        time: `${Date.format(0, true)}`,
+                                        data: `${e.loss} Apostou ${value} Safiras em uma corrida de animais`
+                                    }],
+                                    $position: 0
+                                }
                             }
+                        },
+                        {
+                            upsert: true
                         }
-                    },
-                    {
-                        upsert: true
-                    }
-                )
+                    )
+
+                    total += value
+                }
 
                 const buttonsCommand = allButtons()
                 const button = buttonsCommand.find(b => b.custom_id === customId)
                 const animal = button.emoji
 
-                total += value
                 button.disabled = true
                 button.style = ButtonStyle.Primary
 
@@ -235,7 +274,9 @@ export default {
                 if (usersJoined.length >= 2) return await initCorrida()
 
                 await Database.Cache.Running.pull(`${client.shardId}.Channels`, channel.id)
-                Database.add(author.id, value)
+
+                if (value > 0)
+                    Database.add(author.id, value)
 
                 if (r === 'idle')
                     return msg.edit({
@@ -255,16 +296,17 @@ export default {
             await msg.edit({ embeds: [embed], components: [] }).catch(() => { })
 
             if (usersJoined.length < 2) {
-                await Database.Cache.Running.pull(`${client.shardId}.Channels`, ch => ch.id === channel.id)
+                await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
 
-                await Database.User.updateMany(
-                    { id: { $in: usersJoined.map(u => u.id) } },
-                    {
-                        $inc: {
-                            Balance: value
+                if (value > 0)
+                    await Database.User.updateMany(
+                        { id: { $in: usersJoined.map(u => u.id) } },
+                        {
+                            $inc: {
+                                Balance: value
+                            }
                         }
-                    }
-                )
+                    )
 
                 return channel.send({
                     content: `${e.Deny} | A corrida foi iniciada com menos de 2 jogadores.`
@@ -282,9 +324,9 @@ export default {
 
                 for (let player of usersJoined) {
 
-                    let distancePoints = [0.1, 0.4, 0.3, 0.2, 0.1, 0.1, 0.1, 0.5, 0.1]
-                    let distanceIndex = Math.floor(Math.random() * distancePoints.length)
-                    let dots = ['.', '....', '...', '..', '.', '.', '.', '.....', '.'][distanceIndex]
+                    const distancePoints = [0.1, 0.4, 0.3, 0.2, 0.1, 0.1, 0.1, 0.5, 0.1]
+                    const distanceIndex = Math.floor(Math.random() * distancePoints.length)
+                    const dots = ['.', '....', '...', '..', '.', '.', '.', '.....', '.'][distanceIndex]
 
                     player.distance += distancePoints[distanceIndex]
                     player.dots += dots
@@ -309,25 +351,26 @@ export default {
             clearInterval(atualize)
             MessageRunning.delete()
 
-            await Database.Cache.Running.pull(`${client.shardId}.Channels`, ch => ch.id == channel.id)
+            await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
 
-            await Database.User.updateOne(
-                { id: winnerData.id },
-                {
-                    $inc: {
-                        Balance: total
-                    },
-                    $push: {
-                        Transactions: {
-                            $each: [{
-                                time: `${Date.format(0, true)}`,
-                                data: `${e.gain} Ganhou ${total} Safiras em uma corrida de animais`
-                            }],
-                            $position: 0
+            if (total > 0)
+                await Database.User.updateOne(
+                    { id: winnerData.id },
+                    {
+                        $inc: {
+                            Balance: total
+                        },
+                        $push: {
+                            Transactions: {
+                                $each: [{
+                                    time: `${Date.format(0, true)}`,
+                                    data: `${e.gain} Ganhou ${total} Safiras em uma corrida de animais`
+                                }],
+                                $position: 0
+                            }
                         }
                     }
-                }
-            )
+                )
 
             embed.fields[1].value = usersJoined.map((data, i) => {
                 const crown = data.id === winnerData.id ? '👑' : ''

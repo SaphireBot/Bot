@@ -12,6 +12,7 @@ import wordleGameInfoModal from './modals/wordleGame/wordleGame.info.modal.js'
 import channelIndex from './buttons/channel/channel.index.js'
 import rifa from './buttons/rifa/rifa.js'
 import raspadinha from './buttons/raspadinha/index.raspadinha.js'
+import corridaFunctions from './buttons/corrida/reset.corrida.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -47,12 +48,13 @@ export default class ButtonInteraction extends Base {
             bjm: [blackjackMultiplayer, this.interaction, this.customId],
             like: [likePerfil, this.interaction, this.customId],
             pay: [payment, this.interaction, this.customId],
-            rt: [rather, this.interaction, commandData],
+            corrida: [corridaFunctions, this.interaction],
             redit: [ratherAdminEdit, this],
+            rt: [rather, this.interaction, commandData],
             anime: [anime, this.interaction, commandData],
             channel: [channelIndex, this.interaction, commandData],
             rifa: [rifa, this.interaction, commandData],
-            rasp: [raspadinha, this.interaction, commandData]
+            rasp: [raspadinha, this.interaction, commandData],
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
