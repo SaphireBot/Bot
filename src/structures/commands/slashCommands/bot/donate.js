@@ -1,5 +1,4 @@
 import mercadopago from 'mercadopago'
-import Routes from '../../../../api/Routes.js'
 import { Config } from '../../../../util/Constants.js'
 
 export default {
@@ -78,7 +77,7 @@ export default {
                 channel_id: channel.id,
                 message_id: msg.id
             },
-            notification_url: Routes.BaseDomain + Routes.MercadoPagoWebhook,
+            notification_url: process.env.ROUTE_BASE_DOMAIN + process.env.ROUTE_MARCADO_PAGO_WEBHOOK,
             payment_method_id: 'pix',
             payer: { email }
         })
