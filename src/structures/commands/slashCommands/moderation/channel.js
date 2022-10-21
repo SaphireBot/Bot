@@ -77,7 +77,7 @@ export default {
 
         const { options, guild, channel: currentChannel } = interaction
 
-        if (!guild.clientHasPermission(Permissions.ManageChannels))
+        if (!await guild.clientHasPermission(Permissions.ManageChannels))
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ManageChannels}\`** para liberar este comando.`,
                 ephemeral: true
