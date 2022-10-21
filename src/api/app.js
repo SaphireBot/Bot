@@ -31,7 +31,6 @@ app.get(Routes.Database, (req, res, next) => {
     .split(':')
 
   if (login && password && login === auth.login && password === auth.password) {
-
     req.headers.authorization = null
     return next()
   }
@@ -41,7 +40,7 @@ app.get(Routes.Database, (req, res, next) => {
 
 })
 
-app.get(Routes.Database, async (req, res) => {
+app.get(Routes.Database, async (_, res) => {
   const allData = await Database.Cache.General.all()
   return res.send(allData)
 })

@@ -681,7 +681,7 @@ export default new class Modals {
                             min_length: 5,
                             max_length: 30,
                             placeholder: "Estoquista, Gamer, Terapeuta...",
-                            value: job.length >= 5 ? job : null
+                            value: job?.length >= 5 ? job : null
                         }
                     ]
                 }, // MAX: 5 Fields
