@@ -9,10 +9,10 @@ import { CodeGenerator } from '../../functions/plugins/plugins.js'
 
 export default async (userId) => {
 
-    if (!userId) return
+    if (!userId) return false
 
-    const user = await client.users.fetch(userId)
-    if (!user) return
+    const user = await client.users.fetch(userId).catch(() => null)
+    if (!user) return false
     giveRewards()
 
     const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
@@ -29,22 +29,21 @@ export default async (userId) => {
 
     const data = cachedData?.find(data => data?.userId === userId)
     await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.userId === userId)
-    if (!data) return giveRewards()
+    if (!data) return await giveRewards()
 
     const channel = await client.channels.fetch(data.channelId)
-    if (!channel) return
+    if (!channel) return false
 
     const message = await channel.messages.fetch(data.messageId)
-    if (!message) return
+    if (!message) return false
 
     const embed = message.embeds[0]?.data
-    if (!embed) return
+    if (!embed) return false
 
     embed.description = `${e.Check} | Recebi seu voto e te dei **+5000 ${await channel.guild.getCoin()}** e **+1000 XP ${e.RedStar}**`
     embed.color = client.green
 
     if (data.isReminder) {
-
         new Database.Reminder({
             id: CodeGenerator(7).toUpperCase(),
             userId: userId,
@@ -56,14 +55,15 @@ export default async (userId) => {
         }).save()
 
         embed.description += `\n${e.Notification} | Como você ativou o lembrete automático, vou te lembrar ${Date.GetTimeout(43200000, Date.now(), 'R')}`
-
     }
 
-    return message.edit({ embeds: [embed], components: [] }).catch(() => { })
+    return message.edit({ embeds: [embed], components: [] })
+        .then(() => true)
+        .catch(() => false)
 
     async function giveRewards() {
 
-        await Database.User.updateOne(
+        return await Database.User.updateOne(
             { id: userId },
             {
                 $inc: {
@@ -82,6 +82,8 @@ export default async (userId) => {
             },
             { upsert: true }
         )
+            .then(() => true)
+            .catch(() => false)
 
     }
 }
