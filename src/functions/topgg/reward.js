@@ -2,7 +2,6 @@ import {
     SaphireClient as client,
     Database
 } from '../../classes/index.js'
-import { WebhookClient } from 'discord.js'
 import { Emojis as e } from '../../util/util.js'
 import { Api } from '@top-gg/sdk'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
@@ -17,14 +16,6 @@ export default async (userId) => {
 
     const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
     const votes = await TopGGApi.getVotes() || []
-    const webhook = new WebhookClient({ url: process.env.PRIMARY_WEEBHOOK_LINK })
-
-    webhook.send({
-        content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
-        avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
-        username: 'Top GG Vote Notification'
-    })
-
     const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
 
     const data = cachedData?.find(data => data?.userId === userId)
@@ -58,7 +49,13 @@ export default async (userId) => {
     }
 
     return message.edit({ embeds: [embed], components: [] })
-        .then(() => true)
+        .then(() => {
+            return {
+                content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
+                avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
+                username: 'Top GG Vote Notification'
+            }
+        })
         .catch(() => false)
 
     async function giveRewards() {
@@ -82,7 +79,13 @@ export default async (userId) => {
             },
             { upsert: true }
         )
-            .then(() => true)
+            .then(() => {
+                return {
+                    content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
+                    avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
+                    username: 'Top GG Vote Notification'
+                }
+            })
             .catch(() => false)
 
     }
