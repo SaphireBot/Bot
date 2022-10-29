@@ -8,7 +8,7 @@ const { execArgv, env } = process
 const ShardManager = new Shard('./index.js', { execArgv })
 
 new ShardingClient({
-    key: env.STATCORD_KEY,
+    key: env.STATCORD_TOKEN,
     manager: ShardManager,
     postCpuStatistics: true,
     postMemStatistics: true,

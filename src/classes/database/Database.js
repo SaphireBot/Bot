@@ -2,7 +2,6 @@ import * as fs from 'fs'
 import Mongoose from 'mongoose'
 import Cache from './CacheManager.js'
 import 'dotenv/config'
-import { Config as config } from '../../util/Constants.js'
 import { Models, SaphireClient as client } from '../index.js'
 const { connect } = Mongoose
 
@@ -60,7 +59,7 @@ export default new class Database extends Models {
 
     MongoConnect = async (client) => {
 
-        return connect(process.env.MONGODB_LINK_CONNECTION, {
+        return connect(process.env.DATABASE_LINK_CONNECTION, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
@@ -417,30 +416,28 @@ export default new class Database extends Models {
             { upsert: true }
         )
 
-        const channel = await client.channels.fetch(config.LogChannelId)
-        const fetchWebhook = await channel.fetchWebhooks()
-        const webhook = fetchWebhook.find(web => web.name === 'Saphire Database Logs')
+        const owner = await guild.fetchOwner().catch(() => null)
 
-        if (!webhook) return
-
-        const owner = await guild.fetchOwner()
-
-        return await webhook.send({
-            embeds: [{
-                color: client.green,
-                title: `${emojis.Loud} Servidor Adicionado`,
-                fields: [
-                    {
-                        name: 'Status',
-                        value: `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`
-                    },
-                    {
-                        name: 'Register',
-                        value: `O servidor ${guild.name} foi registrado com sucesso!`
-                    }
-                ]
-            }]
-        }).catch(console.log)
+        return client.sendWebhook(
+            process.env.WEBHOOK_ERROR_REPORTER,
+            {
+                username: "[Saphire] Saphire Database Logs",
+                embeds: [{
+                    color: client.green,
+                    title: `${emojis.Loud} Servidor Adicionado`,
+                    fields: [
+                        {
+                            name: 'Status',
+                            value: `**Dono:** ${owner.user.tag || '`Not Found`'} *\`(${owner.user.id || '0'})\`*\n**Membros:** ${guild.memberCount}`
+                        },
+                        {
+                            name: 'Register',
+                            value: `O servidor ${guild.name} foi registrado com sucesso!`
+                        }
+                    ]
+                }]
+            }
+        )
 
     }
 

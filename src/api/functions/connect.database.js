@@ -4,7 +4,7 @@ const { connect } = Mongoose
 
 export default async () => {
 
-    return connect(process.env.MONGODB_LINK_CONNECTION, {
+    return connect(process.env.DATABASE_LINK_CONNECTION, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })

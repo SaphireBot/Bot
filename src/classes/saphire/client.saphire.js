@@ -11,6 +11,7 @@ import PollManager from '../../functions/update/polls/poll.manager.js'
 import mercadopago from 'mercadopago'
 import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
 import uncaughtException from '../modules/errors/process/uncaughtException.js'
+import axios from 'axios'
 
 const { AutoPoster } = TopGG
 
@@ -169,5 +170,22 @@ export default new class SaphireClient extends Client {
         if (clientData.Administradores) this.admins = [...clientData.Administradores]
         if (clientData.Moderadores) this.mods = [...clientData.Moderadores]
         this.staff = [...this.admins, ...this.mods]
+    }
+
+    async sendWebhook(webhookUrl, data) {
+
+        return axios.post(
+            process.env.ROUTE_WEBHOOK_SENDER,
+            {
+                webhookUrl,
+                ...data
+            },
+            {
+                headers: {
+                    authorization: process.env.WEBHOOK_SENDER_AUTHORIZATION
+                }
+            }
+        )
+            .catch(console.log)
     }
 }
