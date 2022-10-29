@@ -419,7 +419,7 @@ export default new class Database extends Models {
         const owner = await guild.fetchOwner().catch(() => null)
 
         return client.sendWebhook(
-            process.env.WEBHOOK_ERROR_REPORTER,
+            process.env.WEBHOOK_DATABASE_LOGS,
             {
                 username: "[Saphire] Saphire Database Logs",
                 embeds: [{
