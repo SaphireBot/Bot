@@ -1,5 +1,4 @@
 import { Emojis as e } from "../../../../../util/util.js"
-import { Config as config } from "../../../../../util/Constants.js"
 import { SaphireClient as client } from "../../../../../classes/index.js"
 import { ButtonStyle } from "discord.js"
 import fs from 'fs'
@@ -88,6 +87,7 @@ export default async interaction => {
                 await deleteWallpaper()
                 if (index >= animeData.length) index = animeData.length - 1
             }
+
             if (customId === 'cancel') return collector.stop()
 
             if (customId === 'right') {
@@ -132,41 +132,28 @@ export default async interaction => {
     }
 
     async function success() {
+        return client.sendWebhook(
+            process.env.WEBHOOK_DATABASE_PACKAGE,
+            {
+                username: "[Saphire] Saphire's Database",
+                embeds: [{
+                    color: client.blue,
+                    title: '🚮 Wallpaper deletado',
+                    fields: [
+                        {
+                            name: '📺 Anime',
+                            value: `\`${anime}\``
+                        },
+                        {
+                            name: '👤 Autor',
+                            value: `${user.tag} - \`${user.id}\``
+                        }
+                    ],
+                    image: { url: animeData[index] }
+                }]
+            }
+        ).catch(() => { })
 
-        const guild = await client.guilds.fetch(config.guildPackageId).catch(() => null)
-        if (!guild) return
-
-        const channelLogs = guild.channels.cache.get(config.packageLogs)
-        if (!channelLogs) return
-
-        const webhooks = await channelLogs.fetchWebhooks() || []
-        const webhook = webhooks.find(wh => wh?.name === 'Saphire\'s Database')
-            || await channelLogs.createWebhook({
-                name: 'Saphire\'s Database',
-                avatar: config.PackageLogsWebhookProfileIcon,
-                reason: 'Nenhuma webhook encontrada'
-            })
-                .catch(() => null)
-
-        if (!webhook) return
-
-        return webhook.send({
-            embeds: [{
-                color: client.blue,
-                title: '🚮 Wallpaper deletado',
-                fields: [
-                    {
-                        name: '📺 Anime',
-                        value: `\`${anime}\``
-                    },
-                    {
-                        name: '👤 Autor',
-                        value: `${user.tag} - \`${user.id}\``
-                    }
-                ],
-                image: { url: animeData[index] }
-            }]
-        })
     }
 
 }

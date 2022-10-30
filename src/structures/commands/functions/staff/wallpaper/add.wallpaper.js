@@ -1,5 +1,4 @@
 import { Emojis as e } from "../../../../../util/util.js"
-import { Config as config } from "../../../../../util/Constants.js"
 import { SaphireClient as client } from "../../../../../classes/index.js"
 import fs from 'fs'
 
@@ -63,45 +62,32 @@ export default async interaction => {
                 }],
                 ephemeral: true
             })
+
             return success()
         }
     )
 
     async function success() {
-
-        const guild = await client.guilds.fetch(config.guildPackageId).catch(() => null)
-        if (!guild) return
-
-        const channelLogs = guild.channels.cache.get(config.packageLogs)
-        if (!channelLogs) return
-
-        const webhooks = await channelLogs.fetchWebhooks() || []
-        const webhook = webhooks.find(wh => wh?.name === 'Saphire\'s Database')
-            || await channelLogs.createWebhook({
-                name: 'Saphire\'s Database',
-                avatar: config.PackageLogsWebhookProfileIcon,
-                reason: 'Nenhuma webhook encontrada'
-            })
-                .catch(() => null)
-
-        if (!webhook) return
-
-        return webhook.send({
-            embeds: [{
-                color: client.blue,
-                title: '📥 Novo wallpaper adicionado',
-                fields: [
-                    {
-                        name: '📺 Anime',
-                        value: anime
-                    },
-                    {
-                        name: '👤 Autor',
-                        value: `${user.tag} - \`${user.id}\``
-                    }
-                ],
-                image: { url }
-            }]
-        })
+        return client.sendWebhook(
+            process.env.WEBHOOK_DATABASE_PACKAGE,
+            {
+                username: "[Saphire] Saphire's Database",
+                embeds: [{
+                    color: client.blue,
+                    title: '📥 Novo wallpaper Adicionado',
+                    fields: [
+                        {
+                            name: '📺 Anime',
+                            value: anime
+                        },
+                        {
+                            name: '👤 Autor',
+                            value: `${user.tag} - \`${user.id}\``
+                        }
+                    ],
+                    image: { url }
+                }]
+            }
+        ).catch(() => { })
     }
 }
