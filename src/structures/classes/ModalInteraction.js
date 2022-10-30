@@ -318,49 +318,30 @@ export default class ModalInteraction extends Base {
 
         const bug = fields.getTextInputValue('bug')
         const description = fields.getTextInputValue('description')
-        const errorChannel = await client.channels.fetch(config.clientErrorChannelId).catch(() => null)
 
-        if (!errorChannel)
-            return await interaction.reply({
-                content: `${e.Deny} | O canal de report não foi encontrado.`,
-                ephemeral: true
-            })
-
-        const fetchWebhook = await errorChannel.fetchWebhooks().catch(() => [])
-        const webhook = fetchWebhook.find(web => web.name === client.user.id)
-            || await channelLogs.createWebhook({
-                name: client.user.id,
-                avatar: config.ErrorWebhookProfileIcon,
-                reason: 'Nenhuma webhook encontrada'
-            })
-                .catch(() => null)
-
-        if (!webhook)
-            return await interaction.reply({
-                content: `${e.Deny} | A webhook de envio não foi encontrada.`,
-                ephemeral: true
-            })
-
-        const sended = await webhook.send({
-            avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1017604411603820575/questao1.png?width=484&height=484',
-            username: 'QUIZ | Logomarca Reporter',
-            embeds: [{
-                color: client.red,
-                title: '💭 Error Reporter | Logomarca',
-                description: description,
-                fields: [
-                    {
-                        name: '✍ Erro reportado',
-                        value: bug
-                    },
-                    {
-                        name: '👤 Usuário',
-                        value: `${user.tag} - \`${user.id}\``
-                    }
-                ]
-            }],
-            fetchReply: true
-        }).catch(() => null)
+        const sended = await client.sendWebhook(
+            process.env.WEBHOOK_ERROR_REPORTER,
+            {
+                avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1017604411603820575/questao1.png?width=484&height=484',
+                username: '[Saphire] QUIZ | Logomarca Reporter',
+                embeds: [{
+                    color: client.red,
+                    title: '💭 Error Reporter | Logomarca',
+                    description: description,
+                    fields: [
+                        {
+                            name: '✍ Erro reportado',
+                            value: bug
+                        },
+                        {
+                            name: '👤 Usuário',
+                            value: `${user.tag} - \`${user.id}\``
+                        }
+                    ]
+                }],
+                fetchReply: true
+            }
+        ).catch(() => null)
 
         if (!sended)
             return await interaction.reply({
