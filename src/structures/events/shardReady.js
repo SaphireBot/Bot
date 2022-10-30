@@ -1,7 +1,16 @@
-// import { SaphireClient as client } from '../../classes/index.js'
+import {
+    SaphireClient as client
+} from "../../classes/index.js";
+import { Emojis as e } from "../../util/util.js";
 
-// client.on('shardCreate', () => {
-//     const allServers = client.shard.broadcastEval(c => c.guilds.cache.size)
-//     const serversCount = allServers.reduce((acc, guildSize) => acc + guildSize, 0)
-//     return client.user.setPresence({ activities: [{ name: `${client.slashCommands.size || 0} comandos em ${serversCount} servidores [Shard ${client.shard.ids.at(-1)}]` }], status: 'idle' })
-// })
+client.on('shardReady', async shardId => {
+
+    return await client.sendWebhook(
+        process.env.WEBHOOK_STATUS,
+        {
+            username: '[Saphire] Connection Status',
+            content: `${e.Check} | A **Shard ${shardId}** está online.`
+        }
+    ).catch(() => { })
+
+})

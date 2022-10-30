@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import { Client, Collection } from 'discord.js'
-import { ClientOptions } from '../../util/util.js'
+import { Client, Collection, Guild } from 'discord.js'
+import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import { Database, Discloud } from '../index.js'
@@ -127,6 +127,8 @@ export default new class SaphireClient extends Client {
 
         await super.login()
         const discloudResult = await Discloud.login()
+            .then(() => "Discloud Host API Logged")
+            .catch(() => "Discloud Host API Logged Failed")
 
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
@@ -139,14 +141,22 @@ export default new class SaphireClient extends Client {
         const slashCommandsResponse = await slashCommand(this)
 
         await Database.Cache.clearTables(`${this.shardId}`)
-        GiveawayManager.setGiveaways()
+        // GiveawayManager.setGiveaways()
         PollManager.setPolls()
         await automaticSystems()
 
         const commands = await this.application.commands.fetch()
-        this.slashCommandsData.push(...commands.map(cmd => ({ name: cmd.name, id: cmd.id })))
+        this.slashCommandsData.push(...commands.map(cmd => ({ name: cmd.name, id: cmd.id, description: cmd.description })))
 
-        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse} `)
+        await this.sendWebhook(
+            process.env.WEBHOOK_STATUS,
+            {
+                username: `[${this.canaryId === this.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
+                content: `${e.Check} | **Shard ${this.shardId + 1} Online**\n${e.Database} | ${databaseResponse}\n${e.discloud} | ${discloudResult}\n${e.slash} | ${slashCommandsResponse}\n${e.topgg} | Top.GG API Connected\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`
+            }
+        ).catch(console.log)
+
+        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse}`)
     }
 
     /**
@@ -188,5 +198,25 @@ export default new class SaphireClient extends Client {
         )
             .then(() => true)
             .catch(err => err)
+    }
+
+    async getGuild(guildId, newGuild) {
+
+        const guildData = await axios.get(
+            `https://discord.com/api/v10/guilds/${guildId}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bot ${process.env.DISCORD_TOKEN}`
+                }
+            }
+        )
+            .then(g => g.data)
+            .catch(() => null)
+
+        if (!guildData) return null
+
+        if (newGuild)
+            return new Guild(this, guildData)
     }
 }
