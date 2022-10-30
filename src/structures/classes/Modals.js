@@ -696,7 +696,7 @@ export default new class Modals {
                             min_length: 10,
                             max_length: 10,
                             placeholder: "26/06/1999",
-                            value: niver.length === 10 ? niver : null
+                            value: niver?.length === 10 ? niver : null
                         }
                     ]
                 },
@@ -711,7 +711,7 @@ export default new class Modals {
                             min_length: 5,
                             max_length: 100,
                             placeholder: "No mundo da lua...",
-                            value: status.length >= 5 ? status : null
+                            value: status?.length >= 5 ? status : null
                         }
                     ]
                 }

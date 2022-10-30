@@ -43,7 +43,7 @@ export default async interaction => {
         return responseMessage += `\n${e.Check} | O usuário ${user.tag} - \`${user.id}\` foi registrado com sucesso no banco de dados.`
     }
 
-    async function registerServer() {
+    async function registerServer(serverId) {
 
         if (!serverId) return
 
