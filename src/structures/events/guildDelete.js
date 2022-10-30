@@ -2,9 +2,7 @@ import {
     SaphireClient as client,
     Database
 } from '../../classes/index.js'
-import { Config as config } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
-import axios from 'axios'
 
 client.on('guildDelete', async guild => {
 

@@ -186,6 +186,7 @@ export default new class SaphireClient extends Client {
                 }
             }
         )
-            .catch(console.log)
+            .then(() => true)
+            .catch(err => err)
     }
 }

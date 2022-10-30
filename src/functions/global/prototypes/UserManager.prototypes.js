@@ -31,7 +31,8 @@ UserManager.prototype.all = async (inFlat, toDefine) => {
     if (!looped) {
         await Database.Cache.General.set('Looped', true)
         for await (let guildRaw of client.allGuilds) {
-            const guild = await client.guilds.fetch(guildRaw.id)
+            const guild = await client.guilds.fetch(guildRaw.id).catch(() => null)
+            if (!guild) continue
             await guild.members.fetch()
             continue
         }

@@ -1,11 +1,10 @@
-import { ButtonStyle, makeError } from 'discord.js'
+import { ButtonStyle } from 'discord.js'
 import {
     Config as config,
     ErrorsToIgnore,
     ErrorResponse
 } from '../../../util/Constants.js'
 import { Emojis as e } from '../../../util/util.js'
-import createWebhook from './functions/createWebhook.errors.js'
 import reply from './functions/reply.errors.js'
 import { ChannelType } from 'discord.js'
 
@@ -20,19 +19,8 @@ export default
         const { commandName, commandId } = interaction
         const isTextChannel = channel.type === ChannelType.GuildText
 
-        const centralGuild = await client.guilds.fetchGuild(config.guildId)
-        if (!centralGuild) return
-
-        const channelReporter = centralGuild.channels.cache.get(config.clientErrorChannelId)
-        if (!channelReporter) return
-
         const errorCode = err.code
         if (ErrorsToIgnore.includes(errorCode)) return reply(interaction, ErrorResponse[errorCode])
-
-        const webhooks = await channelReporter.fetchWebhooks()
-        const webhook = webhooks.find(wh => wh?.name === client.user.id)
-            || await createWebhook(channelReporter, client.user.id, config.ErrorWebhookProfileIcon)
-                .catch(() => null)
 
         const moeda = await guild?.getCoin() || `${e.Coin} Safiras`
 
@@ -60,45 +48,48 @@ export default
 
         const owner = await client.users.fetch(config.ownerId).catch(() => null)
 
-        owner?.send({
-            embeds: [{
-                color: client.red,
-                title: `${e.Loud} Error Handler | Interaction Command`,
-                description: `\`\`\`js\n${err.stack?.slice(0, 4000)}\`\`\``,
-                fields: [
-                    {
-                        name: '👤 Author',
-                        value: `${user} | ${user?.tag} | *\`${user.id}\`*`
-                    },
-                    {
-                        name: '✍ Locale',
-                        value: isTextChannel ? `Channel: ${channel} - ${channel?.name}` : 'Direct Messages'
-                    },
-                    {
-                        name: '⚙ Command',
-                        value: `</${commandName}${interaction?.options.getSubcommandGroup() ? ` ${interaction?.options.getSubcommandGroup()}` : ''}${interaction?.options.getSubcommand(false) ? ` ${interaction?.options.getSubcommand(false)}` : ''}:${commandId}>`,
-                        inline: true
+        if (owner)
+            owner?.send({
+                embeds: [{
+                    color: client.red,
+                    title: `${e.Loud} Error Handler | Interaction Command`,
+                    description: `\`\`\`js\n${err.stack?.slice(0, 4000)}\`\`\``,
+                    fields: [
+                        {
+                            name: '👤 Author',
+                            value: `${user} | ${user?.tag} | *\`${user.id}\`*`
+                        },
+                        {
+                            name: '✍ Locale',
+                            value: isTextChannel ? `Channel: ${channel} - ${channel?.name}` : 'Direct Messages'
+                        },
+                        {
+                            name: '⚙ Command',
+                            value: `</${commandName}${interaction?.options.getSubcommandGroup() ? ` ${interaction?.options.getSubcommandGroup()}` : ''}${interaction?.options.getSubcommand(false) ? ` ${interaction?.options.getSubcommand(false)}` : ''}:${commandId}>`,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: `Error Code: ${err.code || 'No error code'}`
                     }
-                ],
-                footer: {
-                    text: `Error Code: ${err.code || 'No error code'}`
-                }
-            }],
-            components: ChannelInvite
-                ? [{
-                    type: 1,
-                    components: [{
-                        type: 2,
-                        label: guild.name,
-                        style: ButtonStyle.Link,
-                        url: `https://discord.gg/${ChannelInvite.code}`
+                }],
+                components: ChannelInvite
+                    ? [{
+                        type: 1,
+                        components: [{
+                            type: 2,
+                            label: guild.name,
+                            style: ButtonStyle.Link,
+                            url: `https://discord.gg/${ChannelInvite.code}`
+                        }]
                     }]
-                }]
-                : []
-        }).catch(console.log)
+                    : []
+            }).catch(console.log)
 
-        if (webhook)
-            webhook.send({
+        client.sendWebhook(
+            process.env.WEBHOOK_DATABASE_LOGS,
+            {
+                username: `[Saphire] Error Reporter`,
                 embeds: [{
                     color: client.red,
                     title: `${e.Loud} Error Handler | Interaction Command`,
@@ -122,20 +113,18 @@ export default
                     footer: {
                         text: `Error Code: ${err.code || 'No error code'}`
                     }
-                }],
-                username: `${client.user.username} Error Reporter`
-            }).catch(() => { })
+                }]
+            }
+        )
 
         Database.add(user.id, 1500, `${e.gain} Ganhou 1500 Safiras descobrindo um bug no comando *${commandName}*`)
 
         return await interaction.reply({
             content: `${e.Warn} | Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.gain} | Te dei **+1500 ${moeda}** por ter descoberto esse bug.`,
             ephemeral: true
-        }).catch(async () => {
-            return await interaction.followUp({
-                content: `${e.Warn} | Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.gain} | Te dei **+1500 ${moeda}** por ter descoberto esse bug.`,
-                ephemeral: true
-            }).catch(() => { })
-        })
+        }).catch(async () => await interaction.followUp({
+            content: `${e.Warn} | Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.gain} | Te dei **+1500 ${moeda}** por ter descoberto esse bug.`,
+            ephemeral: true
+        }).catch(() => { }))
 
     }
