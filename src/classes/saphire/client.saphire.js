@@ -146,7 +146,11 @@ export default new class SaphireClient extends Client {
         await automaticSystems()
 
         const commands = await this.application.commands.fetch()
-        this.slashCommandsData.push(...commands.map(cmd => ({ name: cmd.name, id: cmd.id, description: cmd.description })))
+        this.slashCommandsData.push(...commands.map(cmd => ({
+            name: cmd.name,
+            id: cmd.id,
+            description: cmd.description || "Não possui"
+        })))
 
         await this.sendWebhook(
             process.env.WEBHOOK_STATUS,
