@@ -1,5 +1,4 @@
 const ConfigurationBase = {
-    prefix: "-",
     ownerId: "451619591320371213",
     designerId: "830226550116057149",
     contentManagerId: "315297741406339083",
