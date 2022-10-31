@@ -158,7 +158,7 @@ export default new class SaphireClient extends Client {
                 username: `[${this.canaryId === this.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
                 content: `${e.Check} | **Shard ${this.shardId + 1} Online**\n${e.Database} | ${databaseResponse}\n${e.discloud} | ${discloudResult}\n${e.slash} | ${slashCommandsResponse}\n${e.topgg} | Top.GG API Connected\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`
             }
-        ).catch(console.log)
+        )
 
         return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse}`)
     }
@@ -188,7 +188,7 @@ export default new class SaphireClient extends Client {
 
     async sendWebhook(webhookUrl, data) {
 
-        return axios.post(
+        return await axios.post(
             process.env.ROUTE_WEBHOOK_SENDER,
             {
                 webhookUrl,
