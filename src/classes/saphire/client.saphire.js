@@ -56,7 +56,7 @@ export default new class SaphireClient extends Client {
 
         /**
          * @param Nothing
-         * @returns Um array com todos os serviddores de todas as Shards
+         * @returns Um array com todos os servidores de todas as Shards
          * @example [guild1, guild2, guild3, guild4, guild5, guild6]
          */
         this.allGuilds = []

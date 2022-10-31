@@ -25,8 +25,8 @@ GuildManager.prototype.fetchGuild = async function (dataToSearch) {
  * @example <Client>.guilds.all() [[guild1, guild2, guild3], [guild4, guild5, guild6]]
  * @example <Client>.guilds.all(true) [guild1, guild2, guild3, guild4, guild5, guild6]
  */
-// GuildManager.prototype.all = async (inFlat, toDefine) => {
-//     const allGuilds = await client.shard.fetchClientValues('guilds.cache')
-//     if (toDefine) return client.allGuilds = allGuilds.flat()
-//     return inFlat ? allGuilds.flat() : allGuilds
-// }
+GuildManager.prototype.all = async (inFlat, toDefine) => {
+    const allGuilds = await client.shard.fetchClientValues('guilds.cache')
+    if (toDefine) return client.allGuilds = allGuilds.flat()
+    return inFlat ? allGuilds.flat() : allGuilds
+}

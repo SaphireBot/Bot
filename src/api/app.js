@@ -37,9 +37,24 @@ app.get("/commands", async (req, res) => {
 
 })
 
-app.listen(8080, async () => {
-  const dbConnect = await connectDatabase()
-  console.log(`Saphire's Local API Connected | ${dbConnect}`)
+app.get("/allGuilds", async (req, res) => {
+
+  if (req.headers?.authorization !== process.env.ALL_GUILDS_ACCESS)
+    return res
+      .send({
+        status: 401,
+        response: "Authorization is not defined correctly."
+      });
+
+  const allGuilds = await client.shard.fetchClientValues('guilds.cache').catch(() => [])
+  const ids = allGuilds?.flat()?.map(guild => guild?.id) || []
+
+  return res
+    .status(200)
+    .send(ids || [])
+
 })
+
+app.listen(8080, async () => console.log(`Saphire's Local API Connected | ${await connectDatabase()}`))
 
 export default app
