@@ -145,14 +145,6 @@ export default new class SaphireClient extends Client {
         PollManager.setPolls()
         await automaticSystems()
 
-        const commands = await this.application.commands.fetch()
-        this.slashCommandsData.push(...commands.map(cmd => ({
-            name: cmd.name,
-            id: cmd.id,
-            category: cmd.category || "Não possui",
-            description: cmd.description || "Não possui"
-        })))
-
         await this.sendWebhook(
             process.env.WEBHOOK_STATUS,
             {

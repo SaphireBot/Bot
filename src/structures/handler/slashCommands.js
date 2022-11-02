@@ -20,6 +20,11 @@ export default async (client) => {
             const pull = query.default
 
             if (pull && pull.name) {
+                client.slashCommandsData.push({
+                    name: pull.name,
+                    category: pull.category || "Não possui",
+                    description: pull.description || "Não possui"
+                });
                 client.slashCommands.set(pull.name, pull);
                 (pull.admin || pull.staff) ? adminCommands.push(pull) : commands.push(pull);
                 continue
