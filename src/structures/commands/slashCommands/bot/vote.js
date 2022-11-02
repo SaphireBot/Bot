@@ -4,6 +4,7 @@ import { Api } from '@top-gg/sdk'
 export default {
     name: 'vote',
     description: '[bot] Vote no Top.gg e ganhe uma recompensa',
+    category: "bot",
     dm_permission: false,
     type: 1,
     options: [

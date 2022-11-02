@@ -4,6 +4,7 @@ import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../.
 export default {
     name: 'dicionario',
     description: '[util] Pesquise por significados de palavras',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

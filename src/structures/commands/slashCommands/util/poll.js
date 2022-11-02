@@ -5,6 +5,7 @@ import { Colors } from '../../../../util/Constants.js'
 export default {
     name: 'poll',
     description: '[util] Um jeito diferente de criar votações',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

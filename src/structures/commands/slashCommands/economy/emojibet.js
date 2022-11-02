@@ -9,6 +9,7 @@ const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍
 export default {
     name: 'emoji',
     description: '[economy/util] Um linda luta de emojis',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

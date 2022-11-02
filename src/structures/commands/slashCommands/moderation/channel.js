@@ -12,6 +12,7 @@ import unlockChannel from "../../functions/channel/unlock.channel.js"
 export default {
     name: 'channel',
     description: '[moderation] Gerencie os canais do servidor atraves deste comando',
+    category: "moderation",
     dm_permission: false,
     default_member_permissions: Permissions.ManageChannels,
     type: 1,

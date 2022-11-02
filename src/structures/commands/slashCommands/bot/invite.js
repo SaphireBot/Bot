@@ -3,6 +3,7 @@ import { Colors } from '../../../../util/Constants.js'
 export default {
     name: 'invite',
     description: '[bot] Um link rápido para me colocar no seu servidor',
+    category: "bot",
     dm_permission: false,
     type: 1,
     helpData: {

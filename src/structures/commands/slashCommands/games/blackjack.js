@@ -4,6 +4,7 @@ import Blackjack from './blackjack/blackjack.class.js'
 export default {
     name: 'blackjack',
     description: '[games] Um simples jogo de blackjack',
+    category: "games",
     type: 1,
     dm_permission: false,
     options: [

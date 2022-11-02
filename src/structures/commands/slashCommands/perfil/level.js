@@ -5,6 +5,7 @@ import buyBackground from './level/buy.level.js'
 export default {
     name: 'level',
     description: '[level] Confira seu level ou de alguém',
+    category: "perfil",
     type: 1,
     dm_permission: false,
     options: [

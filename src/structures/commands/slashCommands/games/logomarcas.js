@@ -5,6 +5,7 @@ import { Emojis as e } from '../../../../util/util.js'
 export default {
     name: 'logomarcas',
     description: '[games] Você é bom em adivinhar as marcas?',
+    category: "games",
     dm_permission: false,
     type: 1,
     options: [

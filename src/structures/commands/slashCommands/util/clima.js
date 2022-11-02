@@ -4,6 +4,7 @@ import weather from 'weather-js'
 export default {
     name: 'clima',
     description: '[util] Confira o clima de uma cidade',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

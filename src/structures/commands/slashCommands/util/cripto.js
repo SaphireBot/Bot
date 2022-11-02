@@ -9,6 +9,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from "discord.js";
 export default {
     name: 'cripto',
     description: '[util] Criptografe frases e envie para um amigo descriptografar ela.',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

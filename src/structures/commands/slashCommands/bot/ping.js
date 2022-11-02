@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 export default {
     name: 'ping',
     description: '[bot] Comando de ping',
+    category: "bot",
     dm_permission: false,
     type: 1,
     helpData: {

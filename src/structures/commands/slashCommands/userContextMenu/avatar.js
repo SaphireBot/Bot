@@ -4,6 +4,7 @@ import('dotenv/config')
 export default {
     name: 'Avatar',
     dm_permission: false,
+    category: "context menu",
     type: 2,
     async execute({ interaction, client, e }) {
 

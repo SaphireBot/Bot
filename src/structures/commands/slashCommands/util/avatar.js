@@ -4,6 +4,7 @@ import { ApplicationCommandOptionType } from 'discord.js'
 export default {
     name: 'avatar',
     description: '[util] Um simples comando para ver o avatar das pessoas',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [{

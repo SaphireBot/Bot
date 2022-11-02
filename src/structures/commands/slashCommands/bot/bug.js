@@ -4,6 +4,7 @@ import { Modals } from '../../../../classes/index.js'
 export default {
     name: 'bug',
     description: '[bot] Report bugs aos meus administradores',
+    category: "bot",
     dm_permission: false,
     type: 1,
     options: [

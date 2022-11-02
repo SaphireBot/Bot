@@ -141,7 +141,7 @@ export default new class SaphireClient extends Client {
         const slashCommandsResponse = await slashCommand(this)
 
         await Database.Cache.clearTables(`${this.shardId}`)
-        // GiveawayManager.setGiveaways()
+        GiveawayManager.setGiveaways()
         PollManager.setPolls()
         await automaticSystems()
 
@@ -149,6 +149,7 @@ export default new class SaphireClient extends Client {
         this.slashCommandsData.push(...commands.map(cmd => ({
             name: cmd.name,
             id: cmd.id,
+            category: cmd.category || "Não possui",
             description: cmd.description || "Não possui"
         })))
 

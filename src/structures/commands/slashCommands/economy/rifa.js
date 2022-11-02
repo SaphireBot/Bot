@@ -7,6 +7,7 @@ import verifyRifa from "./rifa/verify.rifa.js"
 export default {
     name: 'rifa',
     description: '[economy] Um sistema diferente de rifas',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

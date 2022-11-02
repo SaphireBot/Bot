@@ -4,6 +4,7 @@ export default {
     name: 'Clear 50 Messages',
     dm_permission: false,
     default_member_permissions: Permissions.ManageMessages,
+    category: "context menu",
     type: 3,
     async execute({ interaction, e, config }) {
 

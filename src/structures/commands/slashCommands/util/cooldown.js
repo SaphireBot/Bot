@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType } from "discord.js"
 export default {
     name: 'cooldown',
     description: '[util] Veja todos os seus cooldown em todos os meus comandos',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

@@ -15,6 +15,7 @@ const prize = {
 export default {
     name: 'raspadinha',
     description: '[economy] Tente a sorte em uma raspadinha',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [],

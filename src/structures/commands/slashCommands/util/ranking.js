@@ -8,6 +8,7 @@ import refreshRanking from '../../../../functions/update/ranking/index.ranking.j
 export default {
     name: 'ranking',
     description: '[util] Um simples sistema de ranking',
+    category: "util",
     type: 1,
     options: [
         {

@@ -4,6 +4,7 @@ import * as Discloud from './discloud/functions.discloud.js'
 export default {
     name: 'discloud',
     description: '[admin] Comandos da Discloud Host',
+    category: "admin",
     dm_permission: false,
     admin: true,
     type: 1,

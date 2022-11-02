@@ -6,6 +6,7 @@ import indications from '../../functions/anime/indications.anime.js'
 export default {
     name: 'anime',
     description: '[util] Comandos referente a animes',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

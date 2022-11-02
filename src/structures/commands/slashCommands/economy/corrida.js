@@ -10,6 +10,7 @@ const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍
 export default {
     name: 'corrida',
     description: '[economy] Aposte no seu anime e boa sorte',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

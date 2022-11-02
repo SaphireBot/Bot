@@ -8,6 +8,7 @@ import interactionGifs from './gifs/interaction.gifs.js'
 const data = {
     name: 'gifs',
     description: '[gifs] Interações gerais',
+    category: "images",
     dm_permission: false,
     type: 1,
     options: [

@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType } from 'discord.js'
 export default {
     name: 'like',
     description: '[perfil] De likes e aumente seu status',
+    category: "perfil",
     dm_permission: false,
     type: 1,
     options: [

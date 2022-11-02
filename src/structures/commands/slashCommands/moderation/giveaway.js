@@ -5,6 +5,7 @@ import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 export default {
     name: 'giveaway',
     description: '[moderation] Crie sorteios no servidor',
+    category: "moderation",
     type: 1,
     default_member_permissions: Permissions.ManageEvents,
     dm_permission: false,

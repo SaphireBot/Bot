@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType } from 'discord.js'
 export default {
     name: 'admin',
     description: '[admin] Comandos administrativos',
+    category: "admin",
     dm_permission: false,
     admin: true,
     type: 1,

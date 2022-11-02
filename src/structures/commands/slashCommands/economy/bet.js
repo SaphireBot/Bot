@@ -6,6 +6,7 @@ import refundValues from './bet/refund.bet.js'
 export default {
     name: 'bet',
     description: '[economy] Sistema de aposta',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

@@ -4,6 +4,7 @@ import { Config } from '../../../../util/Constants.js'
 export default {
     name: 'donate',
     description: '[bot] Doe para a Saphire',
+    category: "bot",
     dm_permission: false,
     type: 1,
     helpData: {

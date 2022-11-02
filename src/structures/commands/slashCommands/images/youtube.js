@@ -4,6 +4,7 @@ import { AttachmentBuilder } from 'discord.js'
 export default {
     name: 'youtube',
     description: '[images] Comentário do Youtube',
+    category: "images",
     dm_permission: false,
     type: 1,
     options: [

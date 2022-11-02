@@ -5,6 +5,7 @@ import gameOptions from './rather/options.rather.js'
 export default {
     name: 'rather',
     description: '[games] O que você prefere?',
+    category: "games",
     dm_permission: false,
     type: 1,
     options: [

@@ -3,12 +3,13 @@ import {
     PermissionsTranslate,
     Permissions
 } from '../../../../util/Constants.js'
-import { ApplicationCommandOptionType, ButtonStyle, UserPremiumType } from 'discord.js'
+import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
 
 export default {
     name: 'userinfo',
     description: '[util] Obtenha as informações de um usuário',
+    category: "util",
     dm_permission: false,
     type: 1,
     options: [

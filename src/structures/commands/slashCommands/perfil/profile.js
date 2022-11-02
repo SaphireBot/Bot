@@ -7,6 +7,7 @@ import refreshProfile from './perfil/refresh.profile.js'
 export default {
     name: 'perfil',
     description: '[perfil] Configura o seu perfil ou o de alguém',
+    category: "perfil",
     dm_permission: false,
     type: 1,
     options: [

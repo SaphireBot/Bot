@@ -4,6 +4,7 @@ import indexAnime from '../../functions/staff/index.anime.js'
 export default {
     name: 'staff',
     description: '[bot] Comando exclusívo para a Saphire\'s Team',
+    category: "bot",
     dm_permission: false,
     type: 1,
     staff: true,

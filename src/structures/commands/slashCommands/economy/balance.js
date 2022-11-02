@@ -4,6 +4,7 @@ import balanceOptions from './balance/manage.balance.js'
 export default {
     name: 'balance',
     description: '[economy] Confira suas finanças',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

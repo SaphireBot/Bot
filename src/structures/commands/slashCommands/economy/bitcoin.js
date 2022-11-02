@@ -5,6 +5,7 @@ import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
 export default {
     name: 'bitcoin',
     description: '[economy] Farme bitcoins e fique milhonário',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

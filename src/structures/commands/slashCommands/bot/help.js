@@ -4,6 +4,7 @@ import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
 export default {
     name: 'help',
     description: '[bot] Comando de ajuda',
+    category: "bot",
     dm_permission: false,
     type: 1,
     helpData: {

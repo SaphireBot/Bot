@@ -4,6 +4,7 @@ import newGame from '../../functions/tictactoe/newGame.tictactoe.js'
 export default {
     name: 'jogodavelha',
     description: '[games] O clássico jogo da velha',
+    category: "games",
     dm_permission: false,
     type: 1,
     options: [

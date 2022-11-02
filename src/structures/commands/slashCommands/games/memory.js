@@ -6,6 +6,7 @@ import { ApplicationCommandOptionType } from 'discord.js'
 export default {
     name: 'memory',
     description: '[games] Um jogo simples para testar sua memória',
+    category: "games",
     dm_permission: false,
     type: 1,
     options: [

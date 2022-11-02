@@ -4,6 +4,7 @@ import { ButtonStyle } from 'discord.js'
 export default {
     name: 'User Info',
     dm_permission: false,
+    category: "context menu",
     helpData: {
         color: 'Blue',
         description: 'Clique em alguém e veja suas informações de maneira simples e prática',

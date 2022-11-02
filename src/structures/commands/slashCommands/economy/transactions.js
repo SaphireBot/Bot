@@ -3,6 +3,7 @@ import { ButtonStyle } from "discord.js"
 export default {
     name: 'transactions',
     description: '[economy] Confira suas transações',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

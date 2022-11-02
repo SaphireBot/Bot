@@ -5,6 +5,7 @@ import Daily from './daily/new.daily.js'
 export default {
     name: 'daily',
     description: '[economy] Obtenha uma recompensa diária.',
+    category: "economy",
     dm_permission: false,
     type: 1,
     options: [

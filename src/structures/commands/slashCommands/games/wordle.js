@@ -1,6 +1,7 @@
 export default {
     name: 'wordle',
     description: '[games] O famoso jogo Wordle, só que no Discord.',
+    category: "games",
     dm_permission: false,
     type: 1,
     options: [
