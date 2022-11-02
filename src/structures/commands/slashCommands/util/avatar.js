@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommand, ApplicationCommandOptionType } from 'discord.js'
 
 export default {
     name: 'avatar',
@@ -7,11 +7,28 @@ export default {
     category: "util",
     dm_permission: false,
     type: 1,
-    options: [{
-        name: 'user',
-        description: 'Selecione um usuário para ver o avatar',
-        type: ApplicationCommandOptionType.User
-    }],
+    options: [
+        {
+            name: 'user',
+            description: 'Selecione um usuário para ver o avatar',
+            type: ApplicationCommandOptionType.User
+        },
+        {
+            name: 'show',
+            description: 'Mostrar avatar para todo mundo',
+            type: ApplicationCommandOptionType.String,
+            choices: [
+                {
+                    name: 'Sim',
+                    value: 'sim'
+                },
+                {
+                    name: 'Não',
+                    value: 'não'
+                }
+            ]
+        }
+    ],
     helpData: {
         description: 'Confira o avatar/banner/imagem customizada por perfil de alguém'
     },
@@ -19,6 +36,7 @@ export default {
 
         const { options, guild, user: authorMember } = interaction
         const user = options.getUser('user') || authorMember
+        const hide = options.getString('show') === 'sim'
         const member = await guild.members.fetch(user.id).catch(() => null)
         const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
@@ -45,7 +63,7 @@ export default {
                 image: { url: banner }
             })
 
-        return await interaction.reply({ embeds: [...embeds], ephemeral: true })
+        return await interaction.reply({ embeds: [...embeds], ephemeral: hide })
 
         async function get(userId) {
             return await fetch(`https://discord.com/api/v10/users/${userId}`, {
