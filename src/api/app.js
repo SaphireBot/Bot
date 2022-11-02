@@ -1,7 +1,6 @@
 import express from 'express'
 import topggReward from '../functions/topgg/reward.js'
 import recieveNewPaymentRequest from '../functions/donate/recieve.payment.js'
-import connectDatabase from './functions/connect.database.js'
 import { SaphireClient as client } from '../classes/index.js'
 import('dotenv/config')
 
@@ -55,6 +54,24 @@ app.get("/allGuilds", async (req, res) => {
 
 })
 
-app.listen(8080, async () => console.log(`Saphire's Local API Connected | ${await connectDatabase()}`))
+app.get("/allUsers", async (req, res) => {
+
+  if (req.headers?.authorization !== process.env.ALL_USERS_ACCESS)
+    return res
+      .send({
+        status: 401,
+        response: "Authorization is not defined correctly."
+      });
+
+  const allUsers = await client.shard.fetchClientValues('users.cache').catch(() => [])
+  const ids = allUsers?.flat()?.map(user => user?.id) || []
+
+  return res
+    .status(200)
+    .send(ids || [])
+
+})
+
+app.listen(8080, async () => console.log('Saphire\'s Local API Connected'))
 
 export default app
