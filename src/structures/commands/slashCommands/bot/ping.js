@@ -16,24 +16,39 @@ export default {
 
         const loadingMessage = await interaction.reply({ content: `${e.Loading} | Pinging...`, fetchReply: true })
         const replayPing = loadingMessage.createdTimestamp - interaction.createdTimestamp
+
+        function emojiFormat(ms) {
+            if (!ms) return "🔴 Offline"
+            if (ms > 800) return `🟤 **${ms}**ms`
+
+            return ms < 250
+                ? `🟢 **${ms}**ms`
+                : `🟠 **${ms}**ms`
+        }
+
         let toSubtract = Date.now()
 
-        const saphireAPI = await axios.get("https://ways.discloud.app/ping")
-            .then(() => `**${Date.now() - toSubtract}**ms`)
-            .catch(() => '*+9999*ms')
+        const saphireAPI = await axios.get("https://api.saphire.one/ping")
+            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
+            .catch(() => "🔴 Offline")
+
+        toSubtract = Date.now()
+        const saphireSite = await axios.get("https://saphire.one")
+            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
+            .catch(() => "🔴 Offline")
 
         toSubtract = Date.now()
         const discloudAPI = await Discloud.user.fetch()
-            .then(() => `**${Date.now() - toSubtract}**ms`)
-            .catch(() => '*+9999*ms')
+            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
+            .catch(() => "🔴 Offline")
 
         toSubtract = Date.now()
         const databasePing = await mongoose.connection.db.admin().ping()
-            .then(() => `**${Date.now() - toSubtract}**ms`)
-            .catch(() => '*+9999*ms')
+            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
+            .catch(() => "🔴 Offline")
 
-        return interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0}** - ${Date.stringDate(client.uptime)}\n🤖 | Discord API Latency: **${client.ws.ping}**ms\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Connection: ${saphireAPI}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: **${replayPing}**ms`
+        return await interaction.editReply({
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0}** - ${Date.stringDate(client.uptime)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`
         }).catch(() => { })
     }
 }

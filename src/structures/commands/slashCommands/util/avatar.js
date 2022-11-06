@@ -42,7 +42,7 @@ export default {
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
         const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
-        const banner = await get(user.id, 2048, "png", true)
+        const banner = await get(user.id)
         const embeds = [{
             color: client.blue,
             description: `${e.Download} [Clique aqui](${userAvatarURL}) para baixar o avatar original de ${user.tag}`,
