@@ -14,7 +14,7 @@ export default {
     type: 2,
     async execute({ interaction, client, e }) {
 
-        const { targetUser: user, targetMember: member, guild: guild, user: author } = interaction
+        const { targetUser: user, targetMember: member, user: author, guild } = interaction
         const components = []
         const userData = {}
         const memberData = {}

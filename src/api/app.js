@@ -81,6 +81,8 @@ app.get("/allUsers", async (req, res) => {
 
 app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
 
+app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Found" }))
+
 app.listen(8080, "0.0.0.0", async () => console.log('Saphire\'s Local API Connected'))
 
 export default app

@@ -8,9 +8,7 @@ export default {
     type: 2,
     async execute({ interaction, client, e }) {
 
-        const { targetId, guild } = interaction
-        const member = guild.members.cache.get(targetId)
-        const user = member.user
+        const { targetId, guild, targetUser: user, targetMember: member } = interaction
         const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
