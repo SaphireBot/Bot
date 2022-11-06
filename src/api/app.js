@@ -79,6 +79,8 @@ app.get("/allUsers", async (req, res) => {
 
 })
 
+app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
+
 app.listen(8080, async () => console.log('Saphire\'s Local API Connected'))
 
 export default app
