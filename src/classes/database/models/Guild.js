@@ -3,26 +3,31 @@ const { Schema, model } = Mongoose
 
 export default model("Guild", new Schema({
     id: { type: String, unique: true },
-    Prefix: String,
-    LogChannel: String,
+    LogSystem: {
+        channel: String,
+        ban: {
+            active: Boolean,
+            gif: String
+        },
+        kick:  {
+            active: Boolean,
+            gif: String
+        },
+        mute:  {
+            active: Boolean,
+            gif: String
+        },
+    },
     Giveaways: Array,
     Polls: Array,
-    IdeiaChannel: String,
+    // IdeiaChannel: String,
     Moeda: String,
-    ReportChannel: String,
+    // ReportChannel: String,
     FirstSystem: Boolean,
     Autorole: Array,
-    ConfessChannel: String,
-    AntLink: Boolean,
-    banGif: String,
-    AfkSystem: Array,
+    // AntLink: Boolean,
     CommandBlocks: Array,
-    Antifake: Boolean,
-    LockdownChannels: Array,
-    Warns: {
-        Users: Object,
-        Config: Object
-    },
+    // LockdownChannels: Array,
     XpSystem: {
         Canal: String,
         Mensagem: String
@@ -34,9 +39,5 @@ export default model("Guild", new Schema({
     WelcomeChannel: {
         Canal: String,
         Mensagem: String,
-    },
-    Blockchannels: {
-        Bots: Array,
-        Channels: Array
     }
 }))

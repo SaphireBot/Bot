@@ -72,7 +72,7 @@ Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style, isDate) {
          * Relative time format, consisting of a relative duration format, e.g. 2 months ago
          */
         R: "R"
-    }[style] || 't'
+    }[style]
 
     if (isDate) return time(TimeInMs, TimestampStyles)
 

@@ -24,7 +24,7 @@
     "mercadopago": "^1.5.14",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.38",
-    "mongoose": "^6.6.5",
+    "mongoose": "^6.7.2",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.6",
     "simply-djs": "^3.0.2",
