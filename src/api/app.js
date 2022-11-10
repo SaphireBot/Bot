@@ -20,7 +20,7 @@ app.post(process.env.ROUTE_TOP_GG, async (req, res) => {
   const response = await topggReward(req.headers?.user || null)
 
   return response
-    ? res.status(200).header(response).send(response)
+    ? res.status(200)
     : res.sendStatus(500)
 })
 
