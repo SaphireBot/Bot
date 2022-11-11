@@ -7,7 +7,14 @@ import disableLogs from "./disable.logs.js"
 
 export default async ({ interaction, values: keys }) => {
 
-    const { guild } = interaction
+    const { guild, user, message } = interaction
+
+    if (user.id !== message.interaction.user.id)
+        return await interaction.reply({
+            content: `${e.saphireLeft} | Eu acho que não foi você que usou este comando, foi?`,
+            ephemeral: true
+        })
+
     const values = keys.map(customId => JSON.parse(customId)?.src)
 
     if (values.includes("disabled"))

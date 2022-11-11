@@ -56,7 +56,7 @@ client.on('guildMemberRemove', async member => {
             title: "🛰️ Global System Notification | Kick",
             fields: [
                 { name: '👤 Usuário', value: `${member.user.tag} - *\`${member.user.id}\`*` },
-                { name: `${e.ModShield} Moderador`, value: `${executor.tag}` },
+                { name: `${e.ModShield} Moderador`, value: `${executor.tag} \`${executor.id}\`` },
                 { name: '📝 Razão', value: `${reason || 'Sem motivo informado'}` },
                 { name: '📅 Data', value: `${Date.Timestamp()}` }
             ],
