@@ -32,11 +32,12 @@ client.on('channelDelete', async channel => {
 
     async function DeletedChannel(ChannelDB, CanalFunction) {
 
-        await Database.Guild.updateOne(
+        const data = await Database.Guild.findOneAndUpdate(
             { id: channel.guild.id },
-            { $unset: { [ChannelDB]: 1 } }
+            { $unset: { [ChannelDB]: 1 } },
+            { returnDocument: true }
         )
 
-        return Notify(channel.guild.id, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
+        return Notify(data?.LogSystem?.channel, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
     }
 })

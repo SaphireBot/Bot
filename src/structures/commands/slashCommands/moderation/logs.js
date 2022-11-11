@@ -30,9 +30,12 @@ export default {
 
         const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel) || `Escolha um canal usando \`/logs config_channel:\``
         const dataToArray = [
-            { ...guildData?.LogSystem?.ban, name: "Banimento" },
+            { ...guildData?.LogSystem?.ban, name: "BAN_LOGS_BUILDING" },
             { ...guildData?.LogSystem?.kick, name: "Expulsão" },
-            { ...guildData?.LogSystem?.mute, name: "Mute" }
+            { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
+            { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
+            { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" },
+            { ...guildData?.LogSystem?.mute, name: "CHANNELS_LOGS_BUILDING" }
         ]
 
         const componentOptions = dataToArray.map(data => {
@@ -41,12 +44,12 @@ export default {
                 Banimento: "🔨",
                 Expulsão: "🦶",
                 Mute: "🔇"
-            }[data.name] || "🔴"
+            }[data.name] || e.Loading
 
             return {
                 label: `${data.active ? "Desativar" : "Ativar"} Notificação de ${data.name}`,
                 emoji,
-                value: data.name
+                value: JSON.stringify({ c: 'logs', src: data.name })
             }
 
         })
@@ -55,8 +58,13 @@ export default {
             componentOptions.push({
                 label: "Desativar Sistema GSN",
                 emoji: e.Deny,
-                value: "disableLogs"
+                value: JSON.stringify({ c: 'logs', src: "disabled" })
             })
+
+        const textValue = dataToArray.map(key => {
+            const emoji = key.active ? "🟢" : e.Loading
+            return `${emoji} ${key.name}`
+        }).join("\n")
 
         return await interaction.reply({
             embeds: [{
@@ -66,7 +74,7 @@ export default {
                 fields: [
                     {
                         name: "📨 Logs",
-                        value: `${guildData?.LogSystem?.ban?.active ? "🟢" : "🔴"} Banimento\n${guildData?.LogSystem?.kick?.active ? "🟢" : "🔴"} Expulsão\n${guildData?.LogSystem?.mute?.active ? "🟢" : "🔴"} Mute`
+                        value: `${textValue}`
                     },
                     {
                         name: "#️⃣ Canal",
@@ -81,7 +89,7 @@ export default {
                     custom_id: 'logs',
                     placeholder: 'Ativar/Desativar Logs',
                     disabled: logChannel?.id ? false : true,
-                    max_values: 3,
+                    max_values: 6,
                     options: componentOptions
                 }]
             }]

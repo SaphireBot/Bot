@@ -4,6 +4,7 @@ import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
 import Base from './Base.js'
+import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
 import translateSearch from './selectmenu/search/translate.search.js'
 
@@ -35,7 +36,8 @@ export default class SelectMenuInteraction extends Base {
             mangaChoosen: 'mangaChoosen',
             changeCategory: 'editCategoryChannel',
             changeCategory2: 'editCategoryChannel',
-            rifa: 'refundFunction'
+            rifa: 'refundFunction',
+            logs: 'logsFunction'
         }[this.customId]
 
         if (!result) return
@@ -43,8 +45,12 @@ export default class SelectMenuInteraction extends Base {
         return this[result](this)
     }
 
+    logsFunction() {
+        return logsChange(this)
+    }
+
     refundFunction() {
-        refundRifa(this)
+        return refundRifa(this)
     }
 
     async editCategoryChannel({ interaction }) {
