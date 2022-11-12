@@ -35,12 +35,16 @@ client.on('guildMemberRemove', async member => {
 
         if (member.id === client.user.id || !guild.clientHasPermission(Permissions.ViewAuditLog) || !guildData.LogSystem?.channel) return
 
+        if (!guildData?.LogSystem?.kick?.active) return
+
         const channel = guild.channels.cache.get(guildData.LogSystem?.channel)
         if (!channel) return
 
-        const logs = await guild.fetchAuditLogs({ limit: 1, type: 20 }) // 20 - MemberKick
-        const kickLog = logs.entries.first()
-        if (!kickLog) return
+        const guildAuditLogs = await guild.fetchAuditLogs().catch(() => null) // { type: 20 } - MemberKick
+        if (!guildAuditLogs) return
+
+        const kickLog = guildAuditLogs.entries.first()
+        if (!kickLog || kickLog.action !== 20) return
 
         const { executor, target, reason } = kickLog
 

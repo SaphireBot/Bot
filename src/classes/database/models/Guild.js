@@ -9,6 +9,10 @@ export default model("Guild", new Schema({
             active: Boolean,
             gif: String
         },
+        unban: {
+            active: Boolean,
+            gif: String
+        },
         kick:  {
             active: Boolean,
             gif: String
@@ -16,7 +20,7 @@ export default model("Guild", new Schema({
         mute:  {
             active: Boolean,
             gif: String
-        },
+        }
     },
     Giveaways: Array,
     Polls: Array,

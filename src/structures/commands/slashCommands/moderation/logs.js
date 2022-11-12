@@ -1,5 +1,4 @@
-import { Colors, Permissions } from "../../../../util/Constants.js";
-import { Database } from "../../../../classes/index.js"
+import { Colors, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
 import { ApplicationCommandOptionType } from "discord.js";
 
 export default {
@@ -20,9 +19,16 @@ export default {
     helpData: {
         description: 'Sistema frontal para gerenciar os logs'
     },
-    async execute({ interaction, e }) {
+    async execute({ interaction, e, Database }) {
 
         const { guild, options } = interaction
+
+        if (!guild.clientHasPermission(Permissions.ViewAuditLog))
+            return await interaction.reply({
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`** para executar este comando.`,
+                ephemeral: true
+            })
+
         const configChannel = options.getChannel('config_channel') || null
         const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
 
@@ -30,7 +36,8 @@ export default {
 
         const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel) || `Escolha um canal usando \`/logs config_channel:\``
         const dataToArray = [
-            { ...guildData?.LogSystem?.ban, name: "BAN_LOGS_BUILDING" },
+            { ...guildData?.LogSystem?.ban, name: "Banimento" },
+            { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
             { ...guildData?.LogSystem?.kick, name: "Expulsão" },
             { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
             { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
@@ -42,6 +49,7 @@ export default {
 
             const emoji = {
                 Banimento: "🔨",
+                Desbanimento: "🙏",
                 Expulsão: "🦶",
                 Mute: "🔇"
             }[data.name] || e.Loading
@@ -62,7 +70,12 @@ export default {
             })
 
         const textValue = dataToArray.map(key => {
-            const emoji = key.active ? "🟢" : e.Loading
+            const emoji = key.active
+                ? e.Check
+                : key.name.includes("_")
+                    ? e.Loading
+                    : e.Deny
+
             return `${emoji} ${key.name}`
         }).join("\n")
 
@@ -74,11 +87,19 @@ export default {
                 fields: [
                     {
                         name: "📨 Logs",
-                        value: `${textValue}`
+                        value: textValue || "`NOT_EMBED_FIELD_VALUE_FOUND`"
                     },
                     {
                         name: "#️⃣ Canal",
                         value: `${logChannel}`
+                    },
+                    {
+                        name: "📜 Permissões",
+                        value: `Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`**\nQuem for gerenciar este sistema, precisa da permissão **\`${PermissionsTranslate.ManageGuild}\`**`
+                    },
+                    {
+                        name: `${e.Info} Status`,
+                        value: `${e.Check} Sistema de logs ativado\n${e.Deny} Sistema de logs desativado\n${e.Loading} Sistema de logs em construção\n${e.Warn} Sistema de logs em manutenção`
                     }
                 ]
             }],
@@ -87,9 +108,9 @@ export default {
                 components: [{
                     type: 3,
                     custom_id: 'logs',
-                    placeholder: 'Ativar/Desativar Logs',
+                    placeholder: logChannel?.id ? 'Ativar/Desativar Logs' : 'Um canal é necessário',
                     disabled: logChannel?.id ? false : true,
-                    max_values: 6,
+                    max_values: dataToArray.length - 1,
                     options: componentOptions
                 }]
             }]

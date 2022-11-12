@@ -2,9 +2,9 @@ import {
     SaphireClient as client,
     Database
 } from "../../../../classes/index.js"
+import { Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 import disableLogs from "./disable.logs.js"
-
 export default async ({ interaction, values: keys }) => {
 
     const { guild, user, message } = interaction
@@ -12,6 +12,12 @@ export default async ({ interaction, values: keys }) => {
     if (user.id !== message.interaction.user.id)
         return await interaction.reply({
             content: `${e.saphireLeft} | Eu acho que não foi você que usou este comando, foi?`,
+            ephemeral: true
+        })
+
+    if (!guild.clientHasPermission(Permissions.ViewAuditLog))
+        return await interaction.reply({
+            content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`** para executar este comando.`,
             ephemeral: true
         })
 
@@ -23,7 +29,9 @@ export default async ({ interaction, values: keys }) => {
     const logData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
 
     const baseData = {
-        kick: logData?.LogSystem?.kick?.active || false
+        kick: logData?.LogSystem?.kick?.active || false,
+        ban: logData?.LogSystem?.ban?.active || false,
+        unban: logData?.LogSystem?.unban?.active || false
     }
 
     const toUpdate = {}
@@ -31,11 +39,15 @@ export default async ({ interaction, values: keys }) => {
     for (let key of values) {
 
         const primaryKey = {
-            Expulsão: "LogSystem.kick.active"
+            Expulsão: "LogSystem.kick.active",
+            Banimento: "LogSystem.ban.active",
+            Desbanimento: "LogSystem.unban.active",
         }[key]
 
         const result = {
-            Expulsão: !baseData?.kick
+            Expulsão: !baseData?.kick,
+            Banimento: !baseData?.ban,
+            Desbanimento: !baseData?.unban
         }[key]
 
         if (!primaryKey && !result) continue;
@@ -52,7 +64,8 @@ export default async ({ interaction, values: keys }) => {
 
     const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
     const dataToArray = [
-        { ...guildData?.LogSystem?.ban, name: "BAN_LOGS_BUILDING" },
+        { ...guildData?.LogSystem?.ban, name: "Banimento" },
+        { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
         { ...guildData?.LogSystem?.kick, name: "Expulsão" },
         { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
         { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
@@ -64,6 +77,7 @@ export default async ({ interaction, values: keys }) => {
 
         const emoji = {
             Banimento: "🔨",
+            Desbanimento: "🙏",
             Expulsão: "🦶",
             Mute: "🔇"
         }[data.name] || e.Loading
@@ -85,10 +99,10 @@ export default async ({ interaction, values: keys }) => {
 
     const textValue = dataToArray.map(key => {
         const emoji = key.active
-            ? "🟢"
+            ? e.Check
             : key.name.includes("_")
                 ? e.Loading
-                : "🔴"
+                : e.Deny
 
         return `${emoji} ${key.name}`
     }).join("\n")
@@ -101,11 +115,19 @@ export default async ({ interaction, values: keys }) => {
             fields: [
                 {
                     name: "📨 Logs",
-                    value: `${textValue}`
+                    value: textValue || "`NOT_EMBED_FIELD_VALUE_FOUND`"
                 },
                 {
                     name: "#️⃣ Canal",
-                    value: `${logChannel || "\`Channel Not Found\`"}`
+                    value: `${logChannel || "`Channel Not Found`"}`
+                },
+                {
+                    name: "📜 Permissões",
+                    value: `Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`**\nQuem for gerenciar este sistema, precisa da permissão **\`${PermissionsTranslate.ManageGuild}\`**`
+                },
+                {
+                    name: `${e.Info} Status`,
+                    value: `${e.Check} Sistema de logs ativado\n${e.Deny} Sistema de logs desativado\n${e.Loading} Sistema de logs em construção\n${e.Warn} Sistema de logs em manutenção`
                 }
             ]
         }],
@@ -114,9 +136,9 @@ export default async ({ interaction, values: keys }) => {
             components: [{
                 type: 3,
                 custom_id: 'logs',
-                placeholder: 'Ativar/Desativar Logs',
+                placeholder: logChannel?.id ? 'Ativar/Desativar Logs' : 'Um canal é necessário',
                 disabled: logChannel?.id ? false : true,
-                max_values: 6,
+                max_values: dataToArray.length - 1,
                 options: componentOptions
             }]
         }]
