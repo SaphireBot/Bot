@@ -15,7 +15,8 @@ const SaphireClientOptions = {
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessageTyping,
-        GatewayIntentBits.GuildScheduledEvents
+        GatewayIntentBits.GuildScheduledEvents,
+        GatewayIntentBits.MessageContent
     ],
     sweepers: {
         users: {

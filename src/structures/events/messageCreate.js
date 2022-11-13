@@ -5,6 +5,7 @@ import {
 import { Emojis as e } from '../../util/util.js'
 
 client.on('messageCreate', async message => {
+        
     if (message?.author?.bot || !message.guild) return
     Experience.addXp(message.author.id, 1)
     
