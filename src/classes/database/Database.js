@@ -21,7 +21,8 @@ export default new class Database extends Models {
             Pepy: "830226550116057149",
             Lereo: "978659462602711101",
             San: "327496267007787008",
-            Khetlyn: "428088706533031938"
+            Khetlyn: "428088706533031938",
+            Yafyr: "435444989695229952"
         }
     }
 

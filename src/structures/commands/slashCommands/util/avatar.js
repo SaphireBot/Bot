@@ -52,14 +52,14 @@ export default {
         if (memberAvatarImage && userAvatarImage !== memberAvatarImage)
             embeds.push({
                 color: client.blue,
-                description: `${e.Download} [Clique aqui](${memberAvatarURL}) para baixar o avatar no servidor de ${member?.user?.tag || 'NomeDesconhecido'}`,
+                description: `${e.Download} [Clique aqui](${memberAvatarURL}) para baixar o avatar no servidor de ${user?.tag || 'NomeDesconhecido'}`,
                 image: { url: memberAvatarImage }
             })
 
         if (banner)
             embeds.push({
                 color: client.blue,
-                description: `${e.Download} [Clique aqui](${banner}) para baixar o banner de ${member?.user?.tag || 'NomeDesconhecido'}`,
+                description: `${e.Download} [Clique aqui](${banner}) para baixar o banner de ${user?.tag || 'NomeDesconhecido'}`,
                 image: { url: banner }
             })
 
@@ -74,7 +74,7 @@ export default {
                 .then(user => {
                     if (user.code == 50035) return false
                     if (!user.banner) return false
-                    if (user.banner) return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
+                    return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
                 })
                 .catch(() => false)
         }

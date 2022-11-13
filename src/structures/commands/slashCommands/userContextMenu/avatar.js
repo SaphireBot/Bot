@@ -8,12 +8,12 @@ export default {
     type: 2,
     async execute({ interaction, client, e }) {
 
-        const { targetId, guild, targetUser: user, targetMember: member } = interaction
+        const { targetUser: user, targetMember: member } = interaction
         const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
         const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
-        const banner = await get(user.id, 2048, "png", true)
+        const banner = await get(user.id)
         const embeds = [
             {
                 color: client.blue,
@@ -25,25 +25,20 @@ export default {
         if (memberAvatarImage && userAvatarImage !== memberAvatarImage)
             embeds.push({
                 color: client.blue,
-                description: `${e.Download} [Clique aqui](${memberAvatarURL}) para baixar o avatar no servidor de ${member?.user?.tag || 'NomeDesconhecido'}`,
+                description: `${e.Download} [Clique aqui](${memberAvatarURL}) para baixar o avatar no servidor de ${user?.tag || 'NomeDesconhecido'}`,
                 image: { url: memberAvatarImage }
             })
 
         if (banner)
             embeds.push({
                 color: client.blue,
-                description: `${e.Download} [Clique aqui](${banner}) para baixar o banner de ${member?.user?.tag || 'NomeDesconhecido'}`,
+                description: `${e.Download} [Clique aqui](${banner}) para baixar o banner de ${user?.tag || 'NomeDesconhecido'}`,
                 image: { url: banner }
             })
 
         return interaction.reply({ embeds: [...embeds], ephemeral: true })
 
-        async function createBannerURL(userId, banner, format = "webp", size = "1024", dynamic) {
-            if (dynamic) format = banner.startsWith("a_") ? "gif" : format
-            return `https://cdn.discordapp.com/banners/${userId}/${banner}.${format}${parseInt(size) ? `?size=${parseInt(size)}` : ''}`
-        }
-
-        async function get(userId, size, format, dynamic) {
+        async function get(userId) {
             return await fetch(`https://discord.com/api/v10/users/${userId}`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }

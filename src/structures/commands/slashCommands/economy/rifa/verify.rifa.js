@@ -20,7 +20,6 @@ export default async interaction => {
     const numbers = rifaData.Numbers || []
     const TempPrize = rifaData.TempPrize || 0
     const LastNumber = rifaData.LastNumber || 0
-
     const moeda = await guild.getCoin()
     const LastPrize = `${TempPrize > 0 ? '^' : ''}${rifaData.LastPrize?.currency()} ${moeda}`
 

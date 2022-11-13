@@ -68,7 +68,7 @@ export default {
                         },
                         {
                             name: 'BitFarm',
-                            value: `${e.BitCoin} \`${BitUserFarm}/1000\``,
+                            value: `${e.BitCoin} \`${BitUserFarm || "0"}/1000\``,
                             inline: true
                         }
                     ]
