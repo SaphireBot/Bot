@@ -1,15 +1,68 @@
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
-import { PermissionFlagsBits as Permissions } from 'discord.js'
+import { ChannelsTypes, Permissions } from '../../util/Constants.js'
 
 client.on('channelCreate', async channel => {
 
-    if (!channel || !channel.guild || !channel.guild.available || !channel.permissionsFor(channel.guild.members.me)?.has(Permissions.SendMessages)) return
+    const { guild } = channel
 
-    const data = await Database.Guild.findOne({ id: channel.guild.id }, 'FirstSystem')
-    const firstOn = data?.FirstSystem
+    if (!channel || !guild || !guild.available || !channel.permissionsFor(channel.guild.members.me)?.has(Permissions.SendMessages)) return
 
-    if (!firstOn || !channel.isTextBased() || !channel.viewable) return
+    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
+    const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
+    if (!logChannel) return
 
-    return channel.send(`First! ${e.SaphireOk}`).catch(() => { })
+    const channelType = ChannelsTypes[channel.type] || "Tipo de canal não reconhecido"
+    const category = guild.channels.cache.get(channel.id)?.parent?.name || null
+    const permissions = channel.permissionOverwrites.cache.toJSON() || []
+    const fields = []
+
+    if (permissions.length) {
+
+        // https://discord-api-types.dev/api/discord-api-types-v10/enum/OverwriteType
+        const rolesAllowed = permissions
+            .filter(perm => perm.type === 0 && perm.id !== guild.roles.everyone.id)
+            ?.map(perm => perm?.id)
+            ?.filter(i => i)
+
+        const adminRoles = guild.roles.cache.filter(role => role.permissions.toArray().includes("Administrator")).map(role => role.id)
+
+        const roles = [
+            adminRoles,
+            rolesAllowed
+        ]
+            ?.flat()
+            ?.map(roleId => guild.roles.cache.get(roleId)) // 0 Role
+
+        const membersFilter = permissions
+            .filter(perm => perm.type === 1)
+            ?.map(perm => perm.id) // 1 Member
+            ?.filter(i => i)
+
+        const members = await guild.members.fetch({ user: membersFilter }).catch(() => [])
+
+        if (roles.length)
+            fields.push({
+                name: "@ Cargos",
+                value: `Negados: ${guild.roles.everyone}\nPermitidos: ${roles.join(", ") || "Nenhum cargo"}`.limit("MessageEmbedFieldValue")
+            })
+
+        if (members.size)
+            fields.push({
+                name: "@ Membros",
+                value: `Permitidos: ${members.toJSON().join(", ") || "Nenhum membro"}`.limit("MessageEmbedFieldValue")
+            })
+
+    }
+
+    return logChannel.send({
+        content: "🛰️ | **Global System Notification** | Channel Create",
+        embeds: [{
+            color: client.blue,
+            title: `${e.Info} | Dados do Canal`,
+            description: `Nome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.rawPosition + 1}/${guild.channels.cache.size}\`\nTipo: ${channelType}\n${category ? `Categoria: ${category}` : ""}`,
+            fields
+        }]
+    }).catch(() => { })
+
 })

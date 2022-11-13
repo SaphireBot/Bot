@@ -41,6 +41,21 @@ const ConfigurationBase = {
     ]
 }
 
+const ChannelsTypes = {
+    0: "Canal de Texto",
+    1: "Mensagens Direta / Privado",
+    2: "Canal de Voz",
+    3: "Grupo Privado",
+    4: "Categoria",
+    5: "Canal de Anúncios",
+    10: "Canal de Anúncios Temporário (Thread)",
+    11: "Canal Público (Thread)",
+    12: "Canal Privado (Thread)",
+    13: "Canal de Palco",
+    14: "Canal de Diretoria (Studant Hub)",
+    15: "Canal de Fórum"
+}
+
 const DiscordColors = {
     Default: "Padrão",
     White: "Branco",
@@ -710,5 +725,6 @@ export {
     DiscordPermissons,
     ErrorsToIgnore,
     ErrorResponse,
-    PermissionsBitToString
+    PermissionsBitToString,
+    ChannelsTypes
 }
