@@ -1,5 +1,9 @@
 import fetch from 'node-fetch'
 import('dotenv/config')
+import {
+    Routes,
+    RouteBases
+} from 'discord.js'
 
 export default {
     name: 'Avatar',
@@ -39,7 +43,7 @@ export default {
         return interaction.reply({ embeds: [...embeds], ephemeral: true })
 
         async function get(userId) {
-            return await fetch(`https://discord.com/api/v10/users/${userId}`, {
+            return await fetch(RouteBases.api + Routes.user(userId), {
                 method: 'GET',
                 headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
             })

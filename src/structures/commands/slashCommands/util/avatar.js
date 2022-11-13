@@ -1,5 +1,9 @@
 import fetch from 'node-fetch'
-import { ApplicationCommand, ApplicationCommandOptionType } from 'discord.js'
+import {
+    ApplicationCommandOptionType,
+    Routes,
+    RouteBases
+} from 'discord.js'
 
 export default {
     name: 'avatar',
@@ -19,11 +23,11 @@ export default {
             type: ApplicationCommandOptionType.String,
             choices: [
                 {
-                    name: 'Sim',
+                    name: 'Sim! Pode mostrar para todos o avatar',
                     value: 'sim'
                 },
                 {
-                    name: 'Não',
+                    name: 'Não! Não mostre para ninguém! Só pra mim',
                     value: 'não'
                 }
             ]
@@ -36,13 +40,14 @@ export default {
 
         const { options, guild, user: authorMember } = interaction
         const user = options.getUser('user') || authorMember
-        const hide = options.getString('show') === 'sim'
+        const hide = options.getString('show') === 'não'
         const member = await guild.members.fetch(user.id).catch(() => null)
         const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
         const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
         const banner = await get(user.id)
+
         const embeds = [{
             color: client.blue,
             description: `${e.Download} [Clique aqui](${userAvatarURL}) para baixar o avatar original de ${user.tag}`,
@@ -66,7 +71,7 @@ export default {
         return await interaction.reply({ embeds: [...embeds], ephemeral: hide })
 
         async function get(userId) {
-            return await fetch(`https://discord.com/api/v10/users/${userId}`, {
+            return await fetch(RouteBases.api + Routes.user(userId), {
                 method: 'GET',
                 headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
             })
