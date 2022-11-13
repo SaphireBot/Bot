@@ -32,7 +32,7 @@ export default async ({ interaction, values: keys }) => {
         kick: logData?.LogSystem?.kick?.active || false,
         ban: logData?.LogSystem?.ban?.active || false,
         unban: logData?.LogSystem?.unban?.active || false,
-        unban: logData?.LogSystem?.channels?.active || false
+        channels: logData?.LogSystem?.channels?.active || false
     }
 
     const toUpdate = {}

@@ -1,4 +1,6 @@
+import { AuditLogEvent } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
+import { Emojis as e } from '../../util/util.js'
 
 client.on('channelDelete', async channel => {
 
@@ -18,18 +20,22 @@ client.on('channelDelete', async channel => {
     const logChannel = await guild.channels.fetch(`${guildData?.LogSystem?.channel}`).catch(() => null)
     if (!logChannel) return
 
-    return logChannel.send({
-        content: `🛰️ | **Global System Notification** | Channel Delete\n \nO canal **${channel.name}** - *\`${channel.id}\`* foi deletado.`
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelDelete }).catch(() => null) // { type: 12 } - ChannelDelete
+    if (!logs) return
+
+    const Log = logs.entries.first()
+    if (!Log || Log.action !== AuditLogEvent.ChannelDelete) return
+
+    const { executor, target } = Log
+
+    if (
+        !executor
+        || !target
+        || executor.id === target.id
+        || client.user.id === executor.id
+    ) return
+
+    return logChannel?.send({
+        content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`
     }).catch(() => { })
-
-    // async function DeletedChannel(ChannelDB, CanalFunction) {
-
-    //     const data = await Database.Guild.findOneAndUpdate(
-    //         { id: channel.guild.id },
-    //         { $unset: { [ChannelDB]: 1 } },
-    //         { returnDocument: true }
-    //     )
-
-    //     return Notify(data?.LogSystem?.channel, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
-    // }
 })
