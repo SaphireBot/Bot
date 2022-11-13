@@ -1,6 +1,7 @@
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { ChannelsTypes, Permissions } from '../../util/Constants.js'
+import { AuditLogEvent } from 'discord.js'
 
 client.on('channelCreate', async channel => {
 
@@ -55,12 +56,30 @@ client.on('channelCreate', async channel => {
 
     }
 
+    const allChannels = await guild.channels.fetch().catch(() => null)
+    if (!allChannels) return
+
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelCreate }).catch(() => null) // { type: 10 } - ChannelCreate
+    if (!logs) return
+
+    const Log = logs.entries.first()
+    if (!Log || Log.action !== AuditLogEvent.ChannelCreate) return
+
+    const { executor, target } = Log
+
+    if (
+        !executor
+        || !target
+        || executor.id === target.id
+        || client.user.id === executor.id
+    ) return
+
     return logChannel.send({
         content: "🛰️ | **Global System Notification** | Channel Create",
         embeds: [{
             color: client.blue,
             title: `${e.Info} | Dados do Canal`,
-            description: `Nome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.rawPosition + 1}/${guild.channels.cache.size}\`\nTipo: ${channelType}\n${category ? `Categoria: ${category}` : ""}`,
+            description: `Usuário: **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*\nNome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.position + 1}/${allChannels?.toJSON()?.length}\`\nTipo: ${channelType}\n${category ? `Categoria: ${category}` : ""}\n${Date.Timestamp()}`,
             fields
         }]
     }).catch(() => { })
