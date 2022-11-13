@@ -1,43 +1,35 @@
 import { SaphireClient as client, Database } from '../../classes/index.js'
-import { Config as config } from '../../util/Constants.js'
-import Notify from '../../functions/plugins/notify.js'
 
 client.on('channelDelete', async channel => {
 
     if (!channel || !channel.guild) return
 
-    if (channel.id === config.LoteriaChannel)
-        return Notify(config.guildId, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **Lotery Result At Principal Server** foi deletado.`)
-
     const inLogomarcaGameChannel = await Database.Cache.Logomarca.get(`${client.shardId}.Channels`, channel.id) || []
     if (inLogomarcaGameChannel.includes(channel.id))
         await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)
 
-    const guildData = await Database.Guild.findOne({ id: channel.guild.id })
+    const { guild } = channel
+    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
     if (!guildData) return
 
-    switch (channel.id) {
-        case guildData['IdeiaChannel']: DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;
-        case guildData['LeaveChannel.Canal']: DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
-        case guildData['XPChannel']: DeletedChannel('XPChannel', 'Canal de Level Up'); break;
-        case guildData['ReportChannel']: DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
-        case guildData['LogChannel']: (async () => await Database.Guild.updateOne({ id: channel.guild.id }, { $unset: { LogChannel: 1 } }))(); break;
-        case guildData['WelcomeChannel.Canal']: DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
-        case guildData[`Blockchannels.Bots.${channel.id}`]: DeletedChannel(`Blockchannels.Bots.${channel.id}`, 'Bloqueio de Comandos'); break;
-        case guildData[`Blockchannels.${channel.id}`]: DeletedChannel(`Blockchannels.${channel.id}`, 'Bloqueio de Comandos'); break;
-        case guildData['ConfessChannel']: DeletedChannel('ConfessChannel', 'Canal de Confissão'); break;
-        case guildData['GiveawayChannel']: Database.deleteGiveaway('', channel.guild.id, true); DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
-        default: break;
-    }
+    if (channel.id === guildData?.LogSystem?.channel)
+        return await Database.Guild.updateOne({ id: guild.id }, { $unset: { LogChannel: 1 } })
 
-    async function DeletedChannel(ChannelDB, CanalFunction) {
+    const logChannel = await guild.channels.fetch(`${guildData?.LogSystem?.channel}`).catch(() => null)
+    if (!logChannel) return
 
-        const data = await Database.Guild.findOneAndUpdate(
-            { id: channel.guild.id },
-            { $unset: { [ChannelDB]: 1 } },
-            { returnDocument: true }
-        )
+    return logChannel.send({
+        content: `🛰️ | **Global System Notification** | Channel Delete\n \nO canal **${channel.name}** - *\`${channel.id}\`* foi deletado.`
+    }).catch(() => { })
 
-        return Notify(data?.LogSystem?.channel, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
-    }
+    // async function DeletedChannel(ChannelDB, CanalFunction) {
+
+    //     const data = await Database.Guild.findOneAndUpdate(
+    //         { id: channel.guild.id },
+    //         { $unset: { [ChannelDB]: 1 } },
+    //         { returnDocument: true }
+    //     )
+
+    //     return Notify(data?.LogSystem?.channel, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
+    // }
 })
