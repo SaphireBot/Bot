@@ -145,7 +145,7 @@ export default async interaction => {
                 fields: [
                     {
                         name: `${e.Info} Status`,
-                        value: `Prêmio: ${rifaData.Numbers.length * 1000} ${moeda}\n👥 Ainda falta ${90 - rifaData.Numbers.length} rifas serem compradas para o sorteio do prêmio.`
+                        value: `Prêmio: ${(rifaData.Numbers.length * 1000) || 0} ${moeda}\n👥 Ainda falta ${90 - rifaData.Numbers.length} rifas serem compradas para o sorteio do prêmio.`
                     }
                 ],
                 footer: {

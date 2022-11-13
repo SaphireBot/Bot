@@ -13,6 +13,7 @@ import channelIndex from './buttons/channel/channel.index.js'
 import rifa from './buttons/rifa/rifa.js'
 import raspadinha from './buttons/raspadinha/index.raspadinha.js'
 import corridaFunctions from './buttons/corrida/reset.corrida.js'
+import tradeInfo from './buttons/saphireInfo/trade.info.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -55,6 +56,7 @@ export default class ButtonInteraction extends Base {
             channel: [channelIndex, this.interaction, commandData],
             rifa: [rifa, this.interaction, commandData],
             rasp: [raspadinha, this.interaction, commandData],
+            saphire: [tradeInfo, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
