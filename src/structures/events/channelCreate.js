@@ -10,7 +10,7 @@ client.on('channelCreate', async channel => {
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
     const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
-    if (!logChannel) return
+    if (!logChannel || !guildData?.LogSystem?.channels?.active) return
 
     const channelType = ChannelsTypes[channel.type] || "Tipo de canal não reconhecido"
     const category = guild.channels.cache.get(channel.id)?.parent?.name || null

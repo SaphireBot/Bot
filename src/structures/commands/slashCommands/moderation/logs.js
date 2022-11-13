@@ -34,15 +34,22 @@ export default {
 
         if (configChannel) return setChannel()
 
-        const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel) || `Escolha um canal usando \`/logs config_channel:\``
+        const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
+
+        if (!logChannel)
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa escolher um canal usando \`/logs config_channel:\` antes de acessar este comando.`,
+                ephemeral: true
+            })
+
         const dataToArray = [
             { ...guildData?.LogSystem?.ban, name: "Banimento" },
             { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
             { ...guildData?.LogSystem?.kick, name: "Expulsão" },
+            { ...guildData?.LogSystem?.channels, name: "Canais" },
             { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
             { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
-            { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" },
-            { ...guildData?.LogSystem?.mute, name: "CHANNELS_LOGS_BUILDING" }
+            { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" }
         ]
 
         const componentOptions = dataToArray.map(data => {
@@ -51,7 +58,8 @@ export default {
                 Banimento: "🔨",
                 Desbanimento: "🙏",
                 Expulsão: "🦶",
-                Mute: "🔇"
+                Mute: "🔇",
+                Canais: "💬"
             }[data.name] || e.Loading
 
             return {
@@ -91,7 +99,7 @@ export default {
                     },
                     {
                         name: "#️⃣ Canal",
-                        value: `${logChannel}`
+                        value: `${logChannel || "Escolha um canal usando \`/logs config_channel:\`"}`
                     },
                     {
                         name: "📜 Permissões",

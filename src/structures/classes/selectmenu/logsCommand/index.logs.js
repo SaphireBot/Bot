@@ -31,7 +31,8 @@ export default async ({ interaction, values: keys }) => {
     const baseData = {
         kick: logData?.LogSystem?.kick?.active || false,
         ban: logData?.LogSystem?.ban?.active || false,
-        unban: logData?.LogSystem?.unban?.active || false
+        unban: logData?.LogSystem?.unban?.active || false,
+        unban: logData?.LogSystem?.channels?.active || false
     }
 
     const toUpdate = {}
@@ -42,12 +43,14 @@ export default async ({ interaction, values: keys }) => {
             Expulsão: "LogSystem.kick.active",
             Banimento: "LogSystem.ban.active",
             Desbanimento: "LogSystem.unban.active",
+            Canais: "LogSystem.channels.active"
         }[key]
 
         const result = {
             Expulsão: !baseData?.kick,
             Banimento: !baseData?.ban,
-            Desbanimento: !baseData?.unban
+            Desbanimento: !baseData?.unban,
+            Canais: !baseData?.channels
         }[key]
 
         if (!primaryKey && !result) continue;
@@ -62,15 +65,15 @@ export default async ({ interaction, values: keys }) => {
         { upsert: true, new: true }
     )
 
-    const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
+    const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
     const dataToArray = [
         { ...guildData?.LogSystem?.ban, name: "Banimento" },
         { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
         { ...guildData?.LogSystem?.kick, name: "Expulsão" },
+        { ...guildData?.LogSystem?.channels, name: "Canais" },
         { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
         { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
-        { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" },
-        { ...guildData?.LogSystem?.mute, name: "CHANNELS_LOGS_BUILDING" }
+        { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" }
     ]
 
     const componentOptions = dataToArray.map(data => {
@@ -79,7 +82,8 @@ export default async ({ interaction, values: keys }) => {
             Banimento: "🔨",
             Desbanimento: "🙏",
             Expulsão: "🦶",
-            Mute: "🔇"
+            Mute: "🔇",
+            Canais: "💬"
         }[data.name] || e.Loading
 
         return {

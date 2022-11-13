@@ -6,20 +6,19 @@ export default model("Guild", new Schema({
     LogSystem: {
         channel: String,
         ban: {
-            active: Boolean,
-            gif: String
+            active: Boolean
         },
         unban: {
-            active: Boolean,
-            gif: String
+            active: Boolean
         },
-        kick:  {
-            active: Boolean,
-            gif: String
+        kick: {
+            active: Boolean
         },
-        mute:  {
-            active: Boolean,
-            gif: String
+        mute: {
+            active: Boolean
+        },
+        channels: {
+            active: Boolean
         }
     },
     Giveaways: Array,
@@ -33,15 +32,15 @@ export default model("Guild", new Schema({
     CommandBlocks: Array,
     // LockdownChannels: Array,
     XpSystem: {
-        Canal: String,
-        Mensagem: String
-    },
+    Canal: String,
+    Mensagem: String
+},
     LeaveChannel: {
-        Canal: String,
-        Mensagem: String,
-    },
+    Canal: String,
+    Mensagem: String,
+},
     WelcomeChannel: {
-        Canal: String,
-        Mensagem: String,
-    }
+    Canal: String,
+    Mensagem: String,
+}
 }))
