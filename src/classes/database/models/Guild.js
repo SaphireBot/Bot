@@ -19,6 +19,12 @@ export default model("Guild", new Schema({
         },
         channels: {
             active: Boolean
+        },
+        messages: {
+            active: Boolean
+        },
+        botAdd: {
+            active: Boolean
         }
     },
     Giveaways: Array,
@@ -32,15 +38,15 @@ export default model("Guild", new Schema({
     CommandBlocks: Array,
     // LockdownChannels: Array,
     XpSystem: {
-    Canal: String,
-    Mensagem: String
-},
+        Canal: String,
+        Mensagem: String
+    },
     LeaveChannel: {
-    Canal: String,
-    Mensagem: String,
-},
+        Canal: String,
+        Mensagem: String,
+    },
     WelcomeChannel: {
-    Canal: String,
-    Mensagem: String,
-}
+        Canal: String,
+        Mensagem: String,
+    }
 }))
