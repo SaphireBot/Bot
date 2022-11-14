@@ -70,7 +70,6 @@ client.on('channelCreate', async channel => {
     if (
         !executor
         || !target
-        || executor.id === target.id
         || client.user.id === executor.id
     ) return
 
@@ -79,7 +78,7 @@ client.on('channelCreate', async channel => {
         embeds: [{
             color: client.blue,
             title: `${e.Info} | Dados do Canal`,
-            description: `Usuário: **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*\nNome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.position + 1}/${allChannels?.toJSON()?.length}\`\nTipo: ${channelType}\n${category ? `Categoria: ${category}` : ""}\n${Date.Timestamp()}`,
+            description: `Canal: ${channel}\nUsuário: **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*\nNome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.position + 1}/${allChannels?.toJSON()?.length}\`\nTipo: ${channelType}\n${category ? `Categoria: **${category?.toUpperCase()}**` : ""}\n${Date.Timestamp()}`,
             fields
         }]
     }).catch(() => { })
