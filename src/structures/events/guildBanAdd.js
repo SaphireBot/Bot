@@ -1,3 +1,4 @@
+import { AuditLogEvent } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Permissions } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
@@ -24,7 +25,7 @@ client.on('guildBanAdd', async ban => {
     if (!logs) return
 
     const kickLog = logs.entries.first()
-    if (!kickLog || kickLog.action !== 22) return
+    if (!kickLog || kickLog.action !== AuditLogEvent.MemberBanAdd) return
 
     const { executor, target, reason } = kickLog
 
