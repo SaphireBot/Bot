@@ -1,13 +1,13 @@
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
-import { ChannelsTypes, Permissions } from '../../util/Constants.js'
+import { ChannelsTypes } from '../../util/Constants.js'
 import { AuditLogEvent } from 'discord.js'
 
 client.on('channelCreate', async channel => {
 
     const { guild } = channel
 
-    if (!channel || !guild || !guild.available || !channel.permissionsFor(channel.guild.members.me)?.has(Permissions.SendMessages)) return
+    if (!channel || !guild || !guild.available) return
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
     const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
