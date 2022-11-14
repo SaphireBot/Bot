@@ -31,7 +31,6 @@ client.on('channelDelete', async channel => {
     if (
         !executor
         || !target
-        || executor.id === target.id
         || client.user.id === executor.id
     ) return
 
