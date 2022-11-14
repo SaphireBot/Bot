@@ -136,7 +136,7 @@ Date.prototype.constructor.stringDate = (ms) => {
         if (d[1] > 0 && translate[d[0]])
             result += `${d[1]} ${translate[d[0]](d[1])} `
 
-    return result
+    return result?.trim()
 }
 
 function FormatNumber(data) {
