@@ -84,7 +84,7 @@ export default class SlashCommand extends Base {
                 ephemeral: true
             })
 
-        this.Moeda = guildData.Moeda || `${e.Coin} Safiras`
+        this.Moeda = guildData?.Moeda || `${e.Coin} Safiras`
         return this.execute(guildData, clientData)
     }
 
