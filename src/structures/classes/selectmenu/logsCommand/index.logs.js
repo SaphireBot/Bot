@@ -5,6 +5,7 @@ import {
 import { Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 import disableLogs from "./disable.logs.js"
+
 export default async ({ interaction, values: keys }) => {
 
     const { guild, user, message } = interaction

@@ -5,12 +5,13 @@ import { AuditLogEvent } from 'discord.js'
 
 client.on('channelCreate', async channel => {
 
+
+    if (!channel || !channel?.guild || !channel?.guild.available) return
+
     const { guild } = channel
 
-    if (!channel || !guild || !guild.available) return
-
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
-    const logChannel = guild.channels.cache.get(guildData?.LogSystem?.channel)
+    const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel)?.catch(() => null)
     if (!logChannel || !guildData?.LogSystem?.channels?.active) return
 
     const channelType = ChannelsTypes[channel.type] || "Tipo de canal não reconhecido"
@@ -65,13 +66,9 @@ client.on('channelCreate', async channel => {
     const Log = logs.entries.first()
     if (!Log || Log.action !== AuditLogEvent.ChannelCreate) return
 
-    const { executor, target } = Log
+    const { executor } = Log
 
-    if (
-        !executor
-        || !target
-        || client.user.id === executor.id
-    ) return
+    if (!executor) return
 
     return logChannel.send({
         content: "🛰️ | **Global System Notification** | Channel Create",
