@@ -170,6 +170,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
 
     if (((!description || !description.length) && !fields.length) || (fields.length === 1 && !description)) return
 
+    if (!logChannel?.id || !logChannel?.name) return
     return logChannel?.send({
         content: "🛰️ | **Global System Notification** | Channel Updated",
         embeds: [{
@@ -178,5 +179,5 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
             description,
             fields
         }]
-    })
+    }).catch(() => { })
 })
