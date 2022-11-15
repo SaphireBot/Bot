@@ -15,9 +15,9 @@ app.use((_, res, next) => {
   next();
 })
 
-app.post(process.env.ROUTE_TOP_GG, async (req, res) => {
+app.post("/topgg", async (req, res) => {
 
-  const response = await topggReward(req.headers?.user || null)
+  await topggReward(req.headers?.user || null)
 
   return res.status(200)
 })
