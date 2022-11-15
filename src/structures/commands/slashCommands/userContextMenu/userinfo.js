@@ -67,7 +67,7 @@ export default {
                     },
                     {
                         name: '@ Cargos',
-                        value: memberData?.roles.limit('MessageEmbedFieldValue')
+                        value: memberData?.roles?.limit('MessageEmbedFieldValue') || "`Not Found Roles`"
                     }
                 ]
             },
