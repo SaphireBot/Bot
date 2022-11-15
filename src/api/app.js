@@ -17,9 +17,11 @@ app.use((_, res, next) => {
 
 app.post("/topgg", async (req, res) => {
 
-  await topggReward(req.headers?.user || null)
+  const response = await topggReward(req.headers?.user || null).catch(() => null)
 
-  return res.status(200)
+  return response
+    ? res.status(200).header(response).send(response)
+    : res.sendStatus(500)
 })
 
 app.post(process.env.ROUTE_MARCADO_PAGO_WEBHOOK, async (req, res) => {

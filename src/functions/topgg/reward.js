@@ -5,6 +5,7 @@ import {
 import { Emojis as e } from '../../util/util.js'
 import { Api } from '@top-gg/sdk'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
 
 export default async (userId) => {
 
@@ -14,11 +15,10 @@ export default async (userId) => {
     if (!user) return false
     giveRewards()
 
-    const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
     const votes = await TopGGApi.getVotes() || []
     const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
-
     const data = cachedData?.find(data => data?.userId === userId)
+
     await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.userId === userId)
     if (!data) return await giveRewards()
 
@@ -51,7 +51,7 @@ export default async (userId) => {
     return message.edit({ embeds: [embed], components: [] })
         .then(() => {
             return {
-                content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
+                content: `${user?.tag} \`${userId || 0}\` aumentou os votos da ${client.user.tag} para ${votes.length}`,
                 avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
                 username: 'Top GG Vote Notification'
             }
@@ -81,7 +81,7 @@ export default async (userId) => {
         )
             .then(() => {
                 return {
-                    content: `+1 voto para Saphire Moon#5706 de ${user.tag} \`${userId || 0}\` (${votes.length})`,
+                    content: `${user?.tag} \`${userId || 0}\` aumentou os votos da ${client.user.tag} para ${votes.length}`,
                     avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
                     username: 'Top GG Vote Notification'
                 }
