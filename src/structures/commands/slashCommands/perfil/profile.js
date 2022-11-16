@@ -86,10 +86,6 @@ export default {
                         {
                             name: '📝 Status',
                             value: 'Um dia eu quero ir a lua'
-                        },
-                        {
-                            name: '🛡️ Clan',
-                            value: 'Saphire\'s Team Official'
                         }
                     ]
                 }],
@@ -192,7 +188,6 @@ export default {
         const sexo = data?.Perfil?.Sexo ? `⠀\n${data?.Perfil?.Sexo}` : `⠀\n${e.Deny} Sem gênero definido`
         const niver = data?.Perfil?.Aniversario ? `⠀\n🎉 ${data?.Perfil?.Aniversario}` : `⠀\n${e.Deny} Sem aniversário definido`
         const job = data?.Perfil?.Trabalho ? `⠀\n👷 ${data?.Perfil?.Trabalho}` : `⠀\n${e.Deny} Sem profissão definida`
-        const Clan = data?.Clan || 'Não possui'
         clientData.TopGlobal?.Level === user.id ? titles.push(`${e.RedStar} **Top Global Level**`) : ''
         clientData.TopGlobal?.Likes === user.id ? titles.push(`${e.Like} **Top Global Likes**`) : ''
         clientData.TopGlobal?.Money === user.id ? titles.push(`${e.MoneyWings} **Top Global Money**`) : ''
@@ -273,10 +268,6 @@ export default {
             {
                 name: '📝 Status',
                 value: status
-            },
-            {
-                name: '🛡️ Clan',
-                value: Clan
             }
         ]
 

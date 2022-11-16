@@ -3,7 +3,6 @@ const { Schema, model } = Mongoose
 
 export default model("User", new Schema({
     id: { type: String, unique: true },
-    Clan: String,
     Likes: Number,
     Xp: Number,
     Level: Number,

@@ -70,7 +70,20 @@ export default {
             description: '[admin] Comando de teste',
             type: ApplicationCommandOptionType.Subcommand,
             options: []
-        }
+        },
+        {
+            name: 'fanart',
+            description: '[admin] Comando para gerenciar fanarts',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'add',
+                    description: 'Adicionar uma nova fanart',
+                    type: ApplicationCommandOptionType.User,
+                    required: true
+                }
+            ]
+        },
     ],
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'

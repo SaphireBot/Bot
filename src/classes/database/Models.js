@@ -1,4 +1,4 @@
-import ModelClan from './models/Clans.js'
+import Fanart from './models/Fanart.js'
 import ModelClient from './models/Client.js'
 import ModelGuild from './models/Guild.js'
 import ModelEconomy from './models/Economy.js'
@@ -13,7 +13,7 @@ import Indications from './models/Indications.js'
 
 class Models {
     constructor() {
-        this.Clan = ModelClan
+        this.Fanart = Fanart
         this.Client = ModelClient
         this.Guild = ModelGuild
         this.Economy = ModelEconomy
@@ -25,7 +25,7 @@ class Models {
 }
 
 export {
-    ModelClan as Clan,
+    Fanart,
     ModelClient as Client,
     ModelGuild as Guild,
     ModelEconomy as Economy,

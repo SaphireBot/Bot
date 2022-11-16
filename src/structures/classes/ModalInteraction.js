@@ -28,6 +28,7 @@ export default class ModalInteraction extends Base {
 
         if (this.customId.includes('channel')) return this.ChannelRedirect(this)
         if (this.customId.includes('reportBalance')) return this.reportBalance(this)
+        if (this.customId.includes('fanart')) return this.addFanart(this)
         if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
 
@@ -53,6 +54,68 @@ export default class ModalInteraction extends Base {
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
 
         return
+    }
+
+    async addFanart({ interaction, fields }) {
+
+        const imageUrl = fields.getTextInputValue('imageURL')
+        const imageName = fields.getTextInputValue('imageName')
+        const userId = JSON.parse(this.customId)?.src
+        const user = await this.client.users.fetch(userId).catch(() => null)
+
+        if (!user)
+            return await interaction.reply({
+                content: `${e.Deny} | Usuário não encontrado.`,
+                ephemeral: true
+            })
+
+        const fanarts = await this.Database.Fanart.find({}) || []
+        const allIds = fanarts?.map(fan => fan?.id) || []
+
+        if (fanarts.find(fan => fan?.url === imageUrl))
+            return await interaction.reply({
+                content: `${e.Deny} | Essa fanart já existe no banco de dados.`,
+                ephemeral: true
+            })
+
+        if (fanarts.find(fan => fan?.name === imageName))
+            return await interaction.reply({
+                content: `${e.Deny} | Uma fanart com esse nome já existe no banco de dados.`,
+                ephemeral: true
+            })
+
+        let nextId = 0
+        let control = 0
+
+        do {
+
+            if (!allIds.includes(control)) {
+                nextId = control
+                control = true
+                console.log("ACCESS")
+                break;
+            }
+
+            control++
+            continue
+
+        } while (control !== true)
+
+        return this.Database.Fanart.create({
+            id: nextId,
+            name: imageName,
+            url: imageUrl,
+            userId: user.id
+        })
+            .then(async () => await interaction.reply({
+                content: `${e.Check} | Fanart salva com sucesso.`,
+                ephemeral: true
+            }))
+            .catch(async error => await interaction.reply({
+                content: `${e.Deny} | Não foi possível salvar essa Fanart.\n${e.Warn} | \`${error}\``,
+                ephemeral: true
+            }))
+
     }
 
     async reportBalance({ interaction, fields, user }) {

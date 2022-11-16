@@ -28,6 +28,55 @@ export default new class Modals {
         }
     }
 
+    addFanart(user) {
+        return {
+            title: "Add Fanart Painel",
+            custom_id: JSON.stringify({ c: 'fanartADD', src: user.id }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'user',
+                            label: "Author",
+                            style: 1,
+                            placeholder: "UserData",
+                            required: true,
+                            value: `${user.tag} - ${user.id}`
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'imageURL',
+                            label: "URL da Imagem",
+                            style: 1,
+                            placeholder: "https://media.discordapp.net/attachments/104189...",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'imageName',
+                            label: "Nome da Fanart",
+                            style: 1,
+                            placeholder: "Saphire Natal",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     ChannelClone(channel) {
         return {
             title: "Clone Channel",
