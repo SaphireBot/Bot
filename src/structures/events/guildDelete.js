@@ -10,7 +10,7 @@ client.on('guildDelete', async guild => {
 
     await Database.Guild.deleteMany({ id: guild.id })
 
-    const owner = guild.members.cache.get(guild.ownerId)
+    const owner = await guild.fetchOwner().catch(() => null)
 
     return client.sendWebhook(
         process.env.WEBHOOK_DATABASE_LOGS,
