@@ -322,7 +322,7 @@ export default class SelectMenuInteraction extends Base {
                     {
                         username: "Global System Notification | Anime Indications",
                         avatarURL: process.env.WEBHOOK_GSN_AVATAR,
-                        content: `${e.Notification} | <@${authorId}> \`${authorId}\`\n ${e.Check} | O anime que você indicou foi aceito. -> **${name}**\n🔎 | Você pode vê-lo usando \`/anime indications search: ${name}\``
+                        content: `${e.Notification} | <@${authorId}> \`${authorId}\`\n${e.Check} | O anime que você indicou foi aceito. -> **${name}**\n🔎 | Você pode vê-lo usando \`/anime indications search: ${name}\``
                     }
                 )
 
