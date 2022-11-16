@@ -1,5 +1,6 @@
 import { Colors, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
 import { ApplicationCommandOptionType } from "discord.js";
+import notify from "../../../../functions/plugins/notify.js";
 
 export default {
     name: 'logs',
@@ -19,13 +20,13 @@ export default {
     helpData: {
         description: 'Sistema frontal para gerenciar os logs'
     },
-    async execute({ interaction, e, Database }) {
+    async execute({ interaction, e, Database, client }) {
 
-        const { guild, options } = interaction
+        const { guild, options, commandId, user } = interaction
 
-        if (!guild.clientHasPermission(Permissions.ViewAuditLog))
+        if (!guild.clientHasPermission(Permissions.ViewAuditLog) || !guild.clientHasPermission(Permissions.ManageWebhooks))
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`** para executar este comando.`,
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`** e **\`${PermissionsTranslate.ManageWebhooks}\`** para executar este comando.`,
                 ephemeral: true
             })
 
@@ -144,20 +145,47 @@ export default {
                     ephemeral: true
                 })
 
+            const webhookFetch = await configChannel.fetchWebhooks().catch(() => null)
+
+            const webhook = webhookFetch?.find(w => w?.name === "Global System Notification")
+                || await configChannel.createWebhook({
+                    name: "Global System Notification",
+                    avatar: process.env.WEBHOOK_GSN_AVATAR,
+                    reason: 'Webhook Notification GSN'
+                }).catch(err => err)
+
+            if (!webhook?.url)
+                return await interaction.reply({
+                    content: `${e.Deny} | Não foi possível criar a webhook necessária.`
+                })
+
             return Database.Guild.updateOne(
                 { id: guild.id },
                 {
                     $set: {
-                        "LogSystem.channel": configChannel.id
+                        "LogSystem.channel": configChannel.id,
+                        "LogSystem.webhookUrl": webhook.url
                     }
                 }
             )
                 .then(async result => {
 
-                    if (result.modifiedCount > 0)
+                    if (result.modifiedCount > 0) {
+                        notify(configChannel.id, 'Log System Enabled', `${user} \`${user.id}\` ativou o sistema de logs.`)
+
+                        client.sendWebhook(
+                            webhook.url,
+                            {
+                                username: "Global System Notification | Central Database",
+                                avatarURL: process.env.WEBHOOK_GSN_AVATAR,
+                                content: `${user} \`${user.id}\`, este canal foi registrado e aceito com sucesso no Sistema Global de Notificações da ${client.user.username}.\nTodos os recursos e informações que ligam este servidor ou quaisquer membros com a ${client.user.username} será notificado por está Webhook neste canal.\n \n*Atenciosamente: Equipe Administrativa de Desenvolvimento do Projeto Saphire.*`
+                            }
+                        )
+
                         return await interaction.reply({
-                            content: `${e.Check} | O canal ${configChannel} foi configurado com sucesso como o canal pai do sistema GSN neste servidor.`
+                            content: `${e.Check} | O canal ${configChannel} foi configurado com sucesso como o canal pai do sistema GSN neste servidor.\n${e.Info} | Com um canal configurado, você pode usar o comando </logs:${commandId}> para configurar quais logs você quer receber.`
                         })
+                    }
 
                     return await interaction.reply({
                         content: `${e.Warn} | Não foi possível configurar este canal no banco de dados.`,
@@ -165,7 +193,7 @@ export default {
                     })
                 })
                 .catch(async err => await interaction.reply({
-                    content: `${e.Warn} | Não foi possível configurar este canal no banco de dados.\n> \`${err}\``
+                    content: `${e.Warn} | Não foi possível configurar este canal no banco de dados.\n${e.bug} | \`${err}\``
                 }))
 
         }

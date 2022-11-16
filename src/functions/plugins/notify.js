@@ -1,10 +1,10 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
 
-export default async (channelId, type, msg) => {
+export default async (logChannelId, type, msg) => {
 
-    if (!channelId) return
+    if (!logChannelId) return
 
-    const canal = await client.channels.fetch(channelId).catch(() => null)
+    const canal = await client.channels.fetch(logChannelId).catch(() => null)
     if (!canal)
         return await Database.Guild.updateOne(
             { id: ServerId },

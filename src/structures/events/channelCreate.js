@@ -5,7 +5,6 @@ import { AuditLogEvent } from 'discord.js'
 
 client.on('channelCreate', async channel => {
 
-
     if (!channel || !channel?.guild || !channel?.guild.available) return
 
     const { guild } = channel

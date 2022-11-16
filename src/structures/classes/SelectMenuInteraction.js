@@ -1,4 +1,4 @@
-import { Database } from '../../classes/index.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
@@ -238,7 +238,32 @@ export default class SelectMenuInteraction extends Base {
             return await interaction.showModal(this.modals.indicateAnime('animeIndicationsEdit', name))
         }
 
-        if (value === 'deny') return await message.delete().catch(() => { })
+        if (value === 'deny') {
+
+            await message.delete().catch(() => { })
+
+            const { embeds } = message
+            const embed = embeds[0]?.data
+            if (!embed) return
+
+            const name = embed.fields[0].value
+            const guildId = embed.fields[embed.fields.length - 1]?.value
+            const authorId = embed.footer.text
+            const guildData = await Database.Guild.findOne({ id: guildId })
+            const webhookUrl = guildData?.LogSystem?.webhookUrl
+            if (!webhookUrl) return
+
+            return client.sendWebhook(
+                webhookUrl,
+                {
+                    username: "Global System Notification | Anime Indications",
+                    avatarURL: process.env.WEBHOOK_GSN_AVATAR,
+                    content: `${e.Notification} | <@${authorId}> \`${authorId}\`\n${e.Deny} | O anime que você indicou **NÃO** foi aceito. -> **${name}**`
+                }
+            )
+
+
+        }
 
         if (value === 'accept') {
 
@@ -256,7 +281,8 @@ export default class SelectMenuInteraction extends Base {
             const gender = embed.fields[1].value.replace(/`/g, '').split(', ')
             const category = embed.fields[2].value.replace(/`/g, '').split(', ')
             const category2 = embed.fields[3]?.value.replace(/`/g, '').split(', ')
-            const targetPublic = embed.fields[4].value.replace(/`/g, '').split(', ')
+            const targetPublic = embed.fields[4]?.value.replace(/`/g, '').split(', ')
+            const guildId = embed.fields[embed.fields.length - 1]?.value
             const authorId = embed.footer.text
 
             if (animesIndications.find(anime => anime.name?.toLowerCase() === name?.toLowerCase())) {
@@ -266,6 +292,11 @@ export default class SelectMenuInteraction extends Base {
                     ephemeral: true
                 })
             }
+
+            const guildData = await Database.Guild.findOne({ id: guildId })
+            const webhookUrl = guildData?.LogSystem?.webhookUrl
+
+            if (webhookUrl) sendWebhookMessage()
 
             return new Database.Indications({ name, category: [...category, ...category2], gender, targetPublic, authorId })
                 .save(async function (err) {
@@ -283,6 +314,19 @@ export default class SelectMenuInteraction extends Base {
                     })
 
                 })
+
+            async function sendWebhookMessage() {
+
+                return client.sendWebhook(
+                    webhookUrl,
+                    {
+                        username: "Global System Notification | Anime Indications",
+                        avatarURL: process.env.WEBHOOK_GSN_AVATAR,
+                        content: `${e.Notification} | <@${authorId}> \`${authorId}\`\n ${e.Check} | O anime que você indicou foi aceito. -> **${name}**\n🔎 | Você pode vê-lo usando \`/anime indications search: ${name}\``
+                    }
+                )
+
+            }
 
         }
 

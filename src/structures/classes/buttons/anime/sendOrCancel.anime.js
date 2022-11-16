@@ -7,7 +7,7 @@ import { Emojis as e } from "../../../../util/util.js"
 
 export default async (interaction, customId) => {
 
-    const { user, message } = interaction
+    const { user, message, guild } = interaction
     const { embeds } = message
     const embed = embeds[0]?.data
 
@@ -44,6 +44,11 @@ export default async (interaction, customId) => {
     embed.fields.push({
         name: '👤 Autor(a)',
         value: `${client.users.resolve(embed.footer.text)?.tag || 'Not Found'} - \`${embed.footer.text}\``
+    })
+
+    embed.fields.push({
+        name: 'Guild Id Weebhook Control',
+        value: guild.id
     })
 
     const selectMenuObject = {
@@ -90,6 +95,11 @@ export default async (interaction, customId) => {
     const sended = await channel.send({ embeds: [embed], components: [selectMenuObject] }).catch(() => null)
 
     embed.color = client.green
+    embed.fields[embed.fields.length - 1] = {
+        name: `🛰 Global System Notification`,
+        value: `Este comando é integrado com o GSN *(Sistema Global de Notificação)*.\nVocê será notificado aqui no servidor se o sistema \`/logs\` estiver ativado.\n*Lembrando, se os Adm's do servidor privou o canal de logs, você não será notificado.*`
+    }
+
     return sended
         ? await interaction.update({
             content: `${e.Check} | Sua sugestão foi enviada com sucesso!`,

@@ -5,6 +5,7 @@ export default model("Guild", new Schema({
     id: { type: String, unique: true },
     LogSystem: {
         channel: String,
+        webhookUrl: String,
         ban: {
             active: Boolean
         },
