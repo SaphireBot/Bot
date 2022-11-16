@@ -4,7 +4,7 @@ import {
 } from "../../../../classes/index.js"
 import { ButtonStyle } from "discord.js"
 import { Emojis as e } from "../../../../util/util.js"
-import infoSaphire from "../../../commands/functions/bot/info.saphire.js"
+import infoSaphire from "../../../commands/functions/bot/profile.saphire.js"
 
 export default async (interaction, { src: key, page }) => {
 

@@ -25,7 +25,11 @@ export default {
                     choices: [
                         {
                             name: 'Fotos de Perfil',
-                            value: 'pfp'
+                            value: 'profile'
+                        },
+                        {
+                            name: 'Fanarts',
+                            value: 'fanarts'
                         }
                     ]
                 }
@@ -37,9 +41,13 @@ export default {
         const { options } = interaction
         const isInfoCommand = options.getSubcommand() === "info"
 
-        if (isInfoCommand) return infoSaphire(interaction)
+        if (isInfoCommand)
+            return infoSaphire(interaction)
 
-        console.log(isInfoCommand)
+        return await interaction.reply({
+            content: `${e.Deny} | Comando não reconhecido... Estranho...`,
+            ephemeral: true
+        })
 
     }
 }
