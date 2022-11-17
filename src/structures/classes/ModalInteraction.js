@@ -92,7 +92,6 @@ export default class ModalInteraction extends Base {
             if (!allIds.includes(control)) {
                 nextId = control
                 control = true
-                console.log("ACCESS")
                 break;
             }
 
