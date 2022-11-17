@@ -103,6 +103,11 @@ export default new class SaphireClient extends Client {
          * @returns [staff1, staff2]
          */
         this.staff = [config.ownerId]
+
+        /**
+         * @retuns [FanartsObject]
+         */
+        this.fanarts = []
     }
 
     /**
@@ -139,7 +144,7 @@ export default new class SaphireClient extends Client {
         mercadopago.configure({ access_token: process.env.MERCADO_PAGO_TOKEN })
         const databaseResponse = await Database.MongoConnect(this)
         const slashCommandsResponse = await slashCommand(this)
-
+        
         await Database.Cache.clearTables(`${this.shardId}`)
         GiveawayManager.setGiveaways()
         PollManager.setPolls()

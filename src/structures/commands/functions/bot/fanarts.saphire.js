@@ -1,13 +1,19 @@
 import { ButtonStyle } from "discord.js"
+import { Emojis as e } from "../../../../util/util.js"
 import {
     Database,
     SaphireClient as client
 } from "../../../../classes/index.js"
-import { Emojis as e } from "../../../../util/util.js"
 
-export default async (interaction, data) => {
+export default async (interaction, data, toUpdate) => {
 
-    const fanartsData = await Database.Fanart.find({}) || []
+    if (["like", "unlike"].includes(data?.src)) return newLike()
+
+    const { message, user: interactionUser } = interaction
+
+    if (message.interaction.user.id !== interactionUser.id) return
+
+    const fanartsData = client.fanarts
 
     if (!fanartsData || !fanartsData?.length)
         return await interaction.reply({
@@ -15,11 +21,11 @@ export default async (interaction, data) => {
             ephemeral: true
         })
 
-    const index = 0
-    const fanart = fanartsData[index]
+    const index = data?.index || 0
+    const fanart = fanartsData[index] ? fanartsData[index] : fanartsData[data?.id] ? fanartsData[data?.id] : fanartsData[0]
     const user = await client.users.fetch(fanart?.userId).catch(() => null)
 
-    return await interaction.reply({
+    const responseData = {
         embeds: [{
             color: client.blue,
             title: "🖌 Fanarts - Saphire",
@@ -40,37 +46,81 @@ export default async (interaction, data) => {
                 components: [
                     {
                         type: 2,
-                        label: `${fanart?.like || 0}`,
+                        label: `${fanart?.like?.length || 0}`,
                         emoji: e.Upvote,
-                        custom_id: 'like',
-                        style: ButtonStyle.Success,
-                        disabled: true
+                        custom_id: JSON.stringify({ c: 'fanart', src: "like", id: fanart.id }),
+                        style: ButtonStyle.Success
                     },
                     {
                         type: 2,
-                        label: `${fanart?.unlike || 0}`,
+                        label: `${fanart?.unlike?.length || 0}`,
                         emoji: e.DownVote,
-                        custom_id: 'unlike',
-                        style: ButtonStyle.Danger,
-                        disabled: true
+                        custom_id: JSON.stringify({ c: 'fanart', src: "unlike", id: fanart.id }),
+                        style: ButtonStyle.Danger
                     },
                     {
                         type: 2,
                         emoji: '⬅',
-                        custom_id: JSON.stringify({ c: 'fanart', src: "left", index: index <= 0 ? 0 : index - 1 }),
-                        style: ButtonStyle.Primary,
-                        disabled: true
+                        custom_id: JSON.stringify({ c: 'fanart', src: "left", index: fanartsData < 0 ? fanartsData?.length - 1 : index - 1, id: fanart.id }),
+                        style: ButtonStyle.Primary
                     },
                     {
                         type: 2,
                         emoji: '➡',
-                        custom_id: JSON.stringify({ c: 'fanart', src: "right", index: index >= fanartsData?.length ? 0 : index + 1 }),
-                        style: ButtonStyle.Primary,
-                        disabled: true
+                        custom_id: JSON.stringify({ c: 'fanart', src: "right", index: index >= fanartsData?.length ? 0 : index + 1, id: fanart.id }),
+                        style: ButtonStyle.Primary
                     }
                 ]
             }
         ]
-    })
+    }
+
+    return toUpdate
+        ? await interaction.update(responseData)?.catch(() => { })
+        : await interaction.reply(responseData)
+
+    async function newLike() {
+
+        const fanartId = data?.id
+
+        if (typeof fanartId !== "number")
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível contabilizar o like.`,
+                ephemeral: true
+            })
+
+        await Database.Fanart.findOneAndUpdate(
+            { id: fanartId },
+            {
+                $addToSet: { [data.src]: interactionUser.id },
+                $pull: { [data.src === "unlike" ? "like" : "unlike"]: interactionUser.id }
+            },
+            { new: true }
+        )
+            .then(async document => {
+
+                const components = message.components
+
+                if (!components[0])
+                    return await interaction.update({
+                        content: "${e.Deny} | ${EncoderFormatReponseComponents}",
+                        embeds: [],
+                        components: []
+                    })
+
+                const buttons = components[0]?.toJSON()
+                buttons.components[0].label = document.like?.length || 0
+                buttons.components[1].label = document.unlike?.length || 0
+
+                return await interaction.update({ components: [buttons] })
+            })
+            .catch(async error => {
+                return await interaction.update({
+                    content: `${e.Deny} | Erro ao computar o like.\n${e.Bug} | \`${error}\``,
+                    components: [],
+                    embeds: []
+                })
+            })
+    }
 
 }
