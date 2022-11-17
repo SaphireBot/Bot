@@ -32,7 +32,7 @@ export default {
             })
 
         if (!user && searchId) {
-            user = await client.users.fetch(searchId, { force: true })
+            user = await client.users.fetch(searchId)
                 .catch(() => null)
         }
 

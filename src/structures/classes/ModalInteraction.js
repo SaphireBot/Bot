@@ -1412,7 +1412,7 @@ export default class ModalInteraction extends Base {
         let usernameData = fields.getTextInputValue('username')
         let anonymous = fields.getTextInputValue('anonymous')
         let letterContent = fields.getTextInputValue('letterContent')
-        let userLetted = await client.users.fetchUser(usernameData)
+        let userLetted = await client.users.fetch(usernameData?.id)
 
         if (!userLetted)
             return await interaction.reply({

@@ -1,44 +1,17 @@
-import { UserManager } from 'discord.js'
-import { Database, SaphireClient as client } from '../../../classes/index.js'
+import { UserManager, Routes, RouteBases } from 'discord.js'
+import fetch from "node-fetch"
 
-UserManager.prototype.fetchUser = function (dataToSearch) {
+UserManager.prototype.fetch = async function (userId) {
 
-    if (!dataToSearch) return null
+    const UserInCache = this.cache.get(userId)
+    if (UserInCache) return UserInCache
 
-    const search = client.allUsers
-        .find(data => {
-            return data.id === dataToSearch
-                || data.username?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.tag?.toLowerCase() === dataToSearch?.toLowerCase()
-                || data.discriminator === dataToSearch
-                || data.username?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
-                || data.tag?.toLowerCase()?.includes(dataToSearch?.toLowerCase())
-        })
+    const fetchUser = fetch(`${RouteBases.api + Routes.user(userId)}`, {
+        headers: { Authorization: `Bot ${process.env.BOT_TOKEN_REQUEST}` },
+        method: "GET"
+    })
+        .then(response => response.json())
+        .catch(() => null)
 
-    return client.users.resolve(search.id) || null
-}
-
-/**
- * @param Nothing
- * @returns Um array com todos os usuários de todas as Shards em cada array
- * @example <Client>.users.all() [[user1, user2, user3], [user4, user5, user6]]
- * @example <Client>.users.all(true) [user1, user2, user3, user4, user5, user6]
- */
-UserManager.prototype.all = async (inFlat, toDefine) => {
-
-    const looped = await Database.Cache.General.get('Looped')
-
-    if (!looped) {
-        await Database.Cache.General.set('Looped', true)
-        for await (let guildRaw of client.allGuilds) {
-            const guild = await client.guilds.fetch(guildRaw.id).catch(() => null)
-            if (!guild) continue
-            await guild.members.fetch()
-            continue
-        }
-    }
-
-    const data = await client.shard.broadcastEval(Client => Client.users.cache)
-    if (toDefine) return client.allUsers = data.flat()
-    return inFlat ? data.flat() : data
+    return fetchUser
 }

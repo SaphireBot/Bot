@@ -5,17 +5,14 @@ import Ranking from './ranking/index.ranking.js'
 export default async () => {
 
     await Ranking()
-    // await client.guilds.all(true, true)
-    // client.users.all(true, true)
     client.refreshStaff()
 
-    setInterval(() => {
+    setInterval(async () => {
         ReminderSystem()
+        client.fanarts = await Database.Fanart.find() || []
     }, 3000)
 
     setInterval(async () => {
-        // client.allGuilds = await client.guilds.all(true)
-        // client.allUsers = await client.users.all(true)
         const allDataUsers = await Database.User.find({})
         client.databaseUsers = allDataUsers.map(data => data.id)
     }, 60000 * 5)

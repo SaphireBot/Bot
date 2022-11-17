@@ -17,11 +17,8 @@ client.on("guildCreate", async guild => {
 
     if (blacklistServers.some(data => data?.id === guild.id))
         return guild.leave().catch(async err => {
-
-            const owner = config.ownerId ? await client.users.fetch(config.ownerId).catch(() => { }) : null
-            if (!owner) return
-
-            return owner.send(`${e.Deny} | Não foi possível sair da ${guild.id} \`${guild.id}\` que está na blacklist.\n> \`${err}\``).catch(() => { })
+            const owner = await client.users.fetch(config.ownerId).catch(() => null)
+            return owner?.send(`${e.Deny} | Não foi possível sair da ${guild.id} \`${guild.id}\` que está na blacklist.\n> \`${err}\``).catch(() => { })
         })
 
     Hello(); SendAdder()
