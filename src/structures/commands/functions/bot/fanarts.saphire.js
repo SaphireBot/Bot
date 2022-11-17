@@ -7,14 +7,12 @@ import {
 
 export default async (interaction, data, toUpdate) => {
 
+    const { message, user: interactionUser } = interaction
     if (["like", "unlike"].includes(data?.src)) return newLike()
 
-    const { message, user: interactionUser } = interaction
-
-    if (message.interaction.user.id !== interactionUser.id) return
+    if (message && message?.interaction?.user?.id !== interactionUser.id) return
 
     const fanartsData = client.fanarts
-
     if (!fanartsData || !fanartsData?.length)
         return await interaction.reply({
             content: `${e.Deny} | Nenhuma fanarts foi registrada no banco de dados.`,
@@ -23,7 +21,7 @@ export default async (interaction, data, toUpdate) => {
 
     const index = data?.index || 0
     const fanart = fanartsData[index] ? fanartsData[index] : fanartsData[data?.id] ? fanartsData[data?.id] : fanartsData[0]
-    const user = await client.users.fetch(fanart?.userId).catch(() => null)
+    const user = await client.users.fetch(fanart?.userId)
 
     const responseData = {
         embeds: [{
@@ -112,7 +110,7 @@ export default async (interaction, data, toUpdate) => {
                 buttons.components[0].label = document.like?.length || 0
                 buttons.components[1].label = document.unlike?.length || 0
 
-                return await interaction.update({ components: [buttons] })
+                return await interaction.update({ components: [buttons] }).catch(() => { })
             })
             .catch(async error => {
                 return await interaction.update({

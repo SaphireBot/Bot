@@ -69,7 +69,13 @@ export default {
             name: 'test',
             description: '[admin] Comando de teste',
             type: ApplicationCommandOptionType.Subcommand,
-            options: []
+            options: [
+                {
+                    name: 'id',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'sdsasd'
+                }
+            ]
         },
         {
             name: 'fanart',

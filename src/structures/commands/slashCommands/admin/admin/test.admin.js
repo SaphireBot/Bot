@@ -1,1 +1,1 @@
-export default async interaction => {}
+export default async interaction => { }

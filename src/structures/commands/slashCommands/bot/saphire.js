@@ -13,7 +13,7 @@ export default {
     },
     options: [
         {
-            name: 'info',
+            name: 'images',
             description: 'Informações gerais',
             type: ApplicationCommandOptionType.Subcommand,
             options: [
@@ -39,7 +39,7 @@ export default {
     async execute({ interaction }) {
 
         const { options } = interaction
-        const isInfoCommand = options.getSubcommand() === "info"
+        const isInfoCommand = options.getSubcommand() === "images"
 
         if (isInfoCommand)
             return infoSaphire(interaction)
