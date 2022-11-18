@@ -11,6 +11,25 @@ export default async interaction => {
 
     const { options, user, guild, channel: intChannel } = interaction
 
+    function day(tomorrow = false) {
+
+        function FormatNumber(data) {
+            return data < 10 ? `0${data}` : data
+        }
+
+        const date = new Date()
+        date.setHours(date.getHours() - 3)
+
+        if (tomorrow)
+            date.setDate(date.getDate() + 1)
+
+        let Mes = FormatNumber(date.getMonth() + 1)
+        let Dia = FormatNumber(date.getDate())
+        let Ano = date.getFullYear()
+
+        return `${Dia}/${Mes}/${Ano}`
+    }
+
     const Prize = options.getString('prize')
     const Time = options.getString('time')
     const Requisitos = options.getString('requires')
