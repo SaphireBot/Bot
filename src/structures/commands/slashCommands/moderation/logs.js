@@ -7,7 +7,7 @@ export default {
     description: '[moderation] Gerencie os meus sistemas de logs por aqui',
     category: "moderation",
     dm_permission: false,
-    // default_member_permissions: Permissions.ManageGuild,
+    default_member_permissions: Permissions.ManageGuild,
     type: 1,
     options: [
         {
