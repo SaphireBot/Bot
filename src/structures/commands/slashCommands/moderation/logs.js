@@ -7,7 +7,7 @@ export default {
     description: '[moderation] Gerencie os meus sistemas de logs por aqui',
     category: "moderation",
     dm_permission: false,
-    default_member_permissions: Permissions.ManageGuild,
+    // default_member_permissions: Permissions.ManageGuild,
     type: 1,
     options: [
         {
@@ -22,11 +22,17 @@ export default {
     },
     async execute({ interaction, e, Database, client }) {
 
-        const { guild, options, commandId, user } = interaction
+        const { guild, options, commandId, user, member } = interaction
 
         if (!guild.clientHasPermission(Permissions.ViewAuditLog) || !guild.clientHasPermission(Permissions.ManageWebhooks))
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ViewAuditLog}\`** e **\`${PermissionsTranslate.ManageWebhooks}\`** para executar este comando.`,
+                ephemeral: true
+            })
+
+        if (!member.permissions.has("ManageGuild", true))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **\`${PermissionsTranslate.ManageGuild}\`** para executar este comando.`,
                 ephemeral: true
             })
 
