@@ -2495,5 +2495,116 @@
             "censored": "https://media.discordapp.net/attachments/991029755367292948/1036682293370163231/ricardo_eletro2.png",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1036682292854259802/ricardo_eletro.png"
         }
+    },
+    {
+        "answers": [
+            "playboy"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040715324212908103/imagem_2022-11-11_165033004.png"
+        }
+    },
+    {
+        "answers": [
+            "the beatles"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1040717044368289852/tbt2.jpg?width=385&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040717044166955118/tbt.jpg?width=385&height=408"
+        }
+    },
+    {
+        "answers": [
+            "chá matte leão",
+            "matte leão"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1040718351321804840/matte_leao2.png?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040718351019819078/matte_leao.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "oral-b",
+            "oral b"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1040722851365404712/oral_b2.png?width=856&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040722851000496219/oral_b.png?width=856&height=408"
+        }
+    },
+    {
+        "answers": [
+            "colgate"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1040724492458139708/colgate_1_2.png?width=591&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040724492068073562/colgate_1_1.png?width=591&height=408"
+        }
+    },
+    {
+        "answers": [
+            "dove"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040725233012854854/pngwing.com_1.png"
+        }
+    },
+    {
+        "answers": [
+            "olx"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1040726219731251200/olx_2.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1040726219248910417/olx_1.png"
+        }
+    },
+    {
+        "answers": [
+            "m&m's"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1042040374975283270/32_Sem_Titulo_20221115083505.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042040374740394004/images.jpeg"
+        }
+    },
+    {
+        "answers": [
+            "cerveja heineken",
+            "heineken"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1042043251290542140/33_Sem_Titulo_20221115084336.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042043250988560454/1668512397358.png"
+        }
+    },
+    {
+        "answers": [
+            "club social"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1042944962154729622/club_social2.png?width=424&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042944961798209547/club_social.png?width=424&height=408"
+        }
+    },
+    {
+        "answers": [
+            "carrefour"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042945566977564762/imagem_2022-11-17_203213352_1.png?width=577&height=408"
+        }
+    },
+    {
+        "answers": [
+            "ferrero rocher"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1042947938881654794/ferrero_rocher_2.jpg?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042947938680307752/ferrero_rocher_1.jpg?width=408&height=408"
+        }
     }
 ]
