@@ -123,6 +123,7 @@ export default async (interaction, { src: key, page }) => {
                 {
                     color: client.blue,
                     title: `🖌️ ${client.user.username}'s Fotos de Perfil - 4/5`,
+                    url: "https://twitter.com/yafyr/status/1579564517654433794",
                     description: `A ${client.user.username} foi crescendo e crescendo e um detalhe foi notado. Ela estava ficando muito infantil para o público do Discord. Tanto para as pessoas, quanto para os comandos dela. Ela começou a precisar de um novo designer.\n \nComo o ${Pepy} estava muito ocupado, fui atrás de um designer capaz de atender os requisitos para tal façanha. Depois de algumas horas, cheguei ao criador das artes de perfil da bot Loritta, o ${Yafyr}\nDepois de muita conversa, acordos e ideias de vários membros da equipe da Saphire, o designer final foi montado.\nAs mesmas características, porém, dar uma ênfase maior na lua e mudar o rosto para uma versão mais "agressiva".\n \nTornamos a lua o seu poder.\nMudamos o uniforme para uma edição Premium.\nDemos um ar de arrogância e orgulho.\nE claro, mantemos o lacinho azul.\n \nDepois de mais ou menos 2 semanas, algumas alterações, muita conversa e acompanhamento. O ${Yafyr} entregou a arte. Deixamos tudo nas mãos dele e ele fez mais do que nós esperávamos.\nChegando assim, a 4° foto de perfil`,
                     fields: [
                         {
@@ -135,8 +136,7 @@ export default async (interaction, { src: key, page }) => {
                     }
                 },
                 {
-                    color: client.blue,
-                    title: "Adptação para foto de perfil",
+                    url: "https://twitter.com/yafyr/status/1579564517654433794",
                     image: {
                         url: "https://media.discordapp.net/attachments/1029158072926609520/1029165787333787669/saphire-avatar.png?width=473&height=473"
                     }
@@ -179,6 +179,10 @@ export default async (interaction, { src: key, page }) => {
                         {
                             name: "📝 Comentários",
                             value: `> *"Saphire fofa... Um belo contraste do último desenho, não que a gente não quisesse que a cara da Saphire no Discord fosse de uma vilã, mas nem todo mundo tem bom gosto, no mais, esse é outro desenho que eu gostei muito de fazer e em que tive bastante liberdade criativa."*\n> ***~ ${Yafyr}, Freelancer Artist & Saphire Project's Designer Member***\n \n> *"A ${client.user.username} ficou extremamente fofa e novamente eu fiquei muito feliz com o resultado."*\n> ***~ ${Rody}, Saphire Project's Owner***`
+                        },
+                        {
+                            name: "* Adptação para foto de perfil",
+                            value: "Um recorte foi necessário para o enquadramento 4x4."
                         }
                     ],
                     image: {
@@ -186,10 +190,7 @@ export default async (interaction, { src: key, page }) => {
                     }
                 },
                 {
-                    color: client.blue,
-                    title: "Adptação para foto de perfil",
                     url: "https://twitter.com/yafyr/status/1587930899764899840",
-                    description: `E claro, um recorte foi necessário para o enquadramento.\nVocê também pode conferir o post oficial no [Twitter](https://twitter.com/yafyr/status/1587930899764899840) do ${Yafyr}`,
                     image: {
                         url: "https://media.discordapp.net/attachments/1029158072926609520/1037490102248685599/avatar_2.0.png?width=473&height=473"
                     }
