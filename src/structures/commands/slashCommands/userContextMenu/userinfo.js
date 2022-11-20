@@ -20,7 +20,7 @@ export default {
         const memberData = {}
         const userflags = user?.flags?.toArray() || []
 
-        userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => `\`${flags[flag] ? flags[flag] : flag}\``).join(', ') : 'Nenhuma'}`
+        userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => e[flag] || flags[flag] || flag).join(' ') : 'Nenhuma'}`
         userData.system = user.system ? '\n🧑‍💼 `\`Usuário do Sistema\``' : ''
         userData.avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })
         userData.bot = user.bot ? '\`Sim\`' : '\`Não\`'
