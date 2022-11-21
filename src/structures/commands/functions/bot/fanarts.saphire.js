@@ -23,6 +23,12 @@ export default async (interaction, data, toUpdate) => {
     const fanart = fanartsData[index] ? fanartsData[index] : fanartsData[data?.id] ? fanartsData[data?.id] : fanartsData[0]
     const user = await client.users.fetch(fanart?.userId)
 
+    if (!fanart?.url)
+        return await interaction.reply({
+            content: `${e.Deny} | URL da imagem não encontrada.`,
+            ephemeral: true
+        })
+
     const responseData = {
         embeds: [{
             color: client.blue,
@@ -67,6 +73,12 @@ export default async (interaction, data, toUpdate) => {
                         emoji: '➡',
                         custom_id: JSON.stringify({ c: 'fanart', src: "right", index: index >= fanartsData?.length - 1 ? 0 : index + 1, id: fanart.id }),
                         style: ButtonStyle.Primary
+                    },
+                    {
+                        type: 2,
+                        emoji: '🔎',
+                        url: fanart?.url,
+                        style: ButtonStyle.Link
                     }
                 ]
             }
