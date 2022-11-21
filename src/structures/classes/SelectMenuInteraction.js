@@ -4,6 +4,7 @@ import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
 import Base from './Base.js'
+import configAnunciar from './selectmenu/announce/config.anunciar.js'
 import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
 import translateSearch from './selectmenu/search/translate.search.js'
@@ -40,9 +41,19 @@ export default class SelectMenuInteraction extends Base {
             logs: 'logsFunction'
         }[this.customId]
 
-        if (!result) return
+        if (this[result])
+            return this[result](this)
 
-        return this[result](this)
+        if (!this.customId.startsWith('{')) return
+        this.customId = JSON.parse(this?.customId)
+
+        const result2 = {
+            anunciar: configAnunciar
+        }[this.customId?.c]
+
+        if (!result2) return
+
+        return result2(this)
     }
 
     logsFunction() {

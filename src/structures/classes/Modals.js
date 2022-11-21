@@ -4,6 +4,70 @@ export default new class Modals {
         return { ...this }
     }
 
+    NewNotice = {
+        title: "Notice Builder Painel",
+        custom_id: 'notice',
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "title",
+                        label: "Título",
+                        style: 1,
+                        min_length: 10,
+                        max_length: 100,
+                        placeholder: "Um usuário cometeu um erro",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "notice",
+                        label: "Descrição",
+                        style: 2,
+                        min_length: 50,
+                        max_length: 4000,
+                        placeholder: "No dia 01/01/2001 um usuário de drogas...",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "font",
+                        label: "Fonte",
+                        style: 1,
+                        min_length: 10,
+                        placeholder: "https://g1.globo.com/fantastico/noticia...",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "image",
+                        label: "Imagem da Thumbnail",
+                        style: 1,
+                        placeholder: "Link da Imagem",
+                        required: false
+                    }
+                ]
+            }
+        ]
+    }
+
     reportBalance(user) {
         return {
             title: "Balance Report Central",
@@ -379,7 +443,7 @@ export default new class Modals {
                             required: true
                         }
                     ]
-                } // MAX: 5 Fields
+                }
             ]
         }
     }
@@ -450,7 +514,7 @@ export default new class Modals {
                         required: true
                     }
                 ]
-            } // MAX: 5 Fields
+            }
         ]
     }
 
@@ -499,7 +563,7 @@ export default new class Modals {
                             value: image || null
                         }
                     ]
-                } // MAX: 5 Fields
+                }
             ]
         }
     }
@@ -611,7 +675,7 @@ export default new class Modals {
                         required: true
                     }
                 ]
-            } // MAX: 5 Fields
+            }
         ]
     }
 
@@ -633,7 +697,7 @@ export default new class Modals {
                         required: true
                     }
                 ]
-            } // MAX: 5 Fields
+            }
         ]
     }
 
@@ -733,7 +797,7 @@ export default new class Modals {
                             value: job?.length >= 5 ? job : null
                         }
                     ]
-                }, // MAX: 5 Fields
+                },
                 {
                     type: 1,
                     components: [

@@ -3,6 +3,17 @@ const { Schema, model } = Mongoose
 
 export default model("Guild", new Schema({
     id: { type: String, unique: true },
+    Giveaways: Array,
+    Polls: Array,
+    Moeda: String,
+    FirstSystem: Boolean,
+    Autorole: Array,
+    CommandBlocks: Array,
+    announce: {
+        channel: String,
+        allowedRole: String,
+        notificationRole: String
+    },
     LogSystem: {
         channel: String,
         webhookUrl: String,
@@ -28,16 +39,6 @@ export default model("Guild", new Schema({
             active: Boolean
         }
     },
-    Giveaways: Array,
-    Polls: Array,
-    // IdeiaChannel: String,
-    Moeda: String,
-    // ReportChannel: String,
-    FirstSystem: Boolean,
-    Autorole: Array,
-    // AntLink: Boolean,
-    CommandBlocks: Array,
-    // LockdownChannels: Array,
     XpSystem: {
         Canal: String,
         Mensagem: String

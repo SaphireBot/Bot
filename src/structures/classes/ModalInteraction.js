@@ -4,7 +4,7 @@ import {
     Database
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
-import { Config as config } from '../../util/Constants.js'
+import { Config as config, Permissions } from '../../util/Constants.js'
 import moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle, ChannelType } from 'discord.js'
@@ -29,8 +29,8 @@ export default class ModalInteraction extends Base {
         if (this.customId.includes('channel')) return this.ChannelRedirect(this)
         if (this.customId.includes('reportBalance')) return this.reportBalance(this)
         if (this.customId.includes('fanart')) return this.addFanart(this)
-        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
+        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
 
         const ModalInteractionFunctions = {
             BugModalReport: [this.BugModalReport, this],
@@ -44,6 +44,7 @@ export default class ModalInteraction extends Base {
             ratherEdit: [this.vocePrefereEdit, this],
             animeIndicationsEdit: [this.animeIndicationsEdit, this],
             animeIndications: [this.animeIndications, this],
+            notice: [this.announce, this],
             transactionsModalReport: [this.transactionsModalReport],
             botSugest: [this.botSugest],
             serverSugest: [this.serverSugest],
@@ -53,7 +54,104 @@ export default class ModalInteraction extends Base {
         if (ModalInteractionFunctions)
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
 
-        return
+        return await this.interaction.reply({
+            content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,
+            ephemeral: true
+        })
+    }
+
+    async announce({ interaction, user, guild, member, fields }) {
+
+        const guildData = await Database.Guild.findOne({ id: guild.id }, "announce")
+        const channel = await guild.channels.fetch(guildData?.announce?.channel || "undefined").catch(() => null)
+        const notificationRole = await guild.roles.fetch(guildData?.announce?.notificationRole || "undefined").catch(() => null)
+        const allowedRole = await guild.roles.fetch(guildData?.announce?.allowedRole || "undefined").catch(() => null)
+
+        if (!channel || !notificationRole || !allowedRole)
+            return await interaction.reply({
+                content: `${e.Deny} | A configuração deste comando não está completa ou desatualizada. Por favor, reconfigure usando o mesmo comando ou pedindo a um administrador.`,
+                ephemeral: true
+            })
+
+        if (!member.roles.cache.has(allowedRole) && !member.permissions.has(Permissions.Administrator))
+            return await interaction.reply({
+                content: `${e.Deny} | Você não tem o cargo necessário para publicar notícias. (${notificationRole})`,
+                ephemeral: true
+            })
+
+        const title = fields.getTextInputValue('title') || null
+        const description = fields.getTextInputValue('notice') || null
+        const font = fields.getTextInputValue('font') || null
+        const image = fields.getTextInputValue('image') || null
+
+        if (!title || !description || !font)
+            return await interaction.reply({
+                content: `${e.Deny} | As informações não foram passadas corretamentes.`,
+                ephemeral: true
+            })
+
+        if (!font.isURL())
+            return await interaction.reply({
+                content: `${e.Deny} | O campo de "Fonte" repassado não é um link válido.`,
+                ephemeral: true
+            })
+
+        if (image && !image?.isURL())
+            return await interaction.reply({
+                content: `${e.Deny} | O campo de "imagem" repassado não é um link válido.`,
+                ephemeral: true
+            })
+
+        const embeds = [{
+            color: client.blue,
+            title,
+            url: font,
+            description,
+            thumbnail: { url: image },
+            fields: [
+                {
+                    name: '👤 Autor(a)',
+                    value: `${user.tag} - \`${user.id}\``
+                }
+            ]
+        }]
+
+        const components = [{
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Ver na integra',
+                    emoji: '📎',
+                    style: ButtonStyle.Link,
+                    url: font
+                }
+            ]
+        }]
+
+        return await channel?.send({ embeds, components })
+            .then(async message => await interaction.reply({
+                content: `${e.Check} | A sua notícia foi publicada com sucesso.`,
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Ver Notícia',
+                                emoji: '📎',
+                                style: ButtonStyle.Link,
+                                url: message.url
+                            }
+                        ]
+                    }
+                ],
+                ephemeral: true
+            }))
+            .catch(async err => await interaction.reply({
+                content: `${e.Deny} | Não foi possível publicar a notícia.\n${e.Bug} | \`${err}\``,
+                ephemeral: true
+            }))
     }
 
     async addFanart({ interaction, fields }) {
