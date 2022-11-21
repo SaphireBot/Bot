@@ -66,6 +66,7 @@ export default {
         const userflags = user?.flags?.toArray() || []
         const whoIs = user.id === author.id ? 'Suas Informações' : `Informações de ${user.username}`
 
+        if (user.bot && !userflags.includes('VerifiedBot')) userflags.push('Bot')
         userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => e[flag] || flags[flag] || flag).join(' ') : 'Nenhuma'}`
         userData.system = user.system ? '\n🧑‍💼 `\`Usuário do Sistema\``' : ''
         userData.avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })

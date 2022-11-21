@@ -20,6 +20,7 @@ export default {
         const memberData = {}
         const userflags = user?.flags?.toArray() || []
 
+        if (user.bot && !userflags.includes('VerifiedBot')) userflags.push('Bot')
         userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => e[flag] || flags[flag] || flag).join(' ') : 'Nenhuma'}`
         userData.system = user.system ? '\n🧑‍💼 `\`Usuário do Sistema\``' : ''
         userData.avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })
