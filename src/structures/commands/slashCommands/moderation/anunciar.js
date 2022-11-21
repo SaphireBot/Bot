@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
-import { Modals } from '../../../../classes/index.js'
-import { Permissions } from '../../../../util/Constants.js'
+import { Modals } from '../../../../classes/index.js'   
 import { Emojis as e } from '../../../../util/util.js'
 import configAnunciar from '../../../classes/selectmenu/announce/config.anunciar.js'
 
@@ -8,7 +7,6 @@ export default {
     name: 'anunciar',
     description: '[moderation] Anúncie assuntos interessantes em forma de notícia.',
     dm_permission: false,
-    default_member_permissions: Permissions.ManageChannels,
     type: 1,
     options: [
         {

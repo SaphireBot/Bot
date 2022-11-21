@@ -33,7 +33,8 @@ export default async ({ interaction, values: keys }) => {
         kick: logData?.LogSystem?.kick?.active || false,
         ban: logData?.LogSystem?.ban?.active || false,
         unban: logData?.LogSystem?.unban?.active || false,
-        channels: logData?.LogSystem?.channels?.active || false
+        channels: logData?.LogSystem?.channels?.active || false,
+        messages: logData?.LogSystem?.messages?.active || false
     }
 
     const toUpdate = {}
@@ -44,14 +45,16 @@ export default async ({ interaction, values: keys }) => {
             Expulsão: "LogSystem.kick.active",
             Banimento: "LogSystem.ban.active",
             Desbanimento: "LogSystem.unban.active",
-            Canais: "LogSystem.channels.active"
+            Canais: "LogSystem.channels.active",
+            Mensagens: "LogSystem.messages.active"
         }[key]
 
         const result = {
             Expulsão: !baseData?.kick,
             Banimento: !baseData?.ban,
             Desbanimento: !baseData?.unban,
-            Canais: !baseData?.channels
+            Canais: !baseData?.channels,
+            Mensagens: !baseData?.messages
         }[key]
 
         if (!primaryKey && !result) continue;
@@ -67,14 +70,16 @@ export default async ({ interaction, values: keys }) => {
     )
 
     const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
+   
     const dataToArray = [
-        { ...guildData?.LogSystem?.ban, name: "Banimento" },
-        { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
-        { ...guildData?.LogSystem?.kick, name: "Expulsão" },
-        { ...guildData?.LogSystem?.channels, name: "Canais" },
-        { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
-        { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
-        { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" }
+        { active: guildData?.LogSystem?.ban?.active || false, name: "Banimento" },
+        { active: guildData?.LogSystem?.unban?.active || false, name: "Desbanimento" },
+        { active: guildData?.LogSystem?.kick?.active || false, name: "Expulsão" },
+        { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
+        { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
+        { active: guildData?.LogSystem?.mute?.active || false, name: "MUTE_LOGS_BUILDING" },
+        { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
+        { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
     ]
 
     const componentOptions = dataToArray.map(data => {
@@ -84,7 +89,8 @@ export default async ({ interaction, values: keys }) => {
             Desbanimento: "🙏",
             Expulsão: "🦶",
             Mute: "🔇",
-            Canais: "💬"
+            Canais: "💬",
+            Mensagens: "🗨"
         }[data.name] || e.Loading
 
         return {

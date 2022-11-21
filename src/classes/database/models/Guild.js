@@ -37,18 +37,21 @@ export default model("Guild", new Schema({
         },
         botAdd: {
             active: Boolean
+        },
+        roles: {
+            active: Boolean
         }
     },
     XpSystem: {
-        Canal: String,
-        Mensagem: String
-    },
+    Canal: String,
+    Mensagem: String
+},
     LeaveChannel: {
-        Canal: String,
-        Mensagem: String,
-    },
+    Canal: String,
+    Mensagem: String,
+},
     WelcomeChannel: {
-        Canal: String,
-        Mensagem: String,
-    }
+    Canal: String,
+    Mensagem: String,
+}
 }))

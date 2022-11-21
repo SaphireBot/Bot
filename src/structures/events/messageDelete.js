@@ -3,11 +3,16 @@ import {
     Database,
     SaphireClient as client
 } from '../../classes/index.js'
+import messageDeleteLogs from './logs/messageDelete.logs.js'
 
 client.on('messageDelete', async message => {
 
-    if (!message?.id) return
+    if (!message || !message.id) return
 
+    if (message.partial)
+        message = await message.fetch().catch(() => null)
+
+    if (!message || !message.id) return
     const isWordleGame = await Database.Cache.WordleGame.get(message.id)
     if (isWordleGame) await Database.Cache.WordleGame.delete(message.id)
 
@@ -27,6 +32,8 @@ client.on('messageDelete', async message => {
         Database.add(blackjack.userId, blackjack.bet, `${e.gain} Recebeu ${blackjack.bet} Safiras via *Blackjack Refund*`)
         await Database.Cache.Blackjack.delete(message.id)
     }
+
+    messageDeleteLogs(message)
 
     // TODO: Terminar aqui
     // const Giveaways = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways.${message.guild.id}`)

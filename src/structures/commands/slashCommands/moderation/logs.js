@@ -50,23 +50,24 @@ export default {
             })
 
         const dataToArray = [
-            { ...guildData?.LogSystem?.ban, name: "Banimento" },
-            { ...guildData?.LogSystem?.unban, name: "Desbanimento" },
-            { ...guildData?.LogSystem?.kick, name: "Expulsão" },
-            { ...guildData?.LogSystem?.channels, name: "Canais" },
-            { ...guildData?.LogSystem?.mute, name: "MUTE_LOGS_BUILDING" },
-            { ...guildData?.LogSystem?.mute, name: "ROLES_LOGS_BUILDING" },
-            { ...guildData?.LogSystem?.mute, name: "MESSAGES_LOGS_BUILDING" }
+            { active: guildData?.LogSystem?.ban?.active || false, name: "Banimento" },
+            { active: guildData?.LogSystem?.unban?.active || false, name: "Desbanimento" },
+            { active: guildData?.LogSystem?.kick?.active || false, name: "Expulsão" },
+            { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
+            { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
+            { active: guildData?.LogSystem?.mute?.active || false, name: "MUTE_LOGS_BUILDING" },
+            { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
+            { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
         ]
 
         const componentOptions = dataToArray.map(data => {
-
             const emoji = {
                 Banimento: "🔨",
                 Desbanimento: "🙏",
                 Expulsão: "🦶",
                 Mute: "🔇",
-                Canais: "💬"
+                Canais: "💬",
+                Mensagens: "🗨"
             }[data.name] || e.Loading
 
             return {
@@ -74,7 +75,6 @@ export default {
                 emoji,
                 value: JSON.stringify({ c: 'logs', src: data.name })
             }
-
         })
 
         if (logChannel.id)
@@ -85,6 +85,7 @@ export default {
             })
 
         const textValue = dataToArray.map(key => {
+            console.log(key)
             const emoji = key.active
                 ? e.Check
                 : key.name.includes("_")
