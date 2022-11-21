@@ -64,7 +64,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
         else embeds.push({
             color: client.blue,
             title: '📝 Conteúdo Novo',
-            description: `\`\`\`${newContent?.slice(0, 4090)?.limit('MessageEmbedDescription')}\`\`\``
+            description: `\`\`\`${newContent?.slice(0, 4090)}\`\`\``.limit('MessageEmbedDescription')
         })
     }
 
