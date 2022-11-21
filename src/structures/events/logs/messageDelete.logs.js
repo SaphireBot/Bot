@@ -32,7 +32,7 @@ export default async message => {
                 },
                 {
                     name: `${e.ModShield} Quem apagou`,
-                    value: `- ${executor?.tag || "Not Found"} - \`${executor?.id}\``
+                    value: `- ${executor?.tag || "Not Found"} - \`${executor?.id}\`\n- ${Date.Timestamp()}`
                 }
             ]
         }
