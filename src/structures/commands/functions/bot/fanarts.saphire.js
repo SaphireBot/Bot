@@ -59,7 +59,7 @@ export default async (interaction, data, toUpdate) => {
                     {
                         type: 2,
                         emoji: '⬅',
-                        custom_id: JSON.stringify({ c: 'fanart', src: "left", index: fanartsData < 0 ? fanartsData?.length - 1 : index - 1, id: fanart.id }),
+                        custom_id: JSON.stringify({ c: 'fanart', src: "left", index: index <= 0 ? fanartsData?.length - 1 : index - 1, id: fanart.id }),
                         style: ButtonStyle.Primary
                     },
                     {
