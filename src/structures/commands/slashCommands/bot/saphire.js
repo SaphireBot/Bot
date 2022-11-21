@@ -1,6 +1,7 @@
 import infoSaphire from "../../functions/bot/info.saphire.js"
 import { ApplicationCommandOptionType } from "discord.js"
 import { Emojis as e } from "../../../../util/util.js"
+import fanartsSaphire from "../../functions/bot/fanarts.saphire.js"
 
 export default {
     name: 'saphire',
@@ -13,7 +14,7 @@ export default {
     },
     options: [
         {
-            name: 'images',
+            name: 'info',
             description: 'Informações gerais',
             type: ApplicationCommandOptionType.Subcommand,
             options: [
@@ -26,12 +27,21 @@ export default {
                         {
                             name: 'Fotos de Perfil',
                             value: 'profile'
-                        },
-                        {
-                            name: 'Fanarts',
-                            value: 'fanarts'
                         }
                     ]
+                }
+            ]
+        },
+        {
+            name: 'fanarts',
+            description: 'Comando em homenagem as fanarts',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'view',
+                    description: 'Visualize as fanarts',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
                 }
             ]
         }
@@ -39,10 +49,13 @@ export default {
     async execute({ interaction }) {
 
         const { options } = interaction
-        const isInfoCommand = options.getSubcommand() === "images"
+        const subCommand = options.getSubcommand()
 
-        if (isInfoCommand)
+        if (subCommand === "info")
             return infoSaphire(interaction)
+
+        if (subCommand === "fanarts")
+            return fanartsSaphire(interaction)
 
         return await interaction.reply({
             content: `${e.Deny} | Comando não reconhecido... Estranho...`,

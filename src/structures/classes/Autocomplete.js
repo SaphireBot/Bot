@@ -24,6 +24,7 @@ export default class Autocomplete extends Base {
         let { name, value } = this.options.getFocused(true)
 
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
+        if (name === 'view' && this.commandName === 'saphire') return this.fanartsSearch(value)
 
         if (['search', 'options', 'delete', 'edit', 'view'].includes(name)) name = this.commandName
 
@@ -76,6 +77,17 @@ export default class Autocomplete extends Base {
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async fanartsSearch(value) {
+
+        const fanarts = this.client.fanarts || []
+        if (!fanarts || !fanarts.length) return await this.respond()
+
+        const mapped = fanarts.map(fan => ({ name: `${fan.id} - ${fan.name}`, value: `${fan.id}` }))
+        const fill = mapped.filter(fan => fan.name.toLowerCase()?.includes(value?.toLowerCase()))
+
+        return await this.respond(fill)
     }
 
     async rifaNumero(value) {

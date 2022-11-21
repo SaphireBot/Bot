@@ -19,7 +19,7 @@ export default async (interaction, data, toUpdate) => {
             ephemeral: true
         })
 
-    const index = data?.index || 0
+    const index = parseInt(interaction?.options?.getString('view')) || data?.index || 0
     const fanart = fanartsData[index] ? fanartsData[index] : fanartsData[data?.id] ? fanartsData[data?.id] : fanartsData[0]
     const user = await client.users.fetch(fanart?.userId)
 

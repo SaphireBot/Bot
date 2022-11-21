@@ -1,10 +1,3 @@
-import { ButtonStyle } from "discord.js"
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../classes/index.js"
-import { Emojis as e } from "../../../../util/util.js"
-import fanartsSaphire from "./fanarts.saphire.js"
 import profileSaphire from "./profile.saphire.js"
 
 export default async interaction => {
@@ -18,8 +11,7 @@ export default async interaction => {
         })
 
     const execute = {
-        profile: profileSaphire,
-        fanarts: fanartsSaphire
+        profile: profileSaphire
     }[command]
 
     if (!execute)
