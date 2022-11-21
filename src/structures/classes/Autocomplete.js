@@ -714,7 +714,7 @@ export default class Autocomplete extends Base {
                 name: `${user.tag} | ${user.id}`,
                 value: user.id
             }))
-        return await this.respond(mapped)
+        return await this.respond(mapped).catch(() => { })
     }
 
     async allGuilds(value) {
