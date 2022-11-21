@@ -1,5 +1,6 @@
 import { Config } from '../../../../util/Constants.js'
 import { Api } from '@top-gg/sdk'
+const TopGG = new Api(process.env.TOP_GG_TOKEN)
 
 export default {
     name: 'vote',
@@ -30,34 +31,11 @@ export default {
                     ]
                 }
             ]
-        },
-        {
-            name: 'list',
-            description: '[bot] Veja a lista de votos',
-            type: 1,
-            options: [
-                {
-                    name: 'search_user',
-                    description: 'Pesquise por um usuário',
-                    type: 3,
-                    autocomplete: true
-                },
-                {
-                    name: 'check_member',
-                    description: 'Pesquise por um membro',
-                    type: 6
-                }
-            ]
         }
     ],
     async execute({ interaction, client, Database, e }) {
 
         const { options, user, channel } = interaction
-
-        const optionChoice = options.getSubcommand()
-        if (optionChoice === 'list') return import('../../functions/vote/list.vote.js').then(list => list.default(interaction))
-
-        const TopGG = new Api(process.env.TOP_GG_TOKEN)
         const hasVoted = await TopGG.hasVoted(user.id)
 
         if (hasVoted)
