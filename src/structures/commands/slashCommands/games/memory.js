@@ -3,6 +3,57 @@ import coop from '../../functions/memorygame/coop.memory.js'
 import versus from '../../functions/memorygame/versus.memory.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 
+const choices = [
+    {
+        name: 'Números (Easy)',
+        value: 0
+    },
+    {
+        name: 'Bandeiras (Medium)',
+        value: 1
+    },
+    {
+        name: 'Animais (Easy)',
+        value: 2
+    },
+    {
+        name: 'Frutas (Easy)',
+        value: 3
+    },
+    {
+        name: 'Bolas (Easy)',
+        value: 4
+    },
+    {
+        name: 'Emoticons (Medium)',
+        value: 5
+    },
+    {
+        name: 'Corações (Easy)',
+        value: 6
+    },
+    {
+        name: 'Relógios (Hard)',
+        value: 7
+    },
+    {
+        name: 'Família (Ultimate)',
+        value: 8
+    },
+    {
+        name: 'Bandeiras Azuis (Hard)',
+        value: 9
+    },
+    {
+        name: 'Setas (Medium)',
+        value: 10
+    },
+    {
+        name: 'Luas (Medium)',
+        value: 11
+    }
+]
+
 export default {
     name: 'memory',
     description: '[games] Um jogo simples para testar sua memória',
@@ -19,44 +70,7 @@ export default {
                     name: 'emojis',
                     description: 'Emojis para o jogo',
                     type: ApplicationCommandOptionType.Integer,
-                    choices: [
-                        {
-                            name: 'Números (Easy)',
-                            value: 0
-                        },
-                        {
-                            name: 'Bandeiras (Medium)',
-                            value: 1
-                        },
-                        {
-                            name: 'Animais (Easy)',
-                            value: 2
-                        },
-                        {
-                            name: 'Frutas (Easy)',
-                            value: 3
-                        },
-                        {
-                            name: 'Bolas (Easy)',
-                            value: 4
-                        },
-                        {
-                            name: 'Emoticons (Medium)',
-                            value: 5
-                        },
-                        {
-                            name: 'Corações (Easy)',
-                            value: 6
-                        },
-                        {
-                            name: 'Relógios (Hard)',
-                            value: 7
-                        },
-                        {
-                            name: 'Família (Ultimate)',
-                            value: 8
-                        }
-                    ]
+                    choices
                 },
                 {
                     name: 'mode',
@@ -86,44 +100,7 @@ export default {
                     name: 'emojis',
                     description: 'Emojis para o jogo',
                     type: ApplicationCommandOptionType.Integer,
-                    choices: [
-                        {
-                            name: 'Números (Easy)',
-                            value: 0
-                        },
-                        {
-                            name: 'Bandeiras (Medium)',
-                            value: 1
-                        },
-                        {
-                            name: 'Animais (Easy)',
-                            value: 2
-                        },
-                        {
-                            name: 'Frutas (Easy)',
-                            value: 3
-                        },
-                        {
-                            name: 'Bolas (Easy)',
-                            value: 4
-                        },
-                        {
-                            name: 'Emoticons (Medium)',
-                            value: 5
-                        },
-                        {
-                            name: 'Corações (Easy)',
-                            value: 6
-                        },
-                        {
-                            name: 'Relógios (Hard)',
-                            value: 7
-                        },
-                        {
-                            name: 'Família (Ultimate)',
-                            value: 8
-                        }
-                    ]
+                    choices
                 }
             ]
         },
@@ -142,44 +119,6 @@ export default {
                     name: 'emojis',
                     description: 'Emojis para o jogo',
                     type: ApplicationCommandOptionType.Integer,
-                    choices: [
-                        {
-                            name: 'Números (Easy)',
-                            value: 0
-                        },
-                        {
-                            name: 'Bandeiras (Medium)',
-                            value: 1
-                        },
-                        {
-                            name: 'Animais (Easy)',
-                            value: 2
-                        },
-                        {
-                            name: 'Frutas (Easy)',
-                            value: 3
-                        },
-                        {
-                            name: 'Bolas (Easy)',
-                            value: 4
-                        },
-                        {
-                            name: 'Emoticons (Medium)',
-                            value: 5
-                        },
-                        {
-                            name: 'Corações (Easy)',
-                            value: 6
-                        },
-                        {
-                            name: 'Relógios (Hard)',
-                            value: 7
-                        },
-                        {
-                            name: 'Família (Ultimate)',
-                            value: 8
-                        }
-                    ]
                 }
             ]
         }
