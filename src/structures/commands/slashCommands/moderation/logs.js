@@ -85,7 +85,6 @@ export default {
             })
 
         const textValue = dataToArray.map(key => {
-            console.log(key)
             const emoji = key.active
                 ? e.Check
                 : key.name.includes("_")
