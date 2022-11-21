@@ -1,3 +1,4 @@
+import { ButtonStyle } from 'discord.js'
 import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
@@ -68,6 +69,19 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
         })
     }
 
-    return channel?.send({ content: `🛰️ | **Global System Notification** | Message Edited`, embeds }).catch(() => { })
+    const components = [{
+        type: 1,
+        components: [
+            {
+                type: 2,
+                label: "Ir até a mensagem",
+                emoji: "📎",
+                url: newMessage.url,
+                style: ButtonStyle.Link
+            }
+        ]
+    }]
+
+    return channel?.send({ content: `🛰️ | **Global System Notification** | Message Edited`, embeds, components }).catch(() => { })
 
 })
