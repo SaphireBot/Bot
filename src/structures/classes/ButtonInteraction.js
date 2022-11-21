@@ -15,6 +15,7 @@ import raspadinha from './buttons/raspadinha/index.raspadinha.js'
 import corridaFunctions from './buttons/corrida/reset.corrida.js'
 import tradeInfo from './buttons/saphireInfo/trade.info.js'
 import fanartsSaphire from '../commands/functions/bot/fanarts.saphire.js'
+import roleAnunciar from '../commands/functions/anunciar/role.anunciar.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -58,7 +59,8 @@ export default class ButtonInteraction extends Base {
             rifa: [rifa, this.interaction, commandData],
             rasp: [raspadinha, this.interaction, commandData],
             saphire: [tradeInfo, this.interaction, commandData],
-            fanart: [fanartsSaphire, this.interaction, commandData, true]
+            fanart: [fanartsSaphire, this.interaction, commandData, true],
+            anunciar: [roleAnunciar, this.interaction]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

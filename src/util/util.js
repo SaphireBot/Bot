@@ -77,7 +77,7 @@ const SaphireClientOptions = {
         Partials.ThreadMember,
         Partials.User
     ],
-    allowedMentions: { parse: ['users'] },
+    allowedMentions: { parse: ['users', 'roles'] },
     closeTimeout: 6000,
     shardCount: 1,
     failIfNotExists: false,

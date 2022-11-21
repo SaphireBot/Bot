@@ -1,7 +1,8 @@
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
-import { Modals } from '../../../../classes/index.js'   
+import { Modals } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import configAnunciar from '../../../classes/selectmenu/announce/config.anunciar.js'
+import roleAnunciar from '../../functions/anunciar/role.anunciar.js'
 
 export default {
     name: 'anunciar',
@@ -34,8 +35,26 @@ export default {
         },
         {
             name: 'notice',
-            description: '[moderation] ALLOWED ROLE | Publique novas notícias',
-            type: ApplicationCommandOptionType.Subcommand
+            description: '[moderation] Opções do comando',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'options',
+                    description: 'Opções do comando de anúnciar notícias',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    choices: [
+                        {
+                            name: 'ALLOWED ROLE | Publicar uma nova notícia',
+                            value: 'notice'
+                        },
+                        {
+                            name: 'EVERYONE | Obter/Retirar cargo de notificação',
+                            value: 'role'
+                        }
+                    ]
+                }
+            ]
         }
     ],
     helpData: {
@@ -48,8 +67,21 @@ export default {
         if (command === "config")
             return configAnunciar({ interaction, guildData })
 
-        if (command === "notice")
-            return await interaction.showModal(Modals.NewNotice)
+        if (command === "notice") {
+
+            const option = interaction.options.getString('options')
+
+            if (option === 'notice')
+                return await interaction.showModal(Modals.NewNotice)
+
+            if (option === 'role')
+                return roleAnunciar(interaction, guildData)
+
+            return await interaction.reply({
+                content: `${e.Deny} | Opção de sub-comando não definida.`,
+                ephemeral: true
+            })
+        }
 
         return await interaction.reply({
             content: `${e.Deny} | Sub-Comando não reconhecido dentre as opções.`,

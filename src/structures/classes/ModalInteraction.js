@@ -4,10 +4,10 @@ import {
     Database
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
-import { Config as config, Permissions } from '../../util/Constants.js'
+import { Config as config } from '../../util/Constants.js'
 import moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
-import { ButtonStyle, ChannelType } from 'discord.js'
+import { ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js'
 import axios from 'axios'
 
 export default class ModalInteraction extends Base {
@@ -73,7 +73,7 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        if (!member.roles.cache.has(allowedRole) && !member.permissions.has(Permissions.Administrator))
+        if (!member.roles.cache.has(allowedRole.id) && !member.permissions.has(PermissionFlagsBits.Administrator))
             return await interaction.reply({
                 content: `${e.Deny} | Você não tem o cargo necessário para publicar notícias. (${notificationRole})`,
                 ephemeral: true
@@ -125,11 +125,21 @@ export default class ModalInteraction extends Base {
                     emoji: '📎',
                     style: ButtonStyle.Link,
                     url: font
+                },
+                {
+                    type: 2,
+                    emoji: e.Notification,
+                    style: ButtonStyle.Primary,
+                    custom_id: JSON.stringify({ c: 'anunciar', src: 'notification' })
                 }
             ]
         }]
 
-        return await channel?.send({ embeds, components })
+        return await channel?.send({
+            content: `${e.Notification} ${notificationRole}`,
+            embeds,
+            components
+        })
             .then(async message => await interaction.reply({
                 content: `${e.Check} | A sua notícia foi publicada com sucesso.`,
                 components: [
