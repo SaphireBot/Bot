@@ -32,7 +32,12 @@ export default async ({ interaction, guildData }) => {
         content += `\n${e.Deny} | Esse servidor já possui 10 cargos no autorole.`
     }
 
-    if (addRole && roleInDatabase.includes(addRole?.id)) {
+    if (['@everyone', '@here'].includes(addRole?.name)) {
+        validate.addRole = false
+        content += `${e.Deny} | Os cargos everyone e here não podem entrar no sistema de autorole.`
+    }
+
+    if (addRole && validate.addRole !== false && roleInDatabase.includes(addRole?.id)) {
         validate.addRole = false
         content += `\n${e.Deny} | O cargo ${addRole} já está no banco de dados.`
     }
@@ -59,17 +64,17 @@ export default async ({ interaction, guildData }) => {
     const rolePermissions = addRole?.permissions?.toArray() || []
     const admPerms = []
 
-    if (addRole?.editable)
+    if (addRole?.editable && validate.addRole !== false)
         for (let perm of administratationPermissions)
             if (rolePermissions.includes(perm))
                 admPerms.push(perm)
             else continue
-    else if (addRole) {
+    else if (addRole && validate.addRole !== false) {
         validate.addRole = false
         content += `\n${e.Deny} | Eu não tenho permissão para gerenciar o cargo ${addRole}`
     }
 
-    if (admPerms.length) {
+    if (admPerms.length && validate.addRole !== false) {
         validate.addRole = false
         content += `\n \n${e.Deny} | O cargo ${addRole} possui permissões administrativas e não pode entrar para o autorole -> ${admPerms.map(p => `\`${PermissionsTranslate[p]}\``).join(', ')}\n`
     }
@@ -84,10 +89,10 @@ export default async ({ interaction, guildData }) => {
 
     if (addRole && validate.addRole !== false) {
         content += `\n${e.Check} | O cargo ${addRole} foi adicionado ao Autorole.`
-        saveData["$addToSet"] = { Autorole: addRole?.id }
+        saveData.add = true
     }
 
-    if (addRole && Object.keys(saveData).length)
+    if (addRole && validate.addRole !== false && saveData.add)
         await Database.Guild.findOneAndUpdate(
             { id: guild.id },
             {
@@ -104,31 +109,32 @@ export default async ({ interaction, guildData }) => {
             })
             .catch(err => {
                 validate.error = true
-                response += `\n${e.bug} | ${err}`
+                content += `\n${e.bug} | ${err}`
             })
 
     if (validate.error)
-        return await interaction.reply({
-            content: response
-        })
+        return await interaction.reply({ content: content })
 
-    return await interaction.reply({
-        embeds: [{ // TODO: Deixar a embed mais bonita
-            color: client.blue,
-            title: `${client.user.username}'s Autorole System`,
-            description: 'O sistema de autorole irá adicionar todos os cargos abaixo a todos os membros que entrarem no servidor automáticamente.\n**Autorole** - AUTO Automático - ROLE Cargo',
-            fields: [
-                {
-                    name: '🎯 Cargos no Autorole',
-                    value: rolesFromDB.map(roleId => `${guild.roles.cache.get(roleId) || 'Not Found'}`).join(', ') || 'Nenhum cargo por aqui'
-                },
-                {
-                    name: `${e.Info} Resultado`,
-                    value: content || "Nenhum resultado? Osh..."
-                }
-            ]
-        }]
-    })
+    if (!rolesFromDB.length)
+            rolesFromDB.push(...roleInDatabase)
+
+        return await interaction.reply({
+            embeds: [{ // TODO: Deixar a embed mais bonita
+                color: client.blue,
+                title: `${client.user.username}'s Autorole System`,
+                description: 'O sistema de autorole irá adicionar todos os cargos abaixo a todos os membros que entrarem no servidor automáticamente.\n**Autorole** - AUTO Automático - ROLE Cargo',
+                fields: [
+                    {
+                        name: '🎯 Cargos no Autorole',
+                        value: rolesFromDB.map(roleId => `${guild.roles.cache.get(roleId) || 'Not Found'}`).join(', ') || 'Nenhum cargo por aqui'
+                    },
+                    {
+                        name: `${e.Info} Resultado`,
+                        value: content || "Nenhum resultado? Osh..."
+                    }
+                ]
+            }]
+        })
 
     async function removeRoleFromDatabase(roleId) {
 
