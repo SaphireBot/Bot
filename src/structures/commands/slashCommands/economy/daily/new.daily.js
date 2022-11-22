@@ -1,7 +1,5 @@
 import Base from '../../../../classes/Base.js'
-import {
-    Config as config
-} from '../../../../../util/Constants.js'
+import { Config as config } from '../../../../../util/Constants.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 import revalidateReminder from './reminder.daily.js'
 
@@ -46,7 +44,7 @@ export default class Daily extends Base {
         }
 
         let data = { fields: [] }
-        let prize = Daily.dailyPrizes[count]
+        let prize = { ...Daily.dailyPrizes[count] }
         let over30 = { day: count, money: parseInt(Math.floor(Math.random() * 10000)), xp: parseInt(Math.floor(Math.random() * 10000)) }
         const isVip = await this.user.isVip()
         const moeda = await guild.getCoin()
