@@ -1,5 +1,5 @@
 import { Database } from "../../../../classes/index.js"
-import { Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
+import { Permissions, PermissionsTranslate, DiscordPermissons } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 export default async (interaction, guildResources) => {
@@ -14,8 +14,7 @@ export default async (interaction, guildResources) => {
             ephemeral: true
         })
 
-
-    if (!guild.clientHasPermission(Permissions.ManageRoles))
+    if (!guild.members.me.permissions.has(DiscordPermissons.ManageRoles, true))
         return await interaction.reply({
             content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageRoles}** para adicionar/remover cargos.`,
             ephemeral: true
