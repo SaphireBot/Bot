@@ -51,7 +51,7 @@ export default {
                     value: `\`\`\`txt\n${res.text}\n\`\`\``
                 }
 
-                Embed.footer = { text: `Traduzido de ${Languages[res.from.language.iso]} para ${Languages[formatedLocale]}` }
+                Embed.footer = { text: `Traduzido de ${Languages[res.from.language.iso] || 'WTF?'} para ${Languages[formatedLocale]}` }
 
                 return await interaction.editReply({ embeds: [Embed] })
 
