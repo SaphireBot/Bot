@@ -153,7 +153,7 @@ export default {
             buttons[4].components[4]
         ]
 
-        const embed = {
+        const embeds = [{
             color: color,
             title: `${author.username} iniciou uma Corrida de Animais`,
             description: `Valor da corrida: ${value} ${moeda}`,
@@ -172,14 +172,14 @@ export default {
                 }
             ],
             footer: { text: `Limite de jogadores: ${players}` }
-        }
+        }]
 
         const usersJoined = []
 
         await Database.Cache.Running.push(`${client.shardId}.Channels`, channel.id)
 
         const msg = await interaction.reply({
-            embeds: [embed],
+            embeds,
             components: buttons,
             fetchReply: true
         })
@@ -258,8 +258,8 @@ export default {
                     dots: ''
                 })
 
-                embed.fields[0].value = `${total} ${moeda}`
-                embed.fields[1].value = usersJoined.map(data => `${data.animal} <@${data.id}>`).join('\n')
+                embeds[0].fields[0].value = `${total} ${moeda}`
+                embeds[0].fields[1].value = usersJoined.map(data => `${data.animal} <@${data.id}>`).join('\n')
 
                 if (usersJoined.length >= players) {
                     iniciated = true
@@ -267,7 +267,7 @@ export default {
                     return await initCorrida()
                 }
 
-                return await int.update({ embeds: [embed], components: buttons }).catch(() => { })
+                return await int.update({ embeds, components: buttons }).catch(() => { })
             })
             .on('end', async (_, r) => {
 
@@ -291,10 +291,10 @@ export default {
 
         async function initCorrida() {
 
-            embed.color = client.green
-            embed.footer = { text: embed.footer.text + ' | Corrida Iniciada' }
+            embeds[0].color = client.green
+            embeds[0].footer = { text: embeds[0].footer.text + ' | Corrida Iniciada' }
 
-            await msg.edit({ embeds: [embed], components: [] }).catch(() => { })
+            await msg.edit({ embeds, components: [] }).catch(() => { })
 
             if (usersJoined.length < 2) {
                 await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
@@ -373,17 +373,23 @@ export default {
                     }
                 )
 
-            embed.fields[1].value = usersJoined.map((data, i) => {
+            embeds[0].fields[1].value = usersJoined.map((data, i) => {
                 const crown = data.id === winnerData.id ? '👑' : ''
                 return `${i + 1} ${data.animal} <@${data.id}> ${crown}`
             }).join('\n')
 
-            embed.fields[3] = {
-                name: '🏁 Resultado',
-                value: result
-            }
+            if (result.length <= 1024)
+                embeds[0].fields[3] = {
+                    name: '🏁 Resultado',
+                    value: `${result}`.limit('MessageEmbedFieldValue')
+                }
+            else embeds.push({
+                color: client.green,
+                title: '🏁 Resultado',
+                description: `${result}`.limit('MessageEmbedDescription')
+            })
 
-            return channel.send({ embeds: [embed] })
+            return channel.send({ embeds })
 
         }
 
