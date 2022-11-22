@@ -24,6 +24,9 @@ export default async (interaction, optionValue) => {
             ephemeral: true
         })
 
+    const userFetch = await client.users.fetch(question.authorId).catch(() => null)
+    const userTag = userFetch?.tag || 'Not Found'
+
     const msg = await interaction.reply({
         content: `${e.QuestionMark} | Você tem certeza que deseja deletar a questão \`${optionValue}\`?`,
         embeds: [{
@@ -41,7 +44,7 @@ export default async (interaction, optionValue) => {
                 },
                 {
                     name: '👤 Autor',
-                    value: `${client.users.resolve(question.authorId)?.tag || 'Not Found'} - \`${question.authorId}\``
+                    value: `${userTag} - \`${question.authorId}\``
                 }
             ],
             footer: { text: question.edited ? 'Resposta original editada' : null }

@@ -19,6 +19,8 @@ export default async (interaction, value) => {
     const total = optionOneLength + optionTwoLength
     const optionOnePercent = total > 0 ? parseInt((optionOneLength / total) * 100)?.toFixed(1) || 0 : 0
     const optionTwoPercent = total > 0 ? parseInt((optionTwoLength / total) * 100)?.toFixed(1) || 0 : 0
+    const userFetch = await client.users.fetch(question.authorId).catch(() => null)
+    const userTag = userFetch?.tag || 'Not Found'
 
     return await interaction.reply({
         embeds: [{
@@ -36,7 +38,7 @@ export default async (interaction, value) => {
                 },
                 {
                     name: '👤 Autor',
-                    value: `${client.users.resolve(question.authorId)?.tag || 'Not Found'} - \`${question.authorId}\``
+                    value: `${userTag} - \`${question.authorId}\``
                 }
             ],
             footer: { text: question.edited ? 'Resposta original editada' : null }

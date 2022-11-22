@@ -22,6 +22,8 @@ export default async (interaction) => {
     const question = optionsFilter.length > 0 ? optionsFilter.random() : allGameData.random()
     const starOne = question.optionOne.users.includes(user.id) ? '⭐' : null
     const starTwo = question.optionTwo.users.includes(user.id) ? '⭐' : null
+    const userFetch = await client.users.fetch(question.authorId).catch(() => null)
+    const userTag = userFetch?.tag || 'Not Found'
 
     return await interaction.update({
         embeds: [{
@@ -37,7 +39,7 @@ export default async (interaction) => {
                     value: question.optionTwo.question
                 }
             ],
-            footer: { text: `Questão por: ${client.users.resolve(question.authorId)?.tag || 'Not Found'}` }
+            footer: { text: `Questão por: ${userTag}` }
         }],
         components: [{
             type: 1,
