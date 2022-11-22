@@ -37,13 +37,13 @@ export default {
     helpData: {
         description: 'Sistema de autorole',
     },
-    async execute({ interaction, guildData, Database }) {
+    async execute({ interaction, guildData, Database, client }) {
 
         const { options } = interaction
         const subCommand = options.getSubcommand()
 
-        if (subCommand === 'roles') return addAutorole({ interaction, guildData, Database })
-        if (subCommand === 'painel') return painelAutorole({ interaction, guildData, Database })
+        if (subCommand === 'roles') return addAutorole({ interaction, guildData, Database, client })
+        if (subCommand === 'painel') return painelAutorole({ interaction, guildData, Database, client })
 
         return await interaction.reply({
             content: `${e.Deny} | Sub-Comando não encontrado.`,

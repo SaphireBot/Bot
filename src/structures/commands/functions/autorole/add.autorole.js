@@ -1,12 +1,7 @@
 import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
-import {
-    Database,
-    SaphireClient as client
-} from "../../../../classes/index.js"
 
-
-export default async ({ interaction, guildData }) => {
+export default async ({ interaction, guildData, Database, client }) => {
 
     const { options, guild } = interaction
     const addRole = options.getRole('add')
@@ -116,25 +111,25 @@ export default async ({ interaction, guildData }) => {
         return await interaction.reply({ content: content })
 
     if (!rolesFromDB.length)
-            rolesFromDB.push(...roleInDatabase)
+        rolesFromDB.push(...roleInDatabase)
 
-        return await interaction.reply({
-            embeds: [{ // TODO: Deixar a embed mais bonita
-                color: client.blue,
-                title: `${client.user.username}'s Autorole System`,
-                description: 'O sistema de autorole irá adicionar todos os cargos abaixo a todos os membros que entrarem no servidor automáticamente.\n**Autorole** - AUTO Automático - ROLE Cargo',
-                fields: [
-                    {
-                        name: '🎯 Cargos no Autorole',
-                        value: rolesFromDB.map(roleId => `${guild.roles.cache.get(roleId) || 'Not Found'}`).join(', ') || 'Nenhum cargo por aqui'
-                    },
-                    {
-                        name: `${e.Info} Resultado`,
-                        value: content || "Nenhum resultado? Osh..."
-                    }
-                ]
-            }]
-        })
+    return await interaction.reply({
+        embeds: [{ // TODO: Deixar a embed mais bonita
+            color: client.blue,
+            title: `${client.user.username}'s Autorole System`,
+            description: 'O sistema de autorole irá adicionar todos os cargos abaixo a todos os membros que entrarem no servidor automáticamente.\n**Autorole** - AUTO Automático - ROLE Cargo',
+            fields: [
+                {
+                    name: '🎯 Cargos no Autorole',
+                    value: rolesFromDB.map(roleId => `${guild.roles.cache.get(roleId) || 'Not Found'}`).join(', ') || 'Nenhum cargo por aqui'
+                },
+                {
+                    name: `${e.Info} Resultado`,
+                    value: content || "Nenhum resultado? Osh..."
+                }
+            ]
+        }]
+    })
 
     async function removeRoleFromDatabase(roleId) {
 
