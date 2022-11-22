@@ -1,6 +1,6 @@
-import { Emojis as e } from '../../../../util/util.js'
-import { Permissions } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType } from 'discord.js'
+import { Emojis as e } from '../../../../util/util.js'
+import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import addAutorole from '../../functions/autorole/add.autorole.js'
 import painelAutorole from '../../functions/autorole/painel.autorole.js'
 
@@ -39,8 +39,14 @@ export default {
     },
     async execute({ interaction, guildData, Database, client }) {
 
-        const { options } = interaction
+        const { options, guild } = interaction
         const subCommand = options.getSubcommand()
+
+        if (!guild.members.me.permissions.has(DiscordPermissons.ManageRoles, true))
+            return await interaction.reply({
+                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageRoles}** para adicionar/remover cargos.`,
+                ephemeral: true
+            })
 
         if (subCommand === 'roles') return addAutorole({ interaction, guildData, Database, client })
         if (subCommand === 'painel') return painelAutorole({ interaction, guildData, Database, client })

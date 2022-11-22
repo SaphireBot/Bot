@@ -3,7 +3,7 @@ import {
     Database,
     SaphireClient as client
 } from '../../classes/index.js'
-import messageDeleteLogs from './logs/messageDelete.logs.js'
+import messageDeleteLogs from './system/messageDelete.logs.js'
 
 client.on('messageDelete', async message => {
 
