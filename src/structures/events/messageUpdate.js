@@ -18,7 +18,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     const newContent = newMessage?.content
 
     const isEdited = oldContent !== newContent
-    if (!isEdited || !oldContent || !newContent) return
+    if (!isEdited || !oldContent?.length || !newContent?.length) return
 
     const { guild, author, type } = newMessage
     if (type !== 0) return
@@ -29,19 +29,17 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
     if (!channel) return
 
-    const embeds = [
-        {
-            color: client.blue,
-            title: "Dados da mensagem editada",
-            description: `Esta mensagem foi editada no canal ${newMessage.channel}`,
-            fields: [
-                {
-                    name: '👤 Quem editou?',
-                    value: `- ${author?.tag || "Not Found"} - \`${author?.id}\`\n- ${Date.Timestamp()}`
-                }
-            ]
-        }
-    ]
+    const embeds = [{
+        color: client.blue,
+        title: "Dados da mensagem editada",
+        description: `Esta mensagem foi editada no canal ${newMessage.channel}`,
+        fields: [
+            {
+                name: '👤 Quem editou?',
+                value: `- ${author?.tag || "Not Found"} - \`${author?.id}\`\n- ${Date.Timestamp()}`
+            }
+        ]
+    }]
 
     if (oldContent) {
         if (oldContent?.length <= 1018)
