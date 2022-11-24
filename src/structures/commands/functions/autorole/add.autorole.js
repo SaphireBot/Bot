@@ -117,7 +117,6 @@ export default async ({ interaction, guildData, Database, client }) => {
         embeds: [{ // TODO: Deixar a embed mais bonita
             color: client.blue,
             title: `${client.user.username}'s Autorole System`,
-            description: 'O sistema de autorole irá adicionar todos os cargos abaixo a todos os membros que entrarem no servidor automáticamente.\n**Autorole** - AUTO Automático - ROLE Cargo',
             fields: [
                 {
                     name: '🎯 Cargos no Autorole',
