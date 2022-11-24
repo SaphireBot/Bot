@@ -64,17 +64,25 @@ export default async ({ interaction, guildData, Database, client }) => {
     if (rolesToRemove.length)
         await removeRoles(rolesToRemove)
 
-    return await interaction.reply({
+    const dataSend = {
         embeds: [{
             color: client.blue,
             title: `🛠 ${client.user.username}s' Autorole Painel`,
-            description: control.response || null,
+            description: 'O sistema de autorole é algo sim',
             fields: [{
                 name: '🎯 Cargos no Autorole',
                 value: guildRoles || 'Nenhum cargo por aqui'
             }]
         }]
-    })
+    }
+
+    if (control.response)
+        dataSend.embeds[0].fields.push({
+            name: `${e.Info} | Server Security Control`,
+            value: control.response
+        })
+
+    return await interaction.reply(dataSend)
 
     async function removeRoles(rolesId) {
         await Database.Guild.updateOne(
