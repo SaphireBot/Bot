@@ -11,32 +11,36 @@ export default async message => {
     if (type !== 0 || author?.bot) return
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const auditIds = await Database.Cache.General.get('AudityLogsId') || []
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
     const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
     if (!channel) return
 
-    const auditory = await guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete, limit: 1 }).catch(() => null)
-    const firstEntry = auditory?.entries?.first()
-    const { executor, target } = firstEntry
+    const auditory = await guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete }).catch(() => null)
+    if (!auditory) return
 
-    const embeds = [
-        {
-            color: client.blue,
-            title: "Dados da mensagem deletada",
-            description: `Esta mensagem foi apagada no canal ${message.channel}`,
-            fields: [
-                {
-                    name: '👤 Autor(a)',
-                    value: `- ${target?.tag || "Not Found"} - \`${target?.id}\``
-                },
-                {
-                    name: `${e.ModShield} Quem apagou`,
-                    value: `- ${executor?.tag || "Not Found"} - \`${executor?.id}\`\n- ${Date.Timestamp()}`
-                }
-            ]
-        }
-    ]
+    const firstEntry = auditory?.entries?.first()
+    let { executor, id: auditId } = firstEntry
+
+    if (auditIds.includes(auditId))
+        executor = author
+
+    const embeds = [{
+        color: client.blue,
+        title: "Dados da mensagem deletada",
+        description: `Esta mensagem foi apagada no canal ${message.channel}`,
+        fields: [
+            {
+                name: '👤 Autor(a)',
+                value: `- ${author?.tag || "Not Found"} - \`${author?.id || 0}\``
+            },
+            {
+                name: `${e.ModShield} Quem apagou`,
+                value: `- ${executor?.tag || "Not Found"} - \`${executor?.id}\`\n- ${Date.Timestamp()}`
+            }
+        ]
+    }]
 
     if (message.content) {
         if (message.content?.length <= 1018)
@@ -50,6 +54,9 @@ export default async message => {
             description: `\`\`\`${message.content?.slice(0, 4090)?.limit('MessageEmbedDescription')}\`\`\``
         })
     }
+
+    if (!embeds[0].fields[2] && !embeds[1]) return
+    await Database.Cache.General.push('AudityLogsId', auditId)
 
     return channel?.send({ content: `🛰️ | **Global System Notification** | Message Delete`, embeds }).catch(() => { })
 }
