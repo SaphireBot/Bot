@@ -11,7 +11,7 @@ export default async message => {
     if (type !== 0 || author?.bot) return
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
-    const auditIds = await Database.Cache.General.get('AudityLogsId') || []
+    const auditIds = await Database.Cache.General.get(`${client.shardId}.AudityLogsId`) || []
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
     const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
@@ -56,7 +56,7 @@ export default async message => {
     }
 
     if (!embeds[0].fields[2] && !embeds[1]) return
-    await Database.Cache.General.push('AudityLogsId', auditId)
+    await Database.Cache.General.push(`${client.shardId}.AudityLogsId`, auditId)
 
     return channel?.send({ content: `🛰️ | **Global System Notification** | Message Delete`, embeds }).catch(() => { })
 }
