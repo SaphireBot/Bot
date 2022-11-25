@@ -82,6 +82,7 @@ export default class ModalInteraction extends Base {
         const title = fields.getTextInputValue('title') || null
         const description = fields.getTextInputValue('notice') || null
         const font = fields.getTextInputValue('font') || null
+        const thumbnail = fields.getTextInputValue('thumbnail') || null
         const image = fields.getTextInputValue('image') || null
 
         if (!title || !description || !font)
@@ -96,9 +97,15 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
+        if (thumbnail && !thumbnail?.isURL())
+            return await interaction.reply({
+                content: `${e.Deny} | O campo de "Thumbnail" repassado não é um link válido.`,
+                ephemeral: true
+            })
+
         if (image && !image?.isURL())
             return await interaction.reply({
-                content: `${e.Deny} | O campo de "imagem" repassado não é um link válido.`,
+                content: `${e.Deny} | O campo de "Imagem" repassado não é um link válido.`,
                 ephemeral: true
             })
 
@@ -107,7 +114,8 @@ export default class ModalInteraction extends Base {
             title,
             url: font,
             description,
-            thumbnail: { url: image },
+            thumbnail: { url: thumbnail },
+            image: { url: image },
             fields: [
                 {
                     name: '👤 Autor(a)',

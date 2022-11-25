@@ -57,8 +57,21 @@ export default new class Modals {
                 components: [
                     {
                         type: 4,
-                        custom_id: "image",
+                        custom_id: "thumbnail",
                         label: "Imagem da Thumbnail",
+                        style: 1,
+                        placeholder: "Link da Thumbnail",
+                        required: false
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "image",
+                        label: "Imagem da Notícia",
                         style: 1,
                         placeholder: "Link da Imagem",
                         required: false
