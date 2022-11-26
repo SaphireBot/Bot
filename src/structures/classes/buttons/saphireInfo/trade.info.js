@@ -43,7 +43,7 @@ export default async (interaction, { src: key, page }) => {
                 fields: [
                     {
                         name: "📝 Comentários",
-                        value: `> *"Como o primeiro visual autêntico da ${client.user.username}, nós adotamos o laço azul como uma marca original que seguiria todos os visuais dela. Fizemos uma lei interna, onde todas as próximas fotos de perfil e emojis deveria portar o laço azul, no pescoço, pulso ou cabelo."*\n> ***~ ${Rody}, Saphire Project's Owner***\n \n> *"Texto do Pepy"*\n> ***~ ${Pepy}, Saphire Project's Head Designer***`
+                        value: `> *"Como o primeiro visual autêntico da ${client.user.username}, nós adotamos o laço azul como uma marca original que seguiria todos os visuais dela. Fizemos uma lei interna, onde todas as próximas fotos de perfil e emojis deveria portar o laço azul, no pescoço, pulso ou cabelo."*\n> ***~ ${Rody}, Saphire Project's Owner***\n \n> *Desenhar a primeira Saphire é algo que levo com muito carinho, pois foi através desse desenho que pude entrar para a Saphire Team. O processo criativo foi muito legal e me sentir muito livre para desenhar como eu imaginava a aparência da Saphire, além da aparência queríamos que transmitisse sua personalidade, uma menina meiga só que muito alegre e extrovertida, enfim essa foi a primeira Saphi.*\n> ***~ ${Pepy}, Saphire Project's Head Designer***`
                     }
                 ],
                 image: {
@@ -84,7 +84,7 @@ export default async (interaction, { src: key, page }) => {
                 fields: [
                     {
                         name: "📝 Comentários",
-                        value: `> *"Eu gostei bastante do resultado entregue pelo o ${Pepy} e a equipe de Designer. Um desenho único com um tom antigo de anime deu um visual único pra Saphire. E o laço em forma de gravata ficou sensacional."*\n> ***~ ${Rody}, Saphire Project's Owner***\n \n> *"Texto do Pepy"*\n> ***~ ${Pepy}, Saphire Project's Head Designer***`
+                        value: `> *"Eu gostei bastante do resultado entregue pelo o ${Pepy} e a equipe de Designer. Um desenho único com um tom antigo de anime deu um visual único pra Saphire. E o laço em forma de gravata ficou sensacional."*\n> ***~ ${Rody}, Saphire Project's Owner***\n \n> *Nem tudo dura para sempre, e naquela momento a Saphi precisava de inovação, então decidimos mudar drasticamente seu visual para combinar com o seu novo nome, Saphire Moon, logo deixamos seu visual mais jovem e com mais pegada de anime, mas não deixamos de colocar seu ponto característico, seu amado laço azul.*\n> ***~ ${Pepy}, Saphire Project's Head Designer***`
                     }
                 ],
                 image: {
