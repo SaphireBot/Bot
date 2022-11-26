@@ -30,21 +30,21 @@ export default {
                 }
             ]
         },
-        // {
-        //     name: 'messages',
-        //     description: '[moderation] Limpe mensagens no chat',
-        //     type: ApplicationCommandOptionType.Subcommand,
-        //     options: [
-        //         {
-        //             name: 'amount',
-        //             type: ApplicationCommandOptionType.Integer,
-        //             description: 'Quantidade de mensagens a ser apagadas',
-        //             min_value: 1,
-        //             max_value: 100,
-        //             required: true
-        //         }
-        //     ]
-        // }
+        {
+            name: 'messages',
+            description: '[moderation] Limpe mensagens no chat',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'amount',
+                    type: ApplicationCommandOptionType.Integer,
+                    description: 'Quantidade de mensagens a ser apagadas',
+                    min_value: 1,
+                    max_value: 100,
+                    required: true
+                }
+            ]
+        }
     ],
     helpData: {
         description: 'Limpe rapidamente as mensagens',
@@ -106,7 +106,7 @@ export default {
                 pinned: userMessages.sweep(msg => msg.pinned),
                 older: userMessages.sweep(msg => !Date.Timeout(((1000 * 60 * 60) * 24) * 14, msg.createdAt.valueOf())),
                 undeletable: userMessages.sweep(msg => !msg.deletable),
-                response: '',
+                response: ''
             }
 
             if (!userMessages.size)
@@ -144,6 +144,61 @@ export default {
         }
 
         async function clearChatMessages() {
+
+            const messages = await channel.messages.fetch({ limit: amount }).catch(() => null)
+
+            if (!messages)
+                return await interaction.reply({
+                    content: `${e.Deny} | Não foi possível obter as mensagens deste canal.`,
+                    ephemeral: true
+                })
+
+            if (!messages.size)
+                return await interaction.reply({
+                    content: `${e.Deny} | Este canal não possui nenhuma mensagem.`,
+                    ephemeral: true
+                })
+
+            const control = {
+                size: messages.size,
+                pinned: messages.sweep(msg => msg.pinned),
+                older: messages.sweep(msg => !Date.Timeout(((1000 * 60 * 60) * 24) * 14, msg.createdAt.valueOf())),
+                undeletable: messages.sweep(msg => !msg.deletable),
+                response: '',
+            }
+
+            if (!messages.size)
+                return await interaction.reply({
+                    content: `${e.Deny} | Nas ${control.size} últimas mensagens, esse foi o resultado.\n📌 | ${control.pinned} mensagens são fixadas.\n📆 | ${control.older} mensagens são mais antigas que 14 dias.\n${e.Info} | ${control.undeletable} mensagens são indeletaveis.`,
+                    ephemeral: true
+                })
+
+            const messagesDeleted = await channel.bulkDelete(messages, true).catch(err => err.code)
+
+            if (messagesDeleted.constructor === Number) {
+
+                const content = {
+                    10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
+                    50013: `${e.Deny} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageMessages}\`** para executar este comando.`,
+                    50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`
+                }[messagesDeleted] || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${config.SupportServerLink}).\n\`${err}\`\n\`(${messagesDeleted})\``
+
+                return await interaction.reply({ content, ephemeral: true })
+            }
+
+            control.response += `${e.Check} | Nas ${control.size} últimas mensagens, esse foi o resultado.`
+            control.response += `\n${e.Trash} | ${messagesDeleted?.size || 0} mensagens excluídas.`
+
+            if (control.undeletable > 0)
+                control.response += `\n${e.Info} | ${control.undeletable} mensagens não podem ser deletadas por mim.`
+
+            if (control.older > 0)
+                control.response += `\n📆 | ${control.older} mensagens são mais velhas que 14 dias.`
+
+            if (control.pinned > 0)
+                control.response += `\n📌 | ${control.pinned} mensagens fixadas não foram apagadas.`
+
+            return await interaction.reply({ content: control.response })
 
         }
 
