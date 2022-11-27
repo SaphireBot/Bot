@@ -5,7 +5,7 @@ export default async message => {
 
     if (!message?.id || !message?.guild) return
 
-    const { guild, author } = message
+    const { guild, author, member } = message
     const serverAFK = await Database.Cache.AfkSystem.get(guild.id) || {}
     const globalAFK = await Database.Cache.AfkSystem.get("Global") || {}
     const inServerAuthorAFK = serverAFK[author.id]
@@ -15,6 +15,7 @@ export default async message => {
 
         Database.Cache.AfkSystem.delete(`${guild.id}.${author.id}`).catch(() => { })
         Database.Cache.AfkSystem.delete(`Global.${author.id}`).catch(() => { })
+        member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
 
         const msg = await message.reply({
             content: inServerAuthorAFK ? `${e.Afk} | O sistema de AFK foi desativado automáticamente.` : `${e.Afk} | O sistema de AFK Global foi desativado automáticamente.`

@@ -19,7 +19,7 @@ export default {
                     required: true,
                     choices: [
                         {
-                            name: 'Neste Servidor',
+                            name: 'Neste servidor',
                             value: 'server'
                         },
                         {
@@ -64,7 +64,7 @@ export default {
     },
     async execute({ interaction, Database }) {
 
-        const { options, user, guild } = interaction
+        const { options, user, guild, member } = interaction
         const subCommand = options.getSubcommand()
 
         if (!subCommand)
@@ -83,24 +83,22 @@ export default {
 
             await Database.Cache.AfkSystem.set(`${where ? guild.id : 'Global'}.${user.id}`, message)
 
+            member.setNickname(`${member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
+
             return await interaction.reply({
-                content: `${e.Check} | Você ativou o AFK. Eu vou avisar todos que marcarem você.${message ? `\n📝 | ${message}` : ''}`,
+                content: `${e.Check} | Você ativou o AFK. Eu vou avisar todos que marcarem você.${message !== 'No Message' ? `\n📝 | ${message}` : ''}`,
                 ephemeral: true
             })
         }
 
         async function desableAfkCommand() {
 
-            const deleted = await Database.Cache.AfkSystem.delete(`${guild.id}_${user.id}`)
-
-            if (deleted)
-                return await interaction.reply({
-                    content: `${e.Check} | Você desativou o AFK com sucesso.`,
-                    ephemeral: true
-                })
+            Database.Cache.AfkSystem.delete(`${guild.id}.${user.id}`)
+            Database.Cache.AfkSystem.delete(`Global.${user.id}`)
+            member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
 
             return await interaction.reply({
-                content: `${e.Deny} | Você não tem nenhum AFK ativado para desativar.`,
+                content: `${e.Check} | Sistema AFK desativado.`,
                 ephemeral: true
             })
         }
