@@ -70,7 +70,7 @@ export default async ({ interaction, values: keys }) => {
     )
 
     const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
-   
+
     const dataToArray = [
         { active: guildData?.LogSystem?.ban?.active || false, name: "Banimento" },
         { active: guildData?.LogSystem?.unban?.active || false, name: "Desbanimento" },
