@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
 import fetch from 'node-fetch'
+import translate from '@iamtraction/google-translate'
 
 export default {
     name: 'lyrics',
@@ -46,7 +47,7 @@ export default {
         for (let str of result)
             embeds.push({
                 color: client.blue,
-                title: '🎶 Letras de Músicas',
+                title: `🎶 Letras de Músicas - ${client.user.username}`,
                 description: str[0].limit('MessageEmbedDescription'),
                 fields: [
                     {
@@ -65,9 +66,6 @@ export default {
                 ephemeral: true
             })
 
-        if (!embeds[1])
-            return await interaction.reply({ embeds })
-
         const msg = await interaction.reply({
             embeds: [embeds[0]],
             components: [
@@ -78,14 +76,23 @@ export default {
                             type: 2,
                             label: 'Anterior',
                             custom_id: 'left',
-                            style: ButtonStyle.Primary
+                            style: ButtonStyle.Primary,
+                            disabled: embeds.length === 1
                         },
                         {
                             type: 2,
                             label: 'Seguinte',
                             custom_id: 'right',
-                            style: ButtonStyle.Primary
+                            style: ButtonStyle.Primary,
+                            disabled: embeds.length === 1
                         },
+                        {
+                            type: 2,
+                            label: 'Traduzir',
+                            emoji: e.Translate,
+                            custom_id: 'translate',
+                            style: ButtonStyle.Primary
+                        }
                     ]
                 }
             ],
@@ -101,6 +108,12 @@ export default {
             .on('collect', async int => {
 
                 const { customId } = int
+
+                if (customId === 'translate')
+                    return translateMusic(int)
+
+                if (customId === 'translate_original')
+                    return translateMusic(int, true)
 
                 if (customId === 'left') {
                     index--
@@ -178,5 +191,136 @@ export default {
 
             return strings
         }
+
+        async function translateMusic(int, originalMusic) {
+
+            const text = embeds[index].description
+
+            if (originalMusic)
+                return await int.update({
+                    embeds: [embeds[index]],
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    label: 'Anterior',
+                                    custom_id: 'left',
+                                    style: ButtonStyle.Primary,
+                                    disabled: embeds.length === 1
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Seguinte',
+                                    custom_id: 'right',
+                                    style: ButtonStyle.Primary,
+                                    disabled: embeds.length === 1
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Traduzir',
+                                    emoji: e.Translate,
+                                    custom_id: 'translate',
+                                    style: ButtonStyle.Primary
+                                }
+                            ]
+                        }
+                    ]
+                }).catch(() => { })
+
+            return translate(text, { to: 'pt' })
+                .then(async res => {
+
+                    if (res.from.language.iso === 'pt') {
+
+                        await int.update({
+                            components: [
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 2,
+                                            label: 'Anterior',
+                                            custom_id: 'left',
+                                            style: ButtonStyle.Primary,
+                                            disabled: embeds.length === 1
+                                        },
+                                        {
+                                            type: 2,
+                                            label: 'Seguinte',
+                                            custom_id: 'right',
+                                            style: ButtonStyle.Primary,
+                                            disabled: embeds.length === 1
+                                        },
+                                        {
+                                            type: 2,
+                                            label: 'Traduzir',
+                                            custom_id: 'translate',
+                                            emoji: e.Translate,
+                                            style: ButtonStyle.Primary,
+                                            disabled: true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }).catch(() => { })
+
+                        return await interaction.reply({
+                            content: `${e.Check} | Esta música já está em português.`,
+                            ephemeral: true
+                        })
+                    }
+
+                    return await int.update({
+                        embeds: [{
+                            color: client.blue,
+                            title: `🎶 Letras de Músicas - ${client.user.username}`,
+                            description: res.text.limit('MessageEmbedDescription'),
+                            fields: [
+                                {
+                                    name: `${e.Info} | Dados Fornecidos`,
+                                    value: `Autor: ${author || 'Nenhum Autor'}\nNome da Música: ${title}`.limit('MessageEmbedFieldValue')
+                                }
+                            ],
+                            footer: {
+                                text: '❤ Powered By Google'
+                            }
+                        }],
+                        components: [
+                            {
+                                type: 1,
+                                components: [
+                                    {
+                                        type: 2,
+                                        label: 'Anterior',
+                                        custom_id: 'left',
+                                        style: ButtonStyle.Primary,
+                                        disabled: embeds.length === 1
+                                    },
+                                    {
+                                        type: 2,
+                                        label: 'Seguinte',
+                                        custom_id: 'right',
+                                        style: ButtonStyle.Primary,
+                                        disabled: embeds.length === 1
+                                    },
+                                    {
+                                        type: 2,
+                                        label: 'Letra Original',
+                                        emoji: e.Translate,
+                                        custom_id: 'translate_original',
+                                        style: ButtonStyle.Primary
+                                    }
+                                ]
+                            }
+                        ]
+                    }).catch(() => { })
+                })
+                .catch(async err => await int.reply({
+                    content: `${e.Warn} | Não foi possível traduzir esta música\n${e.bug} | \`${err}\``
+                }))
+        }
+
     }
 }
