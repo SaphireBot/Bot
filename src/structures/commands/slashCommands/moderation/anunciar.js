@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
-import { Modals } from '../../../../classes/index.js'
+import { Database, Modals } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import configAnunciar from '../../../classes/selectmenu/announce/config.anunciar.js'
 import roleAnunciar from '../../functions/anunciar/role.anunciar.js'
@@ -49,8 +49,12 @@ export default {
                             value: 'notice'
                         },
                         {
-                            name: 'EVERYONE | Obter/Retirar cargo de notificação',
+                            name: 'Obter/Retirar cargo de notificação',
                             value: 'role'
+                        },
+                        {
+                            name: 'Créditos',
+                            value: 'credits'
                         }
                     ]
                 }
@@ -60,7 +64,7 @@ export default {
     helpData: {
         description: 'Comando de anúncio'
     },
-    async execute({ interaction, guildData }) {
+    async execute({ interaction, guildData, client }) {
 
         const command = interaction.options.getSubcommand()
 
@@ -76,6 +80,37 @@ export default {
 
             if (option === 'role')
                 return roleAnunciar(interaction, guildData)
+
+            if (option === 'credits') {
+
+                const pepy = await client.users.fetch(Database.Names.Pepy) || { tag: 'Pepy', id: Database.Names.Pepy }
+                const san = await client.users.fetch(Database.Names.San) || { tag: 'San', id: Database.Names.San }
+                const rody = await client.users.fetch(Database.Names.Rody) || { tag: 'Rody', id: Database.Names.Rody }
+                const andre = await client.users.fetch(Database.Names.Andre) || { tag: 'Andre', id: Database.Names.Andre }
+                const lewd = await client.users.fetch("140926143783108610") || { tag: 'Lewd', id: "140926143783108610" }
+
+                return await interaction.reply({
+                    embeds: [{
+                        color: client.blue,
+                        title: '❤ Créditos do comando anunciar',
+                        description: 'Um agradecimento para todos os membros que contribuíram para a construção deste comando.',
+                        fields: [
+                            {
+                                name: '💡 Idealizadores',
+                                value: `${pepy.tag} - \`${pepy.id}\`\n${san.tag} - \`${san.id}\``
+                            },
+                            {
+                                name: `${e.VerifiedDeveloper} Código Fonte`,
+                                value: `${rody.tag} - \`${rody.id}\``
+                            },
+                            {
+                                name: `${e.Reference} Melhorias`,
+                                value: `${andre.tag} - \`${andre.id}\`\n${lewd.tag} - \`${lewd.id}\``
+                            }
+                        ]
+                    }]
+                })
+            }
 
             return await interaction.reply({
                 content: `${e.Deny} | Opção de sub-comando não definida.`,
