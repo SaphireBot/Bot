@@ -75,7 +75,11 @@ export default {
 
         async function clearUserMessages() {
 
-            const messages = await channel.messages.fetch({ limit: 100 }).catch(() => null)
+            const messages = await channel.messages.fetch({ limit: 100 })
+                .catch(err => {
+                    console.log(err)
+                    return null
+                })
 
             if (!messages)
                 return await interaction.reply({
@@ -115,7 +119,10 @@ export default {
                     ephemeral: true
                 })
 
-            const messagesDeleted = await channel.bulkDelete(userMessages, true).catch(err => err.code)
+            const messagesDeleted = await channel.bulkDelete(userMessages, true).catch(err => {
+                console.log(err)
+                return err.code
+            })
 
             if (messagesDeleted.constructor === Number) {
 
@@ -145,7 +152,10 @@ export default {
 
         async function clearChatMessages() {
 
-            const messages = await channel.messages.fetch({ limit: amount }).catch(() => null)
+            const messages = await channel.messages.fetch({ limit: amount }).catch(err => {
+                console.log(err)
+                return null
+            })
 
             if (!messages)
                 return await interaction.reply({
@@ -173,7 +183,10 @@ export default {
                     ephemeral: true
                 })
 
-            const messagesDeleted = await channel.bulkDelete(messages, true).catch(err => err.code)
+            const messagesDeleted = await channel.bulkDelete(messages, true).catch(err => {
+                console.log(err)
+                return err.code
+            })
 
             if (messagesDeleted.constructor === Number) {
 
