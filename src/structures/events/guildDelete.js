@@ -26,7 +26,7 @@ client.on('guildDelete', async guild => {
                     },
                     {
                         name: 'Status',
-                        value: `**Dono:** ${owner?.user?.tag || '\`Not Found\`'} *\`(${guild.ownerId})\`*\n**Membros:** ${guild.memberCount}`
+                        value: `**Dono:** ${owner?.tag || '\`Not Found\`'} *\`(${guild.ownerId})\`*\n**Membros:** ${guild.memberCount}`
                     }
                 ]
             }]
