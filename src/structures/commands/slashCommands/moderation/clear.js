@@ -109,7 +109,8 @@ export default {
             }
 
             if (userMessages.size > amount)
-                control.messagesToDelete = userMessages.toJSON()
+                control.messagesToDelete = userMessages
+                    .toJSON()
                     .slice(0, amount)
 
             if (!userMessages.length)
