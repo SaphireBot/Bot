@@ -430,7 +430,7 @@ export default new class Database extends Models {
                     fields: [
                         {
                             name: 'Status',
-                            value: `**Dono:** ${owner?.user?.tag || '`Not Found`'} *\`(${guild?.ownerId || '0'})\`*\n**Membros:** ${guild.memberCount}`
+                            value: `**Dono:** ${owner?.tag || '`Not Found`'} *\`(${guild?.ownerId || '0'})\`*\n**Membros:** ${guild.memberCount}`
                         },
                         {
                             name: 'Register',
