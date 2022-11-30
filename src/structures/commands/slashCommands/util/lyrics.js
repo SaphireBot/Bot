@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
-import fetch from 'node-fetch'
 import translate from '@iamtraction/google-translate'
+import lyrics from 'lyrics-parse'
 
 export default {
     name: 'lyrics',
@@ -29,7 +29,14 @@ export default {
         const { options, user } = interaction
         const title = options.getString('title')
         const author = options.getString('author')
-        const result = await parse(title, author).catch(() => null)
+        let result = ''
+
+        try {
+            result = await lyrics(title, author)
+            result = divide(result)
+        } catch {
+            result = null
+        }
 
         if (!result && !author)
             return await interaction.reply({
@@ -37,7 +44,7 @@ export default {
                 ephemeral: true
             })
 
-        if (!result)
+        if (!result || !result.length)
             return await interaction.reply({
                 content: `${e.Deny} | Nenhuma letra de música foi encontrada com os valores repassados.`,
                 ephemeral: true
@@ -131,67 +138,6 @@ export default {
                 return await msg.edit({ components: [] }).catch(() => { })
             })
 
-
-        async function parse(title = "", author = "") {
-            if (!title && !author)
-                return null
-
-            const delimiter1 = '</div></div></div></div><div class="hwc"><div class="BNeawe tAd8D AP7Wnd"><div><div class="BNeawe tAd8D AP7Wnd">';
-            const delimiter2 = '</div></div></div></div></div><div><span class="hwc"><div class="BNeawe uEec3 AP7Wnd">';
-            const url = "https://www.google.com/search?q=";
-            let lyrics;
-
-            try {
-                lyrics = await fetch(`${url}${encodeURIComponent(author + " " + title)}+lyrics`);
-                lyrics = await lyrics.textConverted();
-                [, lyrics] = lyrics.split(delimiter1);
-                [lyrics] = lyrics.split(delimiter2);
-            } catch (e) {
-                try {
-                    lyrics = await fetch(`${url}${encodeURIComponent(author + " " + title)}+song+lyrics`);
-                    lyrics = await lyrics.textConverted();
-                    [, lyrics] = lyrics.split(delimiter1);
-                    [lyrics] = lyrics.split(delimiter2);
-                } catch {
-                    try {
-                        lyrics = await fetch(`${url}${encodeURIComponent(author + " " + title)}+song`);
-                        lyrics = await lyrics.textConverted();
-                        [, lyrics] = lyrics.split(delimiter1);
-                        [lyrics] = lyrics.split(delimiter2);
-                    } catch {
-                        try {
-                            lyrics = await fetch(`${url}${encodeURIComponent(author + " " + title)}`);
-                            lyrics = await lyrics.textConverted(); // Convert to text
-                            [, lyrics] = lyrics.split(delimiter1); // Split it by the first delimiter
-                            [lyrics] = lyrics.split(delimiter2); // Split it by the second delimiter
-                        } catch {
-                            lyrics = ''; // Give up, couldn't find lyrics
-                        }
-                    }
-                }
-            }
-
-            if (!lyrics) return null
-            const strings = []
-
-            if (lyrics.length < 4096) {
-                strings.push([lyrics])
-                return strings
-            }
-
-            for (let i = 0; i <= lyrics.length; i += 4096) {
-                if (lyrics.length <= (i + 4096)) {
-                    strings.push([lyrics.slice(i, lyrics.length)])
-                    break;
-                }
-
-                strings.push([`${lyrics.slice(i, 4096)}...`])
-            }
-
-
-            return strings
-        }
-
         async function translateMusic(int, originalMusic) {
 
             const text = embeds[index].description
@@ -266,7 +212,7 @@ export default {
                             ]
                         }).catch(() => { })
 
-                        return await interaction.reply({
+                        return await int.followUp({
                             content: `${e.Check} | Esta música já está em português.`,
                             ephemeral: true
                         })
@@ -320,6 +266,27 @@ export default {
                 .catch(async err => await int.reply({
                     content: `${e.Warn} | Não foi possível traduzir esta música\n${e.bug} | \`${err}\``
                 }))
+        }
+
+        function divide(lyrics) {
+            if (!lyrics) return []
+            const strings = []
+
+            if (lyrics.length < 4096) {
+                strings.push([lyrics])
+                return strings
+            }
+
+            for (let i = 0; i <= lyrics.length; i += 4096) {
+                if (lyrics.length <= (i + 4096)) {
+                    strings.push([lyrics.slice(i, lyrics.length)])
+                    break;
+                }
+
+                strings.push([`${lyrics.slice(i, 4096)}...`])
+            }
+
+            return strings
         }
 
     }
