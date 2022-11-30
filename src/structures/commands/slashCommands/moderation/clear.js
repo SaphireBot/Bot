@@ -112,7 +112,7 @@ export default {
                 control.messagesToDelete = userMessages.toJSON()
                     .slice(0, amount)
 
-            if (!userMessages.size)
+            if (!userMessages.length)
                 return await interaction.reply({
                     content: `${e.Deny} | Nas ${messages.size} últimas mensagens, ${control.userMessagesSize} são de ${user?.tag || 'Not Found'}.\n📌 | ${control.pinned} mensagens são fixadas.\n📆 | ${control.older} mensagens são mais antigas que 14 dias.\n${e.Info} | ${control.undeletable} mensagens são indeletaveis.`,
                     ephemeral: true
