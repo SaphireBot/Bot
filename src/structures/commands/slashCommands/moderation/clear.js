@@ -76,10 +76,7 @@ export default {
         async function clearUserMessages() {
 
             const messages = await channel.messages.fetch({ limit: 100 })
-                .catch(err => {
-                    console.log(err)
-                    return null
-                })
+                .catch(() => null)
 
             if (!messages)
                 return await interaction.reply({
@@ -102,16 +99,18 @@ export default {
                     ephemeral: true
                 })
 
-            if (userMessages.size > amount)
-                userMessages.size = amount
-
             const control = {
                 userMessagesSize: userMessages.size || 0,
                 pinned: userMessages.sweep(msg => msg.pinned),
                 older: userMessages.sweep(msg => !Date.Timeout(((1000 * 60 * 60) * 24) * 14, msg.createdAt.valueOf())),
                 undeletable: userMessages.sweep(msg => !msg.deletable),
+                messagesToDelete: [],
                 response: ''
             }
+
+            if (userMessages.size > amount)
+                control.messagesToDelete = userMessages.toJSON()
+                    .slice(0, amount)
 
             if (!userMessages.size)
                 return await interaction.reply({
@@ -119,10 +118,8 @@ export default {
                     ephemeral: true
                 })
 
-            const messagesDeleted = await channel.bulkDelete(userMessages, true).catch(err => {
-                console.log(err)
-                return err.code
-            })
+            const messagesDeleted = await channel.bulkDelete(control.messagesToDelete, true)
+                .catch(err => err.code)
 
             if (messagesDeleted.constructor === Number) {
 
