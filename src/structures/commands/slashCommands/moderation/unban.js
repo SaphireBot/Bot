@@ -15,6 +15,11 @@ export default {
             type: ApplicationCommandOptionType.String,
             autocomplete: true,
             required: true
+        },
+        {
+            name: 'reason',
+            description: 'Razão do desbanimento',
+            type: ApplicationCommandOptionType.String
         }
     ],
     helpData: {
@@ -22,7 +27,7 @@ export default {
     },
     async execute({ interaction, client }) {
 
-        const { user, options, guild } = interaction
+        const { user, options, guild, member } = interaction
 
         if (!guild.members.me.permissions.has(DiscordPermissons.BanMembers))
             return await interaction.reply({
@@ -30,7 +35,14 @@ export default {
                 ephemeral: true
             })
 
+        if (!member.permissions.has(DiscordPermissons.BanMembers))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
+                ephemeral: true
+            })
+
         const userBanned = await client.users.fetch(options.getString('users_banned')).catch(() => null)
+        const reason = options.getString('reason') || 'Solicitou o desbanimento'
 
         if (!userBanned)
             return await interaction.reply({
@@ -38,7 +50,7 @@ export default {
                 ephemeral: true
             })
 
-        const result = await guild.bans.remove(userBanned, `${user.tag} solicitou o desbanimento`)
+        const result = await guild.bans.remove(userBanned, `${user.tag}: ${reason.slice(0, 100)}`)
             .then(() => true)
             .catch(err => err.code)
 

@@ -74,11 +74,17 @@ export default {
     },
     async execute({ interaction }) {
 
-        const { options, guild } = interaction
+        const { user, options, guild, member } = interaction
 
         if (!guild.members.me.permissions.has(DiscordPermissons.BanMembers))
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
+                ephemeral: true
+            })
+
+        if (!member.permissions.has(DiscordPermissons.BanMembers))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
                 ephemeral: true
             })
 
@@ -129,7 +135,10 @@ export default {
             }
         ].find(obj => obj.value === deleteMessageSeconds)?.name || "Quantidade e tempo de mensagens não identificados."
 
-        const ban = await guild.bans.create(userBan.id, { deleteMessageSeconds, reason })
+        const ban = await guild.bans.create(userBan.id, {
+            deleteMessageSeconds,
+            reason: `${user.tag}: ${reason}`
+        })
             .then(() => true)
             .catch(err => err)
 
