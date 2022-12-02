@@ -11,11 +11,13 @@ export default async message => {
     const inServerAuthorAFK = serverAFK[author.id]
     const inGlobalAuthorAFK = globalAFK[author.id]
 
+    if (member.displayName.includes('[AFK]'))
+        member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
+
     if (inServerAuthorAFK || inGlobalAuthorAFK) {
 
         Database.Cache.AfkSystem.delete(`${guild.id}.${author.id}`).catch(() => { })
         Database.Cache.AfkSystem.delete(`Global.${author.id}`).catch(() => { })
-        member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
 
         const msg = await message.reply({
             content: inServerAuthorAFK ? `${e.Afk} | O sistema de AFK foi desativado automáticamente.` : `${e.Afk} | O sistema de AFK Global foi desativado automáticamente.`
