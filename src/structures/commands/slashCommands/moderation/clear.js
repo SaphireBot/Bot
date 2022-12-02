@@ -104,16 +104,13 @@ export default {
                 pinned: userMessages.sweep(msg => msg.pinned),
                 older: userMessages.sweep(msg => !Date.Timeout(((1000 * 60 * 60) * 24) * 14, msg.createdAt.valueOf())),
                 undeletable: userMessages.sweep(msg => !msg.deletable),
-                messagesToDelete: [],
+                messagesToDelete: userMessages.size > amount
+                    ? [...userMessages.keys()].slice(0, amount)
+                    : userMessages,
                 response: ''
             }
 
-            if (userMessages.size > amount)
-                control.messagesToDelete = userMessages
-                    .toJSON()
-                    .slice(0, amount)
-
-            if (!userMessages.length)
+            if (!control.messagesToDelete?.length && !control.messagesToDelete?.size)
                 return await interaction.reply({
                     content: `${e.Deny} | Nas ${messages.size} últimas mensagens, ${control.userMessagesSize} são de ${user?.tag || 'Not Found'}.\n📌 | ${control.pinned} mensagens são fixadas.\n📆 | ${control.older} mensagens são mais antigas que 14 dias.\n${e.Info} | ${control.undeletable} mensagens são indeletaveis.`,
                     ephemeral: true
