@@ -547,7 +547,9 @@ export default class ModalInteraction extends Base {
             })
 
         return await axios({
+            method: "GET",
             baseURL: `https://kitsu.io/api/edge/anime?filter[text]=${animeName
+                .toLowerCase()
                 .replace(/[ãâáàä]/gi, 'a')
                 .replace(/[êéèë]/gi, 'e')
                 .replace(/[îíìï]/gi, 'i')
@@ -561,7 +563,6 @@ export default class ModalInteraction extends Base {
             }
         })
             .then(async result => {
-
                 if (!result || !result?.data?.data || !result?.data?.data?.length)
                     return await interaction.reply({
                         content: `${e.Deny} | Eu não achei nenhum anime com a sua indicação.`,
