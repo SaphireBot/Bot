@@ -52,11 +52,17 @@ export default {
     },
     async execute({ interaction }) {
 
-        const { options, channel, guild } = interaction
+        const { options, channel, guild, member } = interaction
 
         if (!guild.members.me.permissions.has(DiscordPermissons.ManageMessages))
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageMessages}** para executar este comando.`,
+                ephemeral: true
+            })
+
+        if (!member.permissions.has(DiscordPermissons.ManageMessages, true))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageMessages}** para executar este comando.`,
                 ephemeral: true
             })
 

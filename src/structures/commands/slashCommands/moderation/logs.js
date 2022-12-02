@@ -1,4 +1,4 @@
-import { Colors, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
+import { Colors, DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
 import { ApplicationCommandOptionType } from "discord.js";
 import notify from "../../../../functions/plugins/notify.js";
 
@@ -30,9 +30,9 @@ export default {
                 ephemeral: true
             })
 
-        if (!member.permissions.has("ManageGuild", true))
+        if (!member.permissions.has(DiscordPermissons.ManageGuild, true))
             return await interaction.reply({
-                content: `${e.Deny} | Você precisa da permissão **\`${PermissionsTranslate.ManageGuild}\`** para executar este comando.`,
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageGuild}** para executar este comando.`,
                 ephemeral: true
             })
 

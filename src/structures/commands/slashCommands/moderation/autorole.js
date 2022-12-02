@@ -39,12 +39,18 @@ export default {
     },
     async execute({ interaction, guildData, Database, client }) {
 
-        const { options, guild } = interaction
+        const { options, guild, member } = interaction
         const subCommand = options.getSubcommand()
 
         if (!guild.members.me.permissions.has(DiscordPermissons.ManageRoles, true))
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageRoles}** para adicionar/remover cargos.`,
+                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageRoles}** para executar este comando.`,
+                ephemeral: true
+            })
+
+        if (!member.permissions.has(DiscordPermissons.ManageRoles, true))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageRoles}** para executar este comando.`,
                 ephemeral: true
             })
 

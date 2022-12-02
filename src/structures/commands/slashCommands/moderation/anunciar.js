@@ -65,7 +65,7 @@ export default {
         description: 'Comando de anúncio'
     },
     async execute({ interaction, guildData, client }) {
-
+        
         const command = interaction.options.getSubcommand()
 
         if (command === "config")

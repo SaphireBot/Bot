@@ -1,4 +1,4 @@
-import { Permissions } from '../../../../util/Constants.js'
+import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 
@@ -130,7 +130,7 @@ export default {
     ],
     async execute({ interaction }) {
 
-        const { options, guild } = interaction
+        const { options, guild, member } = interaction
 
         for (let perm of [{ discord: Permissions.ManageChannels, user: 'GERENCIAR CANAIS' }, { discord: Permissions.ManageMessages, user: 'GERENCIAR MENSAGENS' }])
             if (!guild.clientHasPermission(perm.discord))
@@ -138,6 +138,12 @@ export default {
                     content: `❌ | Eu preciso da permissão **\`${perm.user}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
                     ephemeral: true
                 })
+
+        if (!member.permissions.has(DiscordPermissons.ManageChannels, true))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageChannels}** para executar este comando.`,
+                ephemeral: true
+            })
 
         const subCommand = options.getSubcommand()
         // let giveawayId = options.getString('id')
