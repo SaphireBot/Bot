@@ -2606,5 +2606,132 @@
             "censored": "https://media.discordapp.net/attachments/991029755367292948/1042947938881654794/ferrero_rocher_2.jpg?width=408&height=408",
             "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1042947938680307752/ferrero_rocher_1.jpg?width=408&height=408"
         }
+    },
+    {
+        "answers": [
+            "7 belo"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047978580660981880/7_belo2.png?width=545&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047978580333834370/7_belo.png?width=545&height=408"
+        }
+    },
+    {
+        "answers": [
+            "gatorade"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047979124246990939/unknown.png?width=506&height=408"
+        }
+    },
+    {
+        "answers": [
+            "guaraná kuat"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047979865799929876/kuat2.png?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047979865523109898/kuat.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "natura"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047980467212779662/natura2.jpeg?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047980466801741934/natura.jpeg?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "jovem pan"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047982741838377030/imagem_2022-12-01_180845350.png?width=465&height=408"
+        }
+    },
+    {
+        "answers": [
+            "transformers"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047983094982004736/imagem_2022-12-01_181008395.png?width=506&height=408"
+        }
+    },
+    {
+        "answers": [
+            "jeep"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047984691464126576/jeep2.png?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047984691116003409/jeep.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "philips"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047985810282119248/philips2.png?width=454&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047985809929814017/philips.png?width=454&height=408"
+        }
+    },
+    {
+        "answers": [
+            "panco"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047986761244090439/panco2.png?width=408&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047986760954687570/panco.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "wilson"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1047989241398964314/wilson_2.png?width=400&height=408",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1047989241038241792/wilson_1.png?width=400&height=408"
+        }
+    },
+    {
+        "answers": [
+            "johnson's baby",
+            "johnsons baby"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1048017791686561802/imagem_2022-12-01_202653842.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "unilever"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1048030488482291712/unilever2.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1048030488020930670/unilever.png"
+        }
+    },
+    {
+        "answers": [
+            "badoo"
+        ],
+        "images": {
+            "censored": null,
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1048033375304302602/imagem_2022-12-01_212802521.png?width=408&height=408"
+        }
+    },
+    {
+        "answers": [
+            "koo"
+        ],
+        "images": {
+            "censored": "https://media.discordapp.net/attachments/991029755367292948/1048038607199416420/koo2.png",
+            "uncensored": "https://media.discordapp.net/attachments/991029755367292948/1048038606712881222/koo.png"
+        }
     }
 ]
