@@ -592,14 +592,27 @@ export default class Autocomplete extends Base {
     }
 
     async usersBanned(value) {
-        const banneds = await this.guild.bans.fetch()
+        const banneds = await this.guild.bans.fetch().catch(() => null)
+
+        if (banneds === null)
+            return await this.respond([{
+                name: 'Erro ao obter os usuários banidos',
+                value: 'null'
+            }])
+
+        if (!banneds?.size)
+            return await this.respond([{
+                name: 'Nenhum usuário banido',
+                value: 'nothing here'
+            }])
+
         const banned = banneds.toJSON()
         const fill = banned.filter(data => data?.user.tag.toLowerCase().includes(value.toLowerCase()) || data?.user.id.includes(value)) || []
         const mapped = fill.map(data => ({
             name: `${data.user.tag} - ${data.user.id} | ${data.reason?.slice(0, 150) || 'Sem razão definida'}`,
             value: data.user.id
         }))
-        return this.respond(mapped)
+        return await this.respond(mapped)
     }
 
     utilColors(value) {
