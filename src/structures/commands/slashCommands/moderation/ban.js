@@ -84,7 +84,7 @@ export default {
 
         if (!member.permissions.has(DiscordPermissons.BanMembers))
             return await interaction.reply({
-                content: `${e.Deny} | Você precisa da da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
                 ephemeral: true
             })
 
