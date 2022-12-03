@@ -90,7 +90,7 @@ export default {
 
         const userBan = options.getUser('user')
         const deleteMessageSeconds = options.getInteger('delete_messages')
-        const reason = options.getString('reason') || null
+        const reason = options.getString('reason') || 'Nenhuma razão definida'
 
         const deleteMessageSecondsAsString = [
             {
