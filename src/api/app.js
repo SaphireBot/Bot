@@ -24,10 +24,10 @@ app.post("/topgg", async (req, res) => {
     : res.sendStatus(500)
 })
 
-app.post(process.env.ROUTE_MARCADO_PAGO_WEBHOOK, async (req, res) => {
-  res.sendStatus(200)
-  return recieveNewPaymentRequest(req.body)
-})
+// app.post("/MercadoPagoComprovante", async (req, res) => {
+//   res.sendStatus(200)
+//   return recieveNewPaymentRequest(req.body)
+// })
 
 app.get("/commands", async (req, res) => {
 

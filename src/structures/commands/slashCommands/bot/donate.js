@@ -50,11 +50,16 @@ export default {
                 embeds: [{
                     color: client.blue,
                     title: 'Doação livre',
-                    description: `> ${e.Info} Este QrCode não irá te trazer nenhum benefício. Usando a opção de \`quantia\`, você irá ganhar **15000 ${await guild.getCoin()}** por real doado.`,
+                    description: `> ${e.Info} Este QrCode não irá te trazer nenhum benefício. Usando a opção de \`quantia\`, você irá ganhar **15000 ${await guild.getCoin()}** por real doado.\n \nO PIX será enviado ao banco MERCADO PAGO do criador da Saphire's Project, Rodrigo Couto Santos cujo CPF é \`\*\*\*.554.818-\*\*\*\``,
                     image: { url: Config.QrCodeWithoutPrice }
                 }],
                 ephemeral: true
             })
+
+        return await interaction.reply({
+            content: `${e.Info} | Este recurso está desativo por tempo indeterminado. (Dados sendo emitidos de forma errada pelo mercado pago, por segurança e para você não perder seu dinheiro, desativei isso aqui. ~Criador da Saphire)`,
+            ephemeral: true
+        })
 
         const msg = await interaction.reply({
             embeds: [{
@@ -78,16 +83,19 @@ export default {
                 channel_id: channel.id,
                 message_id: msg.id
             },
-            notification_url: process.env.ROUTE_BASE_DOMAIN + process.env.ROUTE_MARCADO_PAGO_WEBHOOK,
+            notification_url: `${process.env.ROUTE_MARCADO_PAGO}`,
             payment_method_id: 'pix',
             payer: { email }
         })
-            .catch(async () => await interaction.editReply({
-                embeds: [{
-                    color: client.red,
-                    title: `${e.Deny} | Erro ao gerar um novo Donate`,
-                    description: 'Verifique se você passou um valor correto em "R$" real e se o email tem um formato válido e existe.'
-                }]
-            }).catch(() => { }))
+            .catch(async (err) => {
+                console.log(err)
+                await interaction.editReply({
+                    embeds: [{
+                        color: client.red,
+                        title: `${e.Deny} | Erro ao gerar um novo Donate`,
+                        description: 'Verifique se você passou um valor correto em "R$" real e se o email tem um formato válido e existe.'
+                    }]
+                }).catch(() => { })
+            })
     }
 }
