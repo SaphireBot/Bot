@@ -7,12 +7,11 @@ User.prototype.isVip = async function () {
     const userData = await Database.User.findOne({ id: this.id }, 'Vip')
     if (!userData) return false
 
+    if (userData?.Vip?.Permanent) return true
     const DateNow = userData?.Vip?.DateNow || null
     const TimeRemaing = userData?.Vip?.TimeRemaing || 0
 
-    if (userData?.Vip?.Permanent) return true
-
-    return Date.Timeout(TimeRemaing, Date.now() - DateNow) || undefined
+    return TimeRemaing - (Date.now() - DateNow) > 0
 }
 
 User.prototype.isMod = async function () {
@@ -31,7 +30,7 @@ User.prototype.balance = async function () {
 }
 
 User.prototype.color = async function () {
-    
+
     const userData = await Database.User.findOne({ id: this.id }, 'Color')
     if (!userData || !userData?.Color.Perm || !userData?.Color.Set) return client.blue
 
