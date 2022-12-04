@@ -33,7 +33,8 @@ export default {
 
         try {
             result = await lyrics(title, author)
-            result = divide(result)
+            if (result)
+                result = divide(result)
         } catch {
             result = null
         }
@@ -44,7 +45,7 @@ export default {
                 ephemeral: true
             })
 
-        if (!result || !result.length)
+        if (!result || !result?.length)
             return await interaction.reply({
                 content: `${e.Deny} | Nenhuma letra de música foi encontrada com os valores repassados.`,
                 ephemeral: true
@@ -134,9 +135,7 @@ export default {
 
                 return await int.update({ embeds: [embeds[index]] }).catch(() => { })
             })
-            .on('end', async () => {
-                return await msg.edit({ components: [] }).catch(() => { })
-            })
+            .on('end', async () => await msg.edit({ components: [] }).catch(() => { }))
 
         async function translateMusic(int, originalMusic) {
 
