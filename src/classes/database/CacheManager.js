@@ -28,6 +28,7 @@ export default new class CacheManager extends Cache {
         await this.Ranking.deleteAll()
         await this.General.delete('Looped')
         await this.General.set(`${shardId}.AudityLogsId`, [])
+        await this.General.set(`${shardId}.sequencyGame`, [])
         return true
     }
 
