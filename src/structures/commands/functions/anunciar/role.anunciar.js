@@ -1,5 +1,5 @@
 import { Database } from "../../../../classes/index.js"
-import { Permissions, PermissionsTranslate, DiscordPermissons } from "../../../../util/Constants.js"
+import { PermissionsTranslate, DiscordPermissons } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 export default async (interaction, guildResources) => {
@@ -65,6 +65,5 @@ export default async (interaction, guildResources) => {
                 ephemeral: true
             })
         })
-
 
 }

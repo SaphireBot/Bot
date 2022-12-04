@@ -8,7 +8,7 @@ export default async interaction => {
 
     await interaction.deferReply({})
 
-    const response = await Discloud.apps.terminal('saphire')
+    const response = await Discloud.apps.terminal('saphire').catch(() => null)
 
     if (!response)
         return await interaction.editReply({
@@ -24,10 +24,9 @@ export default async interaction => {
         embeds: [{
             color: client.blue,
             title: `${e.Reference} Discloud Logs`,
+            url: response.url,
             description: `\`\`\`txt\n${response.small}\`\`\``.limit('MessageEmbedDescription')
         }]
     }).catch(() => { })
-
-
 
 }
