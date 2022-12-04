@@ -15,7 +15,16 @@ app.use((_, res, next) => {
   next();
 })
 
-app.post("/topgg", async (req, res) => {
+app.use(express.json())
+
+app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
+
+  if (req.headers?.authorization !== process.env.TOP_GG_ACCESS)
+    return res
+      .send({
+        status: 401,
+        response: "Authorization is not defined correctly."
+      });
 
   const response = await topggReward(req.headers?.user || null).catch(() => null)
 
@@ -24,12 +33,12 @@ app.post("/topgg", async (req, res) => {
     : res.sendStatus(500)
 })
 
-app.post(process.env.ROUTE_MARCADO_PAGO_WEBHOOK, async (req, res) => {
+app.post(`${process.env.ROUTE_MARCADO_PAGO_WEBHOOK}`, async (req, res) => {
   res.sendStatus(200)
   return recieveNewPaymentRequest(req.body)
 })
 
-app.get("/commands", async (req, res) => {
+app.get(`${process.env.ROUTE_COMMANDS}`, async (req, res) => {
 
   if (req.headers?.authorization !== process.env.COMMAND_ACCESS)
     return res
@@ -43,7 +52,7 @@ app.get("/commands", async (req, res) => {
 
 })
 
-app.get("/allGuilds", async (req, res) => {
+app.get(`${process.env.ROUTE_ALL_GUILDS}`, async (req, res) => {
 
   if (req.headers?.authorization !== process.env.ALL_GUILDS_ACCESS)
     return res
@@ -61,7 +70,7 @@ app.get("/allGuilds", async (req, res) => {
 
 })
 
-app.get("/allUsers", async (req, res) => {
+app.get(`${process.env.ROUTE_ALL_USERS}`, async (req, res) => {
 
   if (req.headers?.authorization !== process.env.ALL_USERS_ACCESS)
     return res

@@ -16,6 +16,7 @@ import corridaFunctions from './buttons/corrida/reset.corrida.js'
 import tradeInfo from './buttons/saphireInfo/trade.info.js'
 import fanartsSaphire from '../commands/functions/bot/fanarts.saphire.js'
 import roleAnunciar from '../commands/functions/anunciar/role.anunciar.js'
+import copyPixDonate from './buttons/donate/copyPix.donate.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -60,7 +61,8 @@ export default class ButtonInteraction extends Base {
             rasp: [raspadinha, this.interaction, commandData],
             saphire: [tradeInfo, this.interaction, commandData],
             fanart: [fanartsSaphire, this.interaction, commandData, true],
-            anunciar: [roleAnunciar, this.interaction]
+            anunciar: [roleAnunciar, this.interaction],
+            donate: [copyPixDonate, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

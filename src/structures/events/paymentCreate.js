@@ -1,18 +1,18 @@
-import { AttachmentBuilder } from 'discord.js'
+import { AttachmentBuilder, ButtonStyle } from 'discord.js'
 import { Emojis as e } from '../../util/util.js'
 import { SaphireClient as client } from '../../classes/index.js'
 
 client.on('paymentCreate', async newPayment => {
 
-    const { point_of_interaction, metadata } = newPayment
+    const { point_of_interaction, metadata, id: paymentId } = newPayment
 
-    const channel = await client.channels.cache.get(metadata.channel_id)
+    const channel = await client.channels.fetch(metadata.channel_id || 'undefined').catch(() => null)
     if (!channel) return
 
-    const message = await channel.messages.fetch(metadata.message_id)
+    const message = await channel.messages.fetch(metadata.message_id || 'undefined').catch(() => null)
     if (!message) return
 
-    const user = await channel.guild.members.fetch(metadata.user_id)
+    const user = await channel.guild.members.fetch(metadata.user_id || 'undefined').catch(() => null)
     if (!user) return
 
     const attachment = new AttachmentBuilder(
@@ -27,17 +27,30 @@ client.on('paymentCreate', async newPayment => {
             description: `📑 Aguardando doação...\n⏳ ${Date.GetTimeout(1200000, Date.now() - 3000, 'R')}`,
             fields: [
                 {
-                    name: `${e.Commands} Pix - Copie e Cole`,
-                    value: `\`\`\`txt\n${point_of_interaction.transaction_data.qr_code}\n\`\`\``
-                },
-                {
                     name: `${e.qrcode} QR Code`,
                     value: `Abra o app do seu banco e leia o QR Code`
                 }
             ],
-            image: { url: 'attachment://qrcode.png' }
+            image: { url: 'attachment://qrcode.png' },
+            footer: {
+                text: `PaymentID: ${paymentId}`
+            }
         }],
-        files: [attachment]
+        files: [attachment],
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'PIX Copia e Cola',
+                        custom_id: JSON.stringify({ c: 'donate', id: paymentId }),
+                        emoji: e.Commands,
+                        style: ButtonStyle.Primary
+                    }
+                ]
+            }
+        ]
     })
 
 

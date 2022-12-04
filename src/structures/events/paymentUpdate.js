@@ -1,4 +1,5 @@
 import { Emojis as e } from '../../util/util.js'
+import { ButtonStyle } from 'discord.js'
 import {
     SaphireClient as client,
     Database
@@ -6,15 +7,17 @@ import {
 
 client.on('paymentUpdate', async paymentUpdated => {
 
-    const { status, status_detail, metadata, transaction_amount } = paymentUpdated
+    console.log(paymentUpdated)
 
-    const channel = client.channels.cache.get(metadata.channel_id)
+    const { status, status_detail, metadata, transaction_amount, id: paymentId } = paymentUpdated
+
+    const channel = await client.channels.fetch(metadata.channel_id || 'undefined').catch(() => null)
     if (!channel) return
 
-    const user = await channel.guild.members.fetch(metadata.user_id).catch(() => null)
+    const user = await channel.guild.members.fetch(metadata.user_id || 'undefined').catch(() => null)
     if (!user) return
 
-    const message = await channel.messages.fetch(metadata.message_id).catch(() => null)
+    const message = await channel.messages.fetch(metadata.message_id || 'undefined').catch(() => null)
     if (!message) return
 
     await Database.Cache.General.push('UPDATE', paymentUpdated)
@@ -70,9 +73,24 @@ client.on('paymentUpdate', async paymentUpdated => {
             description: description[status_detail],
             fields: fields[status],
             image: { url: image[status_detail] },
-            footer: { text: `Status atual: ${atualStatus[status] || atualStatus[status_detail]}` }
+            footer: { text: `PaymentID: ${paymentId} | Status atual: ${atualStatus[status] || atualStatus[status_detail]}` }
         }],
-        files: []
+        files: [],
+        components: ['Cancelado', 'Creditado', 'Expirado'].includes(atualStatus[status])
+            ? []
+            : [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: 'PIX Copia e Cola',
+                            custom_id: JSON.stringify({ c: 'donate', id: paymentId }),
+                            style: ButtonStyle.Primary
+                        }
+                    ]
+                }
+            ]
     }).catch(console.log)
 
     async function addBonus() {
@@ -90,7 +108,10 @@ client.on('paymentUpdate', async paymentUpdated => {
         if (!isVip)
             editData.$set = { 'Vip.DateNow': Date.now() }
 
-        return await Database.User.updateOne({ id: metadata.user_id }, editData, { upsert: true })
+        return await Database.User.updateOne(
+            { id: metadata.user_id },
+            editData,
+            { upsert: true })
 
     }
 })

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import mercadopago from 'mercadopago'
 import { Config } from '../../../../util/Constants.js'
 
@@ -56,10 +57,10 @@ export default {
                 ephemeral: true
             })
 
-        return await interaction.reply({
-            content: `${e.Info} | Este recurso está desativo por tempo indeterminado. (Dados sendo emitidos de forma errada pelo mercado pago, por segurança e para você não perder seu dinheiro, desativei isso aqui. ~Criador da Saphire)`,
-            ephemeral: true
-        })
+        // return await interaction.reply({
+        //     content: `${e.Info} | Este recurso está desativo por tempo indeterminado. (Dados sendo emitidos de forma errada pelo mercado pago, por segurança e para você não perder seu dinheiro, desativei isso aqui. ~Criador da Saphire)`,
+        //     ephemeral: true
+        // })
 
         const msg = await interaction.reply({
             embeds: [{
@@ -87,15 +88,12 @@ export default {
             payment_method_id: 'pix',
             payer: { email }
         })
-            .catch(async (err) => {
-                console.log(err)
-                await interaction.editReply({
-                    embeds: [{
-                        color: client.red,
-                        title: `${e.Deny} | Erro ao gerar um novo Donate`,
-                        description: 'Verifique se você passou um valor correto em "R$" real e se o email tem um formato válido e existe.'
-                    }]
-                }).catch(() => { })
-            })
+            .catch(async () => await interaction.editReply({
+                embeds: [{
+                    color: client.red,
+                    title: `${e.Deny} | Erro ao gerar um novo Donate`,
+                    description: 'Verifique se você passou um valor correto em "R$" real e se o email tem um formato válido e existe.'
+                }]
+            }).catch(() => { }))
     }
 }
