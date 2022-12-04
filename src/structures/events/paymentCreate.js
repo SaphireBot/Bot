@@ -4,7 +4,7 @@ import { SaphireClient as client } from '../../classes/index.js'
 
 client.on('paymentCreate', async newPayment => {
 
-    const { point_of_interaction, metadata, id: paymentId } = newPayment
+    const { point_of_interaction, metadata, id: paymentId, transaction_amount } = newPayment
 
     const channel = await client.channels.fetch(metadata.channel_id || 'undefined').catch(() => null)
     if (!channel) return
@@ -27,8 +27,12 @@ client.on('paymentCreate', async newPayment => {
             description: `📑 Aguardando doação...\n⏳ ${Date.GetTimeout(1200000, Date.now() - 3000, 'R')}`,
             fields: [
                 {
+                    name: `${e.Tax} Valores e Encargos`,
+                    value: `Você está doando \`R$ ${metadata?.value?.currency(true)}\` com encargos adicionais de \`R$ ${(transaction_amount - metadata.value).currency(true)} (0,99%)\` totalizando um valor final de \`R$ ${transaction_amount.currency(true)}\``
+                },
+                {
                     name: `${e.qrcode} QR Code`,
-                    value: `Abra o app do seu banco e leia o QR Code`
+                    value: 'Abra o app do seu banco e leia o QR Code'
                 }
             ],
             image: { url: 'attachment://qrcode.png' },

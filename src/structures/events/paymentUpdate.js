@@ -7,14 +7,12 @@ import {
 
 client.on('paymentUpdate', async paymentUpdated => {
 
-    console.log(paymentUpdated)
-
     const { status, status_detail, metadata, transaction_amount, id: paymentId } = paymentUpdated
 
     const channel = await client.channels.fetch(metadata.channel_id || 'undefined').catch(() => null)
     if (!channel) return
 
-    const user = await channel.guild.members.fetch(metadata.user_id || 'undefined').catch(() => null)
+    const user = await client.users.fetch(metadata.user_id || 'undefined').catch(() => null)
     if (!user) return
 
     const message = await channel.messages.fetch(metadata.message_id || 'undefined').catch(() => null)
@@ -23,7 +21,7 @@ client.on('paymentUpdate', async paymentUpdated => {
     await Database.Cache.General.push('UPDATE', paymentUpdated)
 
     const embed = message.embeds[0]?.data || {}
-    const sevenDays = ((60000 * 60) * 24) * 7
+    const sevenDays = 604800000 // 7 Days
 
     const title = {
         approved: `${e.Check} Doação aprovada`,
@@ -76,7 +74,7 @@ client.on('paymentUpdate', async paymentUpdated => {
             footer: { text: `PaymentID: ${paymentId} | Status atual: ${atualStatus[status] || atualStatus[status_detail]}` }
         }],
         files: [],
-        components: ['Cancelado', 'Creditado', 'Expirado'].includes(atualStatus[status])
+        components: ['Cancelado', 'Creditado', 'Expirado', 'Aprovado'].includes(atualStatus[status])
             ? []
             : [
                 {
@@ -96,22 +94,22 @@ client.on('paymentUpdate', async paymentUpdated => {
     async function addBonus() {
 
         const vipBonus = Math.ceil(transaction_amount * sevenDays)
-        const isVip = await user.user.isVip()
+        const isVip = await user.isVip()
 
         const editData = {
             $inc: {
-                Balance: Math.ceil(transaction_amount * 5000),
-                'Vip.TimeRemaing': vipBonus
+                Balance: Math.ceil(transaction_amount * 5000)
             }
         }
 
         if (!isVip)
-            editData.$set = { 'Vip.DateNow': Date.now() }
+            editData.$set = {
+                'Vip.DateNow': Date.now(),
+                'Vip.TimeRemaing': vipBonus
+            }
+        else editData.$inc['Vip.TimeRemaing'] = vipBonus
 
-        return await Database.User.updateOne(
-            { id: metadata.user_id },
-            editData,
-            { upsert: true })
+        return await Database.User.updateOne({ id: metadata.user_id }, editData, { upsert: true })
 
     }
 })
