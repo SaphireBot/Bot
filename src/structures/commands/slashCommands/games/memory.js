@@ -1,6 +1,7 @@
 import solo from '../../functions/memorygame/solo.memory.js'
 import coop from '../../functions/memorygame/coop.memory.js'
 import versus from '../../functions/memorygame/versus.memory.js'
+import sequency from '../../functions/memorygame/sequency.memory.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 const choices = [
@@ -121,9 +122,46 @@ export default {
                     type: ApplicationCommandOptionType.Integer,
                 }
             ]
+        },
+        {
+            name: 'sequency',
+            description: '[games] Você é capaz de seguir a sequência correta?',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [{
+                name: 'numbers',
+                description: 'Quantos números você quer?',
+                type: ApplicationCommandOptionType.Integer,
+                required: true,
+                choices: [
+                    {
+                        name: '5 Números',
+                        value: 5
+                    },
+                    {
+                        name: '6 Números',
+                        value: 6
+                    },
+                    {
+                        name: '7 Números',
+                        value: 7
+                    },
+                    {
+                        name: '8 Números',
+                        value: 8
+                    },
+                    {
+                        name: '9 Números',
+                        value: 9
+                    },
+                    {
+                        name: '10 Números',
+                        value: 10
+                    },
+                ]
+            }]
         }
     ],
-    async execute({ interaction, Database, e }) {
+    async execute({ interaction, Database, client, e }) {
 
         const { options } = interaction
 
@@ -131,6 +169,7 @@ export default {
         if (gameMode === 'solo') return solo(interaction, Database, e)
         if (gameMode === 'cooperative') return coop(interaction, e)
         if (gameMode === 'versus') return versus(interaction, e)
+        if (gameMode === 'sequency') return sequency(interaction, Database, client, e)
 
     }
 }
