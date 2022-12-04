@@ -37,7 +37,6 @@ export default async message => {
 
         const globalMessage = globalAFK[Member.user.id]
         if (globalMessage) {
-            console.log(Member?.displayName)
             if (!Member?.displayName?.includes('[AFK]'))
                 Member.setNickname(`${Member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
 
