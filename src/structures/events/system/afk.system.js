@@ -28,20 +28,29 @@ export default async message => {
         return setTimeout(() => msg.delete()?.catch(() => { }), 10000)
     }
 
-    const mentions = [...message.mentions.users.toJSON()?.map(user => ({ tag: user?.tag, id: user?.id })), message.repliedUser?.map(user => ({ tag: user?.tag, id: user?.id }))].filter(i => i)
-    if (!mentions.length) return
+    const mentions = message.mentions.members
+    if (!mentions.size) return
 
     let content = ""
 
-    for (let data of mentions) {
-        const globalMessage = globalAFK[data.id]
-        if (globalMessage)
-            content += `\n${e.Afk} | ${data.tag} está offline globalmente.${globalMessage === 'No Message' ? "" : `\n📝 | ${globalMessage}`}\n`
+    mentions.forEach(Member => {
 
-        const serverMessage = serverAFK[data.id]
+        const globalMessage = globalAFK[Member.user.id]
+        if (globalMessage) {
+            console.log(Member?.displayName)
+            if (!Member?.displayName?.includes('[AFK]'))
+                Member.setNickname(`${Member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
+
+            content += `\n${e.Afk} | ${Member.user.tag} está offline globalmente.${globalMessage === 'No Message' ? "" : `\n📝 | ${globalMessage}`}\n`
+        }
+
+        const serverMessage = serverAFK[Member.user.id]
         if (serverMessage)
-            content += `\n${e.Afk} | ${data.tag} está offline.${serverMessage === 'No Message' ? "" : `\n📝 | ${serverMessage}`}\n`
-    }
+            content += `\n${e.Afk} | ${Member.user.tag} está offline.${serverMessage === 'No Message' ? "" : `\n📝 | ${serverMessage}`}\n`
+
+        if (!globalMessage && !serverMessage && Member?.displayName?.includes('[AFK]'))
+            Member.setNickname(Member.displayName.replace('[AFK]', ''), 'AFK Command Desabled').catch(() => { })
+    })
 
     if (content.length > 0) {
 
@@ -51,7 +60,7 @@ export default async message => {
 
         if (msg === null) return
 
-        return setTimeout(() => msg.delete().catch(() => { }), 7000)
+        return setTimeout(() => msg?.delete()?.catch(() => { }), 7000)
     }
 
     return

@@ -39,24 +39,7 @@ export default {
             name: 'desativar',
             description: '[util] Desative o sistema AFK',
             type: ApplicationCommandOptionType.Subcommand,
-            options: [
-                {
-                    name: 'onde',
-                    description: 'Onde você quer desativar o AFK?',
-                    type: ApplicationCommandOptionType.String,
-                    required: true,
-                    choices: [
-                        {
-                            name: 'Desativar neste Servidor',
-                            value: 'server'
-                        },
-                        {
-                            name: 'Desativar em todos os servidores',
-                            value: 'global'
-                        }
-                    ]
-                }
-            ]
+            options: []
         }
     ],
     helpData: {
