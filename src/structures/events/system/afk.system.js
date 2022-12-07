@@ -1,11 +1,20 @@
 import { Database } from "../../../classes/index.js"
 import { Emojis as e } from "../../../util/util.js"
+import { MessageType } from "discord.js"
 
 export default async message => {
 
-    if (!message?.id || !message?.guild) return
-
     const { guild, author, member } = message
+
+    if (
+        !message
+        || !member
+        || !message?.id
+        || !message?.guild
+        || ![MessageType.Default, MessageType.Reply].includes(message.type)
+        || author?.bot
+    ) return
+
     const serverAFK = await Database.Cache.AfkSystem.get(guild.id) || {}
     const globalAFK = await Database.Cache.AfkSystem.get("Global") || {}
     const inServerAuthorAFK = serverAFK[author.id]
