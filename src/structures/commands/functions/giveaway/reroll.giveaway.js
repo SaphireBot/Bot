@@ -72,17 +72,37 @@ export default async (interaction, guildData) => {
                     emoji: '🔗',
                     url: giveaway.MessageLink,
                     style: ButtonStyle.Link
+                },
+                {
+                    type: 2,
+                    label: `${giveaway.Participants?.length || 0} ${giveaway.Participants?.length > 1 ? 'Participantes' : 'Participante'}`,
+                    emoji: '👥',
+                    customId: 'participants',
+                    style: ButtonStyle.Primary,
+                    disabled: true
                 }
             ]
         }]
-        : []
+        : [{
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: `${giveaway.Participants?.length || 0} ${giveaway.Participants?.length > 1 ? 'Participantes' : 'Participante'}`,
+                    emoji: '👥',
+                    customId: 'participants',
+                    style: ButtonStyle.Primary,
+                    disabled: true
+                }
+            ]
+        }]
 
     return await interaction.reply({
-        content: `${e.Notification} | ${winnersRandomized.map(id => `<@${id}>`).join(', ').slice(0, 4000)}`,
+        content: `${e.Notification} | ${winnersRandomized.map(id => `<@${id}>`).join(', ')}`.limit('MessageContent'),
         embeds: [
             {
                 color: client.green,
-                title: `${e.Tada} Sorteio Finalizado [REROLL]`,
+                title: `${e.Tada} Sorteio Finalizado[REROLL]`,
                 url: giveaway?.MessageLink || null,
                 fields: [
                     {

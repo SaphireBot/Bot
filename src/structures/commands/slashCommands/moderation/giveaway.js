@@ -135,16 +135,16 @@ export default {
 
         const { options, guild, member } = interaction
 
-        for (let perm of [{ discord: Permissions.ManageChannels, user: 'GERENCIAR CANAIS' }, { discord: Permissions.ManageMessages, user: 'GERENCIAR MENSAGENS' }])
+        for (let perm of [{ discord: Permissions.ManageChannels, user: PermissionsTranslate.ManageChannels }, { discord: Permissions.ManageMessages, user: PermissionsTranslate.ManageMessages }])
             if (!guild.clientHasPermission(perm.discord))
                 return await interaction.reply({
                     content: `❌ | Eu preciso da permissão **\`${perm.user}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
                     ephemeral: true
                 })
 
-        if (!member.permissions.has(DiscordPermissons.ManageChannels, true))
+        if (!member.permissions.has(DiscordPermissons.ManageEvents, true))
             return await interaction.reply({
-                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageChannels}** para executar este comando.`,
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageEvents}** para executar este comando.`,
                 ephemeral: true
             })
 
