@@ -4,14 +4,13 @@ import {
 import { Emojis as e } from '../../../../util/util.js'
 import { ButtonStyle } from 'discord.js'
 
-export default async (interaction) => {
+export default async (interaction, guildData) => {
 
     const { options, guild, user } = interaction
     const giveawayId = options.getString('select_giveaway')
 
     if (giveawayId === 'all') return deleteAll()
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'Giveaways')
     const sorteio = guildData.Giveaways?.find(gw => gw.MessageID === giveawayId)
 
     if (!sorteio)
@@ -48,14 +47,14 @@ export default async (interaction) => {
         filter: int => int.user.id === user.id,
         time: 60000
     })
-        .on('collect', async ButtonInteraction => {
+        .on('collect', async int => {
 
-            const { customId } = ButtonInteraction
+            const { customId } = int
 
             if (customId === 'cancel') return collector.stop()
 
             Database.deleteGiveaway(giveawayId, guild.id)
-            return await interaction.editReply({
+            return await int.update({
                 content: `${e.Check} | Sorteio deletado com sucesso!`,
                 components: []
             }).catch(() => { })

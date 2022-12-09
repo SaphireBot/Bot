@@ -150,9 +150,6 @@ export default {
             })
 
         const subCommand = options.getSubcommand()
-        // let giveawayId = options.getString('id')
-        // let WinnersAmount = options.getInteger('winners') || 1
-        // let TimeMs = 0
 
         switch (subCommand) {
             case 'create': createGiveaway(interaction); break;
@@ -166,7 +163,7 @@ export default {
         async function methodsGiveaway() {
 
             switch (options.getString('method')) {
-                case 'delete': deleteGiveaway(interaction); break;
+                case 'delete': deleteGiveaway(interaction, guildData); break;
                 // case 'reset': resetGiveaway(); break;
                 // case 'finish': finishGiveaway(); break;
                 // case 'info': infoGiveaway(); break;
