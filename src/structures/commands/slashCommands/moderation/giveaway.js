@@ -3,6 +3,7 @@ import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../.
 import { Emojis as e } from '../../../../util/util.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
+import listGiveaway from '../../functions/giveaway/list.giveaway.js'
 import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'
 
 export default {
@@ -20,7 +21,7 @@ export default {
             options: [
                 {
                     name: 'prize',
-                    description: 'Prêmio do sorteio',
+                    description: 'Prêmio do sorteio (2~100 caracteres)',
                     min_length: 2,
                     max_length: 100,
                     type: 3,
@@ -155,7 +156,7 @@ export default {
 
         switch (subCommand) {
             case 'create': createGiveaway(interaction); break;
-            // case 'list': listGiveaway(); break;
+            case 'list': listGiveaway(interaction, guildData); break;
             case 'reroll': rerollGiveaway(interaction, guildData); break;
             case 'options': methodsGiveaway(); break;
         }

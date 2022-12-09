@@ -176,7 +176,7 @@ export default async interaction => {
             if (reason === 'user') return
 
             return msg.react('🎉')
-                .then(() => registerGiveaway(msg, emoji, emojiData, Message))
+                .then(reaction => registerGiveaway(msg, reaction.emoji, emojiData, Message))
                 .catch(err => {
                     Database.deleteGiveaway(msg.id, guild.id)
                     return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
