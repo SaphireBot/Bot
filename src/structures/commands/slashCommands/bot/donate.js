@@ -1,6 +1,4 @@
-import { ButtonStyle } from 'discord.js'
-import mercadopago from 'mercadopago'
-// import { Config } from '../../../../util/Constants.js'
+import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 
 export default {
     name: 'donate',
@@ -26,100 +24,95 @@ export default {
         ]
     },
     options: [
-        // {
-        //     name: 'quantia',
-        //     description: 'Valor em reais a ser doado',
-        //     type: 10,
-        //     min_value: 0.01,
-        //     max_value: 9999999
-        // },
-        // {
-        //     name: 'email',
-        //     description: 'Email para que eu possa te enviar o comprovante',
-        //     type: 3
-        // }
+        {
+            name: 'method',
+            description: 'Escolha um método de doação',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            choices: [
+                {
+                    name: 'Stripe (Not Working)',
+                    value: 'linkTest'
+                },
+                {
+                    name: 'Pix Direto',
+                    value: 'nubank'
+                }
+            ]
+        }
     ],
     async execute({ interaction, client, e }) {
 
-        const { options, user, channel, guild } = interaction
+        const { options, guild } = interaction
+        const method = options.getString('method')
 
-        // const email = options.getString('email') || 'nothing@nothing.com'
-        // const price = options.getNumber('quantia') || 0
-
-        // if (!price)
-        return await interaction.reply({
-            embeds: [{
-                color: client.blue,
-                title: 'Doação livre',
-                description: `> ${e.Info} Este QrCode não irá te trazer nenhum benefício. Usando a opção de \`quantia\`, você irá ganhar **15000 ${await guild.getCoin()}** por real doado.\n \nO PIX será enviado ao banco NUBANK do criador da Saphire's Project, Rodrigo Couto Santos cujo CPF é \`\*\*\*.554.818-\*\*\*\``,
-                fields: [{
-                    name: `${e.Deny} Serviço Indisponível`,
-                    value: 'Conexão com o Mercado Pago não foi realizada por indisponibilidade dos servidores.'
+        if (method === 'linkTest')
+            return await interaction.reply({
+                embeds: [{
+                    color: client.blue,
+                    title: `💸 Doações`,
+                    description: 'Este link é apenas um teste em produção. As doações por este método não está ativo.',
+                    image: {
+                        url: 'https://media.discordapp.net/attachments/893361065084198954/1049519509163212910/qr_test_00gaIGb16dwL5RmeUU.png?width=394&height=473'
+                    },
+                    footer: {
+                        text: '❤ Powered By Stripe'
+                    }
                 }],
-                image: { url: 'https://media.discordapp.net/attachments/893361065084198954/1048979389666312313/index.png?width=473&height=473' }
-            }],
-            components: [
-                {
+                components: [{
                     type: 1,
                     components: [
                         {
                             type: 2,
-                            label: 'Abrir URL',
-                            url: 'https://nubank.com.br/pagar/sj32w/r3JDxYcxNx',
-                            emoji: '📎',
+                            label: 'Doar',
+                            url: 'https://donate.stripe.com/test_00gaIGb16dwL5RmeUU',
                             style: ButtonStyle.Link
-                        },
-                        {
-                            type: 2,
-                            label: 'Copia e Cola',
-                            emoji: e.Commands,
-                            style: ButtonStyle.Primary,
-                            custom_id: JSON.stringify({ c: 'donate', src: 'nubank' })
                         }
                     ]
-                }
-            ]
-        })
-
-        const msg = await interaction.reply({
-            embeds: [{
-                color: client.blue,
-                title: `${e.Loading} Gerando novo donate`,
-            }],
-            fetchReply: true
-        })
-        const value = options.getNumber('quantia')
-        const taxResult = ((value * 0.99) / 100).toFixed(2)
-        const finalValue = value + Number(taxResult)
-
-        return mercadopago.payment.create({
-            installments: 1,
-            token: client.user.id,
-            external_reference: `Olá ${user.tag}. Eu sou o Rody#1000, criador da ${client.user.username}, venho aqui pessoalmente te agradecer ❤`,
-            issuer_id: user.id,
-            transaction_amount: finalValue,
-            binary_mode: true,
-            date_of_expiration: new Date(Date.now() + 1200000), // 20 Minutos
-            description: 'Obrigado por doar. Você está me ajudando a ficar online e os animais de rua.',
-            metadata: {
-                user_id: user.id,
-                channel_id: channel.id,
-                message_id: msg.id,
-                value: Number(value.toFixed(2))
-            },
-            notification_url: `${process.env.ROUTE_MARCADO_PAGO}`,
-            payment_method_id: 'pix',
-            payer: { email }
-        })
-            .catch(async err => {
-                console.log(err)
-                await interaction.editReply({
-                    embeds: [{
-                        color: client.red,
-                        title: `${e.Deny} | Erro ao gerar um novo Donate`,
-                        description: 'Verifique se você passou um valor correto em "R$" real e se o email tem um formato válido e existe.'
-                    }]
-                }).catch(() => { })
+                }]
             })
+
+        if (method === 'nubank')
+            return await interaction.reply({
+                embeds: [{
+                    color: client.blue,
+                    title: 'Doação livre',
+                    description: `> ${e.Info} Este QrCode não irá te trazer nenhum benefício. Usando a opção de \`quantia\`, você irá ganhar **15000 ${await guild.getCoin()}** por real doado.\n \nO PIX será enviado ao banco NUBANK do criador da Saphire's Project, Rodrigo Couto Santos cujo CPF é \`\*\*\*.554.818-\*\*\*\``,
+                    fields: [{
+                        name: `${e.Deny} Serviço Indisponível`,
+                        value: 'Conexão com o Mercado Pago não foi realizada por indisponibilidade dos servidores.'
+                    }],
+                    image: { url: 'https://media.discordapp.net/attachments/893361065084198954/1048979389666312313/index.png?width=473&height=473' },
+                    footer: {
+                        text: '❤ Powered By Nubank'
+                    }
+                }],
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Abrir URL',
+                                url: 'https://nubank.com.br/pagar/sj32w/r3JDxYcxNx',
+                                emoji: '📎',
+                                style: ButtonStyle.Link
+                            },
+                            {
+                                type: 2,
+                                label: 'Copia e Cola',
+                                emoji: e.Commands,
+                                style: ButtonStyle.Primary,
+                                custom_id: JSON.stringify({ c: 'donate', src: 'nubank' })
+                            }
+                        ]
+                    }
+                ]
+            })
+
+        return await interaction.reply({
+            content: `${e.Deny} | Método não disponível na lista de opções.`,
+            ephemeral: true
+        })
     }
 }

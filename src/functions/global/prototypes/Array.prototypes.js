@@ -12,6 +12,7 @@ Array.prototype.random = function (times = 0, repeat = false) {
         else {
             let originalArray = [...this]
             for (let i = 0; i < times; i++) {
+                if (!originalArray.length) break;
                 let value = ~~(Math.random() * originalArray.length)
                 newArray.push(originalArray[value])
                 originalArray.splice(value, 1)

@@ -70,7 +70,8 @@ export default class Autocomplete extends Base {
             level_options: ['levelOptions'],
             option: ['ideaCommandOptions'],
             editar_imagem_com_censura: ['editImageLogoMarca'],
-            comprar: ['rifaNumero', value]
+            comprar: ['rifaNumero', value],
+            id: ['giveaway_id', value]
         }[name]
 
         if (autocompleteFunctions)
@@ -348,7 +349,34 @@ export default class Autocomplete extends Base {
             mapped.unshift({ name: 'Deletar todos os sorteios', value: 'all' })
 
         return await this.respond(mapped)
+    }
 
+    async giveaway_id(value) {
+
+        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
+        let giveaways = guildData?.Giveaways || []
+
+        if (!giveaways.length) return this.respond()
+
+        giveaways = giveaways.filter(w => !w.Actived)
+        if (!giveaways.length) return this.respond()
+
+        const fill = value ?
+            giveaways.filter(data =>
+                data.MessageID?.toLowerCase().includes(value)
+                || data.Prize?.toLowerCase().includes(value?.toLowerCase())
+                || data.Winners === parseInt(value)
+            )
+            : giveaways
+
+        const mapped = fill.map(gw => ({ name: `${gw.Winners > 1 ? `${gw.Winners} vencedores` : '1 vencedor'} | ${gw.Prize}`, value: gw.MessageID }))
+
+        mapped.unshift({
+            name: 'Informações sobre o reroll',
+            value: 'info'
+        })
+
+        return await this.respond(mapped)
     }
 
     async quiz_question(value) {

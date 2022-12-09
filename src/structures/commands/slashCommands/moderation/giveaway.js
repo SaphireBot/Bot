@@ -1,6 +1,8 @@
+import { ApplicationCommandOptionType } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
+import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'
 
 export default {
     name: 'giveaway',
@@ -76,16 +78,16 @@ export default {
                 {
                     name: 'id',
                     description: 'ID do sorteio (Id da mensagem do sorteio)',
-                    type: 3,
-                    required: true
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    autocomplete: true
                 },
                 {
                     name: 'winners',
-                    description: 'Quantidade de vendores',
-                    type: 4,
+                    description: 'Quantidade de vencedores',
+                    type: ApplicationCommandOptionType.Integer,
                     min_value: 1,
-                    max_value: 20,
-                    required: true
+                    max_value: 20
                 }
             ]
         },
@@ -128,7 +130,7 @@ export default {
             ]
         }
     ],
-    async execute({ interaction }) {
+    async execute({ interaction, guildData }) {
 
         const { options, guild, member } = interaction
 
@@ -153,7 +155,7 @@ export default {
         switch (subCommand) {
             case 'create': createGiveaway(interaction); break;
             // case 'list': listGiveaway(); break;
-            // case 'reroll': rerollGiveaway(); break;
+            case 'reroll': rerollGiveaway(interaction, guildData); break;
             case 'options': methodsGiveaway(); break;
         }
 

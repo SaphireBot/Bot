@@ -121,10 +121,8 @@ async function GetWinners(WinnersArray, Amount = 1, MessageId, guildId) {
 
     WinnersArray.length > Amount
         ? (() => {
-
             for (let i = 0; i < Amount; i++)
                 Winners.push(GetUserWinner())
-
         })()
         : Winners.push(...WinnersArray)
 
