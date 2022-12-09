@@ -358,7 +358,7 @@ export default class Autocomplete extends Base {
 
         if (!giveaways.length) return this.respond()
 
-        giveaways = giveaways.filter(w => !w.Actived)
+        giveaways = giveaways.filter(w => !w.Actived && w.Participants?.length)
         if (!giveaways.length) return this.respond()
 
         const fill = value ?

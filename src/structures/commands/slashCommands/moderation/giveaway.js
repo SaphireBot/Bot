@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
+import { Emojis as e } from '../../../../util/util.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'

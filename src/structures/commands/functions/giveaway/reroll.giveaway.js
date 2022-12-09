@@ -11,8 +11,7 @@ export default async (interaction, guildData) => {
         return await interaction.reply({
             embeds: [{
                 color: client.blue,
-                title: `${e.Info} | Disponibilidades para Reroll`,
-                description: `${e.Warn} Apenas sorteios já sorteados podem sofrer rerolls.`,
+                title: `${e.Info} | Informações Gerais Do Sistema de Reroll`,
                 fields: [
                     {
                         name: '💬 Em qual canal?',
@@ -29,6 +28,10 @@ export default async (interaction, guildData) => {
                     {
                         name: '🔢 Quantos rerolls posso fazer?',
                         value: 'Meu sistema fornece rerolls infinitos para todos os servidores gratuitamentes.'
+                    },
+                    {
+                        name: '🔑 Quais sorteios estão disponíveis para Reroll?',
+                        value: '1. Sorteios já sorteados.\n2. Sorteios com mais de 1 participante'
                     }
                 ]
             }]
