@@ -37,7 +37,6 @@ export default class ModalInteraction extends Base {
             editProfile: [this.editProfile, this],
             logomarcaReporter: [this.logomarcaReporter, this],
             newLetter: [this.newLetter, this],
-            lettersReport: [this.lettersReport, this],
             balance: [this.balanceOptions, this],
             indicationsLogomarca: [this.indicateLogomarca, this],
             rather: [this.vocePrefere, this],
@@ -1628,43 +1627,6 @@ export default class ModalInteraction extends Base {
             })
         }
 
-    }
-
-    lettersReport = async ({ interaction, client, fields, user } = this) => {
-
-        let letterId = fields.getTextInputValue('letterId'),
-            reason = fields.getTextInputValue('reason')
-
-        let Channel = client.channels.cache.get(config.letterChannelReport)
-
-        if (!Channel)
-            return await interaction.reply({
-                content: '❌ | Não foi possível contactar o canal de reports no servidor principal.',
-                ephemeral: true
-            })
-
-        Channel.send({
-            embeds: [{
-                color: client.red,
-                title: `${e.Loud} Novo reporte de carta recebido`,
-                fields: [
-                    {
-                        name: '🆔 ID da Carta/Usuário',
-                        value: `\`${letterId}\``
-                    },
-                    {
-                        name: `${e.Info} Motivo do reporte`,
-                        value: `\`\`\`txt\n${reason}\`\`\``
-                    }
-                ],
-                footer: { text: `ID do usuário: ${user.id}` }
-            }]
-        })
-
-        return await interaction.reply({
-            content: `✅ | Seu reporte foi enviado com sucesso! Caso você não queira receber mais cartas através da Saphire, use o comando \'/carta block\'. A Staff da ${client.user.username} analisará o ocorrido e punirá o responsável a altura.`,
-            ephemeral: true
-        })
     }
 
     transactionsModalReport = async () => {

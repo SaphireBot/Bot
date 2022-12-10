@@ -34,7 +34,8 @@ export default async ({ interaction, values: keys }) => {
         ban: logData?.LogSystem?.ban?.active || false,
         unban: logData?.LogSystem?.unban?.active || false,
         channels: logData?.LogSystem?.channels?.active || false,
-        messages: logData?.LogSystem?.messages?.active || false
+        messages: logData?.LogSystem?.messages?.active || false,
+        mute: logData?.LogSystem?.mute?.active || false
     }
 
     const toUpdate = {}
@@ -46,7 +47,8 @@ export default async ({ interaction, values: keys }) => {
             Banimento: "LogSystem.ban.active",
             Desbanimento: "LogSystem.unban.active",
             Canais: "LogSystem.channels.active",
-            Mensagens: "LogSystem.messages.active"
+            Mensagens: "LogSystem.messages.active",
+            Mute: "LogSystem.mute.active"
         }[key]
 
         const result = {
@@ -54,7 +56,8 @@ export default async ({ interaction, values: keys }) => {
             Banimento: !baseData?.ban,
             Desbanimento: !baseData?.unban,
             Canais: !baseData?.channels,
-            Mensagens: !baseData?.messages
+            Mensagens: !baseData?.messages,
+            Mute: !baseData?.mute
         }[key]
 
         if (!primaryKey && !result) continue;
@@ -77,7 +80,7 @@ export default async ({ interaction, values: keys }) => {
         { active: guildData?.LogSystem?.kick?.active || false, name: "Expulsão" },
         { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
         { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
-        { active: guildData?.LogSystem?.mute?.active || false, name: "MUTE_LOGS_BUILDING" },
+        { active: guildData?.LogSystem?.mute?.active || false, name: "Mute" },
         { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
         { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
     ]

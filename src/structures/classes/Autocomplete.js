@@ -5,6 +5,7 @@ import {
     ColorsTranslate,
     Languages
 } from '../../util/Constants.js'
+import { ChannelType } from 'discord.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -30,7 +31,6 @@ export default class Autocomplete extends Base {
 
         const autocompleteFunctions = {
             look: ['indications', value],
-            channel: ['blockedChannels', value],
             users_banned: ['usersBanned', value],
             color: ['utilColors', value],
             cor: ['utilColors', value],
@@ -49,10 +49,7 @@ export default class Autocomplete extends Base {
             buy_background: ['buyLevelBackground', value],
             select_country: ['flagSearch', value],
             command: ['commandList', value],
-            sugest_channel: ['ideiaChannels', value],
             available_polls: ['available_polls', value],
-            report_channel: ['reportChannels', value],
-            log_channel: ['logChannels', value],
             select_logo_marca: ['select_logo_marca', value],
             remove_sinonimo: ['remove_sinonimo', value],
             roles_in_autorole: ['roles_in_autorole', value],
@@ -68,7 +65,6 @@ export default class Autocomplete extends Base {
             daily: ['dailyOptions'],
             answers: ['answers'],
             level_options: ['levelOptions'],
-            option: ['ideaCommandOptions'],
             editar_imagem_com_censura: ['editImageLogoMarca'],
             comprar: ['rifaNumero', value],
             id: ['giveaway_id', value]
@@ -463,101 +459,6 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-    async ideiaChannels(value) {
-
-        const channels = this.guild.channels.cache.filter(channel => ['GUILD_TEXT', 'GUILD_NEWS'].includes(channel.type))
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'IdeiaChannel')
-        const channelId = guildData?.IdeiaChannel || null
-        const mapped = []
-
-        channels.map(channel => {
-            if (channel.id === channelId) return
-            return mapped.push({ name: channel.name, value: channel.id })
-        })
-
-        const newMapped = [...mapped.filter(data => data?.name?.toLowerCase()?.includes(value.toLowerCase()))]
-
-        if (channelId)
-            newMapped.unshift({
-                name: 'Desativar sistema de sugestões',
-                value: 'disableSugestChannel'
-            })
-
-        if (newMapped.length > 24) newMapped.length = 24
-        return this.respond(newMapped)
-    }
-
-    async logChannels(value) {
-
-        const channels = this.guild.channels.cache.filter(channel => ['GUILD_TEXT', 'GUILD_NEWS'].includes(channel.type))
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'LogChannel')
-        const channelId = guildData?.LogChannel || null
-        const mapped = []
-
-        channels.map(channel => {
-            if (channel.id === channelId) return
-            return mapped.push({ name: channel.name, value: channel.id })
-        })
-
-        const newMapped = [...mapped.filter(data => data?.name?.toLowerCase()?.includes(value.toLowerCase()))]
-
-        if (channelId)
-            newMapped.unshift({
-                name: 'Desativar sistema GSN (Log Channel)',
-                value: 'disableLogChannel'
-            })
-
-        if (newMapped.length > 24) newMapped.length = 24
-        return this.respond(newMapped)
-    }
-
-    async reportChannels(value) {
-
-        const channels = this.guild.channels.cache.filter(channel => ['GUILD_TEXT', 'GUILD_NEWS'].includes(channel.type))
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'ReportChannel')
-        const channelId = guildData?.ReportChannel || null
-        const mapped = []
-
-        channels.map(channel => {
-            if (channel.id === channelId) return
-            return mapped.push({ name: channel.name, value: channel.id })
-        })
-
-        const newMapped = [...mapped.filter(data => data?.name?.toLowerCase()?.includes(value.toLowerCase()))]
-
-        if (channelId)
-            newMapped.unshift({
-                name: 'Desativar sistema de reportes',
-                value: 'disableReportChannel'
-            })
-
-        if (newMapped.length > 24) newMapped.length = 24
-        return this.respond(newMapped)
-    }
-
-    async ideaCommandOptions() {
-
-        const mapped = [{
-            name: `(Modal) Enviar uma sugestão para ${this.client.user.username}`,
-            value: 'sugestBot'
-        }]
-
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'IdeiaChannel ReportChannel')
-        const channel = (channelId) => this.guild.channels.cache.has(channelId)
-
-        mapped.push({
-            name: `(Modal) Enviar uma sugestão para ${this.guild.name}${channel(guildData?.IdeiaChannel) ? '' : ' (Recurso desabilitado)'}`,
-            value: channel(guildData?.IdeiaChannel) ? 'sugestServer' : 'disabled'
-        })
-
-        mapped.push({
-            name: `(Modal) Enviar um reporte para ${this.guild.name}${channel(guildData?.ReportChannel) ? '' : ' (Recurso desabilitado)'}`,
-            value: channel(guildData?.ReportChannel) ? 'reportServer' : 'disabled'
-        })
-
-        return this.respond(mapped)
-    }
-
     async flagAdminOptions() {
         const data = await this.Database.Client.findOne({ id: client.user.id }, 'Moderadores Administradores')
         if (![...data?.Administradores, this.Database.Names.Lereo, ...data?.Moderadores]?.includes(this.user.id)) return this.respond()
@@ -604,18 +505,6 @@ export default class Autocomplete extends Base {
         )
 
         const mapped = fill.map(flag => ({ name: formatString(flag.country[0]), value: flag.country[0] })).sort()
-        return this.respond(mapped)
-    }
-
-    async blockedChannels(value) {
-        const data = await this.Database.Guild.findOne({ id: this.guild.id }, 'Blockchannels')
-        const channelsBlocked = data?.Blockchannels?.Channels || []
-        const named = channelsBlocked.map(channelId => this.guild.channels.cache.get(channelId))
-        const fill = named.filter(ch => ch && ch?.name.toLowerCase().includes(value?.toLowerCase())) || []
-        const mapped = fill.map(ch => {
-            const nameWithCategory = `${ch.name}${ch.parent ? ` - ${ch.parent.name}` : ''}`
-            return { name: nameWithCategory, value: ch.id }
-        })
         return this.respond(mapped)
     }
 

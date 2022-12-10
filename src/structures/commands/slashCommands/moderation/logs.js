@@ -55,7 +55,7 @@ export default {
             { active: guildData?.LogSystem?.kick?.active || false, name: "Expulsão" },
             { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
             { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
-            { active: guildData?.LogSystem?.mute?.active || false, name: "MUTE_LOGS_BUILDING" },
+            { active: guildData?.LogSystem?.mute?.active || false, name: "Mute" },
             { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
             { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
         ]
