@@ -52,9 +52,14 @@ export default {
         const searchUser = options.getString('user') || null
 
         const user = options.getUser('member')
-            || await client.users.fetch(searchUser, { force: true })
-                .catch(() => author)
+            || await client.users.fetch(searchUser, { force: true }).catch(() => null)
             || author
+
+        if (!user)
+            return await interaction.reply({
+                content: `${e.Deny} | Usuário não encontrado.`,
+                ephemeral: true
+            })
 
         const member = guild.members.cache.get(user.id) || null
         const hide = options.getString('hide') === 'hide'
