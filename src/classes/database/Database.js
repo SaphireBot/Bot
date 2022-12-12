@@ -61,6 +61,8 @@ export default new class Database extends Models {
 
     MongoConnect = async (client) => {
 
+        Mongoose.set("strictQuery", true)
+        
         return connect(process.env.DATABASE_LINK_CONNECTION, {
             useNewUrlParser: true,
             useUnifiedTopology: true,

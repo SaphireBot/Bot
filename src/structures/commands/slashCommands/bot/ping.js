@@ -28,24 +28,18 @@ export default {
 
         let toSubtract = Date.now()
 
-        const saphireAPI = await axios.get("https://api.saphire.one/ping")
+        const saphireAPI = await axios.get("https://ways.discloud.app/ping")
             .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
             .catch(() => "🔴 Offline")
 
         toSubtract = Date.now()
         const saphireSite = await axios.get("https://saphire.one")
             .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => "🔴 Offline")
+            // .catch(() => "🔴 Offline")
+            .catch(() => "🛠 Em Construção")
 
         toSubtract = Date.now()
-        const Squarecloud = await axios.get("https://api.squarecloud.app/v1/public/user",
-            {
-                authorization: `${process.env.SQUARECLOUD_KEY}`,
-                headers: {
-                    authorization: `${process.env.SQUARECLOUD_KEY}`,
-                }
-            }
-        )
+        const Squarecloud = await axios.get("https://api.squarecloud.app/v1/public/stats")
             .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
             .catch(() => "🔴 Offline")
 

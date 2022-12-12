@@ -8,7 +8,6 @@ import automaticSystems from '../../functions/update/index.js'
 import * as TopGG from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
-import mercadopago from 'mercadopago'
 import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
 import uncaughtException from '../modules/errors/process/uncaughtException.js'
 import axios from 'axios'
@@ -129,28 +128,41 @@ export default new class SaphireClient extends Client {
 
         process.on('unhandledRejection', error => unhandledRejection(error))
         process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
+        console.log('1/13 - Error Handler Connected')
 
         await super.login()
+        console.log('2/13 - Client Logged')
+
         const discloudResult = await Discloud.login()
             .then(() => "Discloud Host API Logged")
             .catch(() => "Discloud Host API Logged Failed")
+        console.log('3/13 - ' + discloudResult)
 
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
-        import('../../api/app.js')
+        console.log('4/13 - Prototypes & Events Connected')
 
         this.shardId = this.shard.ids.at(-1) || 0
 
-        mercadopago.configure({ access_token: process.env.MERCADO_PAGO_TOKEN })
         const databaseResponse = await Database.MongoConnect(this)
-        const slashCommandsResponse = await slashCommand(this)
-        
-        await Database.Cache.clearTables(`${this.shardId}`)
-        GiveawayManager.setGiveaways()
-        PollManager.setPolls()
-        await automaticSystems()
+        console.log('5/13 - ' + databaseResponse)
 
-        await this.sendWebhook(
+        const slashCommandsResponse = await slashCommand(this)
+        console.log('6/13 - ' + slashCommandsResponse)
+
+        await Database.Cache.clearTables(`${this.shardId}`)
+        console.log('7/13 - Cache\'s Tables Cleaned')
+
+        GiveawayManager.setGiveaways()
+        console.log('8/13 - Giveaways System Started')
+
+        PollManager.setPolls()
+        console.log('9/13 - Polls System Started')
+
+        automaticSystems()
+        console.log('10/13 - Automatic System Started')
+
+        const webhookResponse = await this.sendWebhook(
             process.env.WEBHOOK_STATUS,
             {
                 username: `[${this.canaryId === this.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
@@ -158,7 +170,14 @@ export default new class SaphireClient extends Client {
             }
         )
 
-        return console.log(`[Shard ${this.shardId}] | ${databaseResponse} | ${discloudResult} | ${slashCommandsResponse}`)
+        if (webhookResponse === true)
+            console.log('11/13 - Webhook Responded Successfully')
+        else console.log('11/13 - Webhook Not Responded\n ' + webhookResponse)
+
+        
+        console.log(`12/13 - Connected at Shard ${this.shardId}`)
+        import('../../api/app.js')
+        return
     }
 
     /**

@@ -22,7 +22,6 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "lyrics-parse": "^1.1.1",
-    "mercadopago": "^1.5.14",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.39",
     "mongoose": "^6.8.0",

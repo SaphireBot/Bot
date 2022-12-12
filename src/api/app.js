@@ -1,6 +1,5 @@
 import express from 'express'
 import topggReward from '../functions/topgg/reward.js'
-import recieveNewPaymentRequest from '../functions/donate/recieve.payment.js'
 import { SaphireClient as client } from '../classes/index.js'
 import('dotenv/config')
 
@@ -31,11 +30,6 @@ app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
   return response
     ? res.status(200).header(response).send(response)
     : res.sendStatus(500)
-})
-
-app.post(`${process.env.ROUTE_MARCADO_PAGO_WEBHOOK}`, async (req, res) => {
-  res.sendStatus(200)
-  return recieveNewPaymentRequest(req.body)
 })
 
 app.get(`${process.env.ROUTE_COMMANDS}`, async (req, res) => {
@@ -96,6 +90,6 @@ app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Foun
 // app.listen(8080, "0.0.0.0", async () => console.log('Saphire\'s Local API Connected'))
 
 // Squarecloud
-app.listen(80, "0.0.0.0", async () => console.log('Saphire\'s Local API Connected'))
+app.listen(80, "0.0.0.0", async () => console.log('13/13 - Saphire\'s Local API Connected'))
 
 export default app
