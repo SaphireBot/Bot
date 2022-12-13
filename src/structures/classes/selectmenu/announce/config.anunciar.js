@@ -11,7 +11,7 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
     const options = interaction?.options
     const guild = interaction?.guild
 
-    if (!member.permissions.has(Permissions.Administrator))
+    if (!member.permissions.has(DiscordPermissons.Administrator))
         return await interaction.reply({
             content: `${e.Deny} | Apenas Administradores do servidor podem modificar a configuração deste sistema.`,
             ephemeral: true

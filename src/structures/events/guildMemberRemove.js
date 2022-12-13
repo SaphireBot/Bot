@@ -35,6 +35,7 @@ client.on('guildMemberRemove', async member => {
 
     async function Notify() {
 
+        if (!guildData) return
         if (member.id === client.user.id || !guild.clientHasPermission(Permissions.ViewAuditLog) || !guildData.LogSystem?.channel) return
 
         if (!guildData?.LogSystem?.kick?.active) return
