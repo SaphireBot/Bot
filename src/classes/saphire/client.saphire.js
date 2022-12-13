@@ -173,7 +173,6 @@ export default new class SaphireClient extends Client {
         if (webhookResponse === true)
             console.log('11/13 - Webhook Responded Successfully')
         else console.log('11/13 - Webhook Not Responded\n ' + webhookResponse)
-
         
         console.log(`12/13 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
@@ -204,7 +203,6 @@ export default new class SaphireClient extends Client {
     }
 
     async sendWebhook(webhookUrl, data) {
-
         return await axios.post(
             process.env.ROUTE_WEBHOOK_SENDER,
             {
