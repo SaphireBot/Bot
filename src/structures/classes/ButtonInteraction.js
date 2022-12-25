@@ -91,6 +91,8 @@ export default class ButtonInteraction extends Base {
 
     async refeshPing(interaction) {
 
+        if (interaction.user.id !== interaction.message.interaction.user.id) return
+
         const pingCommand = client.slashCommands.find(cmd => cmd.name === 'ping')
 
         if (!pingCommand)
