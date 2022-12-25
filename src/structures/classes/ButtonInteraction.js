@@ -1,3 +1,5 @@
+import { SaphireClient as client } from '../../classes/index.js'
+import { Emojis as e } from '../../util/util.js'
 import Base from './Base.js'
 import memoryGame from './buttons/memoryGame/solo.memory.js'
 import tictactoe from './buttons/tictactoe/game.tictactoe.js'
@@ -62,7 +64,8 @@ export default class ButtonInteraction extends Base {
             saphire: [tradeInfo, this.interaction, commandData],
             fanart: [fanartsSaphire, this.interaction, commandData, true],
             anunciar: [roleAnunciar, this.interaction],
-            donate: [copyPixDonate, this.interaction, commandData]
+            donate: [copyPixDonate, this.interaction, commandData],
+            ping: [this.refeshPing, this.interaction]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
@@ -84,6 +87,19 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
+    }
+
+    async refeshPing(interaction) {
+
+        const pingCommand = client.slashCommands.find(cmd => cmd.name === 'ping')
+
+        if (!pingCommand)
+            return await interaction.update({
+                content: `${e.Deny} | Comando não encontrado`,
+                components: []
+            }).catch(() => { })
+
+        return await pingCommand.execute({ interaction, client, e }, true)
     }
 
     async copyCripto() {

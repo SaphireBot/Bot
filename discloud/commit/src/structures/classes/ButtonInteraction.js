@@ -32,6 +32,7 @@ export default class ButtonInteraction extends Base {
 
     async execute() {
 
+        console.log(true)
         if (!this.customId.includes('{')) return
         const commandData = JSON.parse(this.customId)
         if (!commandData) return
