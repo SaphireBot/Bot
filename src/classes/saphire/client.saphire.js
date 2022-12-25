@@ -107,6 +107,11 @@ export default new class SaphireClient extends Client {
          * @retuns [FanartsObject]
          */
         this.fanarts = []
+
+        /**
+         * @returns Número de interações criadas após inicialização do client
+         */
+        this.interactions = 0
     }
 
     /**

@@ -87,9 +87,9 @@ app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
 app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Found" }))
 
 // Discloud
-app.listen(8080, "0.0.0.0", async () => console.log('13/13 - Saphire\'s Local API Connected'))
+// app.listen(8080, "0.0.0.0", async () => console.log('13/13 - Saphire\'s Local API Connected'))
 
 // // Squarecloud
-// app.listen(80, "0.0.0.0", async () => console.log('13/13 - Saphire\'s Local API Connected'))
+app.listen(80, "0.0.0.0", async () => console.log('13/13 - Saphire\'s Local API Connected'))
 
 export default app

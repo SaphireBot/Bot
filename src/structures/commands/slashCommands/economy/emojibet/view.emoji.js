@@ -1,9 +1,9 @@
 import { parseEmoji } from "discord.js"
 import { Emojis as e } from "../../../../../util/util.js"
 
-export default async (interaction, emoji) => {
+export default async (interaction) => {
 
-    const emojiParsed = parseEmoji(emoji)
+    const emojiParsed = parseEmoji(interaction.options.getString('emoji'))
 
     if (!emojiParsed)
         return await interaction.reply({

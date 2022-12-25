@@ -1,0 +1,1 @@
+import('./src/classes/saphire/client.saphire.js').then(client => client.default.start())

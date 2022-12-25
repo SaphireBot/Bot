@@ -54,7 +54,7 @@ export default {
             .catch(() => "🔴 Offline")
 
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0}** - ${Date.stringDate(client.uptime)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n🔳 | SquareCloud API Host: ${Squarecloud}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0}** - ${Date.stringDate(client.uptime)}\n${e.slash} | Interações: ${client.interactions || 0}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n🔳 | SquareCloud API Host: ${Squarecloud}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`
         }).catch(() => { })
     }
 }

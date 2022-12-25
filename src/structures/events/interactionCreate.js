@@ -11,6 +11,7 @@ client.on('interactionCreate', async interaction => {
 
     if (!interaction) return
 
+    client.interactions++
     if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) return new SlashCommand(interaction).CheckBeforeExecute()
     if (interaction.isButton()) return new ButtonInteraction(interaction).execute()
     if (interaction.isAnySelectMenu()) return new SelectMenuInteraction(interaction).filterAndChooseFunction()
