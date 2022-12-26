@@ -4,6 +4,41 @@ export default new class Modals {
         return { ...this }
     }
 
+    addEmoji = {
+        title: "Add Emoji at Handler",
+        custom_id: 'addemoji',
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "name",
+                        label: "Nome do emoji na handler",
+                        style: 1,
+                        min_length: 1,
+                        placeholder: "emojiName",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "emoji",
+                        label: "Nome do \\emoji",
+                        style: 1,
+                        min_length: 1,
+                        placeholder: "<:emojiName:123456789123456798>",
+                        required: true
+                    }
+                ]
+            }
+        ]
+    }
+    
     NewNotice = {
         title: "Notice Builder Painel",
         custom_id: 'notice',

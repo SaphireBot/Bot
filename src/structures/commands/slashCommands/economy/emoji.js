@@ -78,7 +78,27 @@ export default {
         {
             name: 'handler',
             description: '[bot] Todos os emojis disponíveis nos meus sistemas',
-            type: ApplicationCommandOptionType.Subcommand
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [{
+                name: 'method',
+                description: 'Metódo a ser executado',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+                choices: [
+                    {
+                        name: '[ADMIN] Adicionar novo emoji',
+                        value: 'add'
+                    },
+                    {
+                        name: '[ADMIN] Remover um emoji',
+                        value: 'remove'
+                    },
+                    {
+                        name: '[USER] Visualizar todos os emojis',
+                        value: 'view'
+                    }
+                ]
+            }]
         }
     ],
     helpData: {
