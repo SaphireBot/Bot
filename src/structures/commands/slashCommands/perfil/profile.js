@@ -323,7 +323,7 @@ export default {
                         value: JSON.stringify({ c: 'chooseSign' }),
                     },
                     {
-                        label: 'Alterar gênero',
+                        label: 'Alterar Gênero',
                         emoji: '🚻',
                         description: 'Altere o gênero do seu perfil',
                         value: JSON.stringify({ c: 'chooseGender' })
