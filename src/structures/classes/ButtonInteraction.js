@@ -19,7 +19,6 @@ import tradeInfo from './buttons/saphireInfo/trade.info.js'
 import fanartsSaphire from '../commands/functions/bot/fanarts.saphire.js'
 import roleAnunciar from '../commands/functions/anunciar/role.anunciar.js'
 import copyPixDonate from './buttons/donate/copyPix.donate.js'
-import signProfile from '../commands/slashCommands/perfil/perfil/sign.profile.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -67,8 +66,6 @@ export default class ButtonInteraction extends Base {
             anunciar: [roleAnunciar, this.interaction],
             donate: [copyPixDonate, this.interaction, commandData],
             ping: [this.refeshPing, this.interaction],
-            sign: [signProfile, this.interaction, true],
-            refreshProfile: [this.refreshProfile, this]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
@@ -82,7 +79,6 @@ export default class ButtonInteraction extends Base {
         const byThis = {
             newProof: ['newProof'],
             cancelVote: ['cancelVote'],
-            editProfile: ['editProfile'],
             copy: ['copyCripto']
         }[this.customId]
 
@@ -90,34 +86,6 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
-    }
-
-    async refreshProfile({ interaction, user, message, client, Database, guild }) {
-
-        if (user.id!== message.interaction.user.id) return
-
-        const profileCommand = client.slashCommands.find(cmd => cmd.name === 'perfil')
-
-        if (!profileCommand)
-            return await interaction.update({
-                content: `${e.Deny} | Comando não encontrado.`,
-                components: []
-            }).catch(() => { })
-
-        const guildData = await Database.Guild.findOne({ id: guild.id })
-        const Moeda = guildData?.Moeda || `${e.Coin} Safiras`
-
-        const clientData = await Database.Client.findOne({ id: client.user.id })
-
-        return await profileCommand.execute({
-            interaction: interaction,
-            client: client,
-            emojis: e,
-            Database: Database,
-            Moeda: Moeda,
-            clientData: clientData,
-            refresh: true
-        })
     }
 
     async refeshPing(interaction) {
@@ -229,27 +197,6 @@ export default class ButtonInteraction extends Base {
         }
 
         return await this.interaction.showModal(this.modals.wordleGameNewTry(message.id, wordleGameData.Length))
-    }
-
-    async editProfile() {
-
-        const data = await this.Database.User.findOne({ id: this.user.id }, 'Perfil')
-
-        if (!data) {
-            await this.Database.registerUser(this.user)
-            return await this.interaction.reply({
-                content: `${e.Database} | DATABASE | Por favor, tente novamente.`,
-                ephemeral: true
-            })
-        }
-
-        const title = data?.Perfil?.Titulo || null
-        const job = data?.Perfil?.Trabalho || null
-        const niver = data?.Perfil?.Aniversario || null
-        const status = data?.Perfil?.Status || null
-        const modal = this.modals.editProfileModal(title, job, niver, status)
-
-        return await this.interaction.showModal(modal)
     }
 
 }

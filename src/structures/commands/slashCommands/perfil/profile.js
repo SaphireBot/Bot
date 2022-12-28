@@ -4,6 +4,7 @@ import { Config as config } from '../../../../util/Constants.js'
 import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
 import signProfile from './perfil/sign.profile.js'
+import genderProfile from './perfil/gender.profile.js'
 
 export default {
     name: 'perfil',
@@ -35,7 +36,11 @@ export default {
                     value: 'signo'
                 },
                 {
-                    name: 'Esconder só pra mim',
+                    name: 'Escolher gênero',
+                    value: 'gender'
+                },
+                {
+                    name: 'Esconder mensagem só pra mim',
                     value: 'hide'
                 }
             ]
@@ -55,6 +60,7 @@ export default {
         if (query === 'refresh') return refreshProfile(interaction)
         if (query === 'edit') return showModal()
         if (query === 'signo') return signProfile(interaction)
+        if (query === 'gender') return genderProfile(interaction)
 
         const user = refresh ? author : options.getUser('user') || author
 
@@ -297,43 +303,51 @@ export default {
         if (warns.length > 0)
             Embed.footer = { text: `${warns.length} avisos neste servidor` }
 
-        const buttons = [{
+        const selectMenuObject = {
             type: 1,
-            components: [
-                {
-                    type: 2,
-                    label: `${likes} likes`,
-                    emoji: e.Like,
-                    custom_id: JSON.stringify({ c: 'like', src: user.id }),
-                    style: ButtonStyle.Primary
-                },
-                {
-                    type: 2,
-                    label: 'Signo',
-                    emoji: '🔅',
-                    custom_id: JSON.stringify({ c: 'sign', src: user.id }),
-                    style: ButtonStyle.Primary
-                }
-            ]
-        }]
+            components: [{
+                type: 3,
+                custom_id: 'profile',
+                placeholder: 'Opções do perfil',
+                options: [
+                    {
+                        label: `${likes} likes`,
+                        emoji: e.Like,
+                        description: `Dar um like para ${user.tag}`,
+                        value: JSON.stringify({ c: 'like', src: user.id }),
+                    },
+                    {
+                        label: 'Alterar Signo',
+                        emoji: '🔅',
+                        description: 'Altere o signo do seu perfil',
+                        value: JSON.stringify({ c: 'chooseSign' }),
+                    },
+                    {
+                        label: 'Alterar gênero',
+                        emoji: '🚻',
+                        description: 'Altere o gênero do seu perfil',
+                        value: JSON.stringify({ c: 'chooseGender' })
+                    }
+                ]
+            }]
+        }
 
         if (author.id === user.id)
-            buttons[0].components.push({
-                type: 2,
+            selectMenuObject.components[0].options.push({
                 label: 'Editar',
                 emoji: '📝',
-                custom_id: JSON.stringify({ c: 'perfil', src: 'editProfile' }),
-                style: ButtonStyle.Success
+                description: 'Alterar os dados do perfil',
+                value: JSON.stringify({ c: 'editProfile' })
             })
 
-        buttons[0].components.push({
-            type: 2,
+        selectMenuObject.components[0].options.push({
+            label: 'Atualizar',
             emoji: "🔄",
-            custom_id: JSON.stringify({ c: 'refreshProfile' }),
-            style: ButtonStyle.Primary
+            description: 'Force uma atualização no seu perfil',
+            value: JSON.stringify({ c: 'refreshProfile' })
         })
 
-        return await interaction.editReply({ embeds: [Embed], components: buttons }).catch(() => { })
+        return await interaction.editReply({ embeds: [Embed], components: [selectMenuObject] })
 
         async function showModal() {
 

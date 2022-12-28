@@ -7,9 +7,8 @@ import { Emojis as e } from "../../../../util/util.js"
 export default async (interaction, userId) => {
 
     const { user: author, message } = interaction
-    const user = client.users.resolve(userId)
-        || await client.users.fetch(userId, { force: true })
-            .catch(() => null)
+    const user = await client.users.fetch(userId, { force: true })
+        .catch(() => null)
 
     if (!user)
         return await interaction.reply({
@@ -52,7 +51,7 @@ export default async (interaction, userId) => {
     const { components } = message
     const componentsJSON = components[0].toJSON()
     const objectComponents = componentsJSON.components
-    objectComponents[0].label = `${data.userLikes + 1} likes`
+    objectComponents[0].options[0].label = `${data.userLikes + 1} likes`
 
     return await interaction.update({ components: [componentsJSON] }).catch(() => { })
 }

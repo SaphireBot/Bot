@@ -3,7 +3,10 @@ import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
+import genderProfile from '../commands/slashCommands/perfil/perfil/gender.profile.js'
+import signProfile from '../commands/slashCommands/perfil/perfil/sign.profile.js'
 import Base from './Base.js'
+import likePerfil from './buttons/perfil/like.perfil.js'
 import configAnunciar from './selectmenu/announce/config.anunciar.js'
 import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
@@ -40,22 +43,100 @@ export default class SelectMenuInteraction extends Base {
             rifa: 'refundFunction',
             logs: 'logsFunction',
             sign: 'chooseSign',
-            signEphemeral: 'chooseSign'
+            gender: 'chooseGender',
+            signEphemeral: 'chooseSign',
+            genderEphemeral: 'chooseGender'
         }[this.customId]
 
         if (this[result])
             return this[result](this)
 
-        if (!this.customId.startsWith('{')) return
+        if (this.value.startsWith('{')) {
+
+            this.customId = JSON.parse(this.value)
+
+            const byValues = {
+                chooseSign: 'sendSelectMenuSign',
+                chooseGender: 'sendSelectMenuGender',
+                refreshProfile: 'refreshProfile',
+                like: 'newLike',
+                editProfile: 'editProfile'
+            }[this.customId?.c]
+
+            if (byValues)
+                return this[byValues](this)
+        }
+
+        if (!this.customId?.startsWith('{')) return
         this.customId = JSON.parse(this?.customId)
 
         const result2 = {
             anunciar: configAnunciar
         }[this.customId?.c]
 
-        if (!result2) return
+        if (result2)
+            return result2(this)
+    }
 
-        return result2(this)
+    async editProfile({ Database, user, interaction, modals }) {
+
+        const data = await Database.User.findOne({ id: user.id }, 'Perfil')
+
+        if (!data) {
+            await Database.registerUser(this.user)
+            return await interaction.reply({
+                content: `${e.Database} | DATABASE | Por favor, tente novamente.`,
+                ephemeral: true
+            })
+        }
+
+        const title = data?.Perfil?.Titulo || null
+        const job = data?.Perfil?.Trabalho || null
+        const niver = data?.Perfil?.Aniversario || null
+        const status = data?.Perfil?.Status || null
+        const modal = modals.editProfileModal(title, job, niver, status)
+
+        return await interaction.showModal(modal)
+    }
+
+    newLike({ interaction }) {
+        return likePerfil(interaction, this.customId.src)
+    }
+
+    sendSelectMenuSign({ interaction }) {
+        return signProfile(interaction, true)
+    }
+
+    sendSelectMenuGender({ interaction }) {
+        return genderProfile(interaction, true)
+    }
+
+    async refreshProfile({ interaction, user, message, client, Database, guild }) {
+
+        if (user.id !== message.interaction.user.id) return
+
+        const profileCommand = client.slashCommands.find(cmd => cmd.name === 'perfil')
+
+        if (!profileCommand)
+            return await interaction.update({
+                content: `${e.Deny} | Comando não encontrado.`,
+                components: []
+            }).catch(() => { })
+
+        const guildData = await Database.Guild.findOne({ id: guild.id })
+        const Moeda = guildData?.Moeda || `${e.Coin} Safiras`
+
+        const clientData = await Database.Client.findOne({ id: client.user.id })
+
+        return await profileCommand.execute({
+            interaction: interaction,
+            client: client,
+            emojis: e,
+            Database: Database,
+            Moeda: Moeda,
+            clientData: clientData,
+            refresh: true
+        })
     }
 
     logsFunction() {
@@ -203,6 +284,23 @@ export default class SelectMenuInteraction extends Base {
 
         return await interaction.update({
             content: `${e.Check} | Você alterou o signo para **${sign}**.`,
+            components: []
+        })
+    }
+
+    async chooseGender({ interaction, values, user, message }) {
+
+        if (this.customId !== 'genderEphemeral' && user.id !== message?.interaction?.user?.id) return
+        const gender = values[0]
+
+        await Database.User.updateOne(
+            { id: user.id },
+            { $set: { "Perfil.Sexo": gender } },
+            { upsert: true }
+        )
+
+        return await interaction.update({
+            content: `${e.Check} | Você alterou o gênero para **${gender}**.`,
             components: []
         })
     }
