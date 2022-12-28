@@ -15,8 +15,8 @@ export default async (giveaway, guild, channel) => {
     const reaction = message?.reactions?.cache?.get(emoji)
 
     if (!reaction || !message || !emoji)
-        return Database.deleteGiveaway(giveaway.MessageID, guild.id)
-
+    return Database.deleteGiveaway(giveaway.MessageID, guild.id)
+    
     const reactionUsers = await reaction.users.fetch()
     const Data = Date.Timeout(giveaway.TimeMs, giveaway.DateNow)
     const WinnersAmount = giveaway.Winners || 1
@@ -41,7 +41,7 @@ export default async (giveaway, guild, channel) => {
                     {
                         color: client.red,
                         title: `${e.Deny} | Sorteio cancelado`,
-                        description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | Giveaway Reference: ${MessageLink || 'Link indisponível'}`
+                        description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | ${MessageLink ? `[Giveaway Reference](${MessageLink})` : 'Link indisponível'}`
                     }
                 ]
             }).catch(() => { })
@@ -57,17 +57,24 @@ export default async (giveaway, guild, channel) => {
                     {
                         color: client.red,
                         title: `${e.Deny} | Sorteio cancelado`,
-                        description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | Giveaway Reference: ${MessageLink || 'Link indisponível'}`
+                        description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | ${MessageLink ? `[Giveaway Reference](${MessageLink})` : 'Link indisponível'}`
                     }
                 ]
             })
             return Database.deleteGiveaway(MessageID, guild.id)
         }
 
-        const vencedoresMapped = vencedores.map(memberId => `${GetMember(guild, memberId)}`)
+        const vencedoresMapped = []
+
+        for await (let memberId of vencedores)
+            vencedoresMapped.push(`${await GetMember(guild, memberId)}`)
+
+        const sponsor = await guild.members.fetch(Sponsor)
+            .then(member => member.user.tag)
+            .catch(() => `${e.Deny} Patrocinador não encontrado`)
 
         channel.send({
-            content: `${e.Notification} | ${[Sponsor, ...vencedores].map(id => channel.guild.members.cache.get(id)).join(', ').slice(0, 4000)}`,
+            content: `${e.Notification} | ${[sponsor, ...vencedoresMapped].join(', ').slice(0, 4000)}`,
             embeds: [
                 {
                     color: client.green,
@@ -81,7 +88,7 @@ export default async (giveaway, guild, channel) => {
                         },
                         {
                             name: `${e.ModShield} Patrocinador`,
-                            value: `${guild.members.cache.get(Sponsor) || `${e.Deny} Patrocinador não encontrado`}`,
+                            value: sponsor,
                             inline: true
                         },
                         {
@@ -108,6 +115,8 @@ export default async (giveaway, guild, channel) => {
                 }
             }
         )
+
+        return
     }
 
     return
@@ -121,8 +130,10 @@ async function GetWinners(WinnersArray, Amount = 1, MessageId, guildId) {
 
     WinnersArray.length > Amount
         ? (() => {
+
             for (let i = 0; i < Amount; i++)
                 Winners.push(GetUserWinner())
+
         })()
         : Winners.push(...WinnersArray)
 
@@ -144,8 +155,8 @@ async function GetWinners(WinnersArray, Amount = 1, MessageId, guildId) {
     return Winners
 }
 
-function GetMember(guild, memberId) {
-    const member = guild.members.cache.get(memberId)
+async function GetMember(guild, memberId) {
+    const member = await guild.members.fetch(memberId).catch(() => null)
 
     return member
         ? `${member} *\`${member?.id || '0'}\`*`

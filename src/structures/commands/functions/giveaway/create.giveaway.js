@@ -1,7 +1,6 @@
 import {
     Database,
-    SaphireClient as client,
-    GiveawayManager
+    SaphireClient as client
 } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
@@ -212,7 +211,9 @@ export default async interaction => {
             giveawayData
         )
 
-        GiveawayManager.filterAndManager()
+        const timeout = setTimeout(() => {
+            client.emit('giveaway', giveawayData, timeout)
+        }, TimeMs)
 
         const embed = {
             color: color || 0x0099ff,

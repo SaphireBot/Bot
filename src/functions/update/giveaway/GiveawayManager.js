@@ -2,7 +2,6 @@ import {
     SaphireClient as client,
     Database,
 } from '../../../classes/index.js'
-import { giveawayInterval } from '../../global/setIntervals.js'
 
 export default new class GiveawayManager {
     constructor() { }
@@ -24,7 +23,6 @@ export default new class GiveawayManager {
         for await (let data of guildsWithGiveaways)
             await Database.Cache.Giveaways.set(`${client.shardId}.Giveaways.${data.id}`, data.Giveaways)
 
-        giveawayInterval()
         return this.filterAndManager()
     }
 
@@ -36,17 +34,32 @@ export default new class GiveawayManager {
         if (!allGiveaways.length) return
 
         const giveawaysAvailables = allGiveaways.filter(data => data.Actived)
-        // const giveawaysUnavailables = allGiveaways.filter(data => !data.Actived)
+        const giveawaysUnavailables = allGiveaways.filter(data => !data.Actived)
 
-        this.selectGiveaways(giveawaysAvailables)
-        // this.managerUnavailablesGiveaways(giveawaysUnavailables)
-        return
+        if (giveawaysAvailables.length)
+            this.selectGiveaways(giveawaysAvailables)
+
+        if (giveawaysUnavailables)
+            // TODO: Terminar as funções de deletar sorteios de 24 horas+
+            // this.managerUnavailablesGiveaways(giveawaysUnavailables)
+            return
     }
 
     async selectGiveaways(giveaways = []) {
         if (!giveaways.length) return
+
         const giveawaySorted = giveaways.sort((a, b) => (a.DateNow + a.TimeMs) - (b.DateNow + b.TimeMs))
-        await Database.Cache.Giveaways.set(`${client.shardId}.Giveaways.NextThrow`, giveawaySorted[0])
+
+        for (let giveaway of giveawaySorted) {
+            const timeout = setTimeout(() => {
+                client.emit('giveaway', giveaway, timeout)
+            }, giveaway?.TimeMs, giveaway?.DateNow)
+        }
+
         return
+    }
+
+    async managerUnavailablesGiveaways(giveawaysUnavailables) {
+
     }
 }

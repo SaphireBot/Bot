@@ -1,13 +1,12 @@
 import {
     SaphireClient as client,
-    Database,
-    GiveawayManager
+    Database
 } from '../../classes/index.js'
 import StartGiveaway from '../../functions/update/giveaway/start.giveaway.js'
 
-client.on('giveaway', async giveaway => {
-
-    await Database.Cache.Giveaways.delete(`${client.shardId}.Giveaways.NextThrow`)
+client.on('giveaway', async (giveaway, timeout) => {
+    
+    clearTimeout(timeout)
 
     const guildGiveaways = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways.${giveaway.GuildId}`)
     await Database.Cache.Giveaways.set(`${client.shardId}.Giveaways.${giveaway.GuildId}`, [
@@ -15,10 +14,11 @@ client.on('giveaway', async giveaway => {
         giveaway.Actived = false
     ])
 
-    await GiveawayManager.filterAndManager()
-
-    const guild = client.guilds.cache.get(giveaway.GuildId)
-    const channel = guild?.channels?.cache?.get(giveaway.ChannelId)
+    const guild = await client.guilds.fetch(giveaway.GuildId).catch(() => null)
+    if (!guild) return
+    
+    const channel = await guild?.channels?.fetch(giveaway.ChannelId).catch(() => null)
+    if (!channel) return
 
     giveaway.Actived = true
     return StartGiveaway(giveaway, guild, channel)
