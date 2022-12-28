@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
+import signProfile from './perfil/sign.profile.js'
 
 export default {
     name: 'perfil',
@@ -30,6 +31,10 @@ export default {
                     value: 'edit'
                 },
                 {
+                    name: 'Escolher signo',
+                    value: 'signo'
+                },
+                {
                     name: 'Esconder só pra mim',
                     value: 'hide'
                 }
@@ -41,16 +46,17 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, emojis: e, Database, Moeda, clientData }) {
+    async execute({ interaction, client, emojis: e, Database, Moeda, clientData, refresh }) {
 
         const { options, user: author, channel, guild } = interaction
-        const query = options.getString('options')
+        const query = refresh ? null : options.getString('options')
         const ephemeral = query === 'hide'
 
         if (query === 'refresh') return refreshProfile(interaction)
         if (query === 'edit') return showModal()
+        if (query === 'signo') return signProfile(interaction)
 
-        const user = options.getUser('user') || author
+        const user = refresh ? author : options.getUser('user') || author
 
         if (user.id === client.user.id)
             return await interaction.reply({
@@ -100,21 +106,34 @@ export default {
 
         const data = await Database.User.findOne({ id: user.id })
 
-        if (!data)
-            return await interaction.reply({
+        if (!data) {
+            const res = {
                 content: `${e.Database} | DATABASE | Nenhum dado encontrado de ${user?.tag || `\`Not Found\``} *\`${user.id}\`* foi encontrado.`,
-                ephemeral
-            })
+                ephemeral,
+                components: []
+            }
 
-        if (!data.Perfil)
-            return await interaction.reply({
+            return refresh
+                ? await interaction.update(res).catch(() => { })
+                : await interaction.reply(res)
+        }
+
+        if (!data.Perfil) {
+            const res = {
                 content: `${e.Deny} | Nenhuma informação do perfil foi encontrada.`,
-                ephemeral
-            })
+                ephemeral,
+                components: []
+            }
 
+            return refresh
+                ? await interaction.update(res).catch(() => { })
+                : await interaction.reply(res)
+        }
         const Embed = { color: client.blue, description: `${e.Loading} | Construindo perfil...` }
 
-        await interaction.reply({ embeds: [Embed], ephemeral })
+        refresh
+            ? await interaction.update({ embeds: [Embed], ephemeral, components: [] }).catch(() => { })
+            : await interaction.reply({ embeds: [Embed], ephemeral, components: [] })
 
         const money = data.Perfil.BalanceOcult && (author.id !== user.id || author.id !== config.ownerId)
             ? '||Oculto||'
@@ -279,13 +298,23 @@ export default {
             Embed.footer = { text: `${warns.length} avisos neste servidor` }
 
         const buttons = [{
-            type: 1, components: [{
-                type: 2,
-                label: `${likes} likes`,
-                emoji: e.Like,
-                custom_id: JSON.stringify({ c: 'like', src: user.id }),
-                style: ButtonStyle.Primary
-            }]
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: `${likes} likes`,
+                    emoji: e.Like,
+                    custom_id: JSON.stringify({ c: 'like', src: user.id }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Signo',
+                    emoji: '🔅',
+                    custom_id: JSON.stringify({ c: 'sign', src: user.id }),
+                    style: ButtonStyle.Primary
+                }
+            ]
         }]
 
         if (author.id === user.id)
@@ -296,7 +325,14 @@ export default {
                 custom_id: JSON.stringify({ c: 'perfil', src: 'editProfile' }),
                 style: ButtonStyle.Success
             })
-            
+
+        buttons[0].components.push({
+            type: 2,
+            emoji: "🔄",
+            custom_id: JSON.stringify({ c: 'refreshProfile' }),
+            style: ButtonStyle.Primary
+        })
+
         return await interaction.editReply({ embeds: [Embed], components: buttons }).catch(() => { })
 
         async function showModal() {

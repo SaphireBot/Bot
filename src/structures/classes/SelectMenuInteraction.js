@@ -38,7 +38,9 @@ export default class SelectMenuInteraction extends Base {
             changeCategory: 'editCategoryChannel',
             changeCategory2: 'editCategoryChannel',
             rifa: 'refundFunction',
-            logs: 'logsFunction'
+            logs: 'logsFunction',
+            sign: 'chooseSign',
+            signEphemeral: 'chooseSign'
         }[this.customId]
 
         if (this[result])
@@ -186,6 +188,23 @@ export default class SelectMenuInteraction extends Base {
 
         }
 
+    }
+
+    async chooseSign({ interaction, values, user, message }) {
+
+        if (this.customId !== 'signEphemeral' && user.id !== message?.interaction?.user?.id) return
+        const sign = values[0]
+
+        await Database.User.updateOne(
+            { id: user.id },
+            { $set: { "Perfil.Signo": sign } },
+            { upsert: true }
+        )
+
+        return await interaction.update({
+            content: `${e.Check} | Você alterou o signo para **${sign}**.`,
+            components: []
+        })
     }
 
     async animeSetSuggestions({ interaction, values, message, e, customId, user }) {
