@@ -3,22 +3,24 @@ import deleteDb from './delete.admin.js'
 import commandManager from './commandManager.admin.js'
 import testAdmin from './test.admin.js'
 import fanartAdmin from './fanart.admin.js'
+import commitAdmin from './commit.admin.js'
 
 export default async (interaction, subCommand) => {
 
-    switch (subCommand) {
-        case 'register': register(interaction); break;
-        case 'delete': deleteDb(interaction); break;
-        case 'commands': commandManager(interaction); break;
-        case 'test': testAdmin(interaction); break;
-        case 'fanart': fanartAdmin(interaction); break;
+    const command = {
+        register: register,
+        delete: deleteDb,
+        commands: commandManager,
+        test: testAdmin,
+        fanart: fanartAdmin,
+        commit: commitAdmin
+    }[subCommand]
 
-        default:
-            await interaction.reply({
-                content: 'Sub-Command Function Not Found',
-                ephemeral: true
-            })
-            break;
-    }
-    return
+    if (!command)
+        return await interaction.reply({
+            content: 'Sub-Command Function Not Found',
+            ephemeral: true
+        })
+
+    return command(interaction)
 }
