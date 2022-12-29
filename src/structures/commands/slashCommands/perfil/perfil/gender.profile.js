@@ -1,9 +1,9 @@
 export default async (interaction, ephemeral = false) => {
 
     const signs = {
-        "Hetero": "👨",
+        "Homem": "👨",
         "Mulher": "👩",
-        "LGBT": "🏳️‍🌈",
+        "LGBTQIA+": "🏳️‍🌈",
         "Helicóptero de Guerra": "🚁"
     }
 
@@ -12,7 +12,7 @@ export default async (interaction, ephemeral = false) => {
         components: [{
             type: 3,
             custom_id: ephemeral ? 'genderEphemeral' : 'gender',
-            placeholder: 'Selecione o seu gênero',
+            placeholder: 'Selecione o seu sexo',
             options:
                 Object.entries(signs)
                     .map(sign => ({

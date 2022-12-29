@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
+import { ApplicationCommandOptionType } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
@@ -36,7 +36,7 @@ export default {
                     value: 'signo'
                 },
                 {
-                    name: 'Escolher gênero',
+                    name: 'Escolher sexo',
                     value: 'gender'
                 },
                 {
@@ -210,7 +210,7 @@ export default {
         const familyData = data?.Perfil?.Family
         const status = data?.Perfil?.Status || `${user.id === author.id ? 'Talvez você não conheça o comando' : `${user.username} não conhece o comando`} \`/perfil options: Editar perfil\``
         const signo = data?.Perfil?.Signo ? `⠀\n${data?.Perfil?.Signo}` : `⠀\n${e.Deny} Sem signo definido`
-        const sexo = data?.Perfil?.Sexo ? `⠀\n${data?.Perfil?.Sexo}` : `⠀\n${e.Deny} Sem gênero definido`
+        const sexo = data?.Perfil?.Sexo ? `⠀\n${data?.Perfil?.Sexo}` : `⠀\n${e.Deny} Sem sexo definido`
         const niver = data?.Perfil?.Aniversario ? `⠀\n🎉 ${data?.Perfil?.Aniversario}` : `⠀\n${e.Deny} Sem aniversário definido`
         const job = data?.Perfil?.Trabalho ? `⠀\n👷 ${data?.Perfil?.Trabalho}` : `⠀\n${e.Deny} Sem profissão definida`
         clientData.TopGlobal?.Level === user.id ? titles.push(`${e.RedStar} **Top Global Level**`) : ''
@@ -323,9 +323,9 @@ export default {
                         value: JSON.stringify({ c: 'chooseSign' }),
                     },
                     {
-                        label: 'Alterar Gênero',
+                        label: 'Alterar Sexo',
                         emoji: '🚻',
-                        description: 'Altere o gênero do seu perfil',
+                        description: 'Altere o sexo do seu perfil',
                         value: JSON.stringify({ c: 'chooseGender' })
                     }
                 ]
