@@ -176,7 +176,7 @@ export default class ButtonInteraction extends Base {
             }).catch(() => { })
         }
 
-        if (!wordleGameData?.Players.includes(user.id)) return await this.interaction.deferReply()
+        if (!wordleGameData?.Players.includes(user.id)) return
 
         if (giveup) {
 

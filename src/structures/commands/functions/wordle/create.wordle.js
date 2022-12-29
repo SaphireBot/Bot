@@ -86,7 +86,7 @@ export default async (interaction, playersAvailable = []) => {
             {
                 type: 2,
                 emoji: '🏳️',
-                custom_id: JSON.stringify({ c: 'wordle',  src:  'giveup' }),
+                custom_id: JSON.stringify({ c: 'wordle', src: 'giveup' }),
                 style: 4
             }
         ]
@@ -97,6 +97,6 @@ export default async (interaction, playersAvailable = []) => {
             content: null,
             embeds: [embed],
             components: [button]
-        })
+        }).catch(() => { })
     }, 1000)
 }
