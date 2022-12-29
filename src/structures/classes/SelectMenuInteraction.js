@@ -300,7 +300,7 @@ export default class SelectMenuInteraction extends Base {
         )
 
         return await interaction.update({
-            content: `${e.Check} | Você alterou o gênero para **${gender}**.`,
+            content: `${e.Check} | Você alterou o sexo para **${gender}**.`,
             components: []
         })
     }
