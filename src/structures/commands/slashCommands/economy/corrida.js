@@ -389,6 +389,8 @@ export default {
                 description: `${result}`.limit('MessageEmbedDescription')
             })
 
+            embeds[0].footer.text = `${usersJoined.length} jogadores participaram desta corrida`
+
             return channel.send({ embeds })
 
         }
