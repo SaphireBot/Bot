@@ -1,6 +1,6 @@
 import { ChannelType } from "discord.js"
 import { Modals, Database } from "../../../../classes/index.js"
-import { Permissions, DiscordPermissons } from "../../../../util/Constants.js"
+import { DiscordPermissons } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 import channelAnunciar from "../../../commands/functions/anunciar/channel.anunciar.js"
 

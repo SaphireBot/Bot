@@ -20,7 +20,7 @@ export default {
     helpData: {
         description: 'Sistema frontal para gerenciar os logs'
     },
-    async execute({ interaction, e, Database, client }) {
+    async execute({ interaction, e, Database, client, guildData }) {
 
         const { guild, options, commandId, user, member } = interaction
 
@@ -37,7 +37,6 @@ export default {
             })
 
         const configChannel = options.getChannel('config_channel') || null
-        const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
 
         if (configChannel) return setChannel()
 

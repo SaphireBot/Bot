@@ -51,7 +51,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, emojis: e, Database, Moeda, clientData, refresh }) {
+    async execute({ interaction, client, emojis: e, Database, Moeda, clientData, refresh, guildData }) {
 
         const { options, user: author, channel, guild } = interaction
         const query = refresh ? null : options.getString('options')
@@ -296,8 +296,7 @@ export default {
             }
         ]
 
-        const warnData = await Database.Guild.findOne({ id: guild.id }, 'Warns.Users')
-        const warnsFormat = warnData?.Warns?.Users || {}
+        const warnsFormat = guildData?.Warns?.Users || {}
         const warns = Object.values(warnsFormat[`${user.id}`] || {})
 
         if (warns.length > 0)
