@@ -66,6 +66,7 @@ export default class ButtonInteraction extends Base {
             anunciar: [roleAnunciar, this.interaction],
             donate: [copyPixDonate, this.interaction, commandData],
             ping: [this.refeshPing, this.interaction],
+            delete: [this.deleteMessage, this]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
@@ -86,6 +87,10 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
+    }
+
+    async deleteMessage({ message }) {
+        return await message.delete().catch(() => { })
     }
 
     async refeshPing(interaction) {
