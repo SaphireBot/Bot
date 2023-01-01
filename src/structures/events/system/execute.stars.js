@@ -21,7 +21,7 @@ export default async ({ MessageReaction, guildData }) => {
 
     await Database.Guild.updateOne(
         { id: guild.id },
-        { $push: { "Stars.sended": [{ userId: author.id, messageId }] } },
+        { $push: { "Stars.sended": { userId: author.id, messageId } } },
         { upsert: true }
     )
 
