@@ -40,7 +40,7 @@ export default model("User", new Schema({
         Bitcoin: Number,
         Porquinho: Number,
         TopGGVote: Number,
-        Rep: Number,
+        Rep: Number
     },
     Cache: { ComprovanteOpen: Boolean },
     Color: {

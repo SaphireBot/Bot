@@ -90,6 +90,23 @@ export default {
                 }
             ]
         },
+        {
+            name: 'commit',
+            description: '[admin] Comando para atualizar o código fonte',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'discloud',
+                    description: 'Arquivo do commit que será enviado para a Discloud',
+                    type: ApplicationCommandOptionType.Attachment
+                },
+                {
+                    name: 'squarecloud',
+                    description: 'Arquivo do commit que será enviado para a Squarecloud',
+                    type: ApplicationCommandOptionType.Attachment
+                }
+            ]
+        }
     ],
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'
