@@ -11,7 +11,7 @@ client.on('channelDelete', async channel => {
         await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)
 
     const { guild } = channel
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars")
     if (!guildData) return
 
     if (channel.id === guildData?.LogSystem?.channel)
@@ -33,6 +33,11 @@ client.on('channelDelete', async channel => {
         || !target
         || client.user.id === executor.id
     ) return
+
+    if (channel.id === guildData?.Stars?.channel)
+        return logChannel?.send({
+            content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* configurado como **\`Canal de Estrelas\`** foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`
+        }).catch(() => { })
 
     return logChannel?.send({
         content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`

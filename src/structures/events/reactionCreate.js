@@ -1,18 +1,25 @@
-import { SaphireClient as client } from '../../classes/index.js'
+import { SaphireClient as client, Database } from '../../classes/index.js'
 import votePoll from '../classes/buttons/poll/vote.poll.js'
+import executeStars from './system/execute.stars.js'
 
-client.on('messageReactionAdd', async (messageReaction, user) => {
+client.on('messageReactionAdd', async (MessageReaction, user) => {
 
-    const availableEmojis = ['💸', '✅', 'upvote', 'QuestionMark', 'downvote']
-    const emojiName = messageReaction?.emoji?.name
+    const availableEmojis = ['💸', '✅', '⭐', 'upvote', 'QuestionMark', 'downvote']
+    const emojiName = MessageReaction?.emoji?.name
     if (!user || user.bot || !availableEmojis.includes(emojiName)) return
 
-    const message = messageReaction.message.author === null
+    const message = MessageReaction.message.author === null
         ? await (async () => {
-            const reactionFetched = await messageReaction.fetch()
+            const reactionFetched = await MessageReaction.fetch()
             return await reactionFetched.message
         })()
-        : messageReaction.message
+        : MessageReaction.message
+
+    if (emojiName === '⭐' && MessageReaction.count >= 2) {
+        const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
+        if (guildData && guildData.Stars && guildData.Stars.channel)
+            executeStars({ MessageReaction, user, guildData, client })
+    }
 
     if (message.author.id !== client.user.id || !message.interaction) return
 

@@ -43,15 +43,20 @@ export default model("Guild", new Schema({
         }
     },
     XpSystem: {
-    Canal: String,
-    Mensagem: String
-},
+        Canal: String,
+        Mensagem: String
+    },
     LeaveChannel: {
-    Canal: String,
-    Mensagem: String,
-},
+        Canal: String,
+        Mensagem: String,
+    },
     WelcomeChannel: {
-    Canal: String,
-    Mensagem: String,
-}
+        Canal: String,
+        Mensagem: String,
+    },
+    Stars: {
+        limit: Number,
+        channel: String,
+        sended: Array
+    }
 }))
