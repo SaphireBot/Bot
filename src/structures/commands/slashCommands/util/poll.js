@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import PollManager from '../../../../functions/update/polls/poll.manager.js'
 import { Colors } from '../../../../util/Constants.js'
 
@@ -95,6 +95,21 @@ export default {
                     description: 'Escolha a cor da embed',
                     type: ApplicationCommandOptionType.String,
                     autocomplete: true
+                },
+                {
+                    name: 'anonymous',
+                    description: 'Essa votação deve ser anônima?',
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Sim, votação anônima',
+                            value: 'true'
+                        },
+                        {
+                            name: 'Não, votação comum',
+                            value: 'false'
+                        }
+                    ]
                 }
             ]
         },
@@ -120,13 +135,16 @@ export default {
         const subCommand = options.getSubcommand()
         const text = options.getString('text')
         const endTime = options.getNumber('time')
+        const anonymous = options.getString('anonymous') === 'true'
 
         if (subCommand === 'close') return PollManager.close(interaction, options.getString('available_polls'))
 
-        const fields = [{
-            name: '🛰 Status',
-            value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados`
-        }]
+        const fields = [
+            {
+                name: '🛰 Status',
+                value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados`
+            }
+        ]
 
         if (endTime > 0)
             fields.push({
@@ -134,16 +152,47 @@ export default {
                 value: `Encerrando ${Date.Timestamp(new Date((Date.now() + endTime)), 'R', true)}`
             })
 
+        const components = anonymous
+            ? [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            emoji: e.Upvote,
+                            custom_id: JSON.stringify({ c: 'poll', type: 'up' }),
+                            style: ButtonStyle.Secondary
+                        },
+                        {
+                            type: 2,
+                            emoji: e.QuestionMark,
+                            custom_id: JSON.stringify({ c: 'poll', type: 'question' }),
+                            style: ButtonStyle.Secondary
+                        },
+                        {
+                            type: 2,
+                            emoji: e.DownVote,
+                            custom_id: JSON.stringify({ c: 'poll', type: 'down' }),
+                            style: ButtonStyle.Secondary
+                        },
+                    ]
+                }
+            ]
+            : []
+
         const msg = await interaction.reply({
             embeds: [{
                 color: color,
-                title: '🎫 Nova votação aberta',
+                title: `🎫 Nova votação ${anonymous ? 'anônima' : ''} aberta`,
                 description: text,
                 fields: fields
             }],
+            components,
             fetchReply: true
         })
-        for (let i of [e.Upvote, e.QuestionMark, e.DownVote]) msg.react(i).catch(() => { })
+
+        if (!anonymous)
+            for (let i of [e.Upvote, e.QuestionMark, e.DownVote]) msg.react(i).catch(() => { })
 
         const data = {
             MessageID: msg.id, // Id da Mensagem
@@ -154,6 +203,14 @@ export default {
             DateNow: Date.now(), // Agora
             MessageLink: msg.url, // Link da mensagem
             Author: user.id, // Quem fez a votação
+            anonymous: anonymous,
+            votes: anonymous
+                ? {
+                    up: [],
+                    down: [],
+                    question: []
+                }
+                : {}
         }
 
         await Database.Guild.updateOne(
@@ -166,7 +223,7 @@ export default {
             }
         )
 
-        if (endTime > 0) {
+        if (endTime > 0 || anonymous) {
             await Database.Cache.Polls.push(`${client.shardId}.${guild.id}`, data)
             return PollManager.Polls.push(data)
         }

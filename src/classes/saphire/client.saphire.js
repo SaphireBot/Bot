@@ -158,10 +158,10 @@ export default new class SaphireClient extends Client {
         await Database.Cache.clearTables(`${this.shardId}`)
         console.log('7/13 - Cache\'s Tables Cleaned')
 
-        GiveawayManager.setGiveaways()
+        await GiveawayManager.setGiveaways()
         console.log('8/13 - Giveaways System Started')
 
-        PollManager.setPolls()
+        await PollManager.set()
         console.log('9/13 - Polls System Started')
 
         automaticSystems()

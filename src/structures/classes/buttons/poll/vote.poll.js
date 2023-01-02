@@ -42,7 +42,7 @@ export default async ({ message }) => {
 
             if (!poll)
                 embed.fields[1].value = 'Votação encerrada.'
-            else PollManager.deletePoll(message.id, message.guild.id)
+            else PollManager.delete(message.id, message.guild.id)
 
             return await message.edit({ embeds: [embed] }).catch(() => { })
         }

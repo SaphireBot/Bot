@@ -6,8 +6,8 @@ const pollInterval = () => setInterval(async () => {
     if (!polls || !polls.length) return
 
     for await (let poll of polls)
-        if (!Date.Timeout(poll?.TimeMs, poll?.DateNow))
-            return await PollManager.newCancel(poll)
+        if (poll?.TimeMs && !Date.Timeout(poll?.TimeMs, poll?.DateNow))
+            return await PollManager.cancel(poll)
 
 }, 5000)
 

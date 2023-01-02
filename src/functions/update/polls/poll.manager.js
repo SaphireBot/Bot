@@ -12,7 +12,7 @@ export default new class PollManager {
         this.Polls = []
     }
 
-    async setPolls() {
+    async set() {
 
         const PollsFromGuilds = await Database.Guild.find({
             id: { $in: [...client.guilds.cache.keys()] }
@@ -23,7 +23,6 @@ export default new class PollManager {
         const guildsWithPolls = PollsFromGuilds
             .filter(data => data.Polls?.length > 0)
             .map(data => ({ id: data.id, Polls: data.Polls }))
-            .filter(data => data.Polls.TimeMs > 0)
 
         pollInterval()
         if (!guildsWithPolls || guildsWithPolls.length === 0) return
@@ -36,7 +35,7 @@ export default new class PollManager {
         return
     }
 
-    async newCancel(poll) {
+    async cancel(poll) {
 
         await Database.Guild.updateOne(
             { id: poll.GuildId },
@@ -50,7 +49,8 @@ export default new class PollManager {
 
         let message = channel.messages.cache.get(poll.MessageId)
             || await (async () => {
-                const fetched = await channel.messages?.fetch(poll.MessageId)
+                const fetched = await channel.messages?.fetch(poll.MessageId).catch(() => null)
+                if (!fetched) return
                 return fetched.first()
             })()
 
@@ -61,7 +61,7 @@ export default new class PollManager {
         const embed = embeds[0]?.data
         if (!embed) return this.pull(poll.MessageId)
 
-        embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
+        embed.fields[1].value = embed.fields[1]?.value.replace('Encerrando', 'Tempo esgotado')
         embed.color = client.red
         embed.title = '🎫 Votação encerrada'
 
@@ -69,7 +69,7 @@ export default new class PollManager {
         message.edit({
             embeds: [embed],
             components: []
-        }).catch(console.log)
+        }).catch(() => { })
         return
     }
 
@@ -96,7 +96,7 @@ export default new class PollManager {
                 ephemeral: true
             })
 
-        this.deletePoll(MessageId, interaction.guild.id)
+        this.delete(MessageId, interaction.guild.id)
         return await interaction.reply({
             content: `${e.Check} | A sua votação foi encerrada com sucesso.`,
             components: [{
@@ -111,8 +111,8 @@ export default new class PollManager {
         })
     }
 
-    async deletePoll(messageId, guildId) {
-        
+    async delete(messageId, guildId) {
+
         await Database.Guild.updateOne(
             { id: guildId },
             {
