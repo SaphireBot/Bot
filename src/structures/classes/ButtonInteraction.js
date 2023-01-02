@@ -28,6 +28,7 @@ export default class ButtonInteraction extends Base {
         this.customId = interaction.customId
         this.message = interaction.message
         this.user = interaction.user
+        this.member = interaction.member
         this.channel = interaction.channel
         this.guild = interaction.guild
         this.commandName = this.message.interaction?.commandName
@@ -40,9 +41,6 @@ export default class ButtonInteraction extends Base {
         const commandData = JSON.parse(this.customId)
         if (!commandData) return
         this.customId = commandData?.src ? commandData.src : `${commandData}`
-
-        if (commandData.c === 'delete' && this.user.id === this.command.user.id)
-            return await this.message?.delete().catch(() => { })
 
         if (commandData.src === 'again') return await this.interaction.showModal(this.modals.indicateLogomarca)
         if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
@@ -67,7 +65,7 @@ export default class ButtonInteraction extends Base {
             anunciar: [roleAnunciar, this.interaction],
             donate: [copyPixDonate, this.interaction, commandData],
             ping: [this.refeshPing, this.interaction],
-            delete: [this.deleteMessage, this],
+            delete: [this.deleteMessage, this, commandData],
             poll: [counterPoll, this, commandData]
         }[commandData.c]
 
@@ -91,7 +89,12 @@ export default class ButtonInteraction extends Base {
         return
     }
 
-    async deleteMessage({ message }) {
+    async deleteMessage({ message, user }, commandData) {
+
+        if (user.id === commandData.userId)
+            return await message.delete().catch(() => { })
+
+        if (user.id !== message.interaction?.user?.id) return
         return await message.delete().catch(() => { })
     }
 

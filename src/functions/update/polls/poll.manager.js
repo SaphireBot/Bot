@@ -37,17 +37,11 @@ export default new class PollManager {
 
     async cancel(poll) {
 
-        await Database.Guild.updateOne(
-            { id: poll.GuildId },
-            { $pull: { Polls: { MessageId: poll.MessageId } } }
-        )
-        await Database.Cache.Polls.pull(`${client.shardId}.${poll.GuildId}`, p => p.MessageID === poll.MessageID)
-
         const guild = client.guilds.cache.get(poll.GuildId)
         const channel = guild?.channels?.cache?.get(poll.ChannelId)
         if (!guild || !channel) return this.pull(poll.MessageId)
 
-        let message = channel.messages.cache.get(poll.MessageId)
+        const message = channel.messages.cache.get(poll.MessageId)
             || await (async () => {
                 const fetched = await channel.messages?.fetch(poll.MessageId).catch(() => null)
                 if (!fetched) return
@@ -61,16 +55,55 @@ export default new class PollManager {
         const embed = embeds[0]?.data
         if (!embed) return this.pull(poll.MessageId)
 
+        if (embed.title.includes("anônima") || poll.anonymous)
+            return this.showResults(message)
+
         embed.fields[1].value = embed.fields[1]?.value.replace('Encerrando', 'Tempo esgotado')
         embed.color = client.red
         embed.title = '🎫 Votação encerrada'
 
         this.pull(poll.MessageId)
+        this.delete(poll.MessageId, poll.GuildId)
         message.edit({
             embeds: [embed],
             components: []
         }).catch(() => { })
         return
+    }
+
+    async showResults(message) {
+
+        const poll = this.Polls.find(p => p.MessageID === message.id)
+        const votes = poll.votes
+        const { embeds } = message
+        const embed = embeds[0]?.data
+        if (!embed) return this.pull(poll.MessageId)
+
+        const base = {
+            up: votes?.up || [],
+            question: votes?.question || [],
+            down: votes?.down || [],
+        }
+
+        const counter = {
+            up: base.up?.length || 0,
+            question: base.question?.length || 0,
+            down: base.down?.length || 0
+        }
+
+        const total = Object.values(counter || {}).reduce((acc, value) => acc += value, 0)
+
+        const percent = {
+            up: parseInt((counter.up / total) * 100).toFixed(0) || 0,
+            question: parseInt((counter.question / total) * 100).toFixed(0) || 0,
+            down: parseInt((counter.down / total) * 100).toFixed(0) || 0
+        }
+
+        embed.fields[0].value = `${e.Upvote} ${counter.up} - ${percent.up}%\n${e.QuestionMark} ${counter.question} - ${percent.question}%\n${e.DownVote} ${counter.down} - ${percent.down}%\n${e.saphireRight} ${total} votos coletados`
+
+        this.pull(message.id)
+        this.delete(message.id, message.guild.id)
+        return await message.edit({ embeds: [embed], components: [] }).catch(() => { })
     }
 
     pull(MessageId) {

@@ -3,19 +3,53 @@ import {
     Database
 } from "../../../../classes/index.js"
 import pollManager from "../../../../functions/update/polls/poll.manager.js"
+import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
+import resultPoll from "./result.poll.js"
 
-export default async ({ interaction, guild, message, user }, commandData) => {
+export default async ({ interaction, guild, message, user, member }, commandData) => {
 
     const guildPolls = await Database.Cache.Polls.get(`${client.shardId}.${guild.id}`) || []
-    const poll = guildPolls.find(p => p.MessageID === message.id)
+    const poll = guildPolls.find(p => p.MessageID === message.id || p.MessageID === commandData.messageId)
     const voteType = commandData.type
 
-    if (!poll)
+    if (voteType === 'result')
+        return resultPoll({ interaction, poll })
+
+    if (voteType === 'review') {
+
+        if (!member.permissions.has(DiscordPermissons.Administrator) && user.id !== commandData.userId)
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.Administrator}** ou ser o autor da votação para executar este comando.`,
+                ephemeral: true
+            })
+
+        message.delete().catch(() => { })
+        return pollManager.cancel(poll)
+    }
+
+    if (!poll) {
+
+        const { embeds } = message
+        const embed = embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | Embed da votação não encontrada.`,
+                embeds: [],
+                components: []
+            }).catch(() => { })
+
+        embed.fields[1] = {
+            name: '⏱ Tempo',
+            value: 'Votação encerrada'
+        }
+
         return await interaction.update({
-            content: `${e.Deny} | Votação não encontrada ou já finalizada.`,
+            embeds: [embed],
             components: []
         }).catch(() => { })
+    }
 
     let votes = {
         up: poll.votes.up || [],
@@ -59,7 +93,7 @@ export default async ({ interaction, guild, message, user }, commandData) => {
             return await interaction.update({ embeds: [embed] }).catch(() => { })
         }
     }
-    
+
     const pullOptions = {
         up: 'down',
         down: 'question',
@@ -93,6 +127,7 @@ export default async ({ interaction, guild, message, user }, commandData) => {
     votes = voteData.Polls.find(v => v.MessageID === message.id).votes
     guildPolls.find(p => p.MessageID === message.id).votes = votes
     await Database.Cache.Polls.set(`${client.shardId}.${guild.id}`, guildPolls)
+    pollManager.Polls.find(v => v.MessageID === message.id).votes = votes
 
     const counter = {
         up: votes?.up?.length || 0,
@@ -102,13 +137,12 @@ export default async ({ interaction, guild, message, user }, commandData) => {
 
     const total = Object.values(counter || {}).reduce((acc, value) => acc += value, 0)
 
-    const percent = {
-        up: parseInt((counter.up / total) * 100).toFixed(0) || 0,
-        question: parseInt((counter.question / total) * 100).toFixed(0) || 0,
-        down: parseInt((counter.down / total) * 100).toFixed(0) || 0
-    }
+    embed.fields[0].value = `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} ${total} votos coletados\n${e.Loading} Aguardando finalização`
 
-    embed.fields[0].value = `${e.Upvote} ${counter.up} - ${percent.up}%\n${e.QuestionMark} ${counter.question} - ${percent.question}%\n${e.DownVote} ${counter.down} - ${percent.down}%\n${e.saphireRight} ${total} votos coletados`
+    await interaction.update({ embeds: [embed] }).catch(() => { })
 
-    return await interaction.update({ embeds: [embed] }).catch(() => { })
+    return await interaction.followUp({
+        content: `${e.Check} | Seu voto foi contabilizado com sucesso!`,
+        ephemeral: true
+    })
 }

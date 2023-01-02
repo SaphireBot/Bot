@@ -31,6 +31,10 @@ export default {
                             value: 0
                         },
                         {
+                            name: '30 Segundos',
+                            value: 30000
+                        },
+                        {
                             name: '1 Minuto',
                             value: 60000
                         },
@@ -142,7 +146,7 @@ export default {
         const fields = [
             {
                 name: '🛰 Status',
-                value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados`
+                value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados${anonymous ? `\n${e.Loading} Aguardando finalização` : ''}`
             }
         ]
 
@@ -174,18 +178,29 @@ export default {
                             emoji: e.DownVote,
                             custom_id: JSON.stringify({ c: 'poll', type: 'down' }),
                             style: ButtonStyle.Secondary
-                        },
+                        }
                     ]
                 }
             ]
             : []
+
+        if (anonymous && endTime === 0)
+            components[0].components.push({
+                type: 2,
+                emoji: '📝',
+                custom_id: JSON.stringify({ c: 'poll', type: 'result' }),
+                style: ButtonStyle.Primary
+            })
 
         const msg = await interaction.reply({
             embeds: [{
                 color: color,
                 title: `🎫 Nova votação ${anonymous ? 'anônima' : ''} aberta`,
                 description: text,
-                fields: fields
+                fields: fields,
+                footer: {
+                    text: endTime === 0 ? 'Votação permanente' : null
+                }
             }],
             components,
             fetchReply: true
@@ -203,8 +218,9 @@ export default {
             DateNow: Date.now(), // Agora
             MessageLink: msg.url, // Link da mensagem
             Author: user.id, // Quem fez a votação
-            anonymous: anonymous,
-            votes: anonymous
+            anonymous: anonymous, // Votação Anônina
+            permanent: endTime === 0, // Votação Permanente
+            votes: anonymous // Votos do sistema de votação anônima
                 ? {
                     up: [],
                     down: [],
