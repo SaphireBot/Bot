@@ -60,7 +60,7 @@ export default new class PollManager {
 
         embed.fields[1].value = embed.fields[1]?.value.replace('Encerrando', 'Tempo esgotado')
         embed.color = client.red
-        embed.title = '🎫 Votação encerrada'
+        embed.title = `🎫 Votação ${poll.anonymous ? 'anônima' : ''} encerrada`
 
         this.pull(poll.MessageId)
         this.delete(poll.MessageId, poll.GuildId)
@@ -74,6 +74,8 @@ export default new class PollManager {
     async showResults(message) {
 
         const poll = this.Polls.find(p => p.MessageID === message.id)
+        if (!poll) return this.pull(message.id)
+
         const votes = poll.votes
         const { embeds } = message
         const embed = embeds[0]?.data
@@ -100,6 +102,10 @@ export default new class PollManager {
         }
 
         embed.fields[0].value = `${e.Upvote} ${counter.up} - ${percent.up}%\n${e.QuestionMark} ${counter.question} - ${percent.question}%\n${e.DownVote} ${counter.down} - ${percent.down}%\n${e.saphireRight} ${total} votos coletados`
+
+        embed.fields[1]
+            ? embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
+            : embed.fields.push({ name: '⏱ Tempo', value: 'Votação encerrada' })
 
         this.pull(message.id)
         this.delete(message.id, message.guild.id)

@@ -40,10 +40,7 @@ export default async ({ interaction, guild, message, user, member }, commandData
                 components: []
             }).catch(() => { })
 
-        embed.fields[1] = {
-            name: '⏱ Tempo',
-            value: 'Votação encerrada'
-        }
+        embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
 
         return await interaction.update({
             embeds: [embed],
@@ -84,13 +81,29 @@ export default async ({ interaction, guild, message, user, member }, commandData
 
             embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
             embed.color = client.red
-            embed.title = '🎫 Votação encerrada'
+            embed.title = `🎫 Votação anônima encerrada`
+
+            const counter = {
+                up: votes?.up?.length || 0,
+                question: votes?.question?.length || 0,
+                down: votes?.down?.length || 0
+            }
+
+            const total = Object.values(counter || {}).reduce((acc, value) => acc += value, 0)
+
+            const percent = {
+                up: parseInt((counter.up / total) * 100).toFixed(0) || 0,
+                question: parseInt((counter.question / total) * 100).toFixed(0) || 0,
+                down: parseInt((counter.down / total) * 100).toFixed(0) || 0
+            }
+
+            embed.fields[0].value = `${e.Upvote} ${counter.up} - ${percent.up}%\n${e.QuestionMark} ${counter.question} - ${percent.question}%\n${e.DownVote} ${counter.down} - ${percent.down}%\n${e.saphireRight} ${total} votos coletados`
 
             if (!poll)
-                embed.fields[1].value = 'Votação encerrada.'
+                embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
             else pollManager.delete(message.id, message.guild.id)
 
-            return await interaction.update({ embeds: [embed] }).catch(() => { })
+            return await interaction.update({ embeds: [embed], components: [] }).catch(() => { })
         }
     }
 
