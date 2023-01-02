@@ -140,7 +140,8 @@ export default async ({ interaction, guild, message, user, member }, commandData
     votes = voteData.Polls.find(v => v.MessageID === message.id).votes
     guildPolls.find(p => p.MessageID === message.id).votes = votes
     await Database.Cache.Polls.set(`${client.shardId}.${guild.id}`, guildPolls)
-    pollManager.Polls.find(v => v.MessageID === message.id).votes = votes
+    const pollVotes = pollManager.Polls.find(v => v.MessageID === message.id)
+    if (pollVotes.votes) pollVotes.votes = votes
 
     const counter = {
         up: votes?.up?.length || 0,

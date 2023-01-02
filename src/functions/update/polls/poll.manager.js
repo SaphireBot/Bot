@@ -39,21 +39,15 @@ export default new class PollManager {
 
         const guild = client.guilds.cache.get(poll.GuildId)
         const channel = guild?.channels?.cache?.get(poll.ChannelId)
-        if (!guild || !channel) return this.pull(poll.MessageId)
+        if (!guild || !channel) return this.pull(poll.MessageID)
 
-        const message = channel.messages.cache.get(poll.MessageId)
-            || await (async () => {
-                const fetched = await channel.messages?.fetch(poll.MessageId).catch(() => null)
-                if (!fetched) return
-                return fetched.first()
-            })()
-
-        if (!message) return this.pull(poll.MessageId)
+        const message = await channel.messages?.fetch(poll.MessageID || '0').catch(() => null)
+        if (!message) return this.pull(poll.MessageID)
         if (message.partial) message = await message.fetch()
 
         const { embeds } = message
         const embed = embeds[0]?.data
-        if (!embed) return this.pull(poll.MessageId)
+        if (!embed) return this.pull(poll.MessageID)
 
         if (embed.title.includes("anônima") || poll.anonymous)
             return this.showResults(message)
@@ -62,7 +56,7 @@ export default new class PollManager {
         embed.color = client.red
         embed.title = `🎫 Votação ${poll.anonymous ? 'anônima' : ''} encerrada`
 
-        this.pull(poll.MessageId)
+        this.pull(poll.MessageID)
         this.delete(poll.MessageId, poll.GuildId)
         message.edit({
             embeds: [embed],
