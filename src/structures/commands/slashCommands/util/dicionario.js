@@ -30,6 +30,10 @@ export default {
     },
     async execute({ interaction, client, e }) {
 
+        return await interaction.reply({
+            content: `${e.Info} | O dicionário utilizado por este comando foi desativado. Estou refazendo o sistema de dicionário. ~Rody, criador da Saphire.`
+        })
+
         const { options, guild, channel } = interaction
 
         if (!guild.clientHasPermission(Permissions.ManageWebhooks))

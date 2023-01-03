@@ -1,4 +1,4 @@
-import dicio from 'dicionario.js'
+import dicio from 'vxdicionario'
 
 export default async ({ interaction, fields, Database, client, emojis: e }) => {
 
@@ -23,8 +23,17 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
         }).catch(() => deleteGameFromCache())
     }
 
-    return dicio.significado(query?.toLowerCase())
-        .then(() => editPlace())
+    return await dicio(query?.toLowerCase())
+        .then(async res => {
+
+            if (res.status === 200)
+                return editPlace()
+
+            return await interaction.reply({
+                content: `${e.Deny} | Esta palavra não existe.`,
+                ephemeral: true
+            })
+        })
         .catch(async () => await interaction.reply({
             content: `${e.Deny} | Esta palavra não existe.`,
             ephemeral: true
