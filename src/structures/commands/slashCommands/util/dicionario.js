@@ -1,5 +1,4 @@
 import dicio from 'vxdicionario'
-import { DiscordPermissons } from '../../../../util/Constants.js'
 
 export default {
     name: 'dicionario',
