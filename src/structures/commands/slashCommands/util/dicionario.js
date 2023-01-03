@@ -1,5 +1,5 @@
-import dicio from 'dicionario.js'
-import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
+import dicio from 'vxdicionario'
+import { DiscordPermissons } from '../../../../util/Constants.js'
 
 export default {
     name: 'dicionario',
@@ -20,7 +20,6 @@ export default {
     helpData: {
         color: 'Blue',
         description: 'Pesquise pelos significados das palavras usando este comando.',
-        permissions: [DiscordPermissons.ManageWebhooks],
         fields: [
             {
                 name: 'Campo: Palavra',
@@ -30,80 +29,48 @@ export default {
     },
     async execute({ interaction, client, e }) {
 
-        return await interaction.reply({
-            content: `${e.Info} | O dicionário utilizado por este comando foi desativado. Estou refazendo o sistema de dicionário. ~Rody, criador da Saphire.`
-        })
-
-        const { options, guild, channel } = interaction
-
-        if (!guild.clientHasPermission(Permissions.ManageWebhooks))
-            return await interaction.reply({
-                content: `${e.Info} | Eu preciso da permissão **\`${PermissionsTranslate.ManageWebhooks}\`** para executar este comando.`
-            })
-
-        const query = options.getString('palavra')
-        const embed = { color: client.blue, title: `🔍 Palavra Pesquisada: ${query.toLowerCase().captalize()}`.limit('MessageEmbedTitle'), fields: [] }
+        const query = interaction.options.getString('palavra')
         await interaction.deferReply()
+        const embeds = []
 
-        return await dicio.significado(query?.toLowerCase())
+        return await dicio(query?.toLowerCase())
             .then(result => buildEmbed(result))
-            .catch(async () => await interaction.editReply({ content: `${e.Deny} | Nenhum significado foi encontrado.` }))
+            .catch(async (err) => await interaction.editReply({ content: `${e.Deny} | Não foi possível executar o comando.\n${e.bug} | \`${err}\`` }))
 
-        async function respondQuery() {
+        async function buildEmbed(result) {
 
-            return channel.createWebhook({
-                name: `Dicionário ${client.user.username}`,
-                avatar: 'https://media.discordapp.net/attachments/893361065084198954/1003453447124811796/unknown.png'
-            })
-                .then(webHook => sendMessageWebHook(webHook))
-                .catch(async err => {
-                    return await interaction.editReply({
-                        content: `${e.Warn} | Houve um erro ao criar a WebHook.\n> \`${err}\``
-                    }).catch(() => { })
+            if (result.status === 404 || result === 'Defina uma palavra para pesquisar!')
+                return await interaction.editReply({
+                    content: `${e.Deny} | Nenhum significado para a palavra \`${query}\` foi encontrada.`
                 })
 
-            async function sendMessageWebHook(webHook) {
+            embeds.push({
+                color: client.blue,
+                title: `🔍 Palavra Pesquisada: ${query.toLowerCase().captalize()}`.limit('MessageEmbedTitle'),
+                description: `${e.Info} ${result.sinonimos || 'Nenhum sinônino encontrado.'}\n🔄️ ${result.antonimos || 'Nenhum antônimo encontrado.'}\n✍️ ${result.etimologia || 'Sem etimogolia'}\n🇵 Plural: ${result.plural || 'Sem Plural'}\n💭 Separação Silábica: ${result.separacaoSilabica || 'Sem Separação'}`.limit('MessageEmbedDescription'),
+            })
 
-                return webHook.send({ embeds: [embed] })
-                    .then(async () => {
-                        webHook.delete().catch(() => { })
-                        return await interaction.deleteReply().catch(() => { })
-                    })
-                    .catch(async err => {
-                        webHook.delete().catch(() => { })
-                        return await interaction.editReply({
-                            content: `${e.Warn} | Erro ao enviar a mensagem.\n> \`${err}\``
-                        }).catch(() => { })
-                    })
-
+            for (let data of result.data) {
+                console.log(data.significados)
+                embeds.push({
+                    color: client.blue,
+                    title: `📑 ${data.classe.captalize()}`.limit('MessageEmbedTitle'),
+                    description: `${data.significados.filter(i => i).map(str => `> ${str.replace(/\[|\]/g, '`')}`).join('\n \n') || 'Nenhum significado encontrado'}`.limit('MessageEmbedDescription'),
+                })
             }
-        }
 
-        function buildEmbed(result) {
-
-            embed.fields.push({
-                name: `${e.Info} Classe`,
-                value: result.class.captalize().limit('MessageEmbedFieldValue')
-            })
-
-            if (result.etymology)
-                embed.fields.push({
-                    name: `${e.Commands} Etimologia`,
-                    value: result.etymology.limit('MessageEmbedFieldValue')
+            if (result.frases.length)
+                embeds.push({
+                    color: client.blue,
+                    title: `📖 Frases com ${query.captalize()}`,
+                    description: result.frases.join('\n').limit('MessageEmbedDescription')
                 })
 
-            result.meanings.map((res, i) =>
-                embed.fields.push({
-                    name: `${e.saphireLendo} Significado ${i + 1}`,
-                    value: '> ' + res
-                        ?.replace(/\[|\]/g, '`')
-                        ?.limit('MessageEmbedFieldValue')
-                        || 'Resultado indefinido'
-                }))
+            if (embeds.length <= 10)
+                return await interaction.editReply({ embeds })
 
-            if (embed.fields.length > 25) embed.fields.length = 25
-
-            return respondQuery()
+            await interaction.editReply({ embeds: embeds.slice(0, 10) })
+            return await interaction.followUp({ embeds: embeds.slice(10, embeds.length) })
         }
 
     }

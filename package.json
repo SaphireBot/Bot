@@ -16,7 +16,6 @@
     "better-sqlite3": "^8.0.1",
     "canvacord": "^5.4.8",
     "canvas": "^2.11.0",
-    "dicionario.js": "^1.1.1-b",
     "discloud.app": "^0.1.4",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
