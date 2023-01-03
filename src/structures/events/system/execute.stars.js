@@ -9,7 +9,13 @@ export default async ({ MessageReaction, guildData }) => {
     const channelId = guildData.Stars.channel || "0"
     const sended = guildData.Stars.sended || []
 
-    if (author.bot || !channelId || limit < count || sended.find(data => data.messageId === messageId)) return
+    if (
+        limit < 2
+        || author.bot
+        || !channelId
+        || count < limit
+        || sended.find(data => data.messageId === messageId)
+    ) return
 
     const channel = await guild.channels.fetch(channelId).catch(() => null)
     if (!channel) return
