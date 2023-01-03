@@ -4,6 +4,28 @@ export default new class Modals {
         return { ...this }
     }
 
+    SendCanta = {
+        title: "Nova Cantada",
+        custom_id: 'cantada',
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "cantada",
+                        label: "Cantada",
+                        style: 1,
+                        min_length: 10,
+                        max_length: 1024,
+                        placeholder: "Sabe quando eu penso em você...",
+                        required: true
+                    }
+                ]
+            } // MAX: 5 Fields
+        ]
+    }
+
     addEmoji = {
         title: "Add Emoji at Handler",
         custom_id: 'addemoji',
@@ -38,7 +60,7 @@ export default new class Modals {
             }
         ]
     }
-    
+
     NewNotice = {
         title: "Notice Builder Painel",
         custom_id: 'notice',

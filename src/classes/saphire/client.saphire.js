@@ -77,7 +77,6 @@ export default new class SaphireClient extends Client {
          */
         this.moonId = '912509487984812043'
 
-
         /**
          * @returns Saphire Canary ID
          */
@@ -112,6 +111,11 @@ export default new class SaphireClient extends Client {
          * @returns Número de interações criadas após inicialização do client
          */
         this.interactions = 0
+
+        /**
+         * @returns Array com todas as cantadas do banco de dados
+         */
+        this.cantadas = []
     }
 
     /**
@@ -133,39 +137,42 @@ export default new class SaphireClient extends Client {
 
         process.on('unhandledRejection', error => unhandledRejection(error))
         process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
-        console.log('1/13 - Error Handler Connected')
+        console.log('1/14 - Error Handler Connected')
 
         await super.login()
-        console.log('2/13 - Client Logged')
+        console.log('2/14 - Client Logged')
 
         const discloudResult = await Discloud.login()
             .then(() => "Discloud Host API Logged")
             .catch(() => "Discloud Host API Logged Failed")
-        console.log('3/13 - ' + discloudResult)
+        console.log('3/14 - ' + discloudResult)
 
         import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
-        console.log('4/13 - Prototypes & Events Connected')
+        console.log('4/14 - Prototypes & Events Connected')
 
         this.shardId = this.shard.ids.at(-1) || 0
 
         const databaseResponse = await Database.MongoConnect(this)
-        console.log('5/13 - ' + databaseResponse)
+        console.log('5/14 - ' + databaseResponse)
 
         const slashCommandsResponse = await slashCommand(this)
-        console.log('6/13 - ' + slashCommandsResponse)
+        console.log('6/14 - ' + slashCommandsResponse)
 
         await Database.Cache.clearTables(`${this.shardId}`)
-        console.log('7/13 - Cache\'s Tables Cleaned')
+        console.log('7/14 - Cache\'s Tables Cleaned')
 
         await GiveawayManager.setGiveaways()
-        console.log('8/13 - Giveaways System Started')
+        console.log('8/14 - Giveaways System Started')
 
         await PollManager.set()
-        console.log('9/13 - Polls System Started')
+        console.log('9/14 - Polls System Started')
 
         automaticSystems()
-        console.log('10/13 - Automatic System Started')
+        console.log('10/14 - Automatic System Started')
+
+        await this.setCantadas()
+        console.log('11/14 - Cantadas Loaded')
 
         const webhookResponse = await this.sendWebhook(
             process.env.WEBHOOK_STATUS,
@@ -176,10 +183,10 @@ export default new class SaphireClient extends Client {
         )
 
         if (webhookResponse === true)
-            console.log('11/13 - Webhook Responded Successfully')
-        else console.log('11/13 - Webhook Not Responded\n ' + webhookResponse)
+            console.log('12/14 - Webhook Responded Successfully')
+        else console.log('12/14 - Webhook Not Responded\n ' + webhookResponse)
         
-        console.log(`12/13 - Connected at Shard ${this.shardId}`)
+        console.log(`13/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
         return
     }
@@ -191,6 +198,14 @@ export default new class SaphireClient extends Client {
      */
     async allGuildsData() {
         return await this.shard.broadcastEval(client => client.guilds.cache)
+    }
+
+    async setCantadas() {
+        const allCantadas = await Database.Cantadas.find({})
+        if (!allCantadas || !allCantadas.length) return
+
+        this.cantadas = allCantadas
+        return
     }
 
     topGGAutoPoster() {
@@ -220,7 +235,7 @@ export default new class SaphireClient extends Client {
                 }
             }
         )
-            .then(() => true)
+            .then((data) => true)
             .catch(err => err)
     }
 

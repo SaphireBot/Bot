@@ -6,6 +6,7 @@ import ModelReminders from './models/Reminders.js'
 import ModelUser from './models/User.js'
 import Rather from './models/Rather.js'
 import Indications from './models/Indications.js'
+import Cantadas from './models/Cantadas.js'
 
 /**
  * Unificação de todos os Models para extensão da Classe Database
@@ -21,6 +22,7 @@ class Models {
         this.User = ModelUser
         this.Rather = Rather
         this.Indications = Indications
+        this.Cantadas = Cantadas
     }
 }
 
@@ -33,5 +35,6 @@ export {
     ModelUser as User,
     Models,
     Rather,
-    Indications
+    Indications,
+    Cantadas
 }

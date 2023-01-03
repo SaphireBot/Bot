@@ -9,6 +9,7 @@ import moment from 'moment'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js'
 import axios from 'axios'
+import cantadasModal from './modals/cantadas/cantadas.modal.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -47,7 +48,8 @@ export default class ModalInteraction extends Base {
             transactionsModalReport: [this.transactionsModalReport],
             botSugest: [this.botSugest],
             serverSugest: [this.serverSugest],
-            serverReport: [this.serverReport]
+            serverReport: [this.serverReport],
+            cantada: [cantadasModal, this]
         }[this.customId]
 
         if (ModalInteractionFunctions)

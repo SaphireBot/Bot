@@ -26,6 +26,8 @@ export default class Autocomplete extends Base {
 
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
         if (name === 'view' && this.commandName === 'saphire') return this.fanartsSearch(value)
+        if (name === 'accept' && this.commandName === 'admin') return this.cantadasSuggest(value)
+        if (name === 'opcoes' && this.commandName === 'cantada') return this.cantadaOptions()
 
         if (['search', 'options', 'delete', 'edit', 'view'].includes(name)) name = this.commandName
 
@@ -74,6 +76,27 @@ export default class Autocomplete extends Base {
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async cantadaOptions() {
+
+        const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'CantadasIndicadas')
+        const cantadas = clientData.CantadasIndicadas || []
+
+        const options = [{
+            name: 'Minhas cantadas',
+            value: 'mycantadas'
+        },
+        {
+            name: 'Todas as cantadas',
+            value: 'all'
+        }]
+
+        if (this.client.staff.includes(this.user.id))
+            options.push({ name: `${cantadas.length} cantadas a ser avaliadas`, value: 'analize' })
+
+        return await this.respond(options)
+
     }
 
     async fanartsSearch(value) {

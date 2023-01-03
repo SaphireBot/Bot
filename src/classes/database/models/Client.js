@@ -64,4 +64,5 @@ export default model("Client", new Schema({
         '90000': Array,
         '100000': Array
     },
+    CantadasIndicadas: Array
 }))
