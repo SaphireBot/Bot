@@ -21,30 +21,40 @@ export default async ({ MessageReaction, guildData }) => {
     if (!channel) return
 
     const formatAllowed = ['.jpg', '.gif', '.png', '.svg', 'webp']
-    const attachment = attachments?.first()?.attachment
+    const attachAvailable = attachments.filter(attach => formatAllowed.includes(attach?.attachment.slice(-4))).toJSON() || []
 
-    if (attachment && !formatAllowed.includes(attachment.slice(-4))) return
+    const embeds = [{
+        color: 0xFFAC33,
+        author: {
+            name: author.tag,
+            icon_url: author.avatarURL({ dynamic: true }),
+            url: message.url,
+        },
+        description: `${content}`.limit('MessageEmbedDescription'),
+        image: {
+            url: attachAvailable[0]?.attachment || null,
+        }
+    }]
 
-    await Database.Guild.updateOne(
-        { id: guild.id },
-        { $push: { "Stars.sended": { userId: author.id, messageId } } },
-        { upsert: true }
-    )
+    if (attachAvailable.length)
+        for (const attach of attachAvailable) {
+            if (attach.id === attachAvailable[0]) continue
+            embeds.push({
+                color: 0xFFAC33,
+                image: {
+                    url: attach?.attachment || null,
+                }
+            })
+        }
 
-    return channel.send({
-        content: `⭐ | ${messageChannel}`,
-        embeds: [{
-            color: 0xFFAC33,
-            author: {
-                name: author.tag,
-                icon_url: author.avatarURL({ dynamic: true }),
-                url: message.url,
-            },
-            description: `${content}`.limit('MessageEmbedDescription'),
-            image: {
-                url: attachment || null,
-            }
-        }]
-    }).catch(() => { })
+    if (embeds.length >= 10) embeds.length = 10
+
+    return channel.send({ content: `⭐ | ${messageChannel}`, embeds })
+        .then(async () => await Database.Guild.updateOne(
+            { id: guild.id },
+            { $push: { "Stars.sended": { userId: author.id, messageId } } },
+            { upsert: true }
+        ))
+        .catch(() => { })
 
 }
