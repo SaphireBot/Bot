@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import viewCantadas from '../../functions/cantadas/view.cantadas.js'
 import Modals from '../../../classes/Modals.js'
+import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'cantada',
@@ -31,7 +32,20 @@ export default {
         title: '😗 Super comando de cantadas',
         description: 'Veja as melhores cantadas do mundo aqui',
         permissions: [],
-        fields: []
+        fields: [
+            {
+                name: `${e.Info} Minhas cantadas`,
+                value: 'Você também pode ver suas cantadas entrando nas opções do comando `/cantada visualizar opcoes`'
+            },
+            {
+                name: '📨 Enviar cantadas',
+                value: 'Você pode enviar sua cantada usando o comando `/cantada enviar`. Assim, os membros da Saphire Team irá dar uma olhada na sua cantada'
+            },
+            {
+                name: '❤️‍🔥 Like Unlike Refresh',
+                value: 'Você pode dar like ❤️‍🔥 e 🖤 unlike em cada cantada.\nO 🔄️ Refresh é para mudar de cantada'
+            }
+        ]
     },
     async execute({ interaction, clientData }) {
 
