@@ -65,5 +65,4 @@ export default async ({ interaction, method, commandData }) => {
     if (cant) cant.likes = cantadaData.likes
 
     return await interaction.update({ components }).catch(() => { })
-
 }
