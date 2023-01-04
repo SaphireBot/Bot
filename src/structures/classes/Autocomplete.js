@@ -97,7 +97,7 @@ export default class Autocomplete extends Base {
             return await this.respond()
 
         const mapped = fill.map(c => ({
-            name: `${c.id} - ${c.phrase}`,
+            name: `${c.id} - ${c.phrase || "INVALID"}`,
             value: `${c.id}`
         })) || []
 

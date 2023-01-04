@@ -3,6 +3,7 @@ import {
     SaphireClient as client
 } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
+import deleteCantada from "../../../classes/buttons/cantadas/delete.cantada.js"
 import cantadaAdmin from "../../slashCommands/admin/admin/cantada.admin.js"
 
 export default async ({ interaction, buttonInteraction, clientData, commandData, search }) => {
@@ -24,14 +25,15 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
             ephemeral: true
         })
 
-    const cantadasAvailable = option === 'mycantadas'
+    const mycantada = commandData?.mc || option === 'mycantadas'
+    const cantadasAvailable = mycantada
         ? client.cantadas.filter(c => c.userId === interaction.user.id)
         : client.cantadas.filter(c => c.id !== cId)
 
     let cantada = search
         ? client.cantadas.find(c => c.id === search)
         : cantadasAvailable?.random()
-
+        
     if (!cantada || !cantadasAvailable || !cantadasAvailable.length)
         return await interaction?.update({
             content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
@@ -40,6 +42,9 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
             content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
             components: []
         }).catch(() => { }))
+
+    if (!cantada.phrase || !cantada.userId || !cantada.acceptedFor || !cantada.likes)
+        return deleteCantada(interaction, null, cantada.id, interaction.message, true)
 
     const author = await client.users.fetch(cantada.userId || '0')
         .then(u => `${u.tag} - \`${u.id}\``)
@@ -51,7 +56,7 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
 
     const embed = {
         color: client.blue,
-        title: `😗 ${client.user.username}'s Cantadas - ${client.cantadas.findIndex(c => c.id === cantada.id) + 1}/${client.cantadas.length}`,
+        title: `😗 ${client.user.username}'s Cantadas - ${cantadasAvailable.findIndex(c => c.id === cantada.id) + 1}/${cantadasAvailable.length }`,
         description: cantada.phrase,
         fields: [
             {
@@ -64,9 +69,7 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
             }
         ],
         footer: {
-            text: commandData?.mc || option === 'mycantadas'
-                ? `${cantadasAvailable?.length} cantadas`
-                : cantada.id
+            text: cantada.id
         }
     }
 
@@ -78,20 +81,20 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
                     type: 2,
                     label: `${cantada.likes.up.length || 0}`,
                     emoji: '❤️‍🔥',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', id: cantada.id, mc: commandData?.mc || option === 'mycantadas' }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', id: cantada.id, mc: mycantada }),
                     style: ButtonStyle.Success
                 },
                 {
                     type: 2,
                     label: `${cantada.likes.down.length || 0}`,
                     emoji: '🖤',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', id: cantada.id, mc: commandData?.mc || option === 'mycantadas' }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', id: cantada.id, mc: mycantada }),
                     style: ButtonStyle.Danger
                 },
                 {
                     type: 2,
                     emoji: '🔄',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'random', userId: interaction.user.id, mc: commandData?.mc || option === 'mycantadas' }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'random', userId: interaction.user.id, mc: mycantada }),
                     style: ButtonStyle.Primary,
                     disabled: client.cantadas.length <= 1
                 }

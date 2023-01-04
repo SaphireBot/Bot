@@ -12,7 +12,7 @@ export default async ({ interaction, user, message }, commandData) => {
     const method = commandData.src
 
     if (method === 'delete')
-        return deleteCantada(interaction, user, commandData, message)
+        return deleteCantada(interaction, user, commandData.cantadaId, message)
 
     if (['like', 'unlike'].includes(method))
         return likeCantada({ interaction, message, method, commandData })
