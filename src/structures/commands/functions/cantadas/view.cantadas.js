@@ -5,7 +5,7 @@ import {
 import { Emojis as e } from "../../../../util/util.js"
 import cantadaAdmin from "../../slashCommands/admin/admin/cantada.admin.js"
 
-export default async ({ interaction, buttonInteraction, clientData, commandData }) => {
+export default async ({ interaction, buttonInteraction, clientData, commandData, search }) => {
 
     let option = undefined
     let cId = interaction?.message?.embeds[0]?.data?.footer?.text
@@ -28,8 +28,8 @@ export default async ({ interaction, buttonInteraction, clientData, commandData 
         ? client.cantadas.filter(c => c.userId === interaction.user.id)
         : client.cantadas.filter(c => c.id !== cId)
 
-    let cantada = cId
-        ? client.cantadas.find(c => c.id === cId)
+    let cantada = search
+        ? client.cantadas.find(c => c.id === search)
         : cantadasAvailable?.random()
 
     if (!cantada || !cantadasAvailable || !cantadasAvailable.length)

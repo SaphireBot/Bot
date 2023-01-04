@@ -61,6 +61,9 @@ export default {
         if (subCommand === 'enviar')
             return await interaction.showModal(Modals.SendCanta)
 
+        if (options.getString('search'))
+            return viewCantadas({ interaction, clientData, search: options.getString('search') })
+
         return viewCantadas({ interaction, clientData })
     }
 }
