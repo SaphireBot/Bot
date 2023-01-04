@@ -1,4 +1,4 @@
-import { SaphireClient as client, } from "../../../../classes/index.js"
+import { Modals, SaphireClient as client, } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import viewCantadas from "../../../commands/functions/cantadas/view.cantadas.js"
 import cantadaAdmin from "../../../commands/slashCommands/admin/admin/cantada.admin.js"
@@ -10,6 +10,9 @@ import likeCantada from "./like.cantada.js"
 export default async ({ interaction, user, message }, commandData) => {
 
     const method = commandData.src
+
+    if (method === 'modal')
+        return await interaction.showModal(Modals.SendCanta)
 
     if (method === 'delete')
         return deleteCantada(interaction, user, commandData.cantadaId, message)

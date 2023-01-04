@@ -97,6 +97,12 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
                     custom_id: JSON.stringify({ c: 'cantada', src: 'random', userId: interaction.user.id, mc: mycantada }),
                     style: ButtonStyle.Primary,
                     disabled: client.cantadas.length <= 1
+                },
+                {
+                    type: 2,
+                    emoji: '📨',
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'modal' }),
+                    style: ButtonStyle.Primary
                 }
             ]
         }
