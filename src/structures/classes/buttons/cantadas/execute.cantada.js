@@ -14,8 +14,10 @@ export default async ({ interaction, user, message }, commandData) => {
     if (['like', 'unlike'].includes(method))
         return likeCantada({ interaction, message, method, commandData })
 
-    if (method === 'random' && commandData.userId === user.id)
+    if (method === 'random') {
+        if (interaction?.message?.interaction?.user?.id !== user.id) return
         return viewCantadas({ interaction, buttonInteraction: true, commandData })
+    }
 
     if (!client.staff.includes(user.id))
         return await interaction.reply({
@@ -52,6 +54,9 @@ export default async ({ interaction, user, message }, commandData) => {
 
     async function accept() {
 
+        if (client.cantadas.find(c => c.id === cantadaId))
+            return deny(true)
+
         new Database.Cantadas({
             id: cantadaId,
             phrase: cantada,
@@ -80,11 +85,13 @@ export default async ({ interaction, user, message }, commandData) => {
         return pull()
     }
 
-    async function deny() {
+    async function deny(exist) {
         embed.color = client.red
         embed.fields.push({
             name: 'Cantada recusada',
-            value: 'Esta cantada foi recusada e retirada do banco de dados'
+            value: exist
+                ? 'Esta cantada já existe no banco de dados'
+                : 'Esta cantada foi recusada e retirada do banco de dados'
         })
 
         await interaction.update({

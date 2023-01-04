@@ -38,7 +38,7 @@ export default async ({ MessageReaction, guildData }) => {
 
     if (attachAvailable.length)
         for (const attach of attachAvailable) {
-            if (attach.id === attachAvailable[0]) continue
+            if (attach.id === attachAvailable[0].id) continue
             embeds.push({
                 color: 0xFFAC33,
                 image: {

@@ -34,14 +34,14 @@ export default async ({ interaction, method, commandData }) => {
                     type: 2,
                     label: `${cantadaData.likes.up.length || 0}`,
                     emoji: '❤️‍🔥',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', mc: commandData?.mc || false }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', id: cantadaData.id, mc: commandData?.mc || false }),
                     style: ButtonStyle.Success
                 },
                 {
                     type: 2,
                     label: `${cantadaData.likes.down.length || 0}`,
                     emoji: '🖤',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', mc: commandData?.mc || false }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', id: cantadaData.id, mc: commandData?.mc || false }),
                     style: ButtonStyle.Danger
                 },
                 {

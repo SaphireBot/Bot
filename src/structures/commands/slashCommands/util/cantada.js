@@ -15,6 +15,12 @@ export default {
             type: ApplicationCommandOptionType.Subcommand,
             options: [
                 {
+                    name: 'search',
+                    description: 'Pesquise por um cantada',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                },
+                {
                     name: 'opcoes',
                     description: 'Mais opções de visualizações de cantadas',
                     type: ApplicationCommandOptionType.String,

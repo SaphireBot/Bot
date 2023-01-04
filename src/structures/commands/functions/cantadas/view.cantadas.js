@@ -8,8 +8,11 @@ import cantadaAdmin from "../../slashCommands/admin/admin/cantada.admin.js"
 export default async ({ interaction, buttonInteraction, clientData, commandData }) => {
 
     let option = undefined
+    let cId = interaction?.message?.embeds[0]?.data?.footer?.text
+
     if (!buttonInteraction) {
         option = interaction.options.getString('opcoes')
+        cId = interaction?.message?.embeds[0]?.data?.footer?.text || interaction.options.getString('search')
         const cantadas = clientData.CantadasIndicadas || []
 
         if (option === 'analize') {
@@ -30,15 +33,16 @@ export default async ({ interaction, buttonInteraction, clientData, commandData 
             ephemeral: true
         })
 
-    const cId = interaction?.message?.embeds[0]?.data?.footer?.text
     const cantadasAvailable = option === 'mycantadas'
         ? client.cantadas.filter(c => c.userId === interaction.user.id)
         : client.cantadas.filter(c => c.id !== cId)
 
-    let cantada = cantadasAvailable?.random()
+    let cantada = cId
+        ? client.cantadas.find(c => c.id === cId)
+        : cantadasAvailable?.random()
 
     if (!cantada || !cantadasAvailable || !cantadasAvailable.length)
-        return await interaction.update({
+        return await interaction?.update({
             content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
             components: []
         }).catch(async () => await interaction.reply({

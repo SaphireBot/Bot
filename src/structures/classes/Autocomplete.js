@@ -5,7 +5,6 @@ import {
     ColorsTranslate,
     Languages
 } from '../../util/Constants.js'
-import { ChannelType } from 'discord.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -27,6 +26,7 @@ export default class Autocomplete extends Base {
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
         if (name === 'view' && this.commandName === 'saphire') return this.fanartsSearch(value)
         if (name === 'accept' && this.commandName === 'admin') return this.cantadasSuggest(value)
+        if (name === 'search' && this.commandName === 'cantada') return this.showCantadas(value)
         if (name === 'opcoes' && this.commandName === 'cantada') return this.cantadaOptions()
 
         if (['search', 'options', 'delete', 'edit', 'view'].includes(name)) name = this.commandName
@@ -76,6 +76,32 @@ export default class Autocomplete extends Base {
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async showCantadas(value) {
+        const cantadas = this.client.cantadas || []
+
+        if (!cantadas.length)
+            return await this.respond()
+
+        const v = value?.toLowerCase()
+
+        const fill = cantadas.filter(c =>
+            c.id.toLowerCase().includes(v)
+            || c.phrase.toLowerCase().includes(v)
+            || c.userId.toLowerCase().includes(v)
+            || c.acceptedFor.toLowerCase().includes(v)
+        )
+
+        if (!fill.length)
+            return await this.respond()
+
+        const mapped = fill.map(c => ({
+            name: `${c.id} - ${c.phrase}`,
+            value: `${c.id}`
+        })) || []
+
+        return await this.respond(mapped)
     }
 
     async cantadaOptions() {
