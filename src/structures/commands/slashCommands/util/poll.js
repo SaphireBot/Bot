@@ -95,25 +95,26 @@ export default {
 
                 },
                 {
+                    name: 'type',
+                    description: 'Qual o tipo desta votação?',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    choices: [
+                        {
+                            name: 'Votação anônima',
+                            value: 'true'
+                        },
+                        {
+                            name: 'Votação comum',
+                            value: 'false'
+                        }
+                    ]
+                },
+                {
                     name: 'color',
                     description: 'Escolha a cor da embed',
                     type: ApplicationCommandOptionType.String,
                     autocomplete: true
-                },
-                {
-                    name: 'anonymous',
-                    description: 'Essa votação deve ser anônima?',
-                    type: ApplicationCommandOptionType.String,
-                    choices: [
-                        {
-                            name: 'Sim, votação anônima',
-                            value: 'true'
-                        },
-                        {
-                            name: 'Não, votação comum',
-                            value: 'false'
-                        }
-                    ]
                 }
             ]
         },
@@ -139,7 +140,7 @@ export default {
         const subCommand = options.getSubcommand()
         const text = options.getString('text')
         const endTime = options.getNumber('time')
-        const anonymous = options.getString('anonymous') === 'true'
+        const anonymous = options.getString('type') === 'true'
 
         if (subCommand === 'close') return PollManager.close(interaction, options.getString('available_polls'))
 
