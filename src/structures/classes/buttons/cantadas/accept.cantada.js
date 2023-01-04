@@ -7,7 +7,7 @@ import pull from './pull.cantada.js'
 
 export default async (cantadaId, prhase, commandData, user, interaction, embed) => {
 
-    if (client.cantadas.find(c => c.id === cantadaId))
+    if (client.cantadas.find(c => c.id === cantadaId || c.phrase == prhase))
         return deny(true)
 
     new Database.Cantadas({
