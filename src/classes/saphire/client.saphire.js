@@ -235,7 +235,7 @@ export default new class SaphireClient extends Client {
                 }
             }
         )
-            .then((data) => true)
+            .then(() => true)
             .catch(err => err)
     }
 
