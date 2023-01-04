@@ -1,4 +1,4 @@
-import Database from "../database/Database.js"
+import Database from '../database/Database.js'
 
 export default new class Experience {
     constructor() {
@@ -12,47 +12,49 @@ export default new class Experience {
         userData
             ? userData.xp += xpPoints
             : this.users.push({ id: userId, xp: xpPoints })
+
         return
     }
 
     async setExperience() {
 
-        if (this.users.length === 0) return
+        if (!this.users.length) return
 
         const usersData = await Database.User.find({ id: { $in: this.users.map(d => d.id) } })
         if (!usersData || !usersData.length) return
 
         const dataToUpdate = []
 
-        for await (let data of this.users) {
+        for (let data of this.users) {
 
             const user = usersData.find(d => d.id === data.id)
             let level = user?.Level || 1
+            let levelEdited = false
             let xp = data.xp += (user?.Xp || 0)
 
             do {
 
                 if (xp >= parseInt((level || 1) * 275)) {
                     level++
+                    levelEdited = true
                     xp -= parseInt((level) * 275)
                     if (xp < 0) xp = 0
                 }
 
             } while (xp >= parseInt((level) * 275))
 
-            dataToUpdate.push({
+            const dataToPush = {
                 updateOne: {
                     filter: { id: data.id },
-                    update: {
-                        $set: {
-                            Xp: xp,
-                            Level: level
-                        }
-                    },
+                    update: { $set: { Xp: xp } },
                     upsert: true
                 }
-            })
+            }
 
+            if (levelEdited)
+                dataToPush.updateOne.update.$set.Level = level
+
+            dataToUpdate.push(dataToPush)
             continue
         }
 

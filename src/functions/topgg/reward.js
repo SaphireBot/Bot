@@ -13,9 +13,9 @@ export default async (userId) => {
 
     const user = await client.users.fetch(userId).catch(() => null)
     if (!user) return false
+    const votes = await TopGGApi.getVotes() || []
     giveRewards()
 
-    const votes = await TopGGApi.getVotes() || []
     const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
     const data = cachedData?.find(data => data?.userId === userId)
 
