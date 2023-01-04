@@ -2,13 +2,16 @@ import { ButtonStyle } from "discord.js"
 import { Database, SaphireClient as client } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
 
-export default async (interaction, cantadaId, cantadas = null) => {
+export default async (interaction, cantadaId, cantadas = null, option, toDeleteId) => {
 
     if (!client.staff.includes(interaction.user.id))
         return await interaction.reply({
             content: `${e.Deny} | Apenas membros da Saphire's Team tem poder de analize neste sistema.`,
             ephemeral: true
         })
+
+    if (option === 'delete')
+        return deleteCantada(interaction, toDeleteId)
 
     const cId = cantadaId || cantadas.random()?.cantadaId
 
@@ -85,4 +88,71 @@ export default async (interaction, cantadaId, cantadas = null) => {
 
     return await interaction.reply(replyData)
 
+}
+
+async function deleteCantada(interaction, cantadaId) {
+
+    const cantada = client.cantadas.find(c => c.id === cantadaId)
+
+    if (!cantada)
+        return await interaction.reply({
+            content: `${e.Deny} | Cantada não encontrada.`,
+            ephemeral: true
+        })
+
+    const author = await client.users.fetch(cantada.userId || '0')
+        .then(u => `${u.tag} - \`${u.id}\``)
+        .catch(() => null) || `Not Found \`${cantada.userId}\``
+
+    const acceptedFor = await client.users.fetch(cantada.acceptedFor || '0')
+        .then(u => `${u.tag} - \`${u.id}\``)
+        .catch(() => null) || `Not Found \`${cantada.acceptedFor}\``
+
+    return await interaction.reply({
+        embeds: [{
+            color: client.blue,
+            title: `${e.Trash} Deletar Cantada`,
+            fields: [
+                {
+                    name: '📝 Cantada',
+                    value: `${cantada.phrase || 'Not Found'}`
+                },
+                {
+                    name: '📨 Enviada por',
+                    value: author
+                },
+                {
+                    name: `${e.ModShield} Aceitado por`,
+                    value: acceptedFor
+                },
+                {
+                    name: '👉 Likes',
+                    value: `❤️‍🔥 ${cantada.likes.up.length}\n🖤 ${cantada.likes.down.length}`
+                }
+            ],
+            footer: {
+                text: `${cantada.id || "0"}`
+            }
+        }],
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Deletar',
+                        emojis: e.Trash,
+                        custom_id: JSON.stringify({ c: 'cantada', src: 'delete', cantadaId, userId: cantada.userId }),
+                        style: ButtonStyle.Success
+                    },
+                    {
+                        type: 2,
+                        label: 'Cancelar',
+                        custom_id: JSON.stringify({ c: 'delete' }),
+                        style: ButtonStyle.Danger
+                    }
+                ]
+            }
+        ]
+    })
 }

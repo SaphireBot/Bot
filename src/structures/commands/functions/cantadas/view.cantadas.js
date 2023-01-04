@@ -13,18 +13,9 @@ export default async ({ interaction, buttonInteraction, clientData, commandData 
     if (!buttonInteraction) {
         option = interaction.options.getString('opcoes')
         cId = interaction?.message?.embeds[0]?.data?.footer?.text || interaction.options.getString('search')
-        const cantadas = clientData.CantadasIndicadas || []
 
-        if (option === 'analize') {
-
-            if (!cantadas.length)
-                return await interaction.reply({
-                    content: `${e.Deny} | Não tem nenhuma cantada a ser analizada.`,
-                    ephemeral: true
-                })
-
-            return cantadaAdmin(interaction, null, clientData.CantadasIndicadas)
-        }
+        if (['analize', 'delete'].includes(option))
+            return cantadaAdmin(interaction, null, clientData.CantadasIndicadas, option, cId)
     }
 
     if (!client.cantadas.length)

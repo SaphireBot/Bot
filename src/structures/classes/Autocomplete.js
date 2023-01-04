@@ -119,7 +119,16 @@ export default class Autocomplete extends Base {
         }]
 
         if (this.client.staff.includes(this.user.id))
-            options.push({ name: `${cantadas.length} cantadas a ser avaliadas`, value: 'analize' })
+            options.push(
+                {
+                    name: `${cantadas.length} cantadas a ser avaliadas`,
+                    value: 'analize'
+                },
+                {
+                    name: 'Deletar cantada',
+                    value: 'delete'
+                }
+            )
 
         return await this.respond(options)
 
