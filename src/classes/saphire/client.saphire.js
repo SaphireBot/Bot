@@ -135,9 +135,8 @@ export default new class SaphireClient extends Client {
         // Clear the console
         console.clear()
 
-        process.on('unhandledRejection', error => unhandledRejection(error))
-        process.on('uncaughtException', (error, origin) => uncaughtException(error, origin))
-        console.log('1/14 - Error Handler Connected')
+        import('./process.saphire.js')
+        console.log('1/14 - Process Handler Readed')
 
         await super.login()
         console.log('2/14 - Client Logged')
@@ -174,19 +173,7 @@ export default new class SaphireClient extends Client {
         await this.setCantadas()
         console.log('11/14 - Cantadas Loaded')
 
-        const webhookResponse = await this.sendWebhook(
-            process.env.WEBHOOK_STATUS,
-            {
-                username: `[${this.canaryId === this.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
-                content: `${e.Check} | **Shard ${this.shardId + 1} Online**\n${e.Database} | ${databaseResponse}\n${e.discloud} | ${discloudResult}\n${e.slash} | ${slashCommandsResponse}\n${e.topgg} | Top.GG API Connected\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`
-            }
-        )
-
-        if (webhookResponse === true)
-            console.log('12/14 - Webhook Responded Successfully')
-        else console.log('12/14 - Webhook Not Responded\n ' + webhookResponse)
-
-        console.log(`13/14 - Connected at Shard ${this.shardId}`)
+        console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
 
         return

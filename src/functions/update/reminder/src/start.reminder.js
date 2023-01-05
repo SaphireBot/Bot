@@ -13,7 +13,7 @@ export default async function reminderStart({ user, data }) {
 
     if (!TimeOver && !data.Alerted) {
 
-        const Channel = await client.channels.fetch(data.ChannelId).catch(() => NotifyUser(user, RemindMessage, data.id))
+        const Channel = await client.channels.fetch(data.ChannelId || "0").catch(() => NotifyUser(user, RemindMessage, data.id))
 
         if (!Channel || !Channel.guild || !Channel.guild?.members.cache.has(user.id))
             return NotifyUser(user, RemindMessage, data.id)

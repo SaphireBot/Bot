@@ -1,6 +1,10 @@
 import express from 'express'
 import topggReward from '../functions/topgg/reward.js'
+import axios from 'axios'
 import { SaphireClient as client } from '../classes/index.js'
+import { Emojis as e } from '../util/util.js'
+import os from 'os'
+const hostName = os.hostname()
 import('dotenv/config')
 
 const app = express()
@@ -25,8 +29,8 @@ app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
         response: "Authorization is not defined correctly."
       });
 
-    if (!req.headers?.user)
-      return res.status(206).send('A partial content was given.')
+  if (!req.headers?.user)
+    return res.status(206).send('A partial content was given.')
 
   const response = await topggReward(req.headers?.user || null).catch(() => null)
 
@@ -89,10 +93,70 @@ app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
 
 app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Found" }))
 
-// Discloud
-app.listen(8080, "0.0.0.0", async () => console.log('14/14 - Saphire\'s Local API Connected'))
+const system = {
+  RodrigoPC: {
+    name: 'LocalHost',
+    port: 1000
+  },
+  '065002fd32e5': {
+    name: 'Discloud',
+    port: 8080
+  },
+  'squarecloud.app': {
+    name: 'Squarecloud',
+    port: 80
+  }
+}[hostName]
 
-// Squarecloud
-// app.listen(80, "0.0.0.0", async () => console.log('14/14 - Saphire\'s Local API Connected'))
+app.listen(system.port, "0.0.0.0", () => alertLogin(system.name))
 
 export default app
+
+async function alertLogin(host) {
+
+  if (!host) {
+    console.clear()
+    return process.exit(10)
+  }
+
+  console.log('13/14 - Saphire\'s Local API Connected')
+
+  return await axios({
+    url: 'https://ways.discloud.app/online',
+    data: {
+      authorization: process.env.LOGIN_ACCESS,
+      host: host
+    },
+    method: "POST"
+  })
+    .then(async value => {
+
+      if (value.data.continue === "Logout") {
+        console.clear()
+
+        client.sendWebhook(
+          process.env.WEBHOOK_STATUS,
+          {
+            username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Try to connect`,
+            content: `Tentativa de login na **${system.name}**. Efetuando desligamento por duplicidade.`
+          }
+        )
+
+        return process.exit(11)
+      }
+
+      const webhookResponse = await client.sendWebhook(
+        process.env.WEBHOOK_STATUS,
+        {
+          username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
+          content: `${e.Check} | **Shard ${client.shardId} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
+        }
+      )
+
+      if (webhookResponse === true)
+        console.log('14/14 - Webhook Responded Successfully')
+      else console.log('14/14 - Webhook Not Responded\n ' + webhookResponse)
+
+    })
+    .catch(err => console.log(err))
+}

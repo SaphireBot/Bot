@@ -69,8 +69,7 @@ export default new class Database extends Models {
             .then(() => 'Database Connected')
             .catch(err => {
                 console.log('Mongoose Database | FAIL!\n--> ' + err)
-                client.destroy()
-                return 'Database Connection Error'
+                return process.exit(12)
             })
     }
 
