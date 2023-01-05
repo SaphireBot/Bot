@@ -11,10 +11,13 @@ import { ChannelType } from 'discord.js'
 export default
     async ({ interaction, Database, user, guild, channel, client }, err) => {
 
-        if (err?.code !== 10062)
-            console.log(err)
-
-        if (!interaction || !interaction?.commandName) return
+        if (
+            !err
+            || !interaction
+            || !interaction?.commandName
+            || [10062].includes(err.code)
+            || err.message === 'Unknown interaction'
+        ) return
 
         const { commandName, commandId } = interaction
         const isTextChannel = channel.type === ChannelType.GuildText

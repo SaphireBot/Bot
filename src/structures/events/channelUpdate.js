@@ -75,7 +75,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     const newMembers = formatMembers(newPermissions)
 
     if ((oldRoles.length || newRoles.length) && oldRoles !== newRoles) {
-        if (!oldRoles) return
+        if (!oldRoles || !oldRoles.length) return
 
         if (oldRoles && oldRoles?.map(u => u.id).filter(roleId => !newRoles.map(u => u.id).includes(roleId)).length) {
             fields.push({

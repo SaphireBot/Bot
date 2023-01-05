@@ -54,9 +54,7 @@ export default async (userId) => {
 
     function sendMessage() {
         return {
-            content: `${user?.tag || "Not Found"} \`${userId || 0}\` aumentou os votos da ${client.user.tag} para ${votes.length}`,
-            avatarURL: 'https://media.discordapp.net/attachments/893361065084198954/1005310889588703332/top.gg_logo.png?width=484&height=484',
-            username: '[API] Top GG Vote Notification'
+            content: `${user?.tag || "Not Found"} \`${userId || 0}\` aumentou os votos da ${client.user.tag} para ${votes.length}`
         }
     }
 

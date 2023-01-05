@@ -29,7 +29,7 @@ export default class Autocomplete extends Base {
         if (name === 'search' && this.commandName === 'cantada') return this.showCantadas(value)
         if (name === 'opcoes' && this.commandName === 'cantada') return this.cantadaOptions()
 
-        if (['search', 'options', 'delete', 'edit', 'view'].includes(name)) name = this.commandName
+        if (['search', 'options', 'delete', 'edit', 'view']?.includes(name)) name = this.commandName
 
         const autocompleteFunctions = {
             look: ['indications', value],
@@ -87,10 +87,10 @@ export default class Autocomplete extends Base {
         const v = value?.toLowerCase()
 
         const fill = cantadas.filter(c =>
-            c.id.toLowerCase().includes(v)
-            || c.phrase.toLowerCase().includes(v)
-            || c.userId.toLowerCase().includes(v)
-            || c.acceptedFor.toLowerCase().includes(v)
+            c.id?.toLowerCase()?.includes(v)
+            || c.phrase?.toLowerCase()?.includes(v)
+            || c.userId?.toLowerCase()?.includes(v)
+            || c.acceptedFor?.toLowerCase()?.includes(v)
         )
 
         if (!fill.length)
@@ -118,7 +118,7 @@ export default class Autocomplete extends Base {
             value: 'all'
         }]
 
-        if (this.client.staff.includes(this.user.id))
+        if (this.client.staff?.includes(this.user.id))
             options.push(
                 {
                     name: `${cantadas.length} cantadas a ser avaliadas`,
@@ -140,7 +140,7 @@ export default class Autocomplete extends Base {
         if (!fanarts || !fanarts.length) return await this.respond()
 
         const mapped = fanarts.map(fan => ({ name: `${fan.id} - ${fan.name}`, value: `${fan.id}` }))
-        const fill = mapped.filter(fan => fan.name.toLowerCase()?.includes(value?.toLowerCase()))
+        const fill = mapped.filter(fan => fan.name?.toLowerCase()?.includes(value?.toLowerCase()))
 
         return await this.respond(fill)
     }
@@ -184,7 +184,7 @@ export default class Autocomplete extends Base {
         }))
 
         if (value)
-            mapped = mapped.filter(opt => opt.name?.toLowerCase().includes(value?.toLowerCase()))
+            mapped = mapped.filter(opt => opt.name?.toLowerCase()?.includes(value?.toLowerCase()))
 
         return await this.respond(mapped)
     }
@@ -229,22 +229,22 @@ export default class Autocomplete extends Base {
 
         value = value?.toLowerCase()
 
-        const fill = this.client.staff.includes(this.user.id)
+        const fill = this.client.staff?.includes(this.user.id)
             ? allData.filter(data => {
-                return data.id.toLowerCase().includes(value)
-                    || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
-                    || data.authorId.includes(value)
-                    || data.optionOne.question.toLowerCase().includes(value)
-                    || data.optionTwo.question.toLowerCase().includes(value)
+                return data.id?.toLowerCase()?.includes(value)
+                    || this.client.users.resolve(data.authorId)?.tag?.toLowerCase()?.includes(value)
+                    || data.authorId?.includes(value)
+                    || data.optionOne.question?.toLowerCase()?.includes(value)
+                    || data.optionTwo.question?.toLowerCase()?.includes(value)
             }) || []
             : allData
                 .filter(data => data.authorId == this.user.id)
                 .filter(data => {
-                    return data.id.toLowerCase().includes(value)
-                        || this.client.users.resolve(data.authorId)?.tag?.toLowerCase().includes(value)
-                        || data.authorId.includes(value)
-                        || data.optionOne.question.toLowerCase().includes(value)
-                        || data.optionTwo.question.toLowerCase().includes(value)
+                    return data.id?.toLowerCase()?.includes(value)
+                        || this.client.users.resolve(data.authorId)?.tag?.toLowerCase()?.includes(value)
+                        || data.authorId?.includes(value)
+                        || data.optionOne.question?.toLowerCase()?.includes(value)
+                        || data.optionTwo.question?.toLowerCase()?.includes(value)
                 }) || []
 
 
@@ -269,10 +269,10 @@ export default class Autocomplete extends Base {
         if (!authorPolls || !authorPolls.length) return await this.respond()
 
         const fill = authorPolls.filter(({ MessageID, ChannelId, GuildId, Text }) => {
-            return MessageID.includes(value)
-                || ChannelId.includes(value)
-                || GuildId.includes(value)
-                || Text.toLowerCase().includes(value?.toLowerCase())
+            return MessageID?.includes(value)
+                || ChannelId?.includes(value)
+                || GuildId?.includes(value)
+                || Text?.toLowerCase()?.includes(value?.toLowerCase())
         })
 
         if (!fill || !fill.length) return await this.respond()
@@ -312,7 +312,7 @@ export default class Autocomplete extends Base {
 
         if (!allWallpaper || !allWallpaper.length) return await this.respond()
 
-        const fill = allWallpaper.filter(name => name.toLowerCase().includes(value?.toLowerCase()))
+        const fill = allWallpaper.filter(name => name?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(name => ({ name: name, value: name }))
 
         if (mapped.length > 2)
@@ -335,7 +335,7 @@ export default class Autocomplete extends Base {
 
         const noMultiplayers = availableBlackjacks.filter(gameData => !gameData.value.availablePlayers)
         const mapped = availableBlackjacks.map(gameData => ({ name: `${gameData.value.availablePlayers ? 'Multiplayer' : 'Solo'} - ${gameData.value.bet} Safiras`, value: gameData.id }))
-        const fill = mapped.filter(bet => bet.name.toLowerCase().includes(value.toLowerCase()) || bet.value.includes(value))
+        const fill = mapped.filter(bet => bet.name?.toLowerCase()?.includes(value?.toLowerCase()) || bet.value?.includes(value))
 
         if (noMultiplayers.length > 1)
             fill.unshift({
@@ -358,7 +358,7 @@ export default class Autocomplete extends Base {
         if (!availableBets || !availableBets.length) return await this.respond()
 
         const mapped = availableBets.map(bet => ({ name: `${bet.amount} Safiras e ${bet.players.length} jogadores`, value: bet.messageId }))
-        const fill = mapped.filter(bet => bet.name.toLowerCase().includes(value.toLowerCase()) || bet.value.includes(value))
+        const fill = mapped.filter(bet => bet.name?.toLowerCase()?.includes(value?.toLowerCase()) || bet.value?.includes(value))
 
         if (fill.length > 1)
             fill.unshift({
@@ -391,8 +391,8 @@ export default class Autocomplete extends Base {
 
         const fill = value ?
             giveaways.filter(data =>
-                data.MessageID?.toLowerCase().includes(value)
-                || data.Prize?.toLowerCase().includes(value?.toLowerCase())
+                data.MessageID?.toLowerCase()?.includes(value)
+                || data.Prize?.toLowerCase()?.includes(value?.toLowerCase())
                 || data.Winners === parseInt(value)
             )
             : giveaways
@@ -417,8 +417,8 @@ export default class Autocomplete extends Base {
 
         const fill = value ?
             giveaways.filter(data =>
-                data.MessageID?.toLowerCase().includes(value)
-                || data.Prize?.toLowerCase().includes(value?.toLowerCase())
+                data.MessageID?.toLowerCase()?.includes(value)
+                || data.Prize?.toLowerCase()?.includes(value?.toLowerCase())
                 || data.Winners === parseInt(value)
             )
             : giveaways
@@ -438,8 +438,8 @@ export default class Autocomplete extends Base {
         const quizData = this.Database.Quiz
         const fill = value ?
             quizData.filter(data =>
-                data.question?.toLowerCase().includes(value?.toLowerCase())
-                || data.answers.find(resp => resp.toLowerCase().includes(value?.toLowerCase()))
+                data.question?.toLowerCase()?.includes(value?.toLowerCase())
+                || data.answers.find(resp => resp?.toLowerCase()?.includes(value?.toLowerCase()))
             )
             : quizData
 
@@ -454,7 +454,7 @@ export default class Autocomplete extends Base {
 
         if (!userReminders || userReminders.length === 0) return this.respond()
 
-        const fill = userReminders.filter(reminders => reminders.RemindMessage?.toLowerCase().includes(value?.toLowerCase()) || reminders.id.toLowerCase().includes(value?.toLowerCase()))
+        const fill = userReminders.filter(reminders => reminders.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase()) || reminders.id?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(reminder => ({ name: `${reminder.id} - ${reminder.RemindMessage}`, value: reminder.id }))
 
         if (mapped.length > 1)
@@ -473,7 +473,7 @@ export default class Autocomplete extends Base {
         const rolesInAutorole = guildData?.Autorole || []
         if (rolesInAutorole.length === 0) return this.respond([{ name: 'Nenhum cargo configurado.', value: 'info' }])
 
-        const fill = rolesInAutorole.filter(id => id.includes(value?.toLowerCase()))
+        const fill = rolesInAutorole.filter(id => id?.includes(value?.toLowerCase()))
         const mapped = fill.map(id => {
             const role = this.guild.roles.cache.get(id)
             if (!role) removeRole(id)
@@ -494,7 +494,7 @@ export default class Autocomplete extends Base {
 
     async select_logo_marca(value) {
         const logoData = this.Database.Logomarca || []
-        const fill = logoData.filter(marca => marca?.answers.find(name => name?.toLowerCase()?.includes(value.toLowerCase())))
+        const fill = logoData.filter(marca => marca?.answers.find(name => name?.toLowerCase()?.includes(value?.toLowerCase())))
         const mapped = fill.map(marca => ({ name: formatString(marca?.answers[0]), value: marca?.answers[0] }))
         return this.respond(mapped)
     }
@@ -557,7 +557,7 @@ export default class Autocomplete extends Base {
         const flags = this.Database.Flags
 
         const fill = flags.filter(flag =>
-            flag.country.find(band => band.toLowerCase().includes(value.toLowerCase()))
+            flag.country.find(band => band?.toLowerCase()?.includes(value?.toLowerCase()))
             || flag.flag === value
             || flag.image === value
         )
@@ -582,7 +582,7 @@ export default class Autocomplete extends Base {
             }])
 
         const banned = banneds.toJSON()
-        const fill = banned.filter(data => data?.user.tag.toLowerCase().includes(value.toLowerCase()) || data?.user.id.includes(value)) || []
+        const fill = banned.filter(data => data?.user.tag?.toLowerCase()?.includes(value?.toLowerCase()) || data?.user.id?.includes(value)) || []
         const mapped = fill.map(data => ({
             name: `${data.user.tag} - ${data.user.id} | ${data.reason?.slice(0, 150) || 'Sem razão definida'}`,
             value: data.user.id
@@ -592,7 +592,7 @@ export default class Autocomplete extends Base {
 
     utilColors(value) {
         const colors = Object.keys(Colors || {})
-        const fill = colors.filter(data => ColorsTranslate[data].toLowerCase().includes(value.toLowerCase()))
+        const fill = colors.filter(data => ColorsTranslate[data]?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(data => ({ name: ColorsTranslate[data], value: data }))
         return this.respond(mapped)
     }
@@ -618,7 +618,7 @@ export default class Autocomplete extends Base {
             { name: '100000', length: bets['100000']?.length }
         ]
 
-        const fill = betObject.filter(d => d.name.includes(value))
+        const fill = betObject.filter(d => d.name?.includes(value))
         const mapped = fill.map(d => ({ name: `${d.name} Safiras | ${d.length || 0} apostas em espera`, value: `${d.name}` }))
         return this.respond(mapped)
     }
@@ -626,7 +626,7 @@ export default class Autocomplete extends Base {
     async blockCommands(value) {
         const data = await this.Database.Client.findOne({ id: this.client.user.id }, 'ComandosBloqueadosSlash')
         const bugs = data?.ComandosBloqueadosSlash || []
-        const fill = bugs.filter(bug => bug.cmd?.toLowerCase().includes(value.toLowerCase()) || bug.error?.toLowerCase().includes(value.toLowerCase()))
+        const fill = bugs.filter(bug => bug.cmd?.toLowerCase()?.includes(value?.toLowerCase()) || bug.error?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(bug => ({ name: `${bug.cmd} | ${bug.error}`, value: bug.cmd }))
 
         if (mapped.length > 1)
@@ -640,10 +640,10 @@ export default class Autocomplete extends Base {
 
     async commandList(value) {
         const cmds = this.client.slashCommands.toJSON()
-        const fill = cmds.filter(cmdName => cmdName.name?.toLowerCase().includes(value.toLowerCase()))
+        const fill = cmds.filter(cmdName => cmdName.name?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(cmdName => ({ name: cmdName.name, value: cmdName.name }))
 
-        if (!value?.length || 'todos os comandos'.includes(value.toLowerCase()))
+        if (!value?.length || 'todos os comandos'?.includes(value?.toLowerCase()))
             mapped.unshift({ name: 'Todos os comandos', value: 'all' })
 
         return this.respond(mapped)
@@ -651,14 +651,14 @@ export default class Autocomplete extends Base {
 
     translateLanguages(value) {
         const languages = Object.entries(Languages)
-        const fill = languages.filter(([a, b]) => a.includes(value.toLowerCase()) || b.toLowerCase().includes(value.toLowerCase()))
+        const fill = languages.filter(([a, b]) => a?.includes(value?.toLowerCase()) || b?.toLowerCase()?.includes(value?.toLowerCase()))
         const mapped = fill.map(([_, b]) => ({ name: b, value: b }))
         return this.respond(mapped)
     }
 
     async balanceOptions(value) {
 
-        const isStaff = this.client.admins.includes(this.user.id)
+        const isStaff = this.client.admins?.includes(this.user.id)
         const options = [
             {
                 name: 'Esconder só pra mim',
@@ -690,7 +690,7 @@ export default class Autocomplete extends Base {
                 }
             )
 
-        const fill = options.filter(data => data.name.toLowerCase().includes(value.toLowerCase()))
+        const fill = options.filter(data => data.name?.toLowerCase()?.includes(value?.toLowerCase()))
         return await this.respond(fill)
 
     }
@@ -704,7 +704,7 @@ export default class Autocomplete extends Base {
         const fill = dataUsers
             .map(id => users.find(data => data.id === id))
             .filter(user => {
-                return user?.tag?.toLowerCase().includes(value.toLowerCase())
+                return user?.tag?.toLowerCase()?.includes(value?.toLowerCase())
                     || user?.id?.includes(value)
             })
 
@@ -724,8 +724,8 @@ export default class Autocomplete extends Base {
 
         const fill = guilds
             .filter(guild =>
-                guild.name.toLowerCase().includes(value.toLowerCase())
-                || guild.id.includes(value)
+                guild.name?.toLowerCase()?.includes(value?.toLowerCase())
+                || guild.id?.includes(value)
             )
 
         const mapped = fill.map(guild => ({ name: `(${guild.members.length}) - ${guild.name} | ${guild.id}`, value: guild.id }))
@@ -739,7 +739,7 @@ export default class Autocomplete extends Base {
 
         const fill = users
             .filter(user => {
-                return user?.tag?.toLowerCase().includes(value?.toLowerCase())
+                return user?.tag?.toLowerCase()?.includes(value?.toLowerCase())
                     || user?.id?.includes(value)
             })
 
@@ -758,7 +758,7 @@ export default class Autocomplete extends Base {
         const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess') || []
         const wallSetted = userData.Walls?.Set
 
-        const userBackground = clientData?.BackgroundAcess.includes(this.user.id)
+        const userBackground = clientData?.BackgroundAcess?.includes(this.user.id)
             ? Object.keys(this.Database.BgLevel)
             : userData.Walls?.Bg
 
@@ -772,7 +772,7 @@ export default class Autocomplete extends Base {
 
             validWallpapers = validWallpapers
                 .filter(a => a)
-                .filter(data => data.name.toLowerCase().includes(value.toLowerCase()))
+                .filter(data => data.name?.toLowerCase()?.includes(value?.toLowerCase()))
 
             if (wallSetted)
                 validWallpapers.unshift({
@@ -787,7 +787,7 @@ export default class Autocomplete extends Base {
     async buyLevelBackground(value) {
 
         const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess') || []
-        if (clientData?.BackgroundAcess.includes(this.user.id)) return this.respond()
+        if (clientData?.BackgroundAcess?.includes(this.user.id)) return this.respond()
 
         const userData = await this.Database.User.findOne({ id: this.user.id }, 'Walls') || []
         const userBackgrounds = userData.Walls?.Bg || []
@@ -799,7 +799,7 @@ export default class Autocomplete extends Base {
                 return num - num2
             })
             .filter(bg =>
-                !userBackgrounds.includes(bg[0])
+                !userBackgrounds?.includes(bg[0])
                 && bg[0] !== 'bg0'
                 && bg[1]?.Limit > 0
             ) || []
@@ -812,7 +812,7 @@ export default class Autocomplete extends Base {
             return { name: nameData, value: bg[0] }
 
         })
-            .filter(data => data.name.toLowerCase().includes(value.toLowerCase())) || []
+            .filter(data => data.name?.toLowerCase()?.includes(value?.toLowerCase())) || []
 
         return this.respond(mapped)
     }
@@ -820,7 +820,7 @@ export default class Autocomplete extends Base {
     async levelOptions() {
         const arr = [{ name: 'Esconder mensagem só para mim', value: 'hide' }]
 
-        if (this.client.admins.includes(this.user.id))
+        if (this.client.admins?.includes(this.user.id))
             arr.push({ name: 'Usuários que possuem acesso aos Backgrounds', value: 'list' })
 
         return this.respond(arr)
