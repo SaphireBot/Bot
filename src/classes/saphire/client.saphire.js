@@ -185,9 +185,10 @@ export default new class SaphireClient extends Client {
         if (webhookResponse === true)
             console.log('12/14 - Webhook Responded Successfully')
         else console.log('12/14 - Webhook Not Responded\n ' + webhookResponse)
-        
+
         console.log(`13/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
+
         return
     }
 

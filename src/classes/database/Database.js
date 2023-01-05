@@ -62,7 +62,6 @@ export default new class Database extends Models {
     MongoConnect = async (client) => {
 
         Mongoose.set("strictQuery", true)
-        
         return connect(process.env.DATABASE_LINK_CONNECTION, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -228,26 +227,11 @@ export default new class Database extends Models {
 
     deleteGiveaway = async (DataId, GuildId, All = false) => {
 
-        return All
-            ? (async () => {
-                await this.Guild.updateOne(
-                    { id: GuildId },
-                    { $unset: { Giveaways: 1 } }
-                )
-                await this.Cache.Giveaways.delete(`${client.shardId}.Giveaways.${GuildId}`)
-            })()
-            : (async () => {
-                await this.Guild.updateOne(
-                    { id: GuildId },
-                    { $pull: { Giveaways: { MessageID: DataId } } },
-                    { MessageID: DataId }
-                )
-                await this.Cache.Giveaways.pull(
-                    `${client.shardId}.Giveaways.${GuildId}`,
-                    data => data.MessageID === DataId
-                )
-            })()
+        const data = All
+            ? { $unset: { Giveaways: 1 } }
+            : { $pull: { Giveaways: { MessageID: DataId } } }
 
+        return await this.Guild.updateOne({ id: GuildId }, data)
     }
 
     /**

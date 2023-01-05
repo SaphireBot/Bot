@@ -175,7 +175,7 @@ export default async interaction => {
             if (reason === 'user') return
 
             return msg.react('🎉')
-                .then(reaction => registerGiveaway(msg, reaction.emoji, emojiData, Message))
+                .then(() => registerGiveaway(msg, null, null, Message))
                 .catch(err => {
                     Database.deleteGiveaway(msg.id, guild.id)
                     return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
@@ -206,14 +206,7 @@ export default async interaction => {
             { upsert: true }
         )
 
-        await Database.Cache.Giveaways.push(
-            `${client.shardId}.Giveaways.${guild.id}`,
-            giveawayData
-        )
-
-        const timeout = setTimeout(() => {
-            client.emit('giveaway', giveawayData, timeout)
-        }, TimeMs)
+        setTimeout(() => client.emit('giveaway', giveawayData), TimeMs)
 
         const embed = {
             color: color || 0x0099ff,

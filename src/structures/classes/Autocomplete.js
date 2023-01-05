@@ -407,13 +407,15 @@ export default class Autocomplete extends Base {
 
     async giveaway_id(value) {
 
+        const response = [{
+            name: 'Informações sobre o reroll',
+            value: 'info'
+        }]
+
         const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
         let giveaways = guildData?.Giveaways || []
-
-        if (!giveaways.length) return this.respond()
-
-        giveaways = giveaways.filter(w => !w.Actived && w.Participants?.length)
-        if (!giveaways.length) return this.respond()
+        giveaways = giveaways.filter(w => !w.Actived && w.Participants?.length > 0)
+        if (!giveaways.length) return this.respond(response)
 
         const fill = value ?
             giveaways.filter(data =>
@@ -425,10 +427,8 @@ export default class Autocomplete extends Base {
 
         const mapped = fill.map(gw => ({ name: `${gw.Winners > 1 ? `${gw.Winners} vencedores` : '1 vencedor'} | ${gw.Prize}`, value: gw.MessageID }))
 
-        mapped.unshift({
-            name: 'Informações sobre o reroll',
-            value: 'info'
-        })
+        if (mapped.length)
+            response.push(...mapped)
 
         return await this.respond(mapped)
     }

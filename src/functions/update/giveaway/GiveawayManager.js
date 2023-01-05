@@ -4,7 +4,9 @@ import {
 } from '../../../classes/index.js'
 
 export default new class GiveawayManager {
-    constructor() { }
+    constructor() {
+        this.giveaways = []
+    }
 
     async setGiveaways() {
 
@@ -14,52 +16,62 @@ export default new class GiveawayManager {
 
         if (!giveawaysFromGuilds || !giveawaysFromGuilds.length) return
 
-        const guildsWithGiveaways = giveawaysFromGuilds
+        this.giveaways = giveawaysFromGuilds
             .filter(data => data.Giveaways?.length > 0)
-            .map(data => ({ id: data.id, Giveaways: data.Giveaways }))
-
-        if (!guildsWithGiveaways || guildsWithGiveaways.length === 0) return
-
-        for await (let data of guildsWithGiveaways)
-            await Database.Cache.Giveaways.set(`${client.shardId}.Giveaways.${data.id}`, data.Giveaways)
+            .map(data => data.Giveaways)
+            .flat()
 
         return this.filterAndManager()
     }
 
     async filterAndManager() {
 
-        const allData = await Database.Cache.Giveaways.get(`${client.shardId}.Giveaways`) || {}
-        const allGiveaways = Object.values(allData || {}).flat()
+        if (!this.giveaways.length) return
 
-        if (!allGiveaways.length) return
-
-        const giveawaysAvailables = allGiveaways.filter(data => data.Actived)
-        const giveawaysUnavailables = allGiveaways.filter(data => !data.Actived)
+        const giveawaysAvailables = this.giveaways.filter(data => data.Actived)
+        const giveawaysUnavailables = this.giveaways.filter(data => !data.Actived)
 
         if (giveawaysAvailables.length)
             this.selectGiveaways(giveawaysAvailables)
 
         if (giveawaysUnavailables)
-            // TODO: Terminar as funções de deletar sorteios de 24 horas+
-            // this.managerUnavailablesGiveaways(giveawaysUnavailables)
-            return
+            this.managerUnavailablesGiveaways(giveawaysUnavailables)
+
+        return
     }
 
     async selectGiveaways(giveaways = []) {
         if (!giveaways.length) return
 
-        const giveawaySorted = giveaways.sort((a, b) => (a.DateNow + a.TimeMs) - (b.DateNow + b.TimeMs))
+        for await (const gw of giveaways) {
 
-        for (let giveaway of giveawaySorted) {
-            const timeout = setTimeout(() => {
-                client.emit('giveaway', giveaway, timeout)
-            }, giveaway?.TimeMs, giveaway?.DateNow)
+            const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
+
+            if (timeMs <= 1000)
+                client.emit('giveaway', gw)
+            else setTimeout(() => client.emit('giveaway', gw), timeMs)
+
+            continue
         }
 
         return
     }
 
-    async managerUnavailablesGiveaways(giveawaysUnavailables) {
+    async managerUnavailablesGiveaways(giveaways) {
+        if (!giveaways.length) return
+
+        for await (const gw of giveaways) {
+
+            const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
+
+            if (timeMs <= -172800000) // 48hrs | 2 Days
+                Database.deleteGiveaway(gw.MessageID, gw.GuildId)
+            else setTimeout(() => Database.deleteGiveaway(gw.MessageID, gw.GuildId), 172800000 - (timeMs - timeMs - timeMs))
+
+            continue
+        }
+
+        return
 
     }
 }
