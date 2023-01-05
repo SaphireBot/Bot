@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import Modals from '../../../classes/Modals.js'
@@ -53,7 +52,7 @@ export default {
     },
     async execute({ interaction, client, emojis: e, Database, Moeda, clientData, refresh, guildData }) {
 
-        const { options, user: author, channel, guild } = interaction
+        const { options, user: author, channel } = interaction
         const query = refresh ? null : options.getString('options')
         const ephemeral = query === 'hide'
 
@@ -259,7 +258,7 @@ export default {
             })()
             : 'Nenhum membro na família'
 
-        const banner = await get(user.id, 2048, "png", true)
+        const banner = await user.banner()
 
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
@@ -367,19 +366,6 @@ export default {
             const modal = Modals.editProfileModal(title, job, niver, status)
 
             return await interaction.showModal(modal)
-        }
-
-        async function get(userId) {
-            return await fetch(`https://discord.com/api/v10/users/${userId}`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
-            })
-                .then(res => res.json())
-                .then(user => {
-                    if (user.code === 50035 || !user.banner) return null
-                    if (user.banner) return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
-                })
-                .catch(() => null)
         }
 
     }

@@ -1,6 +1,29 @@
-import { User } from 'discord.js'
+import axios from 'axios'
 import { Database, SaphireClient as client } from '../../../classes/index.js'
 import { Config as config } from '../../../util/Constants.js'
+import { User } from 'discord.js'
+import { Routes, RouteBases } from 'discord.js'
+
+User.prototype.banner = async function () {
+
+    const banner = await axios.get(
+        RouteBases.api + Routes.user(this.id),
+        {
+            headers: {
+                authorization: `Bot ${process.env.DISCORD_TOKEN}`
+            }
+        }
+    )
+        .then(value => {
+            const user = value.data
+            if (!user.banner) return null
+            RouteBases.cdn
+            return `${RouteBases.cdn}/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
+        })
+        .catch(() => null)
+
+    return banner
+}
 
 User.prototype.isVip = async function () {
 

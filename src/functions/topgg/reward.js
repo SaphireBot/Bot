@@ -3,9 +3,7 @@ import {
     Database
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
-import { Api } from '@top-gg/sdk'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
-const TopGGApi = new Api(process.env.TOP_GG_TOKEN)
 
 export default async (userId) => {
 
@@ -13,7 +11,6 @@ export default async (userId) => {
 
     const user = await client.users.fetch(userId).catch(() => null)
     if (!user) return false
-    const votes = await TopGGApi.getVotes() || []
     giveRewards()
 
     const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
@@ -54,7 +51,7 @@ export default async (userId) => {
 
     function sendMessage() {
         return {
-            content: `${user?.tag || "Not Found"} \`${userId || 0}\` aumentou os votos da ${client.user.tag} para ${votes.length}`
+            content: `${user?.tag || "Not Found"} \`${userId || 0}\` votou na ${client.user.tag} e ganhou 5000 ${e.Coin} Safiras mais 1000 ${e.RedStar} experiências.`
         }
     }
 

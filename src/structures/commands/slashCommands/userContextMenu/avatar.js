@@ -1,9 +1,4 @@
-import fetch from 'node-fetch'
 import('dotenv/config')
-import {
-    Routes,
-    RouteBases
-} from 'discord.js'
 
 export default {
     name: 'Avatar',
@@ -17,7 +12,7 @@ export default {
         const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
         const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
-        const banner = await get(user.id)
+        const banner = await user.banner()
         const embeds = [
             {
                 color: client.blue,
@@ -42,18 +37,5 @@ export default {
 
         return interaction.reply({ embeds: [...embeds], ephemeral: true })
 
-        async function get(userId) {
-            return await fetch(RouteBases.api + Routes.user(userId), {
-                method: 'GET',
-                headers: { 'Authorization': `Bot ${process.env.DISCORD_TOKEN}` }
-            })
-                .then(res => res.json())
-                .then(user => {
-                    if (user.code == 50035) return false
-                    if (!user.banner) return false
-                    if (user.banner) return `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
-                })
-                .catch(() => false)
-        }
     }
 }

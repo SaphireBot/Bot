@@ -1,6 +1,6 @@
 import { UserManager, Routes, RouteBases, User } from 'discord.js'
 import { SaphireClient as client } from '../../../classes/index.js'
-import fetch from "node-fetch"
+import axios from "axios"
 
 // UserManager.prototype.fetch = async function (userId) {
 

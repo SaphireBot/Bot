@@ -1,6 +1,5 @@
 import { Config } from '../../../../util/Constants.js'
-import { Api } from '@top-gg/sdk'
-const TopGG = new Api(process.env.TOP_GG_TOKEN)
+import axios from 'axios'
 
 export default {
     name: 'vote',
@@ -18,7 +17,7 @@ export default {
                     name: 'reminder',
                     description: 'Ative um lembrete automático para o próximo voto',
                     type: 3,
-                    required:  true,
+                    required: true,
                     choices: [
                         {
                             name: 'Ativar lembrete automático',
@@ -36,7 +35,22 @@ export default {
     async execute({ interaction, client, Database, e }) {
 
         const { options, user, channel } = interaction
-        const hasVoted = await TopGG.hasVoted(user.id)
+        const hasVoted = await axios.get(
+            `https://top.gg/api/bots/912509487984812043/check?userId=${user.id}`,
+            {
+                headers: {
+                    authorization: process.env.TOP_GG_TOKEN
+                }
+            }
+        )
+            .then(res => res?.data?.voted === 1)
+            .catch(() => 2)
+
+        if (hasVoted === 2)
+            return await interaction.reply({
+                content: `${e.Deny} | Não foi possível verificar o estado de votação. Por favor, tente daqui a pouco.`,
+                ephemeral: true
+            })
 
         if (hasVoted)
             return await interaction.reply({
