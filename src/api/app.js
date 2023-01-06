@@ -34,9 +34,13 @@ app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
 
   const response = await topggReward(req.headers?.user || null).catch(() => null)
 
-  return response
-    ? res.status(200).header(response).send()
-    : res.sendStatus(204)
+  try {
+    return response
+      ? res.status(200)
+        .header(response)
+        .send()
+      : res.sendStatus(204)
+  } catch (err) { }
 })
 
 app.get(`${process.env.ROUTE_COMMANDS}`, async (req, res) => {

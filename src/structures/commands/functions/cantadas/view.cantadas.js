@@ -33,15 +33,17 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
     let cantada = search
         ? client.cantadas.find(c => c.id === search)
         : cantadasAvailable?.random()
-        
+
     if (!cantada || !cantadasAvailable || !cantadasAvailable.length)
-        return await interaction?.update({
+        return await interaction.reply({
             content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
-            components: []
-        }).catch(async () => await interaction.reply({
-            content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
-            components: []
-        }).catch(() => { }))
+            components: [],
+            ephemeral: true
+        }).catch(() => { })
+            .catch(async () => await interaction?.update({
+                content: `${e.Deny} | Nenhuma cantada foi encontrada.`,
+                components: []
+            }))
 
     if (!cantada.phrase || !cantada.userId || !cantada.acceptedFor || !cantada.likes)
         return deleteCantada(interaction, null, cantada.id, interaction.message, true)
@@ -56,7 +58,7 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
 
     const embed = {
         color: client.blue,
-        title: `😗 ${client.user.username}'s Cantadas - ${cantadasAvailable.findIndex(c => c.id === cantada.id) + 1}/${cantadasAvailable.length }`,
+        title: `😗 ${client.user.username}'s Cantadas - ${cantadasAvailable.findIndex(c => c.id === cantada.id) + 1}/${cantadasAvailable.length}`,
         description: cantada.phrase,
         fields: [
             {

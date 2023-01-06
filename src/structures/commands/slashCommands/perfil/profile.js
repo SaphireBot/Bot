@@ -258,7 +258,7 @@ export default {
             })()
             : 'Nenhum membro na família'
 
-        const banner = await user.banner()
+        const banner = await user.banner().catch(() => null)
 
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
