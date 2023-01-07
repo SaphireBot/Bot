@@ -135,6 +135,8 @@ export default new class SaphireClient extends Client {
         // Clear the console
         console.clear()
 
+        import('../../functions/global/prototypes.js')
+        
         import('./process.saphire.js')
         console.log('1/14 - Process Handler Readed')
 
@@ -146,7 +148,6 @@ export default new class SaphireClient extends Client {
             .catch(() => "Discloud Host API Logged Failed")
         console.log('3/14 - ' + discloudResult)
 
-        import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
         console.log('4/14 - Prototypes & Events Connected')
 

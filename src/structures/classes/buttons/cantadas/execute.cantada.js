@@ -57,7 +57,7 @@ export default async ({ interaction, user, message }, commandData) => {
         }).catch(() => { })
 
     return method === 'accept'
-        ? accept(cantadaId, cantada.cantada, commandData, user, interaction, embed)
+        ? accept(cantadaId, cantada, commandData, user, interaction, embed)
         : deny(embed, false, interaction, cantadaId)
 
 }

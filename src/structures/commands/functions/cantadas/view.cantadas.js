@@ -45,21 +45,21 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
                 components: []
             }))
 
-    if (!cantada.phrase || !cantada.userId || !cantada.acceptedFor || !cantada.likes)
-        return deleteCantada(interaction, null, cantada.id, interaction.message, true)
+    if (!cantada?.phrase || !cantada?.userId || !cantada?.acceptedFor)
+        return deleteCantada(interaction, null, cantada?.id, interaction.message, true)
 
-    const author = await client.users.fetch(cantada.userId || '0')
+    const author = await client.users.fetch(cantada?.userId || '0')
         .then(u => `${u.tag} - \`${u.id}\``)
-        .catch(() => `Not Found - \`${cantada.userId}\``)
+        .catch(() => `Not Found - \`${cantada?.userId}\``)
 
-    const acceptedFor = await client.users.fetch(cantada.acceptedFor || '0')
+    const acceptedFor = await client.users.fetch(cantada?.acceptedFor || '0')
         .then(u => `${u.tag} - \`${u.id}\``)
-        .catch(() => `Not Found - \`${cantada.acceptedFor}\``)
+        .catch(() => `Not Found - \`${cantada?.acceptedFor}\``)
 
     const embed = {
         color: client.blue,
-        title: `😗 ${client.user.username}'s Cantadas - ${cantadasAvailable.findIndex(c => c.id === cantada.id) + 1}/${cantadasAvailable.length}`,
-        description: cantada.phrase,
+        title: `😗 ${client.user.username}'s Cantadas - ${cantadasAvailable.findIndex(c => c.id === cantada?.id) + 1}/${cantadasAvailable.length}`,
+        description: cantada?.phrase,
         fields: [
             {
                 name: '📝 Escrita por',
@@ -71,7 +71,7 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
             }
         ],
         footer: {
-            text: cantada.id
+            text: cantada?.id
         }
     }
 
@@ -81,16 +81,16 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
             components: [
                 {
                     type: 2,
-                    label: `${cantada.likes.up.length || 0}`,
+                    label: `${cantada?.likes?.up?.length || 0}`,
                     emoji: '❤️‍🔥',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', id: cantada.id, mc: mycantada }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'like', id: cantada?.id, mc: mycantada }),
                     style: ButtonStyle.Success
                 },
                 {
                     type: 2,
-                    label: `${cantada.likes.down.length || 0}`,
+                    label: `${cantada?.likes?.down?.length || 0}`,
                     emoji: '🖤',
-                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', id: cantada.id, mc: mycantada }),
+                    custom_id: JSON.stringify({ c: 'cantada', src: 'unlike', id: cantada?.id, mc: mycantada }),
                     style: ButtonStyle.Danger
                 },
                 {
