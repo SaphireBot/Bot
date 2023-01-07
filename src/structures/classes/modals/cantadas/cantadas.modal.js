@@ -24,7 +24,7 @@ export default async ({ interaction, user, guild, fields }) => {
     )
 
     return await interaction.reply({
-        content: `${e.Check} | Sua cantada foi envida com sucesso e está aguardando a aprovação de um dos membros da Saphire's Team.`,
+        content: `${e.Check} | Sua cantada foi enviada com sucesso e está aguardando a aprovação de um dos membros da Saphire's Team.`,
         ephemeral: true
     })
 
