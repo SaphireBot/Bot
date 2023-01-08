@@ -16,6 +16,7 @@ export default new class CacheManager extends Cache {
         this.EmojiBetRescue = this.table('EmojiBetRescue')
         this.Running = this.table('Running')
         this.AfkSystem = this.table('Afk')
+        this.AmongUs = this.table('Amongus')
     }
 
     async clearTables(shardId) {

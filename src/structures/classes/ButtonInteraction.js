@@ -21,6 +21,7 @@ import roleAnunciar from '../commands/functions/anunciar/role.anunciar.js'
 import copyPixDonate from './buttons/donate/copyPix.donate.js'
 import counterPoll from './buttons/poll/counter.poll.js'
 import executeCantada from './buttons/cantadas/execute.cantada.js'
+import executeAmongus from './buttons/amongus/execute.amongus.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -68,7 +69,8 @@ export default class ButtonInteraction extends Base {
             ping: [this.refeshPing, this.interaction],
             delete: [this.deleteMessage, this, commandData],
             poll: [counterPoll, this, commandData],
-            cantada: [executeCantada, this, commandData]
+            cantada: [executeCantada, this, commandData],
+            amongus: [executeAmongus, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

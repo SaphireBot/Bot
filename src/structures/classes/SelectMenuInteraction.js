@@ -7,6 +7,7 @@ import genderProfile from '../commands/slashCommands/perfil/perfil/gender.profil
 import signProfile from '../commands/slashCommands/perfil/perfil/sign.profile.js'
 import Base from './Base.js'
 import likePerfil from './buttons/perfil/like.perfil.js'
+import deathAmongus from './selectmenu/amongus/death.amongus.js'
 import configAnunciar from './selectmenu/announce/config.anunciar.js'
 import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
@@ -71,7 +72,8 @@ export default class SelectMenuInteraction extends Base {
         this.customId = JSON.parse(this?.customId)
 
         const result2 = {
-            anunciar: configAnunciar
+            anunciar: configAnunciar,
+            amongus: deathAmongus
         }[this.customId?.c]
 
         if (result2)
