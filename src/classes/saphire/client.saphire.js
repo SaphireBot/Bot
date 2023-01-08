@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { Client, Collection, Guild } from 'discord.js'
-import { ClientOptions, Emojis as e } from '../../util/util.js'
+import { ClientOptions } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import { Database, Discloud } from '../index.js'
@@ -8,8 +8,6 @@ import automaticSystems from '../../functions/update/index.js'
 import * as TopGG from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
-import unhandledRejection from '../modules/errors/process/unhandledRejection.js'
-import uncaughtException from '../modules/errors/process/uncaughtException.js'
 import axios from 'axios'
 
 const { AutoPoster } = TopGG
@@ -135,8 +133,6 @@ export default new class SaphireClient extends Client {
         // Clear the console
         console.clear()
 
-        import('../../functions/global/prototypes.js')
-        
         import('./process.saphire.js')
         console.log('1/14 - Process Handler Readed')
 
@@ -148,6 +144,7 @@ export default new class SaphireClient extends Client {
             .catch(() => "Discloud Host API Logged Failed")
         console.log('3/14 - ' + discloudResult)
 
+        import('../../functions/global/prototypes.js')
         import('../../structures/events/index.js')
         console.log('4/14 - Prototypes & Events Connected')
 
