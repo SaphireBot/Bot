@@ -1,9 +1,10 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, RouteBases, Routes } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
 import signProfile from './perfil/sign.profile.js'
 import genderProfile from './perfil/gender.profile.js'
+import axios from 'axios'
 
 export default {
     name: 'perfil',
@@ -62,6 +63,12 @@ export default {
         if (query === 'gender') return genderProfile(interaction)
 
         const user = refresh ? author : options.getUser('user') || author
+
+        if (!user)
+            await interaction.reply({
+                content: `${e.Deny} | Nenhum usuário encontrado.`,
+                ephemeral: true
+            })
 
         if (user.id === client.user.id)
             return await interaction.reply({
@@ -258,7 +265,7 @@ export default {
             })()
             : 'Nenhum membro na família'
 
-        const banner = await user.banner().catch(() => null)
+        const banner = await getBanner().catch(() => null)
 
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
@@ -366,6 +373,27 @@ export default {
             const modal = Modals.editProfileModal(title, job, niver, status)
 
             return await interaction.showModal(modal)
+        }
+
+        async function getBanner() {
+
+            const banner = await axios.get(
+                RouteBases.api + Routes.user(user.id),
+                {
+                    headers: {
+                        authorization: `Bot ${process.env.DISCORD_TOKEN}`
+                    }
+                }
+            )
+                .then(value => {
+                    const user = value.data
+                    if (!user.banner) return null
+                    RouteBases.cdn
+                    return `${RouteBases.cdn}/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
+                })
+                .catch(() => null)
+        
+            return banner
         }
 
     }
