@@ -118,6 +118,9 @@ export default app
 
 async function alertLogin(host) {
 
+  if (host === 'LocalHost')
+    return console.log('Online em LocalHost')
+
   if (!host) {
     console.clear()
     return process.exit(10)
