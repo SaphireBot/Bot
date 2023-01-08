@@ -9,25 +9,18 @@ export default {
     type: 1,
     options: [
         {
-            name: 'new',
-            description: '[bot] Mais opções do comando vote.',
-            type: 1,
-            options: [
+            name: 'reminder',
+            description: 'Ative um lembrete automático para o próximo voto',
+            type: 3,
+            required: true,
+            choices: [
                 {
-                    name: 'reminder',
-                    description: 'Ative um lembrete automático para o próximo voto',
-                    type: 3,
-                    required: true,
-                    choices: [
-                        {
-                            name: 'Ativar lembrete automático',
-                            value: 'reminder'
-                        },
-                        {
-                            name: 'Não quero nenhum lembrete',
-                            value: 'noreminder'
-                        }
-                    ]
+                    name: 'Ativar lembrete automático',
+                    value: 'reminder'
+                },
+                {
+                    name: 'Não quero nenhum lembrete',
+                    value: 'noreminder'
                 }
             ]
         }
