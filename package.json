@@ -22,7 +22,7 @@
     "lyrics-parse": "^1.1.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
-    "mongoose": "^6.8.2",
+    "mongoose": "^6.8.3",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.8",
     "statcord.js": "^3.4.3",
