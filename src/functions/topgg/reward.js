@@ -51,7 +51,7 @@ export default async (userId) => {
 
     function sendMessage() {
         return {
-            content: `${user?.tag || "Not Found"} \`${userId || 0}\` votou na ${client.user.tag} e ganhou 5000 ${e.Coin} Safiras mais 1000 ${e.RedStar} experiências.`
+            content: `${user?.tag || "Not Found"} \`${userId || 0}\` votou na ${client.user.tag} e ganhou 5000 ${e.Coin} Safiras mais 1000 ${e.RedStar} XP.`
         }
     }
 

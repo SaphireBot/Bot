@@ -11,7 +11,6 @@ export default {
     description: '[moderation] Crie sorteios no servidor',
     category: "moderation",
     type: 1,
-    default_member_permissions: Permissions.ManageEvents,
     dm_permission: false,
     options: [
         {
@@ -137,7 +136,7 @@ export default {
         const { options, guild, member } = interaction
 
         for (let perm of [{ discord: Permissions.ManageChannels, user: PermissionsTranslate.ManageChannels }, { discord: Permissions.ManageMessages, user: PermissionsTranslate.ManageMessages }])
-            if (!guild.clientHasPermission(perm.discord))
+            if (!guild.members.me.permissions.has(perm.discord, true))
                 return await interaction.reply({
                     content: `❌ | Eu preciso da permissão **\`${perm.user}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
                     ephemeral: true
