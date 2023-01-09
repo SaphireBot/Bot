@@ -9,7 +9,7 @@ export default async ({ gameData, partyId, client, e, guild, interaction }) => {
             description: 'Este é um comando técnico feito para ajudar os jogadores em partidas do jogo Among Us. Auxiliando nos mutes de um jeito fácil.',
             fields: [
                 {
-                    name: '🛰️ Tribulantes',
+                    name: '🛰️ Tripulantes',
                     value: `${gameData.players.length
                         ? gameData.players
                             .map(id => `${e.amongusdance} ${guild.members.cache.get(id) || `<@${id}>`}`)

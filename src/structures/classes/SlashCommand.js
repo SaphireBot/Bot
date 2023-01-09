@@ -38,7 +38,7 @@ export default class SlashCommand extends Base {
             })
 
         return command.execute(this)
-            .then(() => this.registerCommand())
+            .then(() => this.registerCommand(command.name))
             .catch(err => error(this, err))
     }
 
@@ -88,16 +88,17 @@ export default class SlashCommand extends Base {
         return this.execute(guildData, clientData)
     }
 
-    async registerCommand() {
+    async registerCommand(commandName) {
 
-        Statcord.ShardingClient.postCommand(this.interaction.commandName, this.user.id, this.client)
+        Statcord.ShardingClient.postCommand(commandName, this.user.id, this.client)
+        await this.Database.Cache.Commands.push(`${this.user.id}.${commandName}`, Date.now())
 
         return await this.Database.Client.updateOne(
             { id: this.client.user.id },
             {
                 $inc: {
                     ComandosUsados: 1,
-                    [`CommandsCount.${this.interaction.commandName}`]: 1
+                    [`CommandsCount.${commandName}`]: 1
                 }
             },
             { upsert: true }
