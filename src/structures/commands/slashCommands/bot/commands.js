@@ -120,7 +120,7 @@ export default {
             for (let i = 0; i < array.length; i += 4) {
 
                 let current = array.slice(i, amount)
-                let fields = current.map(data => ({ name: `/${data[0]} (${data[1].length}x)`, value: `${data[1].slice(0, 10).map(dateNow => `\`${Date.format(dateNow, false, false)}\``).join('\n')}`.limit('MessageEmbedFieldValue') }))
+                let fields = current.map(data => ({ name: `/${data[0]} (${data[1].length}x)`, value: `${data[1].sort((a, b) => b - a).slice(0, 10).map(dateNow => `\`${Date.format(dateNow, false, false)}\``).join('\n')}`.limit('MessageEmbedFieldValue') }))
                 let pageCount = length > 1 ? ` ${page}/${length}` : ''
 
                 embeds.push({
