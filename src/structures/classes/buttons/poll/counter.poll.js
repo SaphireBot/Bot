@@ -13,25 +13,9 @@ export default async ({ interaction, guild, message, user, member }, commandData
     const poll = guildPolls.find(p => p.MessageID === message.id || p.MessageID === commandData.messageId)
     const voteType = commandData.type
 
-    if (voteType === 'result')
-        return resultPoll({ interaction, poll })
-
-    if (voteType === 'review') {
-
-        if (!member.permissions.has(DiscordPermissons.Administrator) && user.id !== commandData.userId)
-            return await interaction.reply({
-                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.Administrator}** ou ser o autor da votação para executar este comando.`,
-                ephemeral: true
-            })
-
-        message.delete().catch(() => { })
-        return pollManager.cancel(poll)
-    }
-
     if (!poll) {
 
-        const { embeds } = message
-        const embed = embeds[0]?.data
+        const embed = message?.embeds[0]?.data
 
         if (!embed)
             return await interaction.update({
@@ -42,10 +26,22 @@ export default async ({ interaction, guild, message, user, member }, commandData
 
         embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
 
-        return await interaction.update({
-            embeds: [embed],
-            components: []
-        }).catch(() => { })
+        return await interaction.update({ embeds: [embed], components: [] }).catch(() => { })
+    }
+
+    if (voteType === 'result')
+        return resultPoll({ interaction, poll })
+
+    if (voteType === 'review') {
+
+        if ((!member.permissions.has(DiscordPermissons.Administrator) && ![commandData.userId].includes(user.id)))
+            return await interaction.reply({
+                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.Administrator}** ou ser o autor da votação para executar este comando.`,
+                ephemeral: true
+            })
+
+        message.delete().catch(() => { })
+        return pollManager.cancel(poll, message)
     }
 
     let votes = {
@@ -141,7 +137,7 @@ export default async ({ interaction, guild, message, user, member }, commandData
     guildPolls.find(p => p.MessageID === message.id).votes = votes
     await Database.Cache.Polls.set(`${client.shardId}.${guild.id}`, guildPolls)
     const pollVotes = pollManager.Polls.find(v => v.MessageID === message.id)
-    if (pollVotes.votes) pollVotes.votes = votes
+    if (pollVotes?.votes) pollVotes.votes = votes
 
     const counter = {
         up: votes?.up?.length || 0,

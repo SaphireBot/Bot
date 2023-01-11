@@ -89,7 +89,7 @@ function CodeGenerator(number = 1) {
     const Caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
     for (let i = 0; i < number; i++)
-        Result += Caracteres.random()
+        Result += Caracteres[Math.floor(Math.random() * Caracteres.length)]
 
     return Result;
 }

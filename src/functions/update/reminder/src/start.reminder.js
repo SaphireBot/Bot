@@ -6,9 +6,7 @@ import { Emojis as e } from '../../../../util/util.js'
 export default async function reminderStart({ user, data }) {
 
     const RemindMessage = data.RemindMessage.slice(0, 3500)
-    const Time = data.Time
-    const DateNow = data.DateNow
-    const isAutomatic = data.isAutomatic
+    const { Time, DateNow, isAutomatic } = data
     const TimeOver = Date.Timeout(Time, DateNow)
 
     if (!TimeOver && !data.Alerted) {

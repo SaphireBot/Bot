@@ -37,31 +37,30 @@ export default new class PollManager {
 
     async cancel(poll) {
 
-        const guild = client.guilds.cache.get(poll.GuildId)
-        const channel = guild?.channels?.cache?.get(poll.ChannelId)
-        if (!guild || !channel) return this.pull(poll.MessageID)
+        const guild = await client.guilds.fetch(poll?.GuildId || '0').catch(() => null)
+        const channel = await guild?.channels?.fetch(poll?.ChannelId || '0').catch(() => null)
+        if (!guild || !channel) return this.pull(poll?.MessageID)
 
         const message = await channel.messages?.fetch(poll.MessageID || '0').catch(() => null)
         if (!message) return this.pull(poll.MessageID)
         if (message.partial) message = await message.fetch()
 
-        const { embeds } = message
-        const embed = embeds[0]?.data
-        if (!embed) return this.pull(poll.MessageID)
+        const embed = message?.embeds[0]?.data
+        if (!embed || !embed.fields?.length || ['Votação encerrada', 'Tempo esgotado'].includes(embed?.fields[1]?.value)) return this.pull(poll.MessageID)
 
         if (embed.title.includes("anônima") || poll.anonymous)
             return this.showResults(message)
 
-        embed.fields[1].value = embed.fields[1]?.value.replace('Encerrando', 'Tempo esgotado')
+        embed.fields[1] = {
+            name: '⏱️ Tempo',
+            value: embed.fields[1]?.value?.replace('Encerrando', 'Tempo esgotado') || "Tempo esgotado"
+        }
         embed.color = client.red
         embed.title = `🎫 Votação ${poll.anonymous ? 'anônima' : ''} encerrada`
 
         this.pull(poll.MessageID)
         this.delete(poll.MessageId, poll.GuildId)
-        message.edit({
-            embeds: [embed],
-            components: []
-        }).catch(() => { })
+        message.edit({ embeds: [embed], components: [] }).catch(() => { })
         return
     }
 

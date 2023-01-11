@@ -1,34 +1,11 @@
-import {
-    Database,
-    SaphireClient as client
-} from '../../../../classes/index.js'
+import { Database, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
-import moment from 'moment'
+import timeMs from '../../../../functions/plugins/timeMs.js'
 
 export default async interaction => {
 
     const { options, user, guild, channel: intChannel } = interaction
-
-    function day(tomorrow = false) {
-
-        function FormatNumber(data) {
-            return data < 10 ? `0${data}` : data
-        }
-
-        const date = new Date()
-        date.setHours(date.getHours() - 3)
-
-        if (tomorrow)
-            date.setDate(date.getDate() + 1)
-
-        let Mes = FormatNumber(date.getMonth() + 1)
-        let Dia = FormatNumber(date.getDate())
-        let Ano = date.getFullYear()
-
-        return `${Dia}/${Mes}/${Ano}`
-    }
-
     const Prize = options.getString('prize')
     const Time = options.getString('time')
     const Requisitos = options.getString('requires')
@@ -36,100 +13,22 @@ export default async interaction => {
     const Channel = options.getChannel('channel')
     const color = Colors[options.getString('color')]
     const WinnersAmount = options.getInteger('winners') || 1
-    let TimeMs = 0
+    let TimeMs = timeMs(Time)
 
-    let Args = Time.trim().split(/ +/g)
-
-    if (Args[0].includes('/') || Args[0].includes(':') || ['hoje', 'today', 'tomorrow', 'amanhã'].includes(Args[0]?.toLowerCase())) {
-
-        let data = Args[0],
-            hour = Args[1]
-
-        if (['tomorrow', 'amanhã'].includes(data.toLowerCase()))
-            data = day(true)
-
-        if (['hoje', 'today'].includes(data.toLowerCase()))
-            data = day()
-
-        if (!hour && data.includes(':') && data.length <= 5) {
-            data = day()
-            hour = Args[0]
-        }
-
-        if (data.includes('/') && data.length === 10 && !hour)
-            hour = '12:00'
-
-        if (!data || !hour)
-            return await interaction.reply({
-                content: '❌ | A data informada para o sorteio não é correta. Veja alguma formas de dizer a data:\n> Formato 1: \`h, m, s\` - Exemplo: 1h 10m 40s *(1 hora, 10 minutos, 40 segundos)* ou \`1m 10s\`, \`2h 10m\`\n> Formato 2: \`30/01/2022 14:35:25\` - *(Os segundos são opcionais)*\n> Formato 3: \`hoje 14:35 | amanhã 14:35\`\n> Formato 4: \`14:35\` ou \`30/01/2022\`',
-                ephemeral: true
-            })
-
-        let dataArray = data.split('/')
-        let hourArray = hour.split(':')
-        let dia = parseInt(dataArray[0])
-        let mes = parseInt(dataArray[1]) - 1
-        let ano = parseInt(dataArray[2])
-        let hora = parseInt(hourArray[0])
-        let minutos = parseInt(hourArray[1])
-        let segundos = parseInt(hourArray[2]) || 0
-
-        let date = moment.tz({ day: dia, month: mes, year: ano, hour: hora, minutes: minutos, seconds: segundos }, "America/Sao_Paulo")
-
-        if (!date.isValid())
-            return await interaction.reply({
-                content: '❌ | O tempo informado não é válido. Verifique se você escreveu o tempo de forma correta.',
-                ephemeral: true
-            })
-
-        date = date.valueOf()
-
-        if (date < Date.now()) return await interaction.reply({
-            content: '❌ | O tempo do lembrete deve ser maior que o tempo de "agora", não acha?',
-            ephemeral: true
+    if (!TimeMs)
+        return await interaction.reply({
+            embeds: [{
+                color: client.blue,
+                title: `⏱️ | ${client.user.username}'s Time System`,
+                description: 'O meu sistema de tempo transforma o que você escreve em uma data.',
+                fields: [
+                    {
+                        name: '📝 Formas de Escrita',
+                        value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                    }
+                ]
+            }]
         })
-
-        TimeMs += date - Date.now()
-
-    } else
-        for (let arg of Args) {
-
-            if (arg.slice(-1).includes('d')) {
-                let time = arg.replace(/d/g, '000') * 60 * 60 * 24
-                if (isNaN(time)) return cancelReminder()
-                TimeMs += parseInt(time)
-                continue
-            }
-
-            if (arg.slice(-1).includes('h')) {
-                let time = arg.replace(/h/g, '000') * 60 * 60
-                if (isNaN(time)) return cancelReminder()
-                TimeMs += parseInt(time)
-                continue
-            }
-
-            if (arg.slice(-1).includes('m')) {
-                let time = arg.replace(/m/g, '000') * 60
-                if (isNaN(time)) return cancelReminder()
-                TimeMs += parseInt(time)
-                continue
-            }
-
-            if (arg.slice(-1).includes('s')) {
-                let time = arg.replace(/s/g, '000')
-                if (isNaN(time)) return cancelReminder()
-                TimeMs += parseInt(time)
-                continue
-            }
-
-            return cancelReminder()
-            async function cancelReminder() {
-                return await interaction.reply({
-                    content: '❌ | Data inválida! Verifique se a data esta realmente correta: \`dd/mm/aaaa hh:mm\` *(dia, mês, ano, horas, minutos)*\nℹ | Exemplo: \`30/01/2022 14:35:25\` *(Os segundos são opcionais)*\nℹ | \`hoje 14:35\`\nℹ | \`Amanhã 14:35\`',
-                    ephemeral: true
-                })
-            }
-        }
 
     if (TimeMs > 2592000000)
         return await interaction.reply({
