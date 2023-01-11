@@ -49,7 +49,7 @@ export default new class PollManager {
         if (!embed || !embed.fields?.length || ['Votação encerrada', 'Tempo esgotado'].includes(embed?.fields[1]?.value)) return this.pull(poll.MessageID)
 
         if (embed.title.includes("anônima") || poll.anonymous)
-            return this.showResults(message)
+            return this.showResults(message, poll)
 
         embed.fields[1] = {
             name: '⏱️ Tempo',
@@ -59,20 +59,21 @@ export default new class PollManager {
         embed.title = `🎫 Votação ${poll.anonymous ? 'anônima' : ''} encerrada`
 
         this.pull(poll.MessageID)
-        this.delete(poll.MessageId, poll.GuildId)
+        this.delete(poll.MessageID, poll.GuildId)
+        message.reactions?.removeAll().catch(() => { })
         message.edit({ embeds: [embed], components: [] }).catch(() => { })
         return
     }
 
-    async showResults(message) {
+    async showResults(message, poll) {
 
-        const poll = this.Polls.find(p => p.MessageID === message.id)
+        poll = poll ? poll : this.Polls.find(p => p.MessageID === message.id)
         if (!poll) return this.pull(message.id)
 
-        const votes = poll.votes
+        const { votes, MessageID } = poll
         const { embeds } = message
         const embed = embeds[0]?.data
-        if (!embed) return this.pull(poll.MessageId)
+        if (!embed) return this.pull(MessageID)
 
         const base = {
             up: votes?.up || [],
@@ -94,25 +95,31 @@ export default new class PollManager {
             down: parseInt((counter.down / total) * 100).toFixed(0) || 0
         }
 
+        if (isNaN(percent.up)) percent.up = 0
+        if (isNaN(percent.question)) percent.question = 0
+        if (isNaN(percent.down)) percent.down = 0
+
         embed.fields[0].value = `${e.Upvote} ${counter.up} - ${percent.up}%\n${e.QuestionMark} ${counter.question} - ${percent.question}%\n${e.DownVote} ${counter.down} - ${percent.down}%\n${e.saphireRight} ${total} votos coletados`
 
         embed.fields[1]
             ? embed.fields[1].value = embed.fields[1].value.replace('Encerrando', 'Tempo esgotado')
             : embed.fields.push({ name: '⏱ Tempo', value: 'Votação encerrada' })
 
-        this.pull(message.id)
-        this.delete(message.id, message.guild.id)
+        embed.title = '🎫 Votação anônima cancelada'
+
+        this.pull(MessageID)
+        this.delete(MessageID, message.guild.id)
         return await message.edit({ embeds: [embed], components: [] }).catch(() => { })
     }
 
     pull(MessageId) {
-        this.Polls.splice(this.Polls.indexOf(poll => poll.MessageId === MessageId), 1)
+        this.Polls.splice(this.Polls.indexOf(poll => poll.MessageID === MessageId), 1)
         return true
     }
 
     async close(interaction, MessageId) {
 
-        const pollGuildData = await Database.Guild.findOne({ 'Polls.MessageID': MessageId }, 'Polls')
+        const pollGuildData = await Database.Guild.findOne({ id: interaction.guild.id }, 'Polls')
 
         if (!pollGuildData || !pollGuildData.Polls || !pollGuildData.Polls.length)
             return await interaction.reply({
@@ -128,7 +135,7 @@ export default new class PollManager {
                 ephemeral: true
             })
 
-        this.delete(MessageId, interaction.guild.id)
+        this.cancel(poll)
         return await interaction.reply({
             content: `${e.Check} | A sua votação foi encerrada com sucesso.`,
             components: [{
@@ -145,16 +152,13 @@ export default new class PollManager {
 
     async delete(messageId, guildId) {
 
+        if (!messageId || !guildId) return
+
         await Database.Guild.updateOne(
             { id: guildId },
-            {
-                $pull: {
-                    Polls: {
-                        MessageID: messageId
-                    }
-                }
-            }
+            { $pull: { Polls: { MessageID: messageId } } }
         )
+
         await Database.Cache.Polls.pull(`${client.shardId}.${guildId}`, p => p.MessageID === messageId)
         return
 

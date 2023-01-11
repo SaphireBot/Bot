@@ -132,6 +132,19 @@ export default async ({ interaction, guild, message, user, member }, commandData
             fields: 'Polls'
         }
     )
+        .catch(err => err.codeName)
+
+    if (voteData) {
+
+        embed.fields.push({
+            name: `${e.bug} Erro`,
+            value: 'Não foi possível contabilizar o voto.'
+        })
+        embed.color = client.red
+        embed.title = '🎫 Votação anônima cancelada'
+
+        return await interaction.update({ embeds: [embed], components: [] }).catch(() => { })
+    }
 
     votes = voteData.Polls.find(v => v.MessageID === message.id).votes
     guildPolls.find(p => p.MessageID === message.id).votes = votes

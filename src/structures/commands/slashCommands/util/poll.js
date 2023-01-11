@@ -142,14 +142,13 @@ export default {
         const endTime = options.getNumber('time')
         const anonymous = options.getString('type') === 'true'
 
-        if (subCommand === 'close') return PollManager.close(interaction, options.getString('available_polls'))
+        if (subCommand === 'close')
+            return PollManager.close(interaction, options.getString('available_polls'))
 
-        const fields = [
-            {
-                name: '🛰 Status',
-                value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados${anonymous ? `\n${e.Loading} Aguardando finalização` : ''}`
-            }
-        ]
+        const fields = [{
+            name: '🛰 Status',
+            value: `${e.Upvote} 0 - 0%\n${e.QuestionMark} 0 - 0%\n${e.DownVote} 0 - 0%\n${e.saphireRight} 0 votos coletados${anonymous ? `\n${e.Loading} Aguardando finalização` : ''}`
+        }]
 
         if (endTime > 0)
             fields.push({
@@ -158,31 +157,29 @@ export default {
             })
 
         const components = anonymous
-            ? [
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 2,
-                            emoji: e.Upvote,
-                            custom_id: JSON.stringify({ c: 'poll', type: 'up' }),
-                            style: ButtonStyle.Secondary
-                        },
-                        {
-                            type: 2,
-                            emoji: e.QuestionMark,
-                            custom_id: JSON.stringify({ c: 'poll', type: 'question' }),
-                            style: ButtonStyle.Secondary
-                        },
-                        {
-                            type: 2,
-                            emoji: e.DownVote,
-                            custom_id: JSON.stringify({ c: 'poll', type: 'down' }),
-                            style: ButtonStyle.Secondary
-                        }
-                    ]
-                }
-            ]
+            ? [{
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        emoji: e.Upvote,
+                        custom_id: JSON.stringify({ c: 'poll', type: 'up' }),
+                        style: ButtonStyle.Secondary
+                    },
+                    {
+                        type: 2,
+                        emoji: e.QuestionMark,
+                        custom_id: JSON.stringify({ c: 'poll', type: 'question' }),
+                        style: ButtonStyle.Secondary
+                    },
+                    {
+                        type: 2,
+                        emoji: e.DownVote,
+                        custom_id: JSON.stringify({ c: 'poll', type: 'down' }),
+                        style: ButtonStyle.Secondary
+                    }
+                ]
+            }]
             : []
 
         if (anonymous && endTime === 0)
@@ -222,22 +219,13 @@ export default {
             anonymous: anonymous, // Votação Anônina
             permanent: endTime === 0, // Votação Permanente
             votes: anonymous // Votos do sistema de votação anônima
-                ? {
-                    up: [],
-                    down: [],
-                    question: []
-                }
+                ? { up: [], down: [], question: [] }
                 : {}
         }
 
         await Database.Guild.updateOne(
             { id: guild.id },
-            {
-                $push: {
-                    Polls: data,
-                    $position: 0
-                }
-            }
+            { $push: { Polls: data, $position: 0 } }
         )
 
         if (endTime > 0 || anonymous) {

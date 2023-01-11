@@ -9,9 +9,10 @@ export default async (cantadaId, interaction) => {
 
     const clientData = await Database.Client.findOneAndUpdate(
         { id: client.user.id },
-        { $pull: { 'CantadasIndicadas': { cantadaId } } },
+        { $pull: { CantadasIndicadas: { cantadaId } } },
         { upsert: true, new: true, fields: 'CantadasIndicadas' }
     )
+    
     const remains = clientData.CantadasIndicadas || []
 
     if (!remains.length)

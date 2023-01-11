@@ -23,9 +23,7 @@ export default async ({ message }) => {
     if (!embed) {
         message.reactions.removeAll().catch(() => { })
         await Database.Cache.Polls.delete(`${client.shardId}.${message.guild.id}.${message.id}`)
-        return message.edit({
-            content: `${e.Deny} | Embed da votação não encontrada.`
-        }).catch(() => { })
+        return message.edit({ content: `${e.Deny} | Embed da votação não encontrada.` }).catch(() => { })
     }
 
     if (embed.fields[1]) {
@@ -44,6 +42,7 @@ export default async ({ message }) => {
                 embed.fields[1].value = 'Votação encerrada.'
             else PollManager.delete(message.id, message.guild.id)
 
+            message.reactions.removeAll().catch(() => { })
             return await message.edit({ embeds: [embed] }).catch(() => { })
         }
     }
