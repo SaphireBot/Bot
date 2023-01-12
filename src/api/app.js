@@ -156,7 +156,7 @@ async function alertLogin(host) {
         process.env.WEBHOOK_STATUS,
         {
           username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
-          content: `${e.Check} | **Shard ${client.shardId} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
+          content: `${e.Check} | **Shard ${client.shardId} in Cluster Safira Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
         }
       )
 

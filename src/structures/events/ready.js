@@ -8,12 +8,18 @@ client.once('ready', async () => {
 
     const shardId = client.shard.ids.at(-1)
 
+    client.user.setPresence({
+        activities: [
+            { name: `${client.slashCommands.size} comandos disponíveis [Shard ${shardId} at Cluster Safira]` },
+            { name: `Tentando entregar a melhor qualidade possível [Shard ${shardId} at Cluster Safira]` }
+        ],
+        status: 'idle'
+    })
+
     Database.registerClient(client.user.id)
     await Database.Cache.GameChannels.deleteAll()
 
     const restartInfo = await Database.Cache.Client.get(`${client.shardId}.RESTART`)
-    // channelId: channel.id,
-    // messageId: msg.id
 
     if (restartInfo) {
 
@@ -36,14 +42,5 @@ client.once('ready', async () => {
         }
 
     }
-
-    const guildsLength = await client.allGuildsData() || []
-
-    return client.user.setPresence({
-        activities: [
-            { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${shardId}]` }
-        ],
-        status: 'idle'
-    })
 
 })
