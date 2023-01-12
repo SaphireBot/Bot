@@ -16,14 +16,25 @@ export default class SlashCommand extends Base {
         this.e = Emojis
     }
 
-    async execute(guildData, clientData) {
+    async execute(guildData, clientData, command) {
 
         this.guildData = guildData
         this.clientData = clientData
         Experience.addXp(this.user.id, 5)
 
+        return command.execute(this)
+            .then(() => this.registerCommand(command.name))
+            .catch(err => error(this, err))
+    }
+
+    async CheckBeforeExecute() {
+
         const command = this.client.slashCommands.get(this.commandName);
-        if (!command) return
+        if (!command)
+            return this.interaction.reply({
+                content: `${e.Deny} | Comando não encontrado.`,
+                ephemeral: true
+            })
 
         if (command.admin && !this.client.admins.includes(this.user.id))
             return await this.interaction.reply({
@@ -37,55 +48,42 @@ export default class SlashCommand extends Base {
                 ephemeral: true
             })
 
-        return command.execute(this)
-            .then(() => this.registerCommand(command.name))
-            .catch(err => error(this, err))
+        return command.database === false
+            ? this.execute({}, {}, command)
+            : this.checkAndDefineDatabase(command)
     }
 
-    async CheckBeforeExecute() {
+    async checkAndDefineDatabase(command) {
 
         const { guild, e, Database, interaction, user, channel, client } = this
-
         const guildData = await Database.Guild.findOne({ id: guild?.id })
 
         if (!guildData && guild) {
             await Database.registerServer(guild)
             return await interaction.reply({
-                content: `${e.Database} | DATABASE | Registro do servidor no banco de dados efetuado com sucesso.`
+                content: `${e.Database} | DATABASE | Registro do servidor no banco de dados efetuado com sucesso. Por favor, use novamente o comando.`
             })
         }
 
-        const clientData = await Database.Client.findOne({ id: client.user.id })
+        const clientData = this.client.clientData
 
-        if (!clientData) {
-            await Database.registerClient(client.user.id)
-            return await interaction.reply({
-                content: `${e.Database} | Por favor, tente novamente. Alguns dados não foram encontrados.`,
-                ephemeral: true
-            })
-        }
-
-        this.clientData = clientData
         if (clientData.Rebooting?.ON)
             return await interaction.reply({ content: `${e.Loading} | Reiniciando em breve...\n${e.BookPages} | ${clientData.Rebooting?.Features || 'Nenhum dado fornecido'}` })
 
         if (clientData?.Blacklist?.Users?.some(data => data?.id === user.id))
             return await interaction.reply({ content: `${e.Deny} | Você está na blacklist.`, ephemeral: true })
 
-        if (!this.member?.isAdm && guildData?.Blockchannels?.Channels?.includes(channel.id))
-            return await interaction.reply({ content: `${e.Deny} | Meus comandos foram bloqueados neste canal.`, ephemeral: true })
-
         const comandosBloqueados = clientData?.ComandosBloqueadosSlash || []
         const cmdBlocked = comandosBloqueados?.find(Cmd => Cmd.cmd === interaction.commandName)
 
         if (cmdBlocked)
             return await interaction.reply({
-                content: `${e.saphireLendo} | Este Slash Command foi bloqueado por algum Bug/Erro ou pelos meus administradores.\n> Quer fazer algúm reporte? Use o comando \`/bug\`\n> Motivo do bloqueio: ${cmdBlocked?.error || 'Motivo não informado.'}`,
+                content: `${e.saphireLendo} | Este Slash Command foi bloqueado por algum Bug/Erro ou pelos meus administradores.\n> Quer fazer algúm reporte? Use o comando \`/bug\`\n> Motivo do bloqueio: ${cmdBlocked?.error || 'Motivo não informado.'}`.limit('MessageContent'),
                 ephemeral: true
             })
 
         this.Moeda = guildData?.Moeda || `${e.Coin} Safiras`
-        return this.execute(guildData, clientData)
+        return this.execute(guildData, clientData, command)
     }
 
     async registerCommand(commandName) {
@@ -104,4 +102,5 @@ export default class SlashCommand extends Base {
             { upsert: true }
         )
     }
+
 }

@@ -10,6 +10,7 @@ export default async () => {
     setInterval(async () => {
         ReminderSystem()
         client.fanarts = await Database.Fanart.find() || []
+        client.refreshStaff()
     }, 3000)
 
     setInterval(async () => {
@@ -17,21 +18,13 @@ export default async () => {
         client.databaseUsers = allDataUsers.map(data => data.id)
     }, 60000 * 5)
 
-    setInterval(() => client.setCantadas(), 60000)
+    setInterval(() => {
+        client.setCantadas()
+        client.setCantadas()
+    }, 60000)
     setInterval(() => Experience.setExperience(), 1000 * 30)
 
     if (client.shardId === 0) setInterval(async () => await Ranking(), 60000 * 15)
-
-    setInterval(async () => {
-        const guildsLength = await client.allGuildsData() || []
-        client.refreshStaff()
-        return client.user.setPresence({
-            activities: [
-                { name: `${client.slashCommands.size} comandos em ${guildsLength?.flat().length} servidores [Shard ${client.shardId}]` }
-            ],
-            status: 'idle'
-        })
-    }, 300000)
 
     const allDataUsers = await Database.User.find({})
     client.databaseUsers = allDataUsers.map(data => data.id)

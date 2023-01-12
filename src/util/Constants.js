@@ -3,6 +3,7 @@ const ConfigurationBase = {
     designerId: "830226550116057149",
     contentManagerId: "315297741406339083",
     clientId: "837147659898191902",
+    memesChannelId: "1061773471778082876",
     guildId: "952214872584749056",
     guildPackageId: "882475447387054081",
     packageLogs: "1014911562894544916",

@@ -1,13 +1,14 @@
-import axios from "axios"
 import { Discloud } from "../../../../classes/index.js"
-import mongoose from "mongoose"
 import { ButtonStyle } from "discord.js"
+import axios from "axios"
+import mongoose from "mongoose"
 
 export default {
     name: 'ping',
     description: '[bot] Comando de ping',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     helpData: {
         description: 'Pong.'
@@ -28,8 +29,8 @@ export default {
             if (ms > 800) return `🟤 **${ms}**ms`
 
             return ms < 250
-                ? `🟢 **${ms}**ms`
-                : `🟠 **${ms}**ms`
+                ? `🟢 **${ms}**ms`.replace('-', '')
+                : `🟠 **${ms}**ms`.replace('-', '')
         }
 
         let toSubtract = Date.now()

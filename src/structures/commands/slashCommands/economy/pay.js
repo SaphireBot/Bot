@@ -21,7 +21,7 @@ export default {
             required: true
         }
     ],
-    async execute({ interaction, client, Database, emojis: e }) {
+    async execute({ interaction, client, Database, e }) {
 
         const { options, guild, user: author } = interaction
 

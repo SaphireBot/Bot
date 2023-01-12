@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
+import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 import listGiveaway from '../../functions/giveaway/list.giveaway.js'
@@ -131,7 +130,7 @@ export default {
             ]
         }
     ],
-    async execute({ interaction, guildData }) {
+    async execute({ interaction, guildData, e }) {
 
         const { options, guild, member } = interaction
 

@@ -8,6 +8,7 @@ export default {
     description: '[bot] Informações sobre a Saphire',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     helpData: {
         description: 'Infos da Saphire'

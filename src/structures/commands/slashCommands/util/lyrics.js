@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
-import { Emojis as e } from '../../../../util/util.js'
 import translate from '@iamtraction/google-translate'
 import lyrics from 'lyrics-parse'
 
@@ -7,6 +6,7 @@ export default {
     name: 'lyrics',
     description: '[util] Pesquise por letras de músicas',
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {
@@ -24,7 +24,7 @@ export default {
     helpData: {
         description: 'Pesquise por letras de música',
     },
-    async execute({ interaction, client }) {
+    async execute({ interaction, client, e }) {
 
         const { options, user } = interaction
         const title = options.getString('title')

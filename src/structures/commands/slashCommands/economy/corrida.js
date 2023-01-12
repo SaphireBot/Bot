@@ -3,7 +3,6 @@ ESTE COMANDO FOI IDEALIZADO POR 942070026519847002 ꨄ𝑚𝑜𝑜𝑛 𝑎𝑛�
 ESCRITO POR: 451619591320371213 Rody#1000
 */
 import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
-import { Database } from '../../../../classes/index.js'
 import { Colors } from '../../../../util/Constants.js'
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
@@ -88,7 +87,7 @@ export default {
             }
         ]
     },
-    async execute({ interaction, client, e, guildData }) {
+    async execute({ interaction, client, e, guildData, Database }) {
 
         const { options, user: author, channel, guild } = interaction
 

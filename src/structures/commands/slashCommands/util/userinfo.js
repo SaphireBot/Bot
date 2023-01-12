@@ -11,6 +11,7 @@ export default {
     description: '[util] Obtenha as informações de um usuário',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

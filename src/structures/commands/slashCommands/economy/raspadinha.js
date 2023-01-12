@@ -42,10 +42,9 @@ export default {
         ],
         footer: { text: `Per Emoji Chance: ${((1 / Object.keys(prize).length) * 100).toFixed(2)}%` }
     },
-    async execute({ interaction }) {
+    async execute({ interaction, Moeda: moeda }) {
 
-        const { user, guild } = interaction
-        const moeda = await guild.getCoin()
+        const { user } = interaction
         const userBalance = await user.balance()
 
         if (userBalance < 100)

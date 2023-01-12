@@ -5,6 +5,7 @@ export default {
     description: '[bot] Um link rápido para me colocar no seu servidor',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     helpData: {
         description: 'Você pode me convidar usando esse comando. Legal, né? Tipo me convidar [clicando aqui](https://discord.com/oauth2/authorize?client_id=912509487984812043&scope=bot%20applications.commands&permissions=2146958847)'

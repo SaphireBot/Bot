@@ -45,7 +45,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, Database, clientData, emojis: e }) {
+    async execute({ interaction, client, Database, clientData, e }) {
 
         const { BgLevel: LevelWallpapers } = Database
         const { options, user: author, guild } = interaction

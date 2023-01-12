@@ -16,7 +16,7 @@ export default {
     helpData: {
         description: 'Com este comando você consegue ver toda a sua movimentação econômica'
     },
-    async execute({ interaction, client, Database, emojis: e, modals }) {
+    async execute({ interaction, client, Database, e, modals }) {
 
         const { options, user: author } = interaction
         const user = options.getUser('user')

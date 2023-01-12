@@ -7,6 +7,7 @@ export default {
     description: '[games] O que você prefere?',
     category: "games",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

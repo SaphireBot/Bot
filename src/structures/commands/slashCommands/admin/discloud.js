@@ -7,6 +7,7 @@ export default {
     category: "admin",
     dm_permission: false,
     admin: true,
+    database: false,
     type: 1,
     helpData: {
         description: 'Comando exclusivo aos meus administradores para obter informações e funções da minha HOST.'

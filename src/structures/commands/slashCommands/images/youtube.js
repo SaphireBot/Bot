@@ -6,6 +6,7 @@ export default {
     description: '[images] Comentário do Youtube',
     category: "images",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {
@@ -47,7 +48,7 @@ export default {
             }), 'youtube.png'
         )
 
-        return await interaction.editReply({ files: [attachment] })
+        return await interaction.editReply({ files: [attachment] }).catch(() => { })
 
     }
 }

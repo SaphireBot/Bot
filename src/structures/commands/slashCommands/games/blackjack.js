@@ -7,6 +7,7 @@ export default {
     category: "games",
     type: 1,
     dm_permission: false,
+    database: false,
     options: [
         {
             name: 'solo',

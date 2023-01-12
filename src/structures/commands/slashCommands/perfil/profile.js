@@ -51,7 +51,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, emojis: e, Database, Moeda, clientData, refresh, guildData }) {
+    async execute({ interaction, client, e, Database, Moeda, clientData, refresh, guildData }) {
 
         const { options, user: author, channel } = interaction
         const query = refresh ? null : options.getString('options')

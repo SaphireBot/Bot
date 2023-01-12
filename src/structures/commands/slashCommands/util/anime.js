@@ -8,6 +8,7 @@ export default {
     description: '[util] Comandos referente a animes',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

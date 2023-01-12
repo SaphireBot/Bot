@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'ban',
@@ -72,7 +71,7 @@ export default {
     helpData: {
         description: 'Comando para banir um usuário'
     },
-    async execute({ interaction }) {
+    async execute({ interaction, e }) {
 
         const { user, options, guild, member } = interaction
 

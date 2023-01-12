@@ -1,11 +1,11 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'unban',
     description: '[moderation] Retirar banimento de pessoas do servidor',
     dm_permission: false,
+    database: false,
     default_member_permissions: Permissions.BanMembers,
     type: 1,
     options: [
@@ -25,7 +25,7 @@ export default {
     helpData: {
         description: 'Sistema simples de desbanimento'
     },
-    async execute({ interaction, client }) {
+    async execute({ interaction, client, e }) {
 
         const { user, options, guild, member } = interaction
 

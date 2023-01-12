@@ -19,7 +19,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, emojis: e, Database }) {
+    async execute({ interaction, client, e, Database }) {
 
         const { options, user: author } = interaction
         const searchId = options.getString('search_user')

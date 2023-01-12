@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
-import { Database, Modals } from '../../../../classes/index.js'
-import { Emojis as e } from '../../../../util/util.js'
+import { Modals } from '../../../../classes/index.js'
 import configAnunciar from '../../../classes/selectmenu/announce/config.anunciar.js'
 import roleAnunciar from '../../functions/anunciar/role.anunciar.js'
 
@@ -64,7 +63,7 @@ export default {
     helpData: {
         description: 'Comando de anúncio'
     },
-    async execute({ interaction, guildData, client }) {
+    async execute({ interaction, guildData, client, Database, e }) {
         
         const command = interaction.options.getSubcommand()
 

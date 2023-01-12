@@ -7,6 +7,7 @@ export default {
     description: '[bot] Comando de ajuda',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     helpData: {
         description: 'Meio suspeito pedir ajuda no comando de ajuda... Escolhe um comando pra pegar as informações dele, né?'

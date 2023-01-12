@@ -1,5 +1,5 @@
-import { ApplicationCommandOptionType, ChannelType } from "discord.js"
 import { Modals } from "../../../../classes/index.js"
+import { ApplicationCommandOptionType, ChannelType } from "discord.js"
 import { DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import categoryChannel from "../../functions/channel/category.channel.js"
 import deleteChannel from "../../functions/channel/delete.channel.js"
@@ -14,6 +14,7 @@ export default {
     description: '[moderation] Gerencie os canais do servidor atraves deste comando',
     category: "moderation",
     dm_permission: false,
+    database: false,
     default_member_permissions: Permissions.ManageChannels,
     type: 1,
     options: [

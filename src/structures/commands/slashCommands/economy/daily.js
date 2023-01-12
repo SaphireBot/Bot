@@ -7,6 +7,7 @@ export default {
     description: '[economy] Obtenha uma recompensa diária.',
     category: "economy",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

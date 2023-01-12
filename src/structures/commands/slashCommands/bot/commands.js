@@ -1,6 +1,5 @@
 import { Emojis as e } from '../../../../util/util.js'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
-import { Database } from '../../../../classes/index.js'
 
 export default {
     name: 'commands',
@@ -17,7 +16,7 @@ export default {
     helpData: {
         description: 'Comando simples para ver os comandos que alguém usou'
     },
-    async execute({ interaction, client }) {
+    async execute({ interaction, client, Database }) {
 
         const { options, user: author } = interaction
         const user = options.getUser('user') || author

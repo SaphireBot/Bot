@@ -6,6 +6,7 @@ export default {
     category: "admin",
     dm_permission: false,
     admin: true,
+    database: false,
     type: 1,
     options: [
         {

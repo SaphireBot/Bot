@@ -36,7 +36,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, Database, emojis: e }) {
+    async execute({ interaction, Database, e }) {
 
         const { options, user: author, guild } = interaction
         const user = options.getUser('user')

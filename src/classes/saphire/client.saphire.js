@@ -111,9 +111,30 @@ export default new class SaphireClient extends Client {
         this.interactions = 0
 
         /**
+         * @returns Heartbeat
+         */
+        this.Heartbeat = 0
+
+        /**
          * @returns Array com todas as cantadas do banco de dados
          */
         this.cantadas = []
+
+        /**
+         * @returns Conteúdo do client no banco de dados
+         */
+        this.clientData = {}
+
+        /**
+         * @returns Array com todos os memes aprovados do banco de dados
+         */
+        this.MemesApproved = []
+
+        /**
+         * @returns Array com todos os memes não aprovados do banco de dados
+         */
+        this.MemesNotApproved = []
+
     }
 
     /**
@@ -129,9 +150,6 @@ export default new class SaphireClient extends Client {
      * Console Log da Shard
      */
     async start() {
-
-        // Clear the console
-        console.clear()
 
         import('./process.saphire.js')
         console.log('1/14 - Process Handler Readed')
@@ -169,7 +187,8 @@ export default new class SaphireClient extends Client {
         console.log('10/14 - Automatic System Started')
 
         await this.setCantadas()
-        console.log('11/14 - Cantadas Loaded')
+        await this.setMemes()
+        console.log('11/14 - Cantadas/Memes Loaded')
 
         console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
@@ -194,21 +213,32 @@ export default new class SaphireClient extends Client {
         return
     }
 
+    async setMemes() {
+        const allMemes = await Database.Memes.find({})
+        if (!allMemes || !allMemes.length) return
+
+        this.MemesApproved = allMemes.filter(meme => meme.approved)
+        this.MemesNotApproved = allMemes.filter(meme => !meme.approved)
+        return
+    }
+
     topGGAutoPoster() {
         if (this.user.id !== this.moonId) return
         return AutoPoster(process.env.TOP_GG_TOKEN, this)
     }
 
     async refreshStaff() {
-        const clientData = await Database.Client.findOne({ id: this.user.id }, 'Administradores Moderadores')
-        if (!clientData) return
+        this.clientData = await Database.Client.findOne({ id: this.user.id })
+        if (!this.clientData) return
 
-        if (clientData.Administradores) this.admins = [...clientData.Administradores]
-        if (clientData.Moderadores) this.mods = [...clientData.Moderadores]
+        if (this.clientData.Administradores) this.admins = [...this.clientData.Administradores]
+        if (this.clientData.Moderadores) this.mods = [...this.clientData.Moderadores]
         this.staff = [...this.admins, ...this.mods]
+        return
     }
 
     async sendWebhook(webhookUrl, data) {
+
         return await axios.post(
             process.env.ROUTE_WEBHOOK_SENDER,
             {

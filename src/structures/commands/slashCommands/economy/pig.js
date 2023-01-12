@@ -1,4 +1,3 @@
-import { Database } from "../../../../classes/index.js"
 import { Colors } from "../../../../util/Constants.js"
 
 export default {
@@ -26,7 +25,7 @@ export default {
     helpData: {
         description: 'Ao quebrar o porquinho, você ganha todas as moedas dele'
     },
-    async execute({ interaction, client, clientData, emojis: e }) {
+    async execute({ interaction, client, clientData, e, Database }) {
 
         const { options, user, guild } = interaction
         const option = options.getString('options')

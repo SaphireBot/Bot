@@ -8,6 +8,7 @@ export default {
     description: '[economy] Sistema de aposta',
     category: "economy",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

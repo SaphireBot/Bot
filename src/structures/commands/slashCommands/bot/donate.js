@@ -5,6 +5,7 @@ export default {
     description: '[bot] Doe para a Saphire',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     helpData: {
         description: 'Comando exclusivo para fazer doações.',

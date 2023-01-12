@@ -1,8 +1,6 @@
-import { Emojis as e } from '../../../../util/util.js'
 import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
-import { Database } from '../../../../classes/index.js'
 
 export default {
     name: 'amongus',
@@ -25,7 +23,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client }) {
+    async execute({ interaction, client, Database, e }) {
 
         const { guild, member, user, options } = interaction
 

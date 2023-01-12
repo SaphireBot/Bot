@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { Emojis as e, Gifs } from '../../../../util/util.js'
+import { Gifs } from '../../../../util/util.js'
 import emotionalGifData from './gifs/emotional.gifs.data.js'
 import emotionalGifs from './gifs/emotional.gifs.js'
 import interactionGifData from './gifs/interaction.gifs.data.js'
@@ -10,6 +10,7 @@ const data = {
     description: '[gifs] Interações gerais',
     category: "images",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {
@@ -62,7 +63,7 @@ for (let gif of emotionalGifData)
 
 export default {
     ...data,
-    async execute({ interaction, client }) {
+    async execute({ interaction, client, e }) {
 
         const subCommand = interaction.options.getSubcommand()
 

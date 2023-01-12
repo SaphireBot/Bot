@@ -11,6 +11,7 @@ export default {
     description: '[util] Criptografe frases e envie para um amigo descriptografar ela.',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

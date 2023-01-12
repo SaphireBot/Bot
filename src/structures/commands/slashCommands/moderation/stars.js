@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
-import { Database } from '../../../../classes/index.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import { Emojis as e } from '../../../../util/util.js'
 import statusStars from './functions/status.stars.js'
@@ -82,7 +81,7 @@ export default {
             text: 'O Project Saphire se ausenta de quaisquer responsabilidade pelo uso deste comando.'
         }
     },
-    async execute({ interaction, guildData }) {
+    async execute({ interaction, guildData, Database }) {
 
         const { guild, options, member } = interaction
 

@@ -6,6 +6,7 @@ export default {
     description: '[bot] Comando exclusívo para a Saphire\'s Team',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     staff: true,
     options: [

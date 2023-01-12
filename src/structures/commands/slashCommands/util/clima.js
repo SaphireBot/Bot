@@ -6,6 +6,7 @@ export default {
     description: '[util] Confira o clima de uma cidade',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

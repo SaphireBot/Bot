@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Permissions, DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'clear',
@@ -8,6 +7,7 @@ export default {
     dm_permission: false,
     default_member_permissions: Permissions.ManageMessages,
     type: 1,
+    database: false,
     options: [
         {
             name: 'user',
@@ -50,7 +50,7 @@ export default {
         description: 'Limpe rapidamente as mensagens',
         permissions: [DiscordPermissons.ManageMessages],
     },
-    async execute({ interaction }) {
+    async execute({ interaction, e }) {
 
         const { options, channel, guild, member } = interaction
 

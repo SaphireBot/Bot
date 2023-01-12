@@ -5,6 +5,7 @@ export default {
     description: '[util] Pesquise por significados de palavras',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

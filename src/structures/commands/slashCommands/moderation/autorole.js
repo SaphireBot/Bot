@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType } from 'discord.js'
-import { Emojis as e } from '../../../../util/util.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import addAutorole from '../../functions/autorole/add.autorole.js'
 import painelAutorole from '../../functions/autorole/painel.autorole.js'
@@ -37,7 +36,7 @@ export default {
     helpData: {
         description: 'Sistema de autorole',
     },
-    async execute({ interaction, guildData, Database, client }) {
+    async execute({ interaction, guildData, Database, client, e }) {
 
         const { options, guild, member } = interaction
         const subCommand = options.getSubcommand()

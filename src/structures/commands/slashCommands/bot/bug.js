@@ -6,6 +6,7 @@ export default {
     description: '[bot] Report bugs aos meus administradores',
     category: "bot",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

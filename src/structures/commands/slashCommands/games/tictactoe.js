@@ -6,6 +6,7 @@ export default {
     description: '[games] O clássico jogo da velha',
     category: "games",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

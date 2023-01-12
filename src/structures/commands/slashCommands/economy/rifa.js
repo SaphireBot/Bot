@@ -9,6 +9,7 @@ export default {
     description: '[economy] Um sistema diferente de rifas',
     category: "economy",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

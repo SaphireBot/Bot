@@ -5,6 +5,7 @@ export default {
     description: '[util] Um simples comando para ver o avatar das pessoas',
     category: "util",
     dm_permission: false,
+    database: false,
     type: 1,
     options: [
         {

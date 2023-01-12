@@ -1,8 +1,8 @@
+import { ApplicationCommandOptionType } from 'discord.js'
 import solo from '../../functions/memorygame/solo.memory.js'
 import coop from '../../functions/memorygame/coop.memory.js'
 import versus from '../../functions/memorygame/versus.memory.js'
 import sequency from '../../functions/memorygame/sequency.memory.js'
-import { ApplicationCommandOptionType } from 'discord.js'
 
 const choices = [
     {

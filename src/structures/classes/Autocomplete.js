@@ -69,13 +69,33 @@ export default class Autocomplete extends Base {
             level_options: ['levelOptions'],
             editar_imagem_com_censura: ['editImageLogoMarca'],
             comprar: ['rifaNumero', value],
-            id: ['giveaway_id', value]
+            id: ['giveaway_id', value],
+            funcao: ['memesViewer']
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async memesViewer() {
+
+        const data = [
+            {
+                name: 'Visualizar memes',
+                value: 'view'
+            },
+            {
+                name: 'visualizar MEUS memes',
+                value: 'viewmymemes'
+            }
+        ]
+
+        if (this.client.staff.includes(this.user.id))
+            data.push({ name: `${this.client.MemesNotApproved.length} memes a serem analizados`, value: 'analize' })
+
+        return await this.respond(data)
     }
 
     async showCantadas(value) {
