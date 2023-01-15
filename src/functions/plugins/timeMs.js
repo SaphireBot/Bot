@@ -2,13 +2,13 @@ import moment from "moment"
 
 export default (Time) => {
 
-    let Args = Time.trim().split(/ +/g)
+    const Args = Time?.toLowerCase()?.trim().split(/ +/g)
     let timeResult = 0
 
     if (Args[0].includes('/') || Args[0].includes(':') || ['hoje', 'today', 'tomorrow', 'amanhã'].includes(Args[0]?.toLowerCase())) {
 
-        let data = Args[0],
-            hour = Args[1]
+        let data = Args[0]
+        let hour = Args[1]
 
         if (['tomorrow', 'amanhã'].includes(data.toLowerCase()))
             data = day(true)
@@ -26,14 +26,14 @@ export default (Time) => {
 
         if (!data || !hour) return null
 
-        let dataArray = data.split('/')
-        let hourArray = hour.split(':')
-        let dia = parseInt(dataArray[0])
-        let mes = parseInt(dataArray[1]) - 1
-        let ano = parseInt(dataArray[2])
-        let hora = parseInt(hourArray[0])
-        let minutos = parseInt(hourArray[1])
-        let segundos = parseInt(hourArray[2]) || 0
+        const dataArray = data.split('/')
+        const hourArray = hour.split(':')
+        const dia = parseInt(dataArray[0])
+        const mes = parseInt(dataArray[1]) - 1
+        const ano = parseInt(dataArray[2])
+        const hora = parseInt(hourArray[0])
+        const minutos = parseInt(hourArray[1])
+        const segundos = parseInt(hourArray[2]) || 0
 
         let date = moment.tz({ day: dia, month: mes, year: ano, hour: hora, minutes: minutos, seconds: segundos }, "America/Sao_Paulo")
 
@@ -46,37 +46,41 @@ export default (Time) => {
         timeResult += date - Date.now()
 
     } else
-        for (let arg of Args) {
+        for (let i = 0; i < Args.length; i++) {
 
-            if (arg.slice(-1).includes('d')) {
-                let time = arg.replace(/d/g, '000') * 60 * 60 * 24
+            if (Args[i].at(-1).includes('d') || ['dias', 'dia', 'day', 'days'].includes(Args[i + 1])) {
+                const string = Args[i].at(-1).includes('d') ? `${Args[i]}` : `${Args[i]}${Args[i + 1]}`
+                let time = formatString(string) * 60 * 60 * 24
                 if (isNaN(time)) return null
                 timeResult += parseInt(time)
                 continue
             }
 
-            if (arg.slice(-1).includes('h')) {
-                let time = arg.replace(/h/g, '000') * 60 * 60
+            if (Args[i].slice(-1).includes('h') || ['horas', 'hora', 'hour', 'hours'].includes(Args[i + 1])) {
+                const string = Args[i].at(-1).includes('h') ? `${Args[i]}` : `${Args[i]}${Args[i + 1]}`
+                let time = formatString(string) * 60 * 60
                 if (isNaN(time)) return null
                 timeResult += parseInt(time)
                 continue
             }
 
-            if (arg.slice(-1).includes('m')) {
-                let time = arg.replace(/m/g, '000') * 60
+            if (Args[i].slice(-1).includes('m') || ['minuto', 'minutos', 'minute', 'minutes'].includes(Args[i + 1])) {
+                const string = Args[i].at(-1).includes('m') ? `${Args[i]}` : `${Args[i]}${Args[i + 1]}`
+                let time = formatString(string) * 60
                 if (isNaN(time)) return null
                 timeResult += parseInt(time)
                 continue
             }
 
-            if (arg.slice(-1).includes('s')) {
-                let time = arg.replace(/s/g, '000')
+            if (Args[i].slice(-1).includes('s') || ['segundo', 'segundos', 'second', 'seconds'].includes(Args[i + 1])) {
+                const string = Args[i].at(-1).includes('s') ? `${Args[i]}` : `${Args[i]}${Args[i + 1]}`
+                let time = formatString(string)
                 if (isNaN(time)) return null
                 timeResult += parseInt(time)
                 continue
             }
 
-            return null
+            continue
         }
 
     return timeResult
@@ -99,4 +103,32 @@ function day(tomorrow = false) {
     function FormatNumber(number) {
         return number < 10 ? `0${number}` : number
     }
+}
+
+function formatString(string) {
+    return string
+        .replace(/(\D+)/, str => {
+            if ([
+                'd',
+                'dia',
+                'dias',
+                'day',
+                'days',
+                'h',
+                'hora',
+                'horas',
+                'hour',
+                'hours',
+                'm',
+                'minuto',
+                'minutos',
+                'minutes',
+                'minute',
+                's',
+                'segundo',
+                'segundos',
+                'second',
+                'seconds'
+            ].includes(str)) return '000'
+        })
 }

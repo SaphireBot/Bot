@@ -9,6 +9,7 @@ import * as TopGG from 'topgg-autoposter'
 import GiveawayManager from '../../functions/update/giveaway/GiveawayManager.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import axios from 'axios'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 
 const { AutoPoster } = TopGG
 
@@ -190,7 +191,8 @@ export default new class SaphireClient extends Client {
 
         await this.setCantadas()
         await this.setMemes()
-        console.log('11/14 - Cantadas/Memes Loaded')
+        await managerReminder.define()
+        console.log('11/14 - Cantadas/Memes/Lembretes Loaded')
 
         console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')

@@ -1,5 +1,4 @@
 import { Database, Experience, SaphireClient as client } from '../../classes/index.js'
-import ReminderSystem from './reminder/index.js'
 import Ranking from './ranking/index.ranking.js'
 
 export default async () => {
@@ -8,10 +7,9 @@ export default async () => {
     client.refreshStaff()
 
     setInterval(async () => {
-        ReminderSystem()
         client.fanarts = await Database.Fanart.find() || []
         client.refreshStaff()
-    }, 3000)
+    }, 60000)
 
     setInterval(async () => {
         const allDataUsers = await Database.User.find({})
@@ -19,7 +17,7 @@ export default async () => {
     }, 60000 * 5)
 
     setInterval(() => {
-        client.setCantadas()
+        client.setMemes()
         client.setCantadas()
     }, 60000)
     setInterval(() => Experience.setExperience(), 1000 * 30)
@@ -29,4 +27,5 @@ export default async () => {
     const allDataUsers = await Database.User.find({})
     client.databaseUsers = allDataUsers.map(data => data.id)
 
+    return
 }

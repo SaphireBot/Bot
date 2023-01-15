@@ -24,7 +24,7 @@ export default async interaction => {
                 fields: [
                     {
                         name: '📝 Formas de Escrita',
-                        value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                        value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`2 dias 10 minutos 5 segundos\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
                     }
                 ]
             }]

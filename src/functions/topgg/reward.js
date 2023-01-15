@@ -4,6 +4,7 @@ import {
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+import managerReminder from '../update/reminder/manager.reminder.js'
 
 export default async (userId) => {
 
@@ -13,8 +14,7 @@ export default async (userId) => {
     if (!user) return false
     giveRewards()
 
-    const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
-    const data = cachedData?.find(data => data?.userId === userId)
+    const data = await Database.Cache.General.get(`TopGG.${userId}`)
 
     await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.userId === userId)
     if (!data) return await giveRewards()
@@ -32,15 +32,16 @@ export default async (userId) => {
     embed.color = client.green
 
     if (data.isReminder) {
-        new Database.Reminder({
+        managerReminder.save({
             id: CodeGenerator(7).toUpperCase(),
             userId: userId,
+            guildId: data.guildId,
             RemindMessage: `Voto disponível no ${e.topgg} Top GG.`,
             Time: 43200000,
             DateNow: Date.now(),
             isAutomatic: true,
             ChannelId: channel.id
-        }).save()
+        })
 
         embed.description += `\n${e.Notification} | Como você ativou o lembrete automático, vou te lembrar ${Date.GetTimeout(43200000, Date.now(), 'R')}`
     }

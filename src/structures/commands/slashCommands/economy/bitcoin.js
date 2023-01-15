@@ -1,6 +1,7 @@
 import { Colors } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
+import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
 
 export default {
     name: 'bitcoin',
@@ -129,15 +130,16 @@ export default {
             let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(new Date((timeout || Date.now()) + 7200000), 'R', true)}`
 
             if (isReminder) {
-                new Database.Reminder({
+                managerReminder.save({
                     id: CodeGenerator(7).toUpperCase(),
                     userId: author.id,
+                    guildId: guild.id,
                     RemindMessage: 'Bitcoin Farming Disponível',
                     Time: 7200000,
                     DateNow: Date.now(),
                     isAutomatic: true,
                     ChannelId: interaction.channel.id
-                }).save()
+                })
                 returnContent += '\n⏰ | Lembrete automático ativado.'
             }
 

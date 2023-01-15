@@ -10,7 +10,6 @@ import SlashCommand from '../structures/classes/SlashCommand.js'
 import ButtonInteraction from '../structures/classes/ButtonInteraction.js'
 import ModalInteraction from '../structures/classes/ModalInteraction.js'
 import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.js'
-import Reminder from '../classes/modules/Reminder.js'
 import GiveawayManager from '../functions/update/giveaway/GiveawayManager.js'
 import Experience from './modules/Experience.js'
 import Logomarca from './games/Logomarca.js'
@@ -28,7 +27,6 @@ export {
     ButtonInteraction,
     ModalInteraction,
     SelectMenuInteraction,
-    Reminder,
     GiveawayManager,
     Experience,
     Logomarca

@@ -31,7 +31,7 @@ export default class Daily extends Base {
         if (count > 0 && dailyTimeout > 0 && !Date.Timeout(172800000, dailyTimeout)) {
             this.resetSequence()
             return await interaction.reply({
-                content: `${e.SaphireCry} | Você perdeu a sequência do prêmio diário.`
+                content: `${e.cry} | Você perdeu a sequência do prêmio diário.`
             })
         }
 

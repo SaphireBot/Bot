@@ -27,14 +27,10 @@ export default {
     ],
     async execute({ interaction, client, Database, e }) {
 
-        const { options, user, channel } = interaction
+        const { options, user, channel, guild } = interaction
         const hasVoted = await axios.get(
-            `https://top.gg/api/bots/912509487984812043/check?userId=${user.id}`,
-            {
-                headers: {
-                    authorization: process.env.TOP_GG_TOKEN
-                }
-            }
+            `https://top.gg/api/bots/${client.user.id}/check?userId=${user.id}`,
+            { headers: { authorization: process.env.TOP_GG_TOKEN } }
         )
             .then(res => res?.data?.voted === 1)
             .catch(() => 2)
@@ -52,8 +48,7 @@ export default {
             })
 
         const reminder = options.getString('reminder') === 'reminder'
-        const cachedData = await Database.Cache.General.get(`${client.shardId}.TopGG`)
-        const inCachedData = cachedData?.find(data => data.userId === user.id)
+        const inCachedData = await Database.Cache.General.get(`TopGG.${user.id}`)
 
         if (inCachedData?.messageUrl)
             return await interaction.reply({
@@ -103,9 +98,10 @@ export default {
             fetchReply: true
         })
 
-        return await Database.Cache.General.push(`${client.shardId}.TopGG`, {
+        return await Database.Cache.General.push(`TopGG.${user.id}`, {
             userId: user.id,
             channelId: channel.id,
+            guildId: guild.id,
             messageId: msg.id,
             isReminder: reminder,
             messageUrl: msg.url

@@ -1,11 +1,12 @@
 import { ButtonStyle } from 'discord.js'
 import { Database } from '../../../../../classes/index.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
+import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 import { Emojis as e } from '../../../../../util/util.js'
 
 export default async (interaction, dateNow, oneDayMiliseconds) => {
 
-    const { user, channel, commandId } = interaction
+    const { user, channel, commandId, guild } = interaction
     const reminder = await Database.Reminder.findOne({ userId: user.id, DateNow: dateNow })
 
     if (reminder)
@@ -71,15 +72,16 @@ export default async (interaction, dateNow, oneDayMiliseconds) => {
         })
 
     async function revalidadeDailyReminder() {
-        new Database.Reminder({
+        managerReminder.save({
             id: CodeGenerator(7).toUpperCase(),
             userId: user.id,
+            guildId: guild.id,
             RemindMessage: 'Daily Disponível',
             Time: 86400000,
             DateNow: dateNow,
             isAutomatic: true,
             ChannelId: channel.id
-        }).save()
+        })
 
         return await interaction.editReply({
             content: `${e.Check} | Lembrete automático configurado com sucesso. Eu vou te lembrar ${Date.Timestamp(new Date(dateNow + oneDayMiliseconds), 'R', true)} para você resgatar o </daily:${commandId}> novamente.`,
