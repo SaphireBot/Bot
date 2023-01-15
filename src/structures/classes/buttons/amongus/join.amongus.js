@@ -23,8 +23,8 @@ export default async ({ interaction, channel, user, e, partyData, Database, clie
 
     const gameData = await Database.Cache.AmongUs.set(`${partyId}.players`, players)
 
-    if (gameData.players.length >= 15 || gameData.players.length >= channel.members.size)
-        return startAmongus({ client, e, gameData, guild, interaction, partyId })
+    if (gameData.players.length >= 15)
+        return startAmongus({ client, e, gameData, guild, interaction, partyId }, true)
 
     return await interaction.update({
         embeds: [{

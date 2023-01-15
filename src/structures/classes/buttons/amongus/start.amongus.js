@@ -1,6 +1,13 @@
 import { ButtonStyle } from "discord.js"
 
-export default async ({ gameData, partyId, client, e, guild, interaction }) => {
+export default async ({ gameData, partyId, client, e, guild, interaction }, isComplete = false) => {
+
+    if (!isComplete)
+        if (gameData.host !== interaction.user.id)
+            return await interaction.reply({
+                content: `${e.Deny} | Apenas o Host <@${gameData.host}> pode iniciar a partida.`,
+                ephemeral: true
+            })
 
     return await interaction.update({
         embeds: [{
