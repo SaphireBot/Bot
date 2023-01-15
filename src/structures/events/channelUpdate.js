@@ -77,7 +77,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     if ((oldRoles.length || newRoles.length) && oldRoles !== newRoles) {
         if (!oldRoles || !oldRoles.length) return
 
-        if (oldRoles && oldRoles?.map(u => u.id).filter(roleId => !newRoles.map(u => u.id).includes(roleId)).length) {
+        if (oldRoles && oldRoles?.map(u => u?.id).filter(roleId => !newRoles.map(u => u.id).includes(roleId)).length) {
             fields.push({
                 name: "🔰 Permissões Antigas | Cargos",
                 value: `${oldRoles.join(", ") || "Nenhum cargo"}`.limit("MessageEmbedFieldValue")
