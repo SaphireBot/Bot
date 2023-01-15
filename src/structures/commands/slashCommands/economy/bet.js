@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Colors } from '../../../../util/Constants.js'
+import diceBet from './bet/dice.bet.js'
 import simpleBet from './bet/new.bet.js'
 import refundValues from './bet/refund.bet.js'
 
@@ -8,7 +9,6 @@ export default {
     description: '[economy] Sistema de aposta',
     category: "economy",
     dm_permission: false,
-    database: false,
     type: 1,
     options: [
         {
@@ -72,20 +72,52 @@ export default {
                     autocomplete: true
                 },
             ]
+        },
+        {
+            name: 'dice',
+            description: '[economy] Aposte nos dados e boa sorte!',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'value',
+                    type: ApplicationCommandOptionType.Integer,
+                    description: 'Valor a ser apostado nos dados (min: 1)',
+                    min_value: 1,
+                    required: true
+                }
+            ]
         }
     ],
     helpData: {
         color: Colors.Blue,
+        title: 'Sistema de Aposta',
         description: 'Aqui você pode apostar dinheiro, ganhar e perder.',
-        permissions: [],
-        fields: []
+        fields: [
+            {
+                name: '/bet dice',
+                value: 'Escolha um valor e uma cor e tente a sorte nos dados.'
+            },
+            {
+                name: '/bet simple',
+                value: 'Escolha um valor e clique no emoji. Boa sorte!'
+            },
+            {
+                name: '/bet refund',
+                value: 'Resgate apostas que talvez se perderam com o vento.'
+            },
+            {
+                name: '/emoji bet',
+                value: 'Escolha um valor e escolha um emoji.'
+            },
+        ]
     },
-    async execute({ interaction, e, client }) {
+    async execute({ interaction, e, client, Moeda, Database }) {
 
         const { options, user } = interaction
         const amount = options.getInteger('amount')
         const subCommand = options.getSubcommand()
-        const userMoney = await user.balance()
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userMoney = userData?.Balance || 0
 
         if (userMoney <= 0 || userMoney < amount)
             return await interaction.reply({
@@ -93,17 +125,19 @@ export default {
                 ephemeral: true
             })
 
-        switch (subCommand) {
-            case 'simple': simpleBet({ interaction, e, amount, client }); break;
-            case 'refund': refundValues({ interaction, e }); break
-            default:
-                await interaction.reply({
-                    content: `${e.Deny} | Sub comando não encotrado.`,
-                    ephemeral: true
-                });
-                break;
-        }
+        const execute = {
+            simple: simpleBet,
+            dice: diceBet,
+            refund: refundValues
+        }[subCommand]
 
-        return
+        if (!execute)
+            await interaction.reply({
+                content: `${e.Deny} | Sub comando não encotrado.`,
+                ephemeral: true
+            })
+
+        return execute({ interaction, e, amount, client, Moeda })
+
     }
 }

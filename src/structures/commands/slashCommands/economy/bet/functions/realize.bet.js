@@ -39,7 +39,7 @@ export default async (cachedData, message) => {
     }
 
     Database.add(winner, prize)
-    await Database.Cache.Bet.delete(`Bet.${message.id}`)
+    await Database.Cache.Bet.delete(message.id)
 
     message.delete(() => { })
     message.channel.send({ embeds: [embed] })

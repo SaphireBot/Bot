@@ -4,12 +4,16 @@ import {
 } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
-client.on('betRefund', async ({ players, amount, messageId }, noDelete = false) => {
+client.on('betRefund', async (data, noDelete = false) => {
 
-    if (!players || !amount || !messageId) return
+    const players = [...new Set([data?.players || [data?.red || [], data?.blue || [], data.authorId].flat()])].flat()
+    const amount = data?.amount || data?.value
+    const messageId = data?.messageId
+
+    if (!players.length || !amount || !messageId) return
 
     if (!noDelete)
-        await Database.Cache.Bet.delete(`Bet.${messageId}`)
+        await Database.Cache.Bet.delete(messageId)
 
     if (players?.length > 0)
         await Database.User.updateMany(

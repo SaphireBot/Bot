@@ -4,11 +4,10 @@ import realizeBet from './realize.bet.js'
 
 export default async (cachedData, message, userId, finalize) => {
 
-    const returnedData = await Database.Cache.Bet.push(`Bet.${message.id}.players`, userId)
-    const allBets = Object.entries(returnedData || {})
-    const thisBet = allBets.find(([messageId]) => messageId === message.id)
-    const newPlayers = thisBet[1].players
-    const embed = message.embeds[0].data
+    const returnedData = await Database.Cache.Bet.push(`${message.id}.players`, userId)
+    const thisBet = returnedData
+    const newPlayers = thisBet.players
+    const embed = message?.embeds[0]?.data
     const emojis = [e.OwnerCrow, '👤']
 
     if (!embed) {
@@ -40,6 +39,6 @@ export default async (cachedData, message, userId, finalize) => {
     }
 
     Database.subtract(userId, cachedData.amount)
-    if (finalize) return realizeBet(await Database.Cache.Bet.get(`Bet.${message.id}`), message)
+    if (finalize) return realizeBet(await Database.Cache.Bet.get(message.id), message)
 
 }

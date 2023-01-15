@@ -22,6 +22,7 @@ import copyPixDonate from './buttons/donate/copyPix.donate.js'
 import counterPoll from './buttons/poll/counter.poll.js'
 import executeCantada from './buttons/cantadas/execute.cantada.js'
 import executeAmongus from './buttons/amongus/execute.amongus.js'
+import indexBet from './buttons/bet/index.bet.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -35,6 +36,7 @@ export default class ButtonInteraction extends Base {
         this.guild = interaction.guild
         this.commandName = this.message.interaction?.commandName
         this.command = this.message.interaction
+        this.e = e
     }
 
     async execute() {
@@ -70,7 +72,8 @@ export default class ButtonInteraction extends Base {
             delete: [this.deleteMessage, this, commandData],
             poll: [counterPoll, this, commandData],
             cantada: [executeCantada, this, commandData],
-            amongus: [executeAmongus, this, commandData]
+            amongus: [executeAmongus, this, commandData],
+            bet: [indexBet, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

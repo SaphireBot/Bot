@@ -369,15 +369,14 @@ export default class Autocomplete extends Base {
 
     async available_bets(value) {
 
-        const allBets = await this.Database.Cache.Bet.get('Bet')
-        if (!allBets) return await this.respond()
+        const values = await this.Database.Cache.Bet.all()
+        if (!values || !values.length) return await this.respond()
 
-        const values = Object.values(allBets || {})
-        const availableBets = values.filter(bet => bet.authorId === this.user.id)
+        const availableBets = values.filter(bet => bet?.value?.authorId === this.user.id)
 
         if (!availableBets || !availableBets.length) return await this.respond()
 
-        const mapped = availableBets.map(bet => ({ name: `${bet.amount} Safiras e ${bet.players.length} jogadores`, value: bet.messageId }))
+        const mapped = availableBets.map(bet => ({ name: `${bet?.value?.amount || bet?.value?.value} Safiras`, value: bet?.value?.messageId || bet.id }))
         const fill = mapped.filter(bet => bet.name?.toLowerCase()?.includes(value?.toLowerCase()) || bet.value?.includes(value))
 
         if (fill.length > 1)

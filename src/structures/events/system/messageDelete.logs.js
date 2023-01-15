@@ -6,7 +6,7 @@ import {
 } from "../../../classes/index.js"
 
 export default async message => {
-
+    if (message.partial) return
     const { guild, author, type } = message
     if (type !== 0 || author?.bot) return
 

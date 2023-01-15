@@ -12,6 +12,6 @@ export default class Bet extends Base {
     }
 
     async save(messageId, data) {
-        return await this.Database.Cache.Bet.set(`Bet.${messageId}`, data)
+        return await this.Database.Cache.Bet.set(messageId, data)
     }
 }

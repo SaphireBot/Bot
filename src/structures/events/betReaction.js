@@ -8,7 +8,8 @@ import newBetUser from '../commands/slashCommands/economy/bet/functions/addPlaye
 
 client.on('betReaction', async ({ message, user, emojiName }) => {
 
-    const betCachedData = await Database.Cache.Bet.get(`Bet.${message.id}`)
+    const betCachedData = await Database.Cache.Bet.get(message.id)
+    
     if (!betCachedData) {
         message.reactions.removeAll().catch(() => { })
         return await message.edit({
@@ -29,7 +30,8 @@ client.on('betReaction', async ({ message, user, emojiName }) => {
     const timestamp = embed.fields[2].value.replace(/[^0-9]/g, '')
     const time = new Date(timestamp * 1000).valueOf()
     const { authorId, players, playersCount, versus, amount } = betCachedData
-    const userBalance = await user.balance()
+    const userData = await Database.User.findOne({ id: user.id }, "Balance")
+    const userBalance = userData?.Balance || 0
 
     if (time < Date.now() || emojiName === '✅' && user.id === authorId)
         return realizeBet(betCachedData, message)

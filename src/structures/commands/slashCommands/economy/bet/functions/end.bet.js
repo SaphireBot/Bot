@@ -4,7 +4,7 @@ import realizeBet from "./realize.bet.js"
 
 export default async (message) => {
 
-    const thisBet = await Database.Cache.Bet.get(`Bet.${message.id}`) || {}
+    const thisBet = await Database.Cache.Bet.get(message.id) || {}
     if (!thisBet) return
 
     if (thisBet?.players?.length > 1) return realizeBet(thisBet, message)

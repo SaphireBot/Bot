@@ -9,12 +9,7 @@ client.on('messageDelete', async message => {
 
     if (!message || !message.id) return
 
-    if (message.partial)
-        message = await message.fetch().catch(() => null)
-
-    if (!message || !message.id) return
-
-    Database.deleteGiveaway(message.id, message.guild.id)
+    Database.deleteGiveaway(message.id, message.guildId)
 
     const isWordleGame = await Database.Cache.WordleGame.get(message.id)
     if (isWordleGame) await Database.Cache.WordleGame.delete(message.id)
@@ -23,7 +18,7 @@ client.on('messageDelete', async message => {
     if (cachedData?.find(data => data.messageId === message.id))
         await Database.Cache.General.pull(`${client.shardId}.TopGG`, data => data.messageId === message.id)
 
-    const betDataFound = await Database.Cache.Bet.get(`Bet.${message.id}`)
+    const betDataFound = await Database.Cache.Bet.get(message.id)
     if (betDataFound) client.emit('betRefund', betDataFound)
 
     const blackjack = await Database.Cache.Blackjack.get(message.id)
@@ -34,6 +29,37 @@ client.on('messageDelete', async message => {
 
         Database.add(blackjack.userId, blackjack.bet, `${e.gain} Recebeu ${blackjack.bet} Safiras via *Blackjack Refund*`)
         await Database.Cache.Blackjack.delete(message.id)
+    }
+
+    const diceGame = await Database.Cache.Bet.get(message.id)
+    if (diceGame) {
+        await Database.User.updateMany(
+            { id: { $in: [...diceGame.red, ...diceGame.blue, diceGame.authorId] } },
+            {
+                $inc: { Balance: diceGame.value },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.gain} Ganhou ${diceGame.value || 0} Safiras atráves do *Bet Delete System*`
+                        }],
+                        $position: 0
+                    }
+                }
+            }
+        )
+            .then(result => {
+
+                if (!message.channel) return
+                const usersRefunded = result.matchedCount || 0
+
+                return message.channel.send({
+                    content: `${e.Trash} | A mensagem da aposta \`${message.id}\` foi deletada.\n${e.Check} | Eu devolvi **${diceGame.value} Safiras** para ${usersRefunded} usuários.\n👥 | ${[...new Set([...diceGame.red, ...diceGame.blue, diceGame.authorId])].map(id => `<@${id}>`).join(', ')}`
+                }).catch(() => { })
+
+            })
+            .catch(() => { })
+        await Database.Cache.Bet.delete(message.id)
     }
 
     messageDeleteLogs(message)

@@ -102,7 +102,7 @@ const system = {
     name: 'LocalHost',
     port: 1000
   },
-  'a3470d256d6d': {
+  '52bd375d84ce': {
     name: 'Discloud',
     port: 8080
   },
@@ -112,7 +112,7 @@ const system = {
   }
 }[hostName]
 
-app.listen(system.port, "0.0.0.0", () => alertLogin(system.name))
+app.listen(system?.port || 8080, "0.0.0.0", () => alertLogin(system.name || "Discloud"))
 
 export default app
 

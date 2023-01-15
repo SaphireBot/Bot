@@ -16,14 +16,13 @@ client.on('messageDeleteBulk', async (messages) => {
     }
 
     async function refundBet() {
-        const allCachedGames = await Database.Cache.Bet.get('Bet') || {}
-        const allGamesId = Object.entries(allCachedGames)
-        const gamesToDelete = allGamesId.filter(([id]) => messagesId.includes(id)) || []
+        const allGamesId = await Database.Cache.Bet.all() || []
+        const gamesToDelete = allGamesId.filter(data => messagesId.includes(data.id)) || []
 
         if (!gamesToDelete || !gamesToDelete.length) return
 
         for (let game of gamesToDelete) {
-            client.emit('betRefund', game[1])
+            client.emit('betRefund', game.value)
         }
     }
 

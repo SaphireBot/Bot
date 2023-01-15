@@ -6,7 +6,7 @@ export default async ({ interaction, e }) => {
     const messageId = options.getString('available_bets')
     if (messageId === 'all') return refundAll()
 
-    const cachedData = await Database.Cache.Bet.get(`Bet.${messageId}`)
+    const cachedData = await Database.Cache.Bet.get(messageId)
 
     if (!cachedData)
         return await interaction.reply({
@@ -21,15 +21,14 @@ export default async ({ interaction, e }) => {
 
     async function refundAll() {
 
-        const cachedData = await Database.Cache.Bet.get('Bet') || {}
-        const cachedInArray = Object.values(cachedData || {})
-        const allBetAuthor = cachedInArray.filter(bet => bet.authorId === user.id)
+        const cachedInArray = await Database.Cache.Bet.all() || []
+        const allBetAuthor = cachedInArray.filter(bet => bet?.value?.authorId === user.id)
         let totalValue = 0
 
-        for await (let { amount, players, messageId } of allBetAuthor) {
-            totalValue += parseInt(amount * players.length)
-            await Database.Cache.Bet.delete(`Bet.${messageId}`)
-            client.emit('betRefund', { players, amount, messageId }, true)
+        for await (let { id, value } of allBetAuthor) {
+            totalValue += parseInt((value.amount || value.value) * ((value.players?.length || [value?.red || [], value?.blue || []].flat().length) || 1))
+            await Database.Cache.Bet.delete(value.messageId || id)
+            client.emit('betRefund', value, true)
             continue
         }
 
