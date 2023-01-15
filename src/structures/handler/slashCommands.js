@@ -45,9 +45,5 @@ export default async (client) => {
         { body: commands },
     );
 
-    client.user.setActivity(`${client.slashCommands.size} comandos em ${client.guilds.cache.size} servidores`, { type: 'PLAYING' });
-    client.user.setStatus('idle');
-
     return `${client.slashCommands.size} Slash Commands Loaded`
-
 }
