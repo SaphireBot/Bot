@@ -2,8 +2,8 @@ import { SaphireClient as client } from '../../classes/index.js'
 
 client.on('error', error => {
 
-    if (error.code === 10062)
-        return
+    const codesToIgnore = [10062, 40060]
+    if (codesToIgnore.includes(error.code)) return
     console.log(error)
 })
 

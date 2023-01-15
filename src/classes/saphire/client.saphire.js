@@ -135,6 +135,8 @@ export default new class SaphireClient extends Client {
          */
         this.MemesNotApproved = []
 
+        this.clusterName = "Bellatrix" // 30% Pronto
+
     }
 
     /**
@@ -192,6 +194,14 @@ export default new class SaphireClient extends Client {
 
         console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
+
+        this.user.setPresence({
+            activities: [
+                { name: `${this.slashCommands.size} comandos disponíveis [Shard ${this.shardId} in Cluster ${this.clusterName}]` },
+                { name: `Tentando entregar a melhor qualidade possível [Shard ${this.shardId} in Cluster ${this.clusterName}]` }
+            ],
+            status: 'idle'
+        })
 
         return
     }

@@ -66,7 +66,7 @@ export default class ButtonInteraction extends Base {
             fanart: [fanartsSaphire, this.interaction, commandData, true],
             anunciar: [roleAnunciar, this.interaction],
             donate: [copyPixDonate, this.interaction, commandData],
-            ping: [this.refeshPing, this.interaction],
+            ping: [this.refeshPing, this.interaction, commandData],
             delete: [this.deleteMessage, this, commandData],
             poll: [counterPoll, this, commandData],
             cantada: [executeCantada, this, commandData],
@@ -102,7 +102,7 @@ export default class ButtonInteraction extends Base {
         return await message.delete().catch(() => { })
     }
 
-    async refeshPing(interaction) {
+    async refeshPing(interaction, commandData) {
 
         if (interaction.user.id !== interaction.message.interaction.user.id) return
 
@@ -114,7 +114,7 @@ export default class ButtonInteraction extends Base {
                 components: []
             }).catch(() => { })
 
-        return await pingCommand.execute({ interaction, client, e }, true)
+        return await pingCommand.execute({ interaction, client, e }, commandData)
     }
 
     async copyCripto() {

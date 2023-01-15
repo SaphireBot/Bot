@@ -1,20 +1,10 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
-client.once('ready', async () => {
+client.on('ready', async (client) => {
 
     // EXTERNAL SERVICES
     client.topGGAutoPoster()
-
-    const shardId = client.shard.ids.at(-1)
-
-    client.user.setPresence({
-        activities: [
-            { name: `${client.slashCommands.size} comandos disponíveis [Shard ${shardId} at Cluster Safira]` },
-            { name: `Tentando entregar a melhor qualidade possível [Shard ${shardId} at Cluster Safira]` }
-        ],
-        status: 'idle'
-    })
 
     Database.registerClient(client.user.id)
     await Database.Cache.GameChannels.deleteAll()

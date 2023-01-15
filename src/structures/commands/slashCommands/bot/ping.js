@@ -1,5 +1,5 @@
 import { Discloud } from "../../../../classes/index.js"
-import { ButtonStyle } from "discord.js"
+import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import axios from "axios"
 import mongoose from "mongoose"
 
@@ -13,8 +13,27 @@ export default {
     helpData: {
         description: 'Pong.'
     },
-    options: [],
-    async execute({ interaction, client, e }, toRefresh) {
+    options: [
+        {
+            name: 'options',
+            description: 'Opções do comando ping',
+            type: ApplicationCommandOptionType.String,
+            choices: [
+                {
+                    name: 'Ping das Shards',
+                    value: 'shard'
+                }
+            ]
+        }
+    ],
+    async execute({ interaction, client, e }, commandData) {
+
+        const toRefresh = commandData?.c
+
+        if (commandData?.src === 'shard') return pingShard()
+
+        if (!toRefresh)
+            if (interaction.options.getString('options') === 'shard') return pingShard()
 
         const loadingMessage = toRefresh
             ? await interaction.update({ content: `${e.Loading} | Atualizando Pinging....`, fetchReply: true, components: [] })
@@ -23,15 +42,6 @@ export default {
         const replayPing = toRefresh
             ? Date.now() - interaction.createdAt.valueOf()
             : loadingMessage.createdTimestamp - interaction.createdTimestamp
-
-        function emojiFormat(ms) {
-            if (!ms) return "🔴 Offline"
-            if (ms > 800) return `🟤 **${ms}**ms`
-
-            return ms < 250
-                ? `🟢 **${ms}**ms`.replace('-', '')
-                : `🟠 **${ms}**ms`.replace('-', '')
-        }
 
         let toSubtract = Date.now()
 
@@ -61,7 +71,7 @@ export default {
             .catch(() => "🔴 Offline")
 
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster Safira**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging\n${e.slash} | Interações: ${client.interactions || 0}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n🔳 | SquareCloud API Host: ${Squarecloud}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging\n${e.slash} | Interações: ${client.interactions || 0}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n🔳 | SquareCloud API Host: ${Squarecloud}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
             components: [
                 {
                     type: 1,
@@ -75,5 +85,48 @@ export default {
                 }
             ]
         })
+
+        async function pingShard() {
+            const shardPings = client.ws.shards
+                .map((shard, i) => `\`${i}\` ${emojiFormat(shard.ping)}`)
+                .join('\n')
+
+            const data = {
+                embeds: [{
+                    color: client.blue,
+                    title: `🧩 ${client.user.username}'s Shards`,
+                    description: `${shardPings || 'Nenhum resultado encontrado'}`,
+                    footer: {
+                        text: `${client.shard.count} Shards at Cluster ${client.clusterName}`
+                    }
+                }],
+                components: [
+                    {
+                        type: 1,
+                        components: [{
+                            type: 2,
+                            label: 'Atualizar',
+                            emoji: '🔄',
+                            custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
+                            style: ButtonStyle.Primary
+                        }]
+                    }
+                ]
+            }
+
+            return commandData?.src
+                ? await interaction.update(data).catch(() => { })
+                : await interaction.reply(data)
+        }
+
+        function emojiFormat(ms) {
+            if (!ms) return "🔴 Offline"
+            if (ms > 800) return `🟤 **${ms}**ms`
+
+            return ms < 250
+                ? `🟢 **${ms}**ms`.replace('-', '')
+                : `🟠 **${ms}**ms`.replace('-', '')
+        }
+
     }
 }
