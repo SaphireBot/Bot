@@ -7,7 +7,6 @@ export default {
     name: 'cantada',
     description: '[util] Comando interativo de cantadas',
     dm_permission: false,
-    database: false,
     type: 1,
     options: [
         {

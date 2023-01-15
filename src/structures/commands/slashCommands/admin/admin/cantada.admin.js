@@ -13,7 +13,7 @@ export default async (interaction, cantadaId, cantadas = null, option, toDeleteI
     if (option === 'delete')
         return deleteCantada(interaction, toDeleteId)
 
-    const cId = cantadaId || cantadas.random()?.cantadaId
+    const cId = cantadaId || cantadas?.random()?.cantadaId
 
     if (!cId)
         return await interaction.reply({
