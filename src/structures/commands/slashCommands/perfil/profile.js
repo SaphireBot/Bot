@@ -5,6 +5,7 @@ import refreshProfile from './perfil/refresh.profile.js'
 import signProfile from './perfil/sign.profile.js'
 import genderProfile from './perfil/gender.profile.js'
 import axios from 'axios'
+import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'perfil',
@@ -51,7 +52,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, e, Database, Moeda, clientData, refresh, guildData }) {
+    async execute({ interaction, client, Database, Moeda, clientData, refresh, guildData }) {
 
         const { options, user: author, channel } = interaction
         const query = refresh ? null : options.getString('options')
@@ -392,7 +393,7 @@ export default {
                     return `${RouteBases.cdn}/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
                 })
                 .catch(() => null)
-        
+
             return banner
         }
 
