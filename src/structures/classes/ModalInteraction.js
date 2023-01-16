@@ -10,6 +10,7 @@ import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js'
 import axios from 'axios'
 import cantadasModal from './modals/cantadas/cantadas.modal.js'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -54,6 +55,14 @@ export default class ModalInteraction extends Base {
 
         if (ModalInteractionFunctions)
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
+
+        if (this.customId.startsWith('{')) {
+            const data = JSON.parse(this.customId)
+
+            if (data?.c === 'reminder')
+                return managerReminder.edit(this.interaction, data?.reminderId)
+
+        }
 
         return await this.interaction.reply({
             content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,

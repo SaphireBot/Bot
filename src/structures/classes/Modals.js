@@ -4,6 +4,45 @@ export default new class Modals {
         return { ...this }
     }
 
+    ReminderEdit = (hour, message, reminderId) => {
+        return {
+            title: "Edição de Lembrete",
+            custom_id: JSON.stringify({ c: 'reminder', reminderId }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "message",
+                            label: "Mensagem",
+                            style: 2,
+                            min_length: 1,
+                            max_length: 1024,
+                            value: message,
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "date",
+                            label: "Data",
+                            style: 1,
+                            min_length: 2,
+                            max_length: 1000,
+                            value: hour,
+                            required: true
+                        }
+                    ]
+                } // MAX: 5 Fields
+            ]
+        }
+    }
+
     SendCanta = {
         title: "Nova Cantada",
         custom_id: 'cantada',

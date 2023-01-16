@@ -170,15 +170,6 @@ export default new class Database extends Models {
         )
     }
 
-    deleteReminders = async (idData, all = false) => {
-
-        if (!idData) return null
-
-        return all
-            ? await this.Reminder.deleteMany({ userId: idData })
-            : await this.Reminder.deleteOne({ id: idData })
-    }
-
     subtractItem = async (userId, ItemDB, amount) => {
 
         if (!userId || !ItemDB || isNaN(amount)) return

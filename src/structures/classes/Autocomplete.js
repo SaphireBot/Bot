@@ -5,6 +5,7 @@ import {
     ColorsTranslate,
     Languages
 } from '../../util/Constants.js'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -70,13 +71,26 @@ export default class Autocomplete extends Base {
             editar_imagem_com_censura: ['editImageLogoMarca'],
             comprar: ['rifaNumero', value],
             id: ['giveaway_id', value],
-            funcao: ['memesViewer']
+            funcao: ['memesViewer'],
+            itens: ['reminders', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async reminders(value) {
+        const reminders = managerReminder.reminders.filter(r => r.userId = this.user.id)
+        if (!reminders.length) return await this.respond()
+
+        const fill = reminders.filter(r =>
+            r.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase())
+            || r.id?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+        const mapped = fill.map(r => ({ name: `${r.id} - ${r.RemindMessage}`, value: r.id }))
+        return await this.respond(mapped)
     }
 
     async memesViewer() {

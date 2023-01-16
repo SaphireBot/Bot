@@ -1,7 +1,7 @@
-import { Database, SaphireClient as client } from '../../../../classes/index.js'
+import { SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import timeMs from '../../../plugins/timeMs.js'
-import reminderStart from './start.reminder.js'
+import managerReminder from '../manager.reminder.js'
 
 export default async (Channel, user, data) => {
 
@@ -45,25 +45,14 @@ export default async (Channel, user, data) => {
         })
         .on('end', () => {
             if (CollectControl) return
-            Database.deleteReminders(data.id)
+            managerReminder.remove(data.id)
             return msg.delete().catch(() => { })
         })
 
     return
 
     async function editReminderTimer(DefinedTime, message) {
-
-        const reminderData = await Database.Reminder.findOneAndUpdate(
-            { id: data.id },
-            {
-                Time: DefinedTime,
-                DateNow: Date.now(),
-                Alerted: false
-            }
-        )
-
-        setTimeout(() => reminderStart({ user, data: reminderData }), DefinedTime)
-
+        managerReminder.revalide(data.id, DefinedTime, user)
         return message.reply(`${e.Check} | Tudo bem! Lembrete redefinido! Novo disparo **${Date.GetTimeout(DefinedTime, Date.now(), 'R')}**`).catch(() => { })
     }
 }

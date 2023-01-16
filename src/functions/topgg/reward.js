@@ -42,7 +42,6 @@ export default async (userId) => {
             isAutomatic: true,
             ChannelId: channel.id
         })
-
         embed.description += `\n${e.Notification} | Como você ativou o lembrete automático, vou te lembrar ${Date.GetTimeout(43200000, Date.now(), 'R')}`
     }
 

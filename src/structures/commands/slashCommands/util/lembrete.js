@@ -13,18 +13,39 @@ export default {
     type: 1,
     options: [
         {
-            name: 'quando',
-            description: 'Quando eu devo te avisar?',
-            type: ApplicationCommandOptionType.String,
-            required: true
+            name: 'criar',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[util] Crie um novo lembrete',
+            options: [
+                {
+                    name: 'quando',
+                    description: 'Quando eu devo te avisar?',
+                    type: ApplicationCommandOptionType.String,
+                    required: true
+                },
+                {
+                    name: 'mensagem',
+                    description: 'Mensagem que eu devo te alertar',
+                    type: ApplicationCommandOptionType.String,
+                    min_length: 1,
+                    max_length: 1024,
+                    required: true
+                }
+            ]
         },
         {
-            name: 'mensagem',
-            description: 'Mensagem que eu devo te alertar',
-            type: ApplicationCommandOptionType.String,
-            min_length: 1,
-            max_length: 1024,
-            required: true
+            name: 'ver',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[util] Veja os seus lembretes ativos',
+            options: [
+                {
+                    name: 'itens',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Escolha um dos itens',
+                    required: true,
+                    autocomplete: true
+                }
+            ]
         }
     ],
     helpData: {
@@ -35,6 +56,11 @@ export default {
     async execute({ interaction, client }) {
 
         const { options, user, channel, guild } = interaction
+        const subCommand = options.getSubcommand()
+
+        if (subCommand === 'ver')
+            return await managerReminder.show(interaction, options.getString('itens'))
+
         const timeData = options.getString('quando')
         const message = options.getString('mensagem')
         const TimeMs = timeMs(timeData)
@@ -67,7 +93,6 @@ export default {
         return managerReminder.save(data)
             .then(async doc => {
                 setTimeout(() => reminderStart({ user, data }), TimeMs)
-                managerReminder.reminders.push(data)
                 return await interaction.reply({
                     content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${doc.Time > 86400000 ? Date.GetTimeout(doc.Time, doc.DateNow, 'f') : Date.GetTimeout(doc.Time, doc.DateNow, 'R')}`,
                     ephemeral: true

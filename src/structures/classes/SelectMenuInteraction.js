@@ -1,5 +1,6 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
@@ -46,7 +47,8 @@ export default class SelectMenuInteraction extends Base {
             sign: 'chooseSign',
             gender: 'chooseGender',
             signEphemeral: 'chooseSign',
-            genderEphemeral: 'chooseGender'
+            genderEphemeral: 'chooseGender',
+            reminder: 'reminder'
         }[this.customId]
 
         if (this[result])
@@ -78,6 +80,44 @@ export default class SelectMenuInteraction extends Base {
 
         if (result2)
             return result2(this)
+    }
+
+    async reminder({ interaction, value, user }) {
+
+        const data = JSON.parse(value)
+
+        const reminderData = managerReminder.reminders.find(r => r?.id === data?.reminderId)
+
+        if (!reminderData)
+            return await interaction.update({
+                content: `${e.Deny} | Lembrete não encontrado.`,
+                embeds: [], components: []
+            }).catch(() => { })
+
+        if (user.id !== reminderData?.userId) return
+
+        if (data.c === 'deleteMessage')
+            return await interaction.message.delete()?.catch(() => { })
+
+        if (data.c === 'edit')
+            return managerReminder.requestEdit(interaction, data.reminderId)
+
+        if (data.c === 'move')
+            return managerReminder.move(interaction, data.reminderId)
+
+        if (data.c === 'delete') {
+            managerReminder.remove(data.reminderId)
+            return await interaction.update({
+                content: `${e.Check} | Prontinho! O lembrete \`${data.reminderId}\` foi deletado e não existe mais.`,
+                embeds: [],
+                components: []
+            }).catch(() => { })
+        }
+
+        return await interaction.reply({
+            content: `${e.Deny} | Sub-comando não encontrado.`,
+            ephemeral: true
+        })
     }
 
     async editProfile({ Database, user, interaction, modals }) {
