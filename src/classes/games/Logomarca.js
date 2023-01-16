@@ -212,7 +212,7 @@ export default class Logomarca extends Base {
         this.embed.color = this.client.red
         this.embed.description = `${e.Deny} | Ninguém acertou a marca \`${formatString(this.gameData.logo.answers[0])}\``
         this.embed.image = { url: this.gameData.logo.images.uncensored }
-        
+
         if (!this.msg) return
 
         this.msg.delete()
@@ -269,14 +269,7 @@ export default class Logomarca extends Base {
 
                 this.logoData = [...this.Database.Logomarca].randomize()
                 this.buttons = undefined
-                this.gameData = {
-                    counter: 0,
-                    round: 1,
-                    users: [],
-                    replied: [],
-                    sandBox: false,
-                    sandBoxActive: false
-                }
+                this.gameData = { counter: 0, round: 1, users: [], replied: [], sandBox: false, sandBoxActive: false }
                 this.collectors = {}
 
                 this.msg = undefined
