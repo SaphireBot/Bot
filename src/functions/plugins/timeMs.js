@@ -1,4 +1,4 @@
-import moment from "moment"
+import moment from "moment-timezone"
 
 export default (Time) => {
 
@@ -16,7 +16,7 @@ export default (Time) => {
         if (['hoje', 'today'].includes(data.toLowerCase()))
             data = day()
 
-        if (!hour && data.includes(':') && data.length <= 5) {
+        if (!hour && data.includes(':') && data.length <= 8) {
             data = day()
             hour = Args[0]
         }
@@ -30,7 +30,7 @@ export default (Time) => {
         const hourArray = hour.split(':')
         const dia = parseInt(dataArray[0])
         const mes = parseInt(dataArray[1]) - 1
-        const ano = parseInt(dataArray[2])
+        const ano = parseInt(dataArray[2]) || '2023'
         const hora = parseInt(hourArray[0])
         const minutos = parseInt(hourArray[1])
         const segundos = parseInt(hourArray[2]) || 0
@@ -41,7 +41,7 @@ export default (Time) => {
 
         date = date.valueOf()
 
-        if (date < Date.now()) return null
+        if (date < Date.now()) return false
 
         timeResult += date - Date.now()
 
@@ -89,14 +89,13 @@ export default (Time) => {
 function day(tomorrow = false) {
 
     const date = new Date()
-    date.setHours(date.getHours() - 3)
 
     if (tomorrow)
         date.setDate(date.getDate() + 1)
 
-    let Mes = FormatNumber(date.getMonth() + 1)
-    let Dia = FormatNumber(date.getDate())
-    let Ano = date.getFullYear()
+    const Mes = FormatNumber(date.getMonth() + 1)
+    const Dia = FormatNumber(date.getDate())
+    const Ano = date.getFullYear()
 
     return `${Dia}/${Mes}/${Ano}`
 
