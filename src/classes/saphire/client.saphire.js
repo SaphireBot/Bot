@@ -154,6 +154,8 @@ export default new class SaphireClient extends Client {
      */
     async start() {
 
+        process.env.TZ = "America/Sao_Paulo"
+
         import('./process.saphire.js')
         console.log('1/14 - Process Handler Readed')
 
