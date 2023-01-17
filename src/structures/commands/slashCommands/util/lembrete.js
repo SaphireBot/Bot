@@ -75,9 +75,25 @@ export default {
                         {
                             name: '📝 Formas de Escrita',
                             value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`2 dias 10 minutos 5 segundos\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                        },
+                        {
+                            name: `${e.QuestionMark} Status`,
+                            value: TimeMs === false ? 'O tempo definido não pode estar no passado' : 'Tempo definido de forma incorreta'
                         }
                     ]
                 }]
+            })
+
+        if (TimeMs > 63115200000)
+            return await interaction.reply({
+                content: `${e.Deny} | O tempo limite é de 2 anos.`,
+                ephemeral: true
+            })
+
+        if ((Date.now() + TimeMs) <= (Date.now() + 4000))
+            return await interaction.reply({
+                content: `${e.Deny} | O tempo minímo para configurar um lembrete é de 5 segundos.`,
+                ephemeral: true
             })
 
         const data = {
@@ -86,15 +102,17 @@ export default {
             RemindMessage: message,
             guildId: guild.id,
             Time: TimeMs,
+            timeout: false,
+            snoozed: false,
             DateNow: Date.now(),
             ChannelId: channel.id
         }
 
         return managerReminder.save(data)
             .then(async doc => {
-                setTimeout(() => reminderStart({ user, data }), TimeMs)
+                managerReminder.start(user, data)
                 return await interaction.reply({
-                    content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${doc.Time > 86400000 ? Date.GetTimeout(doc.Time, doc.DateNow, 'f') : Date.GetTimeout(doc.Time, doc.DateNow, 'R')}`,
+                    content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? Date.GetTimeout(data.Time + 1000, data.DateNow, 'f') : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
                     ephemeral: true
                 })
             })
