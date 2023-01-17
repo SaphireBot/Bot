@@ -118,9 +118,6 @@ export default app
 
 async function alertLogin(host) {
 
-  if (host === 'LocalHost')
-    return console.log('Online em LocalHost')
-
   if (!host) {
     console.clear()
     return process.exit(10)
@@ -130,14 +127,13 @@ async function alertLogin(host) {
 
   return await axios({
     url: 'https://ways.discloud.app/online',
-    data: {
-      authorization: process.env.LOGIN_ACCESS,
+    headers: {
+      authorization: `${process.env.LOGIN_ACCESS}`,
       host: host
     },
     method: "POST"
   })
     .then(async value => {
-
       if (value.data.continue === "Logout") {
         console.clear()
 
@@ -165,5 +161,5 @@ async function alertLogin(host) {
       else console.log('14/14 - Webhook Not Responded\n ' + webhookResponse)
 
     })
-    .catch(err => console.log(err))
+    .catch(() => { })
 }

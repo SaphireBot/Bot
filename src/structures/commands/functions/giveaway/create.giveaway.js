@@ -25,9 +25,19 @@ export default async interaction => {
                     {
                         name: '📝 Formas de Escrita',
                         value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`2 dias 10 minutos 5 segundos\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                    },
+                    {
+                        name: `${e.QuestionMark} Status`,
+                        value: TimeMs === false ? 'O tempo definido não pode estar no passado' : 'Tempo definido de forma incorreta'
                     }
                 ]
             }]
+        })
+
+    if ((Date.now() + TimeMs) <= (Date.now() + 4000))
+        return await interaction.reply({
+            content: `${e.Deny} | O tempo minímo para configurar um sorteio é de 5 segundos.`,
+            ephemeral: true
         })
 
     if (TimeMs > 2592000000)
