@@ -3,12 +3,14 @@ const { Schema, model } = Mongoose
 
 export default model("Reminders", new Schema({
     id: { type: String, unique: true },
-    userId: String,
-    guildId: String,
-    RemindMessage: String,
-    Time: Number,
+    userId: { type: String, default: "" },
+    guildId: { type: String, default: "" },
+    RemindMessage: { type: String, default: "" },
+    Time: { type: Number, default: 0 },
+    snoozed: { type: Boolean, default: false },
+    timeout: { type: Schema.Types.Mixed, default: false },
     isAutomatic: { type: Boolean, default: false },
-    DateNow: Number,
-    ChannelId: String,
+    DateNow: { type: Number, default: 0 },
+    ChannelId: { type: String, default: "" },
     Alerted: { type: Boolean, default: false }
 }))
