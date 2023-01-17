@@ -86,7 +86,7 @@ export default class SelectMenuInteraction extends Base {
 
         const data = JSON.parse(value)
 
-        const reminderData = managerReminder.reminders.find(r => r?.id === data?.reminderId)
+        const reminderData = [...managerReminder.reminders, ...managerReminder.over32Bits].find(r => r?.id === data?.reminderId)
 
         if (!reminderData)
             return await interaction.update({

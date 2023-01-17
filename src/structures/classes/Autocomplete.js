@@ -82,7 +82,7 @@ export default class Autocomplete extends Base {
     }
 
     async reminders(value) {
-        const reminders = managerReminder.reminders.filter(r => r.userId = this.user.id)
+        const reminders = [...managerReminder.reminders, ...managerReminder.over32Bits].filter(r => r.userId = this.user.id)
         if (!reminders.length) return await this.respond()
 
         const fill = reminders.filter(r =>
