@@ -10,7 +10,7 @@ import SlashCommand from '../structures/classes/SlashCommand.js'
 import ButtonInteraction from '../structures/classes/ButtonInteraction.js'
 import ModalInteraction from '../structures/classes/ModalInteraction.js'
 import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.js'
-import GiveawayManager from '../functions/update/giveaway/GiveawayManager.js'
+import GiveawayManager from '../functions/update/giveaway/manager.giveaway.js'
 import Experience from './modules/Experience.js'
 import Logomarca from './games/Logomarca.js'
 
