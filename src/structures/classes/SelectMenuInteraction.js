@@ -85,19 +85,15 @@ export default class SelectMenuInteraction extends Base {
     async reminder({ interaction, value, user }) {
 
         const data = JSON.parse(value)
-
         const reminderData = [...managerReminder.reminders, ...managerReminder.over32Bits].find(r => r?.id === data?.reminderId)
+
+        if (user.id !== reminderData?.userId) return
 
         if (!reminderData)
             return await interaction.update({
                 content: `${e.Deny} | Lembrete não encontrado.`,
                 embeds: [], components: []
             }).catch(() => { })
-
-        if (user.id !== reminderData?.userId) return
-
-        if (data.c === 'deleteMessage')
-            return await interaction.message.delete()?.catch(() => { })
 
         if (data.c === 'edit')
             return managerReminder.requestEdit(interaction, data.reminderId)
