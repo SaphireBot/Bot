@@ -129,8 +129,8 @@ export default new class ReminderManager {
                 continue
             } else continue
         }
-        // return setTimeout(() => this.checkBits(), 600000)
-        return setTimeout(() => this.checkBits(), 3000)
+
+        return setTimeout(() => this.checkBits(), 600000)
     }
 
     async remove(reminderId) {
@@ -257,16 +257,11 @@ export default new class ReminderManager {
                             emoji: '🗺️',
                             description: 'Definir que o lembrete seja disparado aqui',
                             value: JSON.stringify({ c: 'move', reminderId })
-                        },
-                        {
-                            label: 'Deletar mensagem',
-                            emoji: '❌',
-                            description: 'Apague está mensagem e finja que nada aconteceu',
-                            value: JSON.stringify({ c: 'deleteMessage' })
                         }
                     ]
                 }]
-            }]
+            }],
+            ephemeral: true
         }
 
         if (toEdit)
@@ -388,7 +383,7 @@ export default new class ReminderManager {
             this.reminders.splice(indexReminders, 1)
 
         this.start(interaction.user, data)
-        return this.show(interaction, reminderId)
+        return this.show(interaction, reminderId, true)
     }
 
     async snooze(message, reminderId) {
