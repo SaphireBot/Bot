@@ -112,7 +112,7 @@ const system = {
   }
 }[hostName]
 
-app.listen(system?.port || 8080, "0.0.0.0", () => alertLogin(system.name || "Discloud"))
+app.listen(system?.port || process.env.SERVER_PORT, "0.0.0.0", () => alertLogin(system?.name || "Discloud"))
 
 export default app
 
@@ -133,20 +133,7 @@ async function alertLogin(host) {
     },
     method: "POST"
   })
-    .then(async value => {
-      if (value.data.continue === "Logout") {
-        console.clear()
-
-        client.sendWebhook(
-          process.env.WEBHOOK_STATUS,
-          {
-            username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Try to connect`,
-            content: `Tentativa de login na **${system.name}**. Efetuando desligamento por duplicidade.`
-          }
-        )
-
-        return process.exit(11)
-      }
+    .then(async () => {
 
       const webhookResponse = await client.sendWebhook(
         process.env.WEBHOOK_STATUS,

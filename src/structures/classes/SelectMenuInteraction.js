@@ -94,7 +94,7 @@ export default class SelectMenuInteraction extends Base {
                 content: `${e.Deny} | Lembrete não encontrado.`,
                 embeds: [], components: []
             }).catch(() => { })
-
+            
         if (data.c === 'edit')
             return managerReminder.requestEdit(interaction, data.reminderId)
 
