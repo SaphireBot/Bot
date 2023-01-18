@@ -12,7 +12,7 @@ client.on('messageCreate', async message => {
 
     afkSystem(message)
 
-    if (message.content?.includes(client.user.id))
+    if (message.content === `<@${client.user.id}>`)
         return message.reply({
             content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando \`/help\``
         }).catch(() => { })
