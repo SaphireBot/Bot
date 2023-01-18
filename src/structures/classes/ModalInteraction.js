@@ -61,7 +61,6 @@ export default class ModalInteraction extends Base {
 
             if (data?.c === 'reminder')
                 return managerReminder.edit(this.interaction, data?.reminderId)
-
         }
 
         return await this.interaction.reply({
