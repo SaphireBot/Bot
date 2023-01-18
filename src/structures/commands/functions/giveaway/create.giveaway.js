@@ -1,4 +1,4 @@
-import { Database, SaphireClient as client } from '../../../../classes/index.js'
+import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
@@ -20,11 +20,11 @@ export default async interaction => {
             embeds: [{
                 color: client.blue,
                 title: `⏱️ | ${client.user.username}'s Time System`,
-                description: 'O meu sistema de tempo transforma o que você escreve em uma data.',
+                description: 'O meu sistema de tempo transforma o que você escreve em uma data.\nEle suporta 7 tipos diferentes de tempo escrito.',
                 fields: [
                     {
                         name: '📝 Formas de Escrita',
-                        value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`2 dias 10 minutos 5 segundos\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                        value: "> \`a - h - m - s\` - Ano, Hora, Minuto, Segundo\n \n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n \n> \`2 dias 10 minutos 5 segundos\`\n \n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n \n> \`hoje 14:35` - `amanhã 14:35\`\n \n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`\n \n> `domingo 11:00` - `segunda` - `terça-feira 17:00`"
                     },
                     {
                         name: `${e.QuestionMark} Status`,
@@ -40,9 +40,9 @@ export default async interaction => {
             ephemeral: true
         })
 
-    if (TimeMs > 2592000000)
+    if (TimeMs > 63115200000)
         return await interaction.reply({
-            content: `${e.Deny} | O tempo limite é de 30 dias.`,
+            content: `${e.Deny} | O tempo limite é de 2 anos.`,
             ephemeral: true
         })
 
@@ -115,7 +115,7 @@ export default async interaction => {
             { upsert: true }
         )
 
-        setTimeout(() => client.emit('giveaway', giveawayData), TimeMs)
+        GiveawayManager.selectGiveaways([giveawayData])
 
         const embed = {
             color: color || 0x0099ff,
