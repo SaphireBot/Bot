@@ -57,8 +57,9 @@ export default new class GiveawayManager {
             if (timeMs <= 1000)
                 client.emit('giveaway', gw)
             else {
+                const timeout = setTimeout(() => client.emit('giveaway', gw), timeMs)
+                gw.timeout = timeout
                 this.giveaways.push(gw)
-                setTimeout(() => client.emit('giveaway', gw), timeMs)
             }
             continue
         }
