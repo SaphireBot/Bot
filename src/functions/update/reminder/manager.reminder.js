@@ -103,15 +103,15 @@ export default new class ReminderManager {
                 RemindMessage: data.RemindMessage,
                 Time: data.Time,
                 snoozed: data.snoozed,
-                timeout,
+                timeout: timeout,
                 isAutomatic: data.isAutomatic,
                 DateNow: data.DateNow,
                 ChannelId: data.ChannelId,
                 Alerted: data.Alerted,
             })
 
-        data.timeout = timeout
-        return data
+        reminder.timeout = timeout
+        return reminder
     }
 
     checkBits() {
