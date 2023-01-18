@@ -3,17 +3,17 @@ import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
 
-export default async interaction => {
+export default async (interaction, giveawayResetedData) => {
 
     const { options, user, guild, channel: intChannel } = interaction
-    const Prize = options.getString('prize')
-    const Time = options.getString('time')
-    const Requisitos = options.getString('requires')
-    const imageURL = options.getString('imageurl')
-    const Channel = options.getChannel('channel')
-    const color = Colors[options.getString('color')]
-    const WinnersAmount = options.getInteger('winners') || 1
-    let TimeMs = timeMs(Time)
+    const Prize = options.getString('prize') || giveawayResetedData?.Prize
+    const Time = options.getString('time') || giveawayResetedData?.TimeMs
+    const Requisitos = options.getString('requires') || giveawayResetedData?.Requires
+    const imageURL = options.getString('imageurl') || giveawayResetedData?.imageUrl
+    const Channel = options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
+    const color = Colors[options.getString('color')] || giveawayResetedData?.color
+    const WinnersAmount = options.getInteger('winners') || giveawayResetedData?.Winners || 1
+    let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
     if (!TimeMs)
         return await interaction.reply({
@@ -98,7 +98,7 @@ export default async interaction => {
         const giveawayData = { // new Class Model
             MessageID: msg.id, // Id da Mensagem
             GuildId: guild.id, // Id do Servidor
-            Prize: Prize, // Prêmio do sorteio
+            Prize, // Prêmio do sorteio
             Winners: WinnersAmount, // Quantos vencedores
             Emoji: emojiData, // Quantos vencedores
             TimeMs: TimeMs, // Tempo do Sorteio
@@ -157,7 +157,7 @@ export default async interaction => {
             .then(async () => {
                 Message.delete()
                 return await interaction.editReply({
-                    content: `${e.Check} | Sorteio criado com sucesso! Você pode vê-lo no canal ${msg.channel}`,
+                    content: `${e.Check} | ${giveawayResetedData ? 'Sorteio resetado' : 'Sorteio criado'} com sucesso! Você pode vê-lo no canal ${msg.channel}`,
                     ephemeral: true
                 })
             })

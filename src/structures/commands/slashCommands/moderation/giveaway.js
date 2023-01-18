@@ -4,6 +4,7 @@ import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 import listGiveaway from '../../functions/giveaway/list.giveaway.js'
 import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'
+import resetGiveaway from '../../functions/giveaway/reset.giveaway.js'
 
 export default {
     name: 'giveaway',
@@ -106,10 +107,10 @@ export default {
                             name: 'delete',
                             value: 'delete'
                         },
-                        // {
-                        //     name: 'reset',
-                        //     value: 'reset'
-                        // },
+                        {
+                            name: 'reset',
+                            value: 'reset'
+                        },
                         // {
                         //     name: 'finish',
                         //     value: 'finish'
@@ -162,7 +163,7 @@ export default {
 
             switch (options.getString('method')) {
                 case 'delete': deleteGiveaway(interaction, guildData); break;
-                // case 'reset': resetGiveaway(); break;
+                case 'reset': resetGiveaway(interaction, guildData); break;
                 // case 'finish': finishGiveaway(); break;
                 // case 'info': infoGiveaway(); break;
             }

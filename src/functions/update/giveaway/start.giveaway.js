@@ -1,14 +1,17 @@
 import { time } from 'discord.js'
 import {
     SaphireClient as client,
-    Database
+    Database,
+    GiveawayManager
 } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
 export default async (giveaway, guild, channel) => {
 
-    if (!giveaway || !guild || !channel)
-        return Database.deleteGiveaway(giveaway.MessageID, guild.id)
+    const hasGiveaway = GiveawayManager.giveaways.some(gw => gw.MessageID == giveaway.MessageID)
+
+    if (!giveaway || !guild || !channel || !hasGiveaway)
+        return Database.deleteGiveaway(giveaway?.MessageID, guild?.id)
 
     const { MessageID } = giveaway
     const emoji = giveaway.Emoji || '🎉'

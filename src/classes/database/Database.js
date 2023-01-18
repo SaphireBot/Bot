@@ -217,6 +217,8 @@ export default new class Database extends Models {
 
     deleteGiveaway = async (DataId, GuildId, All = false) => {
 
+        if (!DataId || !GuildId) return
+
         const data = All
             ? { $unset: { Giveaways: 1 } }
             : { $pull: { Giveaways: { MessageID: DataId } } }

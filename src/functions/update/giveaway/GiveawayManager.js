@@ -48,7 +48,7 @@ export default new class GiveawayManager {
         for await (const gw of giveaways) {
 
             const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
-
+            
             if (timeMs > 2147483647) {
                 this.awaiting.push(gw)
                 continue
@@ -56,8 +56,10 @@ export default new class GiveawayManager {
 
             if (timeMs <= 1000)
                 client.emit('giveaway', gw)
-            else setTimeout(() => client.emit('giveaway', gw), timeMs)
-
+            else {
+                this.giveaways.push(gw)
+                setTimeout(() => client.emit('giveaway', gw), timeMs)
+            }
             continue
         }
 

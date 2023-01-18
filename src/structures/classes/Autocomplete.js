@@ -432,9 +432,6 @@ export default class Autocomplete extends Base {
 
         const mapped = fill.map(gw => ({ name: `${gw.MessageID} | ${gw.Winners > 1 ? `(${gw.Winners}) vencedores` : '(1) vencedor'} | ${gw.Prize}`, value: gw.MessageID }))
 
-        if (giveaways.length > 2)
-            mapped.unshift({ name: 'Deletar todos os sorteios', value: 'all' })
-
         return await this.respond(mapped)
     }
 
