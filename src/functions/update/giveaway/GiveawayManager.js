@@ -6,6 +6,8 @@ import {
 export default new class GiveawayManager {
     constructor() {
         this.giveaways = []
+        this.awaiting = []
+        this.onCheck = []
     }
 
     async setGiveaways() {
@@ -47,6 +49,11 @@ export default new class GiveawayManager {
 
             const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
 
+            if (timeMs > 2147483647) {
+                this.awaiting.push(gw)
+                continue
+            }
+
             if (timeMs <= 1000)
                 client.emit('giveaway', gw)
             else setTimeout(() => client.emit('giveaway', gw), timeMs)
@@ -54,7 +61,27 @@ export default new class GiveawayManager {
             continue
         }
 
+        if (this.onCheck) this.checkBits()
         return
+    }
+
+    checkBits() {
+        this.onCheck = true
+
+        if (!this.awaiting.length)
+            return this.onCheck = false
+
+        for (let gw of this.awaiting) {
+            const time = (gw.DateNow + gw.TimeMs) - Date.now()
+            if (time < 2147483647) {
+                this.giveaways.push(gw)
+                this.selectGiveaways([gw])
+                this.awaiting.splice(this.awaiting.findIndex(g => g.MessageID === gw.MessageID), 1)
+                continue
+            } else continue
+        }
+
+        return setTimeout(() => this.checkBits(), 600000)
     }
 
     async managerUnavailablesGiveaways(giveaways) {
