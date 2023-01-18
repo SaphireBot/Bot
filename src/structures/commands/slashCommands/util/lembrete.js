@@ -70,18 +70,19 @@ export default {
                 embeds: [{
                     color: client.blue,
                     title: `⏱️ | ${client.user.username}'s Time System`,
-                    description: 'O meu sistema de tempo transforma o que você escreve em uma data.',
+                    description: 'O meu sistema de tempo transforma o que você escreve em uma data.\nEle suporta 7 tipos diferentes de tempo escrito.',
                     fields: [
                         {
                             name: '📝 Formas de Escrita',
-                            value: "> \`h - m - s\` - Hora, Minuto, Segundo\n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n> \`2 dias 10 minutos 5 segundos\`\n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n> \`hoje 14:35` - `amanhã 14:35\`\n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`"
+                            value: "> \`a - h - m - s\` - Ano, Hora, Minuto, Segundo\n \n> \`1h 10m 40s\` - \`1m 10s\` - \`2h 10m\`\n \n> \`2 dias 10 minutos 5 segundos\`\n \n> \`30/01/2022 14:35:25\` *Os segundos são opcionais*\n \n> \`hoje 14:35` - `amanhã 14:35\`\n \n> \`09:10\` - \`14:35\` - \`30/01/2022\` - \`00:00\`\n \n> `domingo 11:00` - `segunda` - `terça-feira 17:00`"
                         },
                         {
                             name: `${e.QuestionMark} Status`,
                             value: TimeMs === false ? 'O tempo definido não pode estar no passado' : 'Tempo definido de forma incorreta'
                         }
                     ]
-                }]
+                }],
+                ephemeral: true
             })
 
         if (TimeMs > 63115200000)
@@ -109,10 +110,10 @@ export default {
         }
 
         return managerReminder.save(data)
-            .then(async doc => {
+            .then(async () => {
                 managerReminder.start(user, data)
                 return await interaction.reply({
-                    content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? Date.GetTimeout(data.Time + 1000, data.DateNow, 'f') : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
+                    content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? `no dia ${Date.GetTimeout(data.Time + 1000, data.DateNow, 'F')} (${Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')})` : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
                     ephemeral: true
                 })
             })
