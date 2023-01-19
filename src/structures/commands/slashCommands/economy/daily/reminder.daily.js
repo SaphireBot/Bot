@@ -72,7 +72,7 @@ export default async (interaction, dateNow, oneDayMiliseconds) => {
         })
 
     async function revalidadeDailyReminder() {
-        managerReminder.save({
+        managerReminder.save(user, {
             id: CodeGenerator(7).toUpperCase(),
             userId: user.id,
             guildId: guild.id,

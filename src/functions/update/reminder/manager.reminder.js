@@ -87,7 +87,7 @@ export default new class ReminderManager {
         const reminder = [...this.reminders, ...this.over32Bits].find(r => r.id === data.id)
         const remainTime = (data.DateNow + data.Time) - Date.now()
 
-        if (remainTime > 2147483647) {
+        if (!reminder && remainTime > 2147483647) {
             this.over32Bits.push(data)
             if (!this.checking) this.checkBits()
             return
@@ -157,12 +157,26 @@ export default new class ReminderManager {
         return
     }
 
-    async save(data) {
+    async save(user, data) {
         return new Database
             .Reminder(data)
             .save()
-            .then(doc => {
+            .then(async doc => {
                 if (doc.Time > 2147483647)
+                    this.over32Bits.push({
+                        id: doc.id,
+                        userId: doc.userId,
+                        guildId: doc.guildId,
+                        RemindMessage: doc.RemindMessage,
+                        Time: doc.Time,
+                        snoozed: false,
+                        timeout: false,
+                        isAutomatic: doc.isAutomatic,
+                        DateNow: doc.DateNow,
+                        ChannelId: doc.ChannelId,
+                        Alerted: doc.Alerted
+                    })
+                else {
                     this.reminders.push({
                         id: doc.id,
                         userId: doc.userId,
@@ -176,22 +190,11 @@ export default new class ReminderManager {
                         ChannelId: doc.ChannelId,
                         Alerted: doc.Alerted
                     })
-                else this.reminders.push({
-                    id: doc.id,
-                    userId: doc.userId,
-                    guildId: doc.guildId,
-                    RemindMessage: doc.RemindMessage,
-                    Time: doc.Time,
-                    snoozed: false,
-                    timeout: false,
-                    isAutomatic: doc.isAutomatic,
-                    DateNow: doc.DateNow,
-                    ChannelId: doc.ChannelId,
-                    Alerted: doc.Alerted
-                })
+                    await this.start(user, doc)
+                }
                 return doc
             })
-            .catch(() => { })
+            .catch(() => null)
     }
 
     async show(interaction, reminderId, toEdit) {

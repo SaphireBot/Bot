@@ -2,6 +2,7 @@ import Base from '../../../../classes/Base.js'
 import { Config as config } from '../../../../../util/Constants.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 import revalidateReminder from './reminder.daily.js'
+import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -128,29 +129,31 @@ export default class Daily extends Base {
         const dateNow = Date.now()
 
         if (isReminder)
-            new this.Database.Reminder({
+            managerReminder.save(this.user, {
                 id: CodeGenerator(7).toUpperCase(),
                 userId: this.user.id,
+                guildId: this.guild.id,
                 RemindMessage: 'Daily Disponível',
                 Time: 86400000,
                 DateNow: dateNow,
                 isAutomatic: true,
-                ChannelId: this.channel.id
-            }).save()
+                ChannelId: this.channel.id,
+            })
 
         const data = {
-            'Timeouts.Daily': dateNow,
             $inc: {
                 DailyCount: 1,
                 Balance: prize.money,
                 Xp: prize.xp,
+            },
+            $set: {
+                'Timeouts.Daily': dateNow
             }
         }
 
         if (prize.day > 0)
             data.$push = {
-                Transactions:
-                {
+                Transactions: {
                     $each: [{
                         time: `${Date.format(0, true)} - ${await this.user.balance()}`,
                         data: `${this.emojis.gain} Ganhou ${prize.money} Safiras no ${prize.day}º dia do *daily*.`
@@ -159,7 +162,7 @@ export default class Daily extends Base {
                 }
             }
 
-        await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
+        return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
 
     }
 

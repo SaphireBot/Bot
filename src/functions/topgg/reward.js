@@ -32,7 +32,7 @@ export default async (userId) => {
     embed.color = client.green
 
     if (data.isReminder) {
-        managerReminder.save({
+        managerReminder.save(user, {
             id: CodeGenerator(7).toUpperCase(),
             userId: userId,
             guildId: data.guildId,

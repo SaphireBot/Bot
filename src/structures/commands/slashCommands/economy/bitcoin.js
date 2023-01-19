@@ -130,7 +130,7 @@ export default {
             let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(new Date((timeout || Date.now()) + 7200000), 'R', true)}`
 
             if (isReminder) {
-                managerReminder.save({
+                managerReminder.save(user, {
                     id: CodeGenerator(7).toUpperCase(),
                     userId: author.id,
                     guildId: guild.id,

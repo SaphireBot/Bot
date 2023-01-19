@@ -14,7 +14,7 @@ export default async ({ user, data }) => {
     if (!user || !RemindMessage)
         return managerReminder.remove(data.id)
 
-    const { isAutomatic } = data
+    const isAutomatic = data.isAutomatic
     const guild = await client.guilds.fetch(data.guildId).catch(() => null)
     const Channel = await guild?.channels.fetch(data.ChannelId || "0").catch(() => null)
     const hasMember = await guild?.members.fetch({ user: user.id, cache: true, force: true }).catch(() => null)
@@ -23,7 +23,7 @@ export default async ({ user, data }) => {
         return NotifyUser(user, RemindMessage, data.id)
 
     const msg = await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
-        .catch(async () => await  NotifyUser())
+        .catch(async () => await NotifyUser())
 
     if (!msg) return
     if (isAutomatic) return managerReminder.remove(data.id)

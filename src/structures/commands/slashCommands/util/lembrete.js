@@ -109,16 +109,13 @@ export default {
             ChannelId: channel.id
         }
 
-        return managerReminder.save(data)
-            .then(async () => {
-                managerReminder.start(user, data)
-                return await interaction.reply({
-                    content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? `no dia ${Date.GetTimeout(data.Time + 1000, data.DateNow, 'F')} (${Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')})` : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
-                    ephemeral: true
-                })
-            })
+        return managerReminder.save(user, data)
+            .then(async () => await interaction.reply({
+                content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? `no dia ${Date.GetTimeout(data.Time + 1000, data.DateNow, 'F')} (${Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')})` : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
+                ephemeral: true
+            }))
             .catch(async err => await interaction.reply({
-                content: `${e.cry} | Não foi possível criar o sorteio.\n${e.bug} | \`${err}\``
+                content: `${e.cry} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
             }))
 
     }
