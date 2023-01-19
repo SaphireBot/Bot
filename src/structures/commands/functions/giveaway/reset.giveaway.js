@@ -2,10 +2,10 @@ import { Database, GiveawayManager } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import createGiveaway from "./create.giveaway.js"
 
-export default async (interaction, guildData) => {
+export default async (interaction, guildData, giveawayId) => {
 
     const { options, guild } = interaction
-    const gwId = options.getString('select_giveaway')
+    const gwId = giveawayId || options.getString('select_giveaway')
 
     const allGiveaways = guildData.Giveaways || []
     if (!allGiveaways.length)
@@ -39,5 +39,5 @@ export default async (interaction, guildData) => {
 
     await Database.deleteGiveaway(gwId, guild.id)
 
-    return createGiveaway(interaction, giveaway)
+    return createGiveaway(interaction, giveaway, giveawayId ? true : false)
 }

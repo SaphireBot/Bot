@@ -3,10 +3,10 @@ import { Emojis as e } from "../../../../util/util.js"
 import startGiveaway from "../../../../functions/update/giveaway/start.giveaway.js"
 import { ButtonStyle } from "discord.js"
 
-export default async (interaction, guildData) => {
+export default async (interaction, guildData, giveawayId) => {
 
     const { options, guild } = interaction
-    const gwId = options.getString('select_giveaway')
+    const gwId = giveawayId || options.getString('select_giveaway')
     const giveaway = guildData?.Giveaways?.find(gw => gw?.MessageID === gwId)
 
     if (!giveaway)
@@ -21,7 +21,7 @@ export default async (interaction, guildData) => {
             ephemeral: true
         })
 
-    const cachedGiveaway = GiveawayManager.giveaways.find(gw => gw?.MessageID == gwId)
+    const cachedGiveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].find(gw => gw?.MessageID == gwId)
 
     if (!cachedGiveaway)
         return await interaction.reply({

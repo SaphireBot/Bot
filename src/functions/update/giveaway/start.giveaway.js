@@ -8,7 +8,7 @@ import { Emojis as e } from '../../../util/util.js'
 
 export default async (giveaway, guild, channel, finalForce) => {
 
-    const hasGiveaway = GiveawayManager.giveaways.some(gw => gw.MessageID == giveaway.MessageID)
+    const hasGiveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].some(gw => gw.MessageID == giveaway.MessageID)
 
     if (!giveaway || !guild || !channel || !hasGiveaway)
         return Database.deleteGiveaway(giveaway?.MessageID, guild?.id)

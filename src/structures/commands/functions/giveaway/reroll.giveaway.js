@@ -2,10 +2,10 @@ import { ButtonStyle } from "discord.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
-export default async (interaction, guildData) => {
+export default async (interaction, guildData, giveawayId) => {
 
     const { options } = interaction
-    const messageId = options.getString('id')
+    const messageId = giveawayId || options.getString('id')
 
     if (messageId === 'info')
         return await interaction.reply({
@@ -38,7 +38,7 @@ export default async (interaction, guildData) => {
         })
 
     const giveaway = guildData?.Giveaways?.find(gw => gw.MessageID === messageId)
-    const winnersAmount = options.getInteger('winners') || giveaway?.Winners
+    const winnersAmount = giveawayId ? giveaway?.Winners : options.getInteger('winners') || giveaway?.Winners
 
     if (!giveaway)
         return await interaction.reply({
@@ -102,7 +102,7 @@ export default async (interaction, guildData) => {
         embeds: [
             {
                 color: client.green,
-                title: `${e.Tada} Sorteio Finalizado[REROLL]`,
+                title: `${e.Tada} Sorteio Finalizado [REROLL]`,
                 url: giveaway?.MessageLink || null,
                 fields: [
                     {

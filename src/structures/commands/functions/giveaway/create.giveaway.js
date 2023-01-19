@@ -3,16 +3,16 @@ import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
 
-export default async (interaction, giveawayResetedData) => {
+export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
 
     const { options, user, guild, channel: intChannel } = interaction
-    const Prize = options.getString('prize') || giveawayResetedData?.Prize
-    const Time = options.getString('time') || giveawayResetedData?.TimeMs
-    const Requisitos = options.getString('requires') || giveawayResetedData?.Requires
-    const imageURL = options.getString('imageurl') || giveawayResetedData?.imageUrl
-    const Channel = options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
-    const color = Colors[options.getString('color')] || giveawayResetedData?.color
-    const WinnersAmount = options.getInteger('winners') || giveawayResetedData?.Winners || 1
+    const Prize = bySelectMenuInteraction ? giveawayResetedData?.Prize : options.getString('prize') || giveawayResetedData?.Prize
+    const Time = bySelectMenuInteraction ? giveawayResetedData?.TimeMs : options.getString('time') || giveawayResetedData?.TimeMs
+    const Requisitos = bySelectMenuInteraction ? giveawayResetedData?.Requires : options.getString('requires') || giveawayResetedData?.Requires
+    const imageURL = bySelectMenuInteraction ? giveawayResetedData?.imageUrl : options.getString('imageurl') || giveawayResetedData?.imageUrl
+    const Channel = bySelectMenuInteraction ? interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId) : options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
+    const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color
+    const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
     if (!TimeMs)
@@ -164,7 +164,8 @@ export default async (interaction, giveawayResetedData) => {
             .catch(async err => {
 
                 Database.deleteGiveaway(msg.id, guild.id)
-                msg.delete()
+                msg.delete().catch(() => { })
+                Message.delete().catch(() => { })
 
                 if (err.code === 50035)
                     return await interaction.followUp({

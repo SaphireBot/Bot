@@ -4,14 +4,14 @@ import {
 import { Emojis as e } from '../../../../util/util.js'
 import { ButtonStyle } from 'discord.js'
 
-export default async (interaction, guildData) => {
+export default async (interaction, guildData, giveawayId) => {
 
     const { options, guild, user } = interaction
-    const giveawayId = options.getString('select_giveaway')
+    const gwId = giveawayId || options.getString('select_giveaway')
 
-    if (giveawayId === 'all') return deleteAll()
+    if (gwId === 'all') return deleteAll()
 
-    const sorteio = guildData.Giveaways?.find(gw => gw.MessageID === giveawayId)
+    const sorteio = guildData.Giveaways?.find(gw => gw.MessageID === gwId) || guildData?.Giveaways?.find(gw => gw.MessageID === gwId)
 
     if (!sorteio)
         return await interaction.reply({
@@ -20,22 +20,22 @@ export default async (interaction, guildData) => {
         })
 
     const msg = await interaction.reply({
-        content: `${e.QuestionMark} | Deseja deletar o sorteio \`${giveawayId}\`?`,
+        content: `${e.QuestionMark} | Deseja mesmo deletar o sorteio \`${gwId}\` do banco de dados?`,
         components: [
             {
                 type: 1,
                 components: [
                     {
                         type: 2,
-                        label: 'DELETAR SORTEIO',
+                        label: 'Confirmar',
                         custom_id: 'delete',
-                        style: ButtonStyle.Success
+                        style: ButtonStyle.Danger
                     },
                     {
                         type: 2,
-                        label: 'CANCELAR',
+                        label: 'Cancelar',
                         custom_id: 'cancel',
-                        style: ButtonStyle.Danger
+                        style: ButtonStyle.Success
                     }
                 ]
             }
@@ -53,7 +53,7 @@ export default async (interaction, guildData) => {
 
             if (customId === 'cancel') return collector.stop()
 
-            Database.deleteGiveaway(giveawayId, guild.id)
+            Database.deleteGiveaway(gwId, guild.id)
             return await int.update({
                 content: `${e.Check} | Sorteio deletado com sucesso!`,
                 components: []
@@ -67,7 +67,7 @@ export default async (interaction, guildData) => {
         })
 
     async function deleteAll() {
-        Database.deleteGiveaway(giveawayId, guild.id, true)
+        Database.deleteGiveaway(gwId, guild.id, true)
         return await interaction.reply({
             content: `${e.Check} | Todos os sorteios foram deletados com sucesso.`
         })

@@ -3,10 +3,10 @@ import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Consta
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 import finishGiveaway from '../../functions/giveaway/finish.giveaway.js'
+import infoGiveaway from '../../functions/giveaway/info.giveaway.js'
 import listGiveaway from '../../functions/giveaway/list.giveaway.js'
 import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'
 import resetGiveaway from '../../functions/giveaway/reset.giveaway.js'
-
 export default {
     name: 'giveaway',
     description: '[moderation] Crie sorteios no servidor',
@@ -105,22 +105,22 @@ export default {
                     required: true,
                     choices: [
                         {
-                            name: 'delete',
+                            name: 'Deletar',
                             value: 'delete'
                         },
                         {
-                            name: 'reset',
+                            name: 'Resetar',
                             value: 'reset'
                         },
                         {
-                            name: 'finish',
+                            name: 'Forçar Finalização',
                             value: 'finish'
                         },
-                        // {
-                        //     name: 'info',
-                        //     value: 'info'
-                        // }
-                    ],
+                        {
+                            name: 'Ver Informações',
+                            value: 'info'
+                        }
+                    ]
                 },
                 {
                     name: 'select_giveaway',
@@ -166,7 +166,7 @@ export default {
                 case 'delete': deleteGiveaway(interaction, guildData); break;
                 case 'reset': resetGiveaway(interaction, guildData); break;
                 case 'finish': finishGiveaway(interaction, guildData); break;
-                // case 'info': infoGiveaway(); break;
+                case 'info': infoGiveaway(interaction, guildData); break;
             }
             return
 

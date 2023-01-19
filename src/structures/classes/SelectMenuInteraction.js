@@ -4,6 +4,11 @@ import managerReminder from '../../functions/update/reminder/manager.reminder.js
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
+import deleteGiveaway from '../commands/functions/giveaway/delete.giveaway.js'
+import finishGiveaway from '../commands/functions/giveaway/finish.giveaway.js'
+import infoGiveaway from '../commands/functions/giveaway/info.giveaway.js'
+import rerollGiveaway from '../commands/functions/giveaway/reroll.giveaway.js'
+import resetGiveaway from '../commands/functions/giveaway/reset.giveaway.js'
 import genderProfile from '../commands/slashCommands/perfil/perfil/gender.profile.js'
 import signProfile from '../commands/slashCommands/perfil/perfil/sign.profile.js'
 import Base from './Base.js'
@@ -63,7 +68,9 @@ export default class SelectMenuInteraction extends Base {
                 chooseGender: 'sendSelectMenuGender',
                 refreshProfile: 'refreshProfile',
                 like: 'newLike',
-                editProfile: 'editProfile'
+                editProfile: 'editProfile',
+                giveaway: 'giveaway',
+                'delete': 'deleteMessage'
             }[this.customId?.c]
 
             if (byValues)
@@ -82,6 +89,45 @@ export default class SelectMenuInteraction extends Base {
             return result2(this)
     }
 
+    async deleteMessage({ message, user }) {
+        if (user.id !== message.interaction?.user?.id) return
+        return await message.delete()?.catch(() => { })
+    }
+
+    async giveaway({ interaction, message, value, user, guild }) {
+
+        if (user.id !== message.embeds[0]?.data?.footer?.text) return
+
+        const data = JSON.parse(value || {})
+        const src = data?.src
+
+        if (!data || !src)
+            return await interaction.update({
+                components: `${e.Deny} | Algo de errado não está certo por aqui.`,
+                components: [], embeds: []
+            }).catch(() => { })
+
+        const execute = {
+            'delete': deleteGiveaway,
+            reset: resetGiveaway,
+            finish: finishGiveaway,
+            reroll: rerollGiveaway
+        }[src]
+
+        if (!execute)
+            return await interaction.reply({
+                content: `${e.saphireDesespero} | NENHUMA COISA FOI ACHADAAA. Entra no meu servidor e fala pro meu criador, pelo amor de Deus!! \`#15482615\``
+            })
+
+        const guildData = await Database.Guild.findOne({ id: guild.id }) || {}
+        await execute(interaction, guildData, data.gwId)
+
+        if (['delete', 'reset', 'finish'].includes(src))
+            await message.delete()?.catch(() => { })
+
+        return
+    }
+
     async reminder({ interaction, value, user }) {
 
         const data = JSON.parse(value)
@@ -94,7 +140,7 @@ export default class SelectMenuInteraction extends Base {
                 content: `${e.Deny} | Lembrete não encontrado.`,
                 embeds: [], components: []
             }).catch(() => { })
-            
+
         if (data.c === 'edit')
             return managerReminder.requestEdit(interaction, data.reminderId)
 
