@@ -6,7 +6,7 @@ import {
 } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
-export default async (giveaway, guild, channel) => {
+export default async (giveaway, guild, channel, finalForce) => {
 
     const hasGiveaway = GiveawayManager.giveaways.some(gw => gw.MessageID == giveaway.MessageID)
 
@@ -31,7 +31,7 @@ export default async (giveaway, guild, channel) => {
 
     embedToEdit.color = client.red
     embedToEdit.description = null
-    embedToEdit.title += ' | Sorteio encerrado'
+    embedToEdit.title += ` | Sorteio ${finalForce ? 'Finalizado' : 'Encerrado'}`
     embedToEdit.footer.text = `Giveaway ID: ${MessageID} | ${Participantes.length} Participantes`
     embedToEdit.fields.push({
         name: `${e.Trash} Exclusão`,
@@ -56,13 +56,11 @@ export default async (giveaway, guild, channel) => {
 
     if (!vencedores || vencedores.length === 0) {
         channel.send({
-            embeds: [
-                {
-                    color: client.red,
-                    title: `${e.Deny} | Sorteio cancelado`,
-                    description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | ${MessageLink ? `[Giveaway Reference](${MessageLink})` : 'Link indisponível'}`
-                }
-            ]
+            embeds: [{
+                color: client.red,
+                title: `${e.Deny} | Sorteio cancelado`,
+                description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | ${MessageLink ? `[Giveaway Reference](${MessageLink})` : 'Link indisponível'}`
+            }]
         })
         return Database.deleteGiveaway(MessageID, guild.id)
     }

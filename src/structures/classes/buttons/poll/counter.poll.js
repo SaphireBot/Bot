@@ -132,9 +132,9 @@ export default async ({ interaction, guild, message, user, member }, commandData
             fields: 'Polls'
         }
     )
-        .catch(err => err.codeName)
+        .catch(err => ({ err: err.codeName }))
 
-    if (voteData) {
+    if (voteData?.err) {
 
         embed.fields.push({
             name: `${e.bug} Erro`,
