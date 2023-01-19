@@ -193,7 +193,7 @@ export default {
         const msg = await interaction.reply({
             embeds: [{
                 color: color,
-                title: `🎫 Nova votação ${anonymous ? 'anônima' : ''} aberta`,
+                title: `🎫 Nova votação ${anonymous ? 'anônima ' : ''}aberta`,
                 description: text,
                 fields: fields,
                 footer: {
