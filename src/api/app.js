@@ -5,7 +5,10 @@ import { SaphireClient as client } from '../classes/index.js'
 import { Emojis as e } from '../util/util.js'
 import os from 'os'
 const hostName = os.hostname()
-let system = { name: hostName, port: hostName === 'RodrigoPC' ? 1000 : 8080 }
+let system = {
+  name: hostName === 'RodrigoPC' ? 'RodrigoPC' : 'Discloud',
+  port: hostName === 'RodrigoPC' ? 1000 : 8080
+}
 import('dotenv/config');
 
 const app = express()
