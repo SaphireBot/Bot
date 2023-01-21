@@ -43,11 +43,11 @@ export default {
                 content: `${e.cry} | Não foi possível falar com o Top.GG. Tente novamente daqui a pouco, ok?`
             }).catch(() => { })
 
-        // if (hasVoted)
-        //     return await interaction.editReply({
-        //         content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
-        //         ephemeral: true
-        //     }).catch(() => { })
+        if (hasVoted)
+            return await interaction.editReply({
+                content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
+                ephemeral: true
+            }).catch(() => { })
 
         const inCachedData = await Database.Cache.General.get(`TopGG.${user.id}`)
 
