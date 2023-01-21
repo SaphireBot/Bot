@@ -24,23 +24,16 @@ app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
 
   if (req.headers?.authorization !== process.env.TOP_GG_ACCESS)
     return res
-      .send({
-        status: 401,
-        response: "Authorization is not defined correctly."
-      });
+      .send({ status: 401, response: "Authorization is not defined correctly." });
 
-  if (!req.headers?.user)
+  const userId = req.body?.user
+
+  if (!userId)
     return res.status(206).send('A partial content was given.')
 
-  const response = await topggReward(req.headers?.user || null).catch(() => null)
+  topggReward(userId || null).catch(() => null)
 
-  try {
-    return response
-      ? res.status(200)
-        .header(response)
-        .send()
-      : res.sendStatus(204)
-  } catch (err) { }
+  return res.status(200).send()
 })
 
 app.get(`${process.env.ROUTE_COMMANDS}`, async (req, res) => {

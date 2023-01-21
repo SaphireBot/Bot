@@ -34,7 +34,7 @@ export default {
         const timeouts = data?.Timeouts
         const clientTimeouts = clientData?.Timeouts
 
-        let TDaily, TPig, TWork, TCu, TBit, TLikes, TVip
+        let TDaily, TPig, TBit, TLikes, TVip
 
         if (isGlobal)
             return SendCooldownsSaphire()
@@ -124,7 +124,7 @@ export default {
                 return ms - (Date.now() - timeDatabase) > 0 ? cooldown(ms, timeDatabase) : '\`Indisponível\`'
             }
 
-            return Date.Timeout(ms, timeDatabase) ? `${e.Loading} ${Date.Timestamp(new Date(timeDatabase + ms), 'R', true)}` : `${e.Check} \`Disponível\``
+            return Date.Timeout(ms, timeDatabase) ? `${e.Loading} ${Date.Timestamp(new Date(timeDatabase + ms), 'R', true)}` : `${e.CheckV} \`Disponível\``
         }
 
     }

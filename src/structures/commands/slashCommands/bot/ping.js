@@ -50,15 +50,16 @@ export default {
             .catch(() => "🔴 Offline")
 
         toSubtract = Date.now()
+        const topGG = await axios.get("https://top.gg/api/bots/912509487984812043",
+            { headers: { authorization: process.env.TOP_GG_TOKEN }, timeout: 10000 })
+            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
+            .catch(() => "🔴 Offline")
+
+        toSubtract = Date.now()
         const saphireSite = await axios.get("https://saphire.one", { timeout: 10000 })
             .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
             // .catch(() => "🔴 Offline")
             .catch(() => "🛠 Em Construção")
-
-        toSubtract = Date.now()
-        const Squarecloud = await axios.get("https://api.squarecloud.app/v1/public/stats", { timeout: 10000 })
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => "🔴 Offline")
 
         toSubtract = Date.now()
         const discloudAPI = await Discloud.user.fetch()
@@ -71,7 +72,7 @@ export default {
             .catch(() => "🔴 Offline")
 
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging\n${e.slash} | Interações: ${client.interactions || 0}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n🔳 | SquareCloud API Host: ${Squarecloud}\n${e.discloud} | Discloud API Host: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging Counter\n${e.slash} | Interações: ${client.interactions || 0}\n${e.topgg} | Top.gg API Latency: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Response Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
             components: [
                 {
                     type: 1,

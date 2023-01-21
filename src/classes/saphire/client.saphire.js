@@ -199,10 +199,11 @@ export default new class SaphireClient extends Client {
         console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')
 
-        const guilds = await this.allGuildsData() || []
+        await this.guilds.all(false, true)
+        // const guilds = await this.allGuildsData() || []
         this.user.setPresence({
             activities: [
-                { name: `${this.slashCommands.size} comandos em ${guilds?.flat()?.length || 0}  servidores [Shard ${this.shardId} in Cluster ${this.clusterName}]` },
+                { name: `${this.slashCommands.size} comandos em ${this.allGuilds?.length || 0}  servidores [Shard ${this.shardId} in Cluster ${this.clusterName}]` },
                 { name: `Tentando entregar a melhor qualidade possível [Shard ${this.shardId} in Cluster ${this.clusterName}]` }
             ],
             status: 'idle'

@@ -80,7 +80,7 @@ export default {
                     fields: [
                         {
                             name: `👤 Pessoal`,
-                            value: `🔰 Princesa do Discord\n${e.Deny} Não tenho signo\n:tada: 29/4/2021\n${e.CatJump} Gatinha\n👷 Bot no Discord`
+                            value: `🔰 Princesa do Discord\n${e.DenyX} Não tenho signo\n:tada: 29/4/2021\n${e.CatJump} Gatinha\n👷 Bot no Discord`
                         },
                         {
                             name: '🌟 Títulos',
@@ -164,7 +164,7 @@ export default {
                     )
 
                     channel.send(`${e.Database} | DATABASE | Eu não achei o usuário setado como seu cônjuge. Efetuei a separação.`)
-                    return `${e.Deny} Usuário deletado`
+                    return `${e.DenyX} Usuário deletado`
                 }
 
                 const time = data?.Perfil.Marry?.StartAt
@@ -194,7 +194,7 @@ export default {
         if (clientData.Titles?.Halloween?.includes(user.id))
             titles.push("🎃 **Halloween 2021**")
 
-        const titulo = data.Perfil?.Titulo ? `🔰 ${data.Perfil?.Titulo}` : `${e.Deny} Sem título definido`
+        const titulo = data.Perfil?.Titulo ? `🔰 ${data.Perfil?.Titulo}` : `${e.DenyX} Sem título definido`
 
         const Estrelas = {
             Um: data.Perfil.Estrela?.Um,
@@ -216,10 +216,10 @@ export default {
         const parcaData = data?.Perfil?.Parcas || []
         const familyData = data?.Perfil?.Family
         const status = data?.Perfil?.Status || `${user.id === author.id ? 'Talvez você não conheça o comando' : `${user.username} não conhece o comando`} \`/perfil options: Editar perfil\``
-        const signo = data?.Perfil?.Signo ? `⠀\n${data?.Perfil?.Signo}` : `⠀\n${e.Deny} Sem signo definido`
-        const sexo = data?.Perfil?.Sexo ? `⠀\n${data?.Perfil?.Sexo}` : `⠀\n${e.Deny} Sem sexo definido`
-        const niver = data?.Perfil?.Aniversario ? `⠀\n🎉 ${data?.Perfil?.Aniversario}` : `⠀\n${e.Deny} Sem aniversário definido`
-        const job = data?.Perfil?.Trabalho ? `⠀\n👷 ${data?.Perfil?.Trabalho}` : `⠀\n${e.Deny} Sem profissão definida`
+        const signo = data?.Perfil?.Signo ? `⠀\n${data?.Perfil?.Signo}` : `⠀\n${e.DenyX} Sem signo definido`
+        const sexo = data?.Perfil?.Sexo ? `⠀\n${data?.Perfil?.Sexo}` : `⠀\n${e.DenyX} Sem sexo definido`
+        const niver = data?.Perfil?.Aniversario ? `⠀\n🎉 ${data?.Perfil?.Aniversario}` : `⠀\n${e.DenyX} Sem aniversário definido`
+        const job = data?.Perfil?.Trabalho ? `⠀\n👷 ${data?.Perfil?.Trabalho}` : `⠀\n${e.DenyX} Sem profissão definida`
         clientData.TopGlobal?.Level === user.id ? titles.push(`${e.RedStar} **Top Global Level**`) : ''
         clientData.TopGlobal?.Likes === user.id ? titles.push(`${e.Like} **Top Global Likes**`) : ''
         clientData.TopGlobal?.Money === user.id ? titles.push(`${e.MoneyWings} **Top Global Money**`) : ''
