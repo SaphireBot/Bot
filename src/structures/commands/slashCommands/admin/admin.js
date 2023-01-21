@@ -102,11 +102,6 @@ export default {
                     type: ApplicationCommandOptionType.Attachment
                 },
                 {
-                    name: 'squarecloud',
-                    description: 'Arquivo do commit que será enviado para a Squarecloud',
-                    type: ApplicationCommandOptionType.Attachment
-                },
-                {
                     name: 'api',
                     description: 'Arquivo a ser enviado para a API (Discloud Host)',
                     type: ApplicationCommandOptionType.Attachment
