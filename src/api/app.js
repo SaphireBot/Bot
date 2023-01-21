@@ -98,10 +98,6 @@ const system = {
   '52bd375d84ce': {
     name: 'Discloud',
     port: 8080
-  },
-  'squarecloud.app': {
-    name: 'Squarecloud',
-    port: 80
   }
 }[hostName]
 
@@ -118,28 +114,23 @@ async function alertLogin(host) {
 
   console.log('13/14 - Saphire\'s Local API Connected')
 
+  await client.sendWebhook(
+    process.env.WEBHOOK_STATUS,
+    {
+      username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
+      content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
+    }
+  )
+
   return await axios({
     url: 'https://ways.discloud.app/online',
+    method: "POST",
     headers: {
       authorization: `${process.env.LOGIN_ACCESS}`,
-      host: host
+      hostname: `${host} - ${hostName}`,
+      "Content-Type": "application/json"
     },
-    method: "POST"
+    data: {}
   })
-    .then(async () => {
-
-      const webhookResponse = await client.sendWebhook(
-        process.env.WEBHOOK_STATUS,
-        {
-          username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
-          content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
-        }
-      )
-
-      if (webhookResponse === true)
-        console.log('14/14 - Webhook Responded Successfully')
-      else console.log('14/14 - Webhook Not Responded\n ' + webhookResponse)
-
-    })
-    .catch(() => { })
+    .catch(err => console.log(err.response.data))
 }
