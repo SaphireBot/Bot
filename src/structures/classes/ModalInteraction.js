@@ -185,6 +185,7 @@ export default class ModalInteraction extends Base {
 
         const imageUrl = fields.getTextInputValue('imageURL')
         const imageName = fields.getTextInputValue('imageName')
+        const socialUrl = fields.getTextInputValue('socialURL')
         const userId = JSON.parse(this.customId)?.src
         const user = await this.client.users.fetch(userId).catch(() => null)
 
@@ -228,13 +229,17 @@ export default class ModalInteraction extends Base {
         return this.Database.Fanart.create({
             id: nextId,
             name: imageName,
+            socialUrl: socialUrl,
             url: imageUrl,
             userId: user.id
         })
-            .then(async () => await interaction.reply({
-                content: `${e.Check} | Fanart salva com sucesso.`,
-                ephemeral: true
-            }))
+            .then(async doc => {
+                client.fanarts.push(doc)
+                return await interaction.reply({
+                    content: `${e.Check} | Fanart salva com sucesso.`,
+                    ephemeral: true
+                })
+            })
             .catch(async error => await interaction.reply({
                 content: `${e.Deny} | Não foi possível salvar essa Fanart.\n${e.Warn} | \`${error}\``,
                 ephemeral: true

@@ -194,7 +194,8 @@ export default new class SaphireClient extends Client {
         await this.setCantadas()
         await this.setMemes()
         await managerReminder.define()
-        console.log('11/14 - Cantadas/Memes/Lembretes Loaded')
+        this.fanarts = await Database.Fanart.find() || []
+        console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts Loaded')
 
         console.log(`12/14 - Connected at Shard ${this.shardId}`)
         import('../../api/app.js')

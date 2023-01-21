@@ -29,17 +29,22 @@ export default async (interaction, data, toUpdate) => {
             ephemeral: true
         })
 
+    const fields = [
+        {
+            name: "🏷️ Imagem",
+            value: `\`${fanart?.id || 0}\` - ${fanart?.name || 'Name Not Found'}`
+        }
+    ]
+
+    if (fanart.socialUrl)
+        fields[0].value += `\n📷 [Rede social de ${user?.tag || "\`Not Found\`"}](${fanart.socialUrl})`
+
     const responseData = {
         embeds: [{
             color: client.blue,
             title: "🖌 Fanarts - Saphire",
             description: `Essa fanart foi feita por **${user?.tag || "`Not Found`"}** - \`${fanart?.userId || 0}\``,
-            fields: [
-                {
-                    name: "🏷️ Imagem",
-                    value: `\`${fanart?.id || 0}\` - ${fanart?.name || 'Name Not Found'}`
-                }
-            ],
+            fields,
             image: {
                 url: fanart?.url || null
             }

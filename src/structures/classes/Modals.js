@@ -245,7 +245,20 @@ export default new class Modals {
                             required: true
                         }
                     ]
-                }
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: 'socialURL',
+                            label: "URL de alguma rede social",
+                            style: 1,
+                            placeholder: "https://instagram.com/user123",
+                            required: false
+                        }
+                    ]
+                },
             ]
         }
     }

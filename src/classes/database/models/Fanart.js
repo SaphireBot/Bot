@@ -6,6 +6,7 @@ export default model("Fanart", new Schema({
     userId: String,
     name: String,
     url: String,
+    socialUrl: { type: String, default: "" },
     like: [String],
     unlike: [String]
 }))
