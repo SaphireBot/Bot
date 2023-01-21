@@ -277,7 +277,8 @@ export default new class Database extends Models {
     }
 
     deleteUser = async (userId) => {
-        client.databaseUsers = client.databaseUsers.filter(id => id !== userId)
+        if (client.databaseUsers.find(id => id == userId))
+            client.databaseUsers.slice(client.databaseUsers.findIndex(id => id == userId), 1)
         return await this.User.deleteOne({ id: userId })
     }
 

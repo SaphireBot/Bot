@@ -201,7 +201,6 @@ export default new class SaphireClient extends Client {
         import('../../api/app.js')
 
         await this.guilds.all(false, true)
-        // const guilds = await this.allGuildsData() || []
         this.user.setPresence({
             activities: [
                 { name: `${this.slashCommands.size} comandos em ${this.allGuilds?.length || 0}  servidores [Shard ${this.shardId} in Cluster ${this.clusterName}]` },
