@@ -5,7 +5,8 @@ import { SaphireClient as client } from '../classes/index.js'
 import { Emojis as e } from '../util/util.js'
 import os from 'os'
 const hostName = os.hostname()
-import('dotenv/config')
+let system = { name: hostName, port: hostName === 'RodrigoPC' ? 1000 : 8080 }
+import('dotenv/config');
 
 const app = express()
 
@@ -90,18 +91,7 @@ app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
 
 app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Found" }))
 
-const system = {
-  RodrigoPC: {
-    name: 'LocalHost',
-    port: 1000
-  },
-  '52bd375d84ce': {
-    name: 'Discloud',
-    port: 8080
-  }
-}[hostName]
-
-app.listen(system?.port || process.env.SERVER_PORT, "0.0.0.0", () => alertLogin(system?.name || "Discloud"))
+app.listen(system?.port || process.env.SERVER_PORT, "0.0.0.0", () => alertLogin(system?.name))
 
 export default app
 
