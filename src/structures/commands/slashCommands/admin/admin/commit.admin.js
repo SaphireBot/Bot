@@ -5,10 +5,9 @@ export default async interaction => {
 
     const { options } = interaction
     const discloudFile = options.getAttachment('discloud')
-    const squarecloudFile = options.getAttachment('squarecloud')
     const apiFile = options.getAttachment('api')
 
-    if (!discloudFile && !squarecloudFile && !api)
+    if (!discloudFile && !api)
         return await interaction.reply({
             content: `${e.Deny} | Pelo menos um arquivo deve ser enviado para alguma host.`
         })
@@ -19,15 +18,9 @@ export default async interaction => {
             ephemeral: true
         })
 
-    if (squarecloudFile && squarecloudFile.contentType !== 'application/zip')
-        return await interaction.reply({
-            content: `${e.Deny} | O arquivo enviado para a Squarecloud não está no formato \`.zip\``,
-            ephemeral: true
-        })
-
     if (apiFile && apiFile.contentType !== 'application/zip')
         return await interaction.reply({
-            content: `${e.Deny} | O arquivo enviado para a Squarecloud não está no formato \`.zip\``,
+            content: `${e.Deny} | O arquivo enviado para a API não está no formato \`.zip\``,
             ephemeral: true
         })
 
@@ -39,7 +32,6 @@ export default async interaction => {
         headers: {
             authorization: process.env.COMMIT_AUTHORIZATION,
             discloud: discloudFile?.attachment || null,
-            squarecloud: squarecloudFile?.attachment || null,
             api: apiFile?.attachment || null
         }
     })
