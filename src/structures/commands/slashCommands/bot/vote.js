@@ -28,30 +28,31 @@ export default {
     async execute({ interaction, client, Database, e }) {
 
         const { options, user, channel, guild } = interaction
+
+        const msg = await interaction.reply({ content: `${e.Loading} | Contactando Top.gg...`, fetchReply: true })
+
         const hasVoted = await axios.get(
-            `https://top.gg/api/bots/${client.user.id}/check?userId=${user.id}`,
+            `https://top.gg/api/bots/912509487984812043/check?userId=${user.id}`,
             { headers: { authorization: process.env.TOP_GG_TOKEN } }
         )
             .then(res => res?.data?.voted === 1)
             .catch(() => 2)
 
         if (hasVoted === 2)
-            return await interaction.reply({
-                content: `${e.Deny} | Não foi possível verificar o estado de votação. Por favor, tente daqui a pouco.`,
-                ephemeral: true
-            })
+            return await interaction.editReply({
+                content: `${e.cry} | Não foi possível falar com o Top.GG. Tente novamente daqui a pouco, ok?`
+            }).catch(() => { })
 
-        if (hasVoted)
-            return await interaction.reply({
-                content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
-                ephemeral: true
-            })
+        // if (hasVoted)
+        //     return await interaction.editReply({
+        //         content: `${e.Deny} | Você já votou nas últimas 12 horas.`,
+        //         ephemeral: true
+        //     }).catch(() => { })
 
-        const reminder = options.getString('reminder') === 'reminder'
         const inCachedData = await Database.Cache.General.get(`TopGG.${user.id}`)
 
         if (inCachedData?.messageUrl)
-            return await interaction.reply({
+            return await interaction.editReply({
                 content: `${e.Deny} | Você já tem uma solicitação de voto em aberto.`,
                 components: [
                     {
@@ -68,9 +69,10 @@ export default {
                     }
                 ],
                 ephemeral: true
-            })
+            }).catch(() => { })
 
-        const msg = await interaction.reply({
+        await interaction.editReply({
+            content: null,
             embeds: [{
                 color: client.blue,
                 title: `${e.topgg} | Top.gg Bot List`,
@@ -96,14 +98,14 @@ export default {
                 ]
             }],
             fetchReply: true
-        })
+        }).catch(() => { })
 
-        return await Database.Cache.General.push(`TopGG.${user.id}`, {
+        return await Database.Cache.General.set(`TopGG.${user.id}`, {
             userId: user.id,
             channelId: channel.id,
             guildId: guild.id,
             messageId: msg.id,
-            isReminder: reminder,
+            isReminder: options.getString('reminder') === 'reminder',
             messageUrl: msg.url
         })
 

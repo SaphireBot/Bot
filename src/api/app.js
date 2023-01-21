@@ -125,5 +125,6 @@ async function alertLogin(host) {
     },
     data: {}
   })
+    .then(() => console.log('14/14 - Saphire\'s API Logged'))
     .catch(err => console.log(err.response.data))
 }
