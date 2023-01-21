@@ -15,7 +15,7 @@ export default async () => {
 
         client.user.setPresence({
             activities: [
-                { name: `${this.slashCommands.size} comandos em ${this.allGuilds?.length || 0}  servidores [Shard ${this.shardId} in Cluster ${this.clusterName}]` }],
+                { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0}  servidores [Shard ${client.shardId} in Cluster ${client.clusterName}]` }],
             status: 'idle'
         })
 
