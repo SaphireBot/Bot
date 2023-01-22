@@ -28,8 +28,24 @@ export default {
                     value: 'trash'
                 },
                 {
+                    name: 'Arco-íris do ele é?',
+                    value: 'rainbow'
+                },
+                {
                     name: 'Pior que hilter cara...',
                     value: 'hitler'
+                },
+                {
+                    name: 'R.I.P',
+                    value: 'rip'
+                },
+                {
+                    name: 'Wanted (Procurado em PT)',
+                    value: 'wanted'
+                },
+                {
+                    name: 'Wasted',
+                    value: 'wasted'
                 },
                 {
                     name: 'Facepalm',

@@ -35,6 +35,7 @@ export default {
         const user = options.getUser('user')
 
         return await msg.edit({
+            content: null,
             files: [
                 new AttachmentBuilder(
                     await Canvas.phub({
