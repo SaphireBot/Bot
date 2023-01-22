@@ -24,19 +24,16 @@ export default class FlagGame {
     }
 
     async register() {
-
         if (client.chatsInGame.includes(this.channel.id))
             return await this.interaction.reply({
                 content: `${e.Deny} | Este canal já está em uma partida de quiz. Por favor, espere a partida atual acabar ou recomece em outro canal.`,
                 ephemeral: true
             })
-
         client.chatsInGame.push(this.channel.id)
         return this.choose()
     }
 
     async choose() {
-
         this.message = await this.interaction.reply({
             embeds: [{
                 color: client.blue,
@@ -83,7 +80,6 @@ export default class FlagGame {
             ],
             fetchReply: true
         })
-
         const collector = this.message.createMessageComponentCollector({
             filter: int => int.user.id === this.user.id,
             idle: 30000,
@@ -91,27 +87,17 @@ export default class FlagGame {
             errors: ['idle']
         })
             .on('collect', async int => {
-
                 const { customId } = int
-
-                if (customId === 'cancel')
-                    return collector.stop()
-
+                if (customId === 'cancel') return collector.stop()
                 this.gameData.mode = customId
                 this.gameData.started = true
                 collector.stop()
                 return this.chooseStyle(int)
-
             })
             .on('end', async () => {
-
                 if (this.gameData.started) return
-
                 this.unregister()
-                return await this.interaction.editReply({
-                    content: `${e.Deny} | Comando cancelado.`,
-                    embeds: [], components: []
-                }).catch(() => { })
+                return await this.interaction.editReply({ content: `${e.Deny} | Comando cancelado.`, embeds: [], components: [] }).catch(() => { })
             })
     }
 
@@ -174,25 +160,16 @@ export default class FlagGame {
             .on('collect', async int => {
 
                 const { customId } = int
-
-                if (customId === 'cancel')
-                    return collector.stop()
-
+                if (customId === 'cancel') return collector.stop()
                 this.gameData.style = customId
                 this.gameData.started = true
                 collector.stop()
                 return this.loadMessage()
-
             })
             .on('end', async () => {
-
                 if (this.gameData.started) return
-
                 this.unregister()
-                return await this.interaction.editReply({
-                    content: `${e.Deny} | Comando cancelado.`,
-                    embeds: [], components: []
-                }).catch(() => { })
+                return await this.interaction.editReply({ content: `${e.Deny} | Comando cancelado.`, embeds: [], components: [] }).catch(() => { })
             })
     }
 
@@ -376,7 +353,7 @@ export default class FlagGame {
             .on('collect', async int => {
 
                 const { user, customId } = int
-                
+
                 if (alreadyReplied.includes(user.id))
                     return await int.reply({
                         content: `${e.Deny} | Você já errou esta rodada. Espere a próxima, ok?`,
