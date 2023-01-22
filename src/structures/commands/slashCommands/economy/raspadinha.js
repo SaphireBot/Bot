@@ -21,7 +21,7 @@ export default {
     options: [],
     helpData: {
         title: `${e.raspadinha} Raspadinhas ${client.user.username}`,
-        description: `${e.FirePo} Azar ou sorte? Na raspadinha você tem os dois`,
+        description: `${e.QuestionMark} Azar ou sorte? Na raspadinha você tem os dois!`,
         fields: [
             {
                 name: '1 - Como jogar?',

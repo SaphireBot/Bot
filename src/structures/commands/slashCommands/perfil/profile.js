@@ -84,7 +84,7 @@ export default {
                         },
                         {
                             name: '🌟 Títulos',
-                            value: `${e.SaphireTimida} **Envergonhada**\n🎃 **Halloween 2021**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
+                            value: `🎃 **Halloween 2021**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
                         },
                         {
                             name: '💍 Cônjuge',
@@ -189,7 +189,7 @@ export default {
             titles.push(`${e.Gear} **Bug Hunter**`)
 
         if (clientData.Titles?.OfficialDesigner?.includes(user.id))
-            titles.push(`${e.SaphireFeliz} **Designer Official**`)
+            titles.push("🖌️ **Designer Official**")
 
         if (clientData.Titles?.Halloween?.includes(user.id))
             titles.push("🎃 **Halloween 2021**")

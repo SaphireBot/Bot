@@ -68,7 +68,7 @@ export default class SlashCommand extends Base {
         const clientData = this.client.clientData
 
         if (clientData.Rebooting?.ON)
-            return await interaction.reply({ content: `${e.Loading} | Reiniciando em breve...\n${e.BookPages} | ${clientData.Rebooting?.Features || 'Nenhum dado fornecido'}` })
+            return await interaction.reply({ content: `${e.Loading} | Reiniciando em breve...\n${e.Commands} | ${clientData.Rebooting?.Features || 'Nenhum dado fornecido'}` })
 
         if (clientData?.Blacklist?.Users?.some(data => data?.id === user.id))
             return await interaction.reply({ content: `${e.Deny} | Você está na blacklist.`, ephemeral: true })

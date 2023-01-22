@@ -117,7 +117,7 @@ export default class Daily extends Base {
         return await interaction.reply({
             embeds: [{
                 color: client.green,
-                title: `${e.SaphireLove} ${client.user.username} Daily Rewards`,
+                title: `${e.waku} ${client.user.username} Daily Rewards`,
                 description: `Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
                 fields: data.fields
             }]
