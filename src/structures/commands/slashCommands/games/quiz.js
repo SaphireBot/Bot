@@ -216,6 +216,9 @@ export default {
         async function bandeiras() {
             const option = options.getString('options')
 
+            if (option === 'play')
+                return new FlagGame(interaction).register()
+
             if (option === 'credits') {
 
                 const rody = await client.users.fetch(Database.Names.Rody).then(u => `${u.tag} - \`${u.id}\``).catch(() => `Rody - \`${Database.Names.Rody}\``)
@@ -255,9 +258,6 @@ export default {
                     }]
                 })
             }
-
-            if (option === 'play')
-                return new FlagGame(interaction).register()
 
             if (option === 'points') {
 
