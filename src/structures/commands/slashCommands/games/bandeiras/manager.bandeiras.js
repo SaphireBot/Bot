@@ -267,7 +267,6 @@ export default class FlagGame {
                 }]
 
                 this.message.edit({ embeds: [embed] }).catch(() => { })
-                //TODO: computar ponto no banco de dados
                 this.message = await this.channel.send({
                     embeds: [{
                         color: client.blue,
