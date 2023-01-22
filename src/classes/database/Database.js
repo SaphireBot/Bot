@@ -23,7 +23,10 @@ export default new class Database extends Models {
             San: "327496267007787008",
             Khetlyn: "428088706533031938",
             Yafyr: "435444989695229952",
-            Andre: "648389538703736833"
+            Andre: "648389538703736833",
+            Pandinho: "369810325022834688",
+            Gorniaky: "395669252121821227",
+            Mari: "704023863314350081"
         }
     }
 
