@@ -34,7 +34,7 @@ export default {
                 10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
                 50013: `${e.Deny} | Eu não tenho a permissão **\`Gerenciar Mensagens\`** para executar este comando.`,
                 50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`
-            }[messagesDeleted] || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${config.SupportServerLink}).\n\`${err}\`\n\`(${messagesDeleted})\``
+            }[messagesDeleted] || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${config.MoonServerLink}).\n\`${err}\`\n\`(${messagesDeleted})\``
 
             return await interaction.reply({ content, ephemeral: true })
         }
