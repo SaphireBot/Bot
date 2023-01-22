@@ -21,6 +21,10 @@ export default {
                 {
                     name: 'Não quero nenhum lembrete',
                     value: 'noreminder'
+                },
+                {
+                    name: 'Voto aberto bugado',
+                    value: 'reload'
                 }
             ]
         }
@@ -28,6 +32,8 @@ export default {
     async execute({ interaction, client, Database, e }) {
 
         const { options, user, channel, guild } = interaction
+
+        if (options.getString('reminder') === 'reload') return reload()
 
         const msg = await interaction.reply({ content: `${e.Loading} | Contactando Top.gg...`, fetchReply: true })
 
@@ -50,8 +56,7 @@ export default {
             }).catch(() => { })
 
         const inCachedData = await Database.Cache.General.get(`TopGG.${user.id}`)
-
-        if (inCachedData?.messageUrl)
+        if (inCachedData)
             return await interaction.editReply({
                 content: `${e.Deny} | Você já tem uma solicitação de voto em aberto.`,
                 components: [
@@ -108,6 +113,37 @@ export default {
             isReminder: options.getString('reminder') === 'reminder',
             messageUrl: msg.url
         })
+
+        async function reload() {
+            const data = await Database.Cache.General.get(`TopGG.${user.id}`)
+
+            if (!data)
+                return await interaction.reply({
+                    content: `${e.Deny} | Você não tem nenhuma solicitação de voto em aberto.`,
+                    ephemeral: true
+                })
+
+            await Database.Cache.General.delete(`TopGG.${user.id}`)
+            const channelCached = await guild.channels.fetch(data?.channelId || '0').catch(() => null)
+            if (!channel)
+                return await interaction.reply({
+                    content: `${e.Check} | Canal não encontrado. Porém, eu fechei a solicitação no banco de dados.`,
+                    ephemeral: true
+                })
+
+            const message = await channelCached.messages.fetch(data?.messageId || '0').catch(() => null)
+            if (!message)
+                return await interaction.reply({
+                    content: `${e.Check} | Mensagem não encontrada. Porém, eu fechei a solicitação no banco de dados.`,
+                    ephemeral: true
+                })
+
+            await message.delete().catch(() => { })
+            return await interaction.reply({
+                content: `${e.Check} | Solicitação de voto fechada com sucesso.`,
+                ephemeral: true
+            })
+        }
 
     }
 }
