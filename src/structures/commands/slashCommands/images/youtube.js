@@ -34,21 +34,23 @@ export default {
         await interaction.deferReply()
 
         const { options } = interaction
-        const content = options.getString('content')
         const user = options.getUser('user')
-        const dark = options.getBoolean('darkmode')
-        const avatar = user.displayAvatarURL({ format: 'png' })
 
-        const attachment = new AttachmentBuilder(
-            await Canvas.youtube({
-                username: user.username,
-                content,
-                avatar,
-                dark
-            }), 'youtube.png'
-        )
-
-        return await interaction.editReply({ files: [attachment] }).catch(() => { })
+        return await interaction.editReply({
+            files: [
+                new AttachmentBuilder(
+                    await Canvas.youtube({
+                        username: user.username,
+                        content: options.getString('content'),
+                        avatar: user.displayAvatarURL({ format: 'png' }),
+                        dark: options.getBoolean('darkmode')
+                    }), 'youtube.png'
+                )
+            ]
+        })
+            .catch(err => msg.edit({
+                content: `${e.cry} | Não foi possível gerar o seu change my mind.\n${e.bug} | \`${err}\``
+            })).catch(() => { })
 
     }
 }

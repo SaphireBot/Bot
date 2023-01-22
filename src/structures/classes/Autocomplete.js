@@ -763,7 +763,7 @@ export default class Autocomplete extends Base {
                 || guild.id?.includes(value)
             )
 
-        const mapped = fill.map(guild => ({ name: `(${guild.members.length}) - ${guild.name} | ${guild.id}`, value: guild.id }))
+        const mapped = fill.map(guild => ({ name: `(${guild.memberCount}) - ${guild.name} | ${guild.id}`, value: guild.id }))
         return this.respond(mapped)
     }
 

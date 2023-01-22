@@ -1,19 +1,16 @@
 import register from './register.admin.js'
 import deleteDb from './delete.admin.js'
-import commandManager from './commandManager.admin.js'
-import testAdmin from './test.admin.js'
-import fanartAdmin from './fanart.admin.js'
-import commitAdmin from './commit.admin.js'
+import commands from './commandManager.admin.js'
+import test from './test.admin.js'
+import fanart from './fanart.admin.js'
+import commit from './commit.admin.js'
+import invite from './invite.admin.js'
 
 export default async (interaction, subCommand) => {
 
     const command = {
-        register: register,
+        register, commands, test, fanart, commit, invite,
         delete: deleteDb,
-        commands: commandManager,
-        test: testAdmin,
-        fanart: fanartAdmin,
-        commit: commitAdmin
     }[subCommand]
 
     if (!command)

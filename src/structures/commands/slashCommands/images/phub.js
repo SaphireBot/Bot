@@ -24,24 +24,30 @@ export default {
             required: true
         }
     ],
-    async execute({ interaction }) {
+    async execute({ interaction, e }) {
 
-        await interaction.deferReply()
+        const msg = await interaction.reply({
+            content: `${e.Loading} | Gerando o seu incrível comentário`,
+            fetchReply: true
+        })
 
         const { options } = interaction
-        const message = options.getString('content')
         const user = options.getUser('user')
-        const avatar = user.displayAvatarURL({ format: 'png' })
 
-        const attachment = new AttachmentBuilder(
-            await Canvas.phub({
-                image: avatar,
-                message,
-                username: user.username
-            }), 'youtube.png'
-        )
-
-        return await interaction.editReply({ files: [attachment] }).catch(() => { })
+        return await msg.edit({
+            files: [
+                new AttachmentBuilder(
+                    await Canvas.phub({
+                        image: user.displayAvatarURL({ format: 'png' }),
+                        message: options.getString('content'),
+                        username: user.username
+                    }), 'phub.png'
+                )
+            ]
+        })
+            .catch(err => msg.edit({
+                content: `${e.cry} | Não foi possível gerar o seu change my mind.\n${e.bug} | \`${err}\``
+            }))
 
     }
 }

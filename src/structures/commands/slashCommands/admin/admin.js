@@ -107,6 +107,19 @@ export default {
                     type: ApplicationCommandOptionType.Attachment
                 }
             ]
+        },
+        {
+            name: 'invite',
+            description: '[admin] Comando para criar um convite de um servidor',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'server',
+                    description: 'Servidor ou ID de um servidor',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
+                }
+            ]
         }
     ],
     helpData: {
