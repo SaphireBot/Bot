@@ -6,7 +6,7 @@ import { Emojis as e } from '../../util/util.js'
 
 client.on('betRefund', async (data, noDelete = false) => {
 
-    const players = [...new Set([data?.players || [data?.red || [], data?.blue || [], data.authorId].flat()])].flat()
+    const players = [...new Set([data?.players || [data?.red || [], data?.blue || []].flat()])].flat()
     const amount = data?.amount || data?.value
     const messageId = data?.messageId
 

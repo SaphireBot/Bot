@@ -34,7 +34,7 @@ client.on('messageDelete', async message => {
     const diceGame = await Database.Cache.Bet.get(message.id)
     if (diceGame) {
         await Database.User.updateMany(
-            { id: { $in: [...diceGame.red, ...diceGame.blue, diceGame.authorId] } },
+            { id: { $in: [...diceGame.red, ...diceGame.blue] } },
             {
                 $inc: { Balance: diceGame.value },
                 $push: {
