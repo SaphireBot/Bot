@@ -10,58 +10,73 @@ export default {
     type: 1,
     options: [
         {
-            name: 'interaction',
-            description: 'Interação a ser usada',
-            type: ApplicationCommandOptionType.String,
-            required: true,
-            choices: [
+            name: 'avatar',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[images] Brinque com o avatar de alguém',
+            options: [
                 {
-                    name: 'Isso não afeta o bebê',
-                    value: 'affect'
+                    name: 'interaction',
+                    description: 'Interação a ser usada',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    choices: [
+                        {
+                            name: 'Isso não afeta o bebê',
+                            value: 'affect'
+                        },
+                        {
+                            name: 'Isso é bonito',
+                            value: 'beautiful'
+                        },
+                        {
+                            name: 'Pera... É um lixo?',
+                            value: 'trash'
+                        },
+                        {
+                            name: 'Arco-íris do ele é?',
+                            value: 'rainbow'
+                        },
+                        {
+                            name: 'Pior que hilter cara...',
+                            value: 'hitler'
+                        },
+                        {
+                            name: 'R.I.P',
+                            value: 'rip'
+                        },
+                        {
+                            name: 'Wanted (Procurado em PT)',
+                            value: 'wanted'
+                        },
+                        {
+                            name: 'Deleta pra lixeira',
+                            value: 'delete'
+                        },
+                        {
+                            name: 'Wasted',
+                            value: 'wasted'
+                        },
+                        {
+                            name: 'Pisei no cocô',
+                            value: 'shit'
+                        },
+                        {
+                            name: 'Facepalm',
+                            value: 'facepalm'
+                        },
+                        {
+                            name: 'Borrão',
+                            value: 'blur'
+                        }
+                    ]
                 },
                 {
-                    name: 'Isso é bonito',
-                    value: 'beautiful'
-                },
-                {
-                    name: 'Pera... É um lixo?',
-                    value: 'trash'
-                },
-                {
-                    name: 'Arco-íris do ele é?',
-                    value: 'rainbow'
-                },
-                {
-                    name: 'Pior que hilter cara...',
-                    value: 'hitler'
-                },
-                {
-                    name: 'R.I.P',
-                    value: 'rip'
-                },
-                {
-                    name: 'Wanted (Procurado em PT)',
-                    value: 'wanted'
-                },
-                {
-                    name: 'Wasted',
-                    value: 'wasted'
-                },
-                {
-                    name: 'Facepalm',
-                    value: 'facepalm'
-                },
-                {
-                    name: 'Borrão',
-                    value: 'blur'
+                    name: 'user',
+                    description: 'Escolha o usuário a ser afetado',
+                    type: ApplicationCommandOptionType.User,
+                    required: true
                 }
-            ]
-        },
-        {
-            name: 'user',
-            description: 'Escolha o usuário a ser afetado',
-            type: ApplicationCommandOptionType.User,
-            required: true
+            ] // TODO: Adicionar o resto
         }
     ],
     async execute({ interaction, e }) {
