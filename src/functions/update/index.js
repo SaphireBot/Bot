@@ -11,7 +11,7 @@ export default async () => {
         client.refreshStaff()
         client.setMemes()
         client.setCantadas()
-        Experience.setExperience()
+        Experience.set()
 
         client.user.setPresence({
             activities: [

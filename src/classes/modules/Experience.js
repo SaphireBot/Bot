@@ -16,7 +16,7 @@ export default new class Experience {
         return
     }
 
-    async setExperience() {
+    async set() {
 
         if (!this.users.length) return
 
