@@ -50,6 +50,8 @@ String.prototype.random = function (times = 0, repeat = false) {
 
 String.prototype.captalize = function formatString(withTrace = true) {
 
+    if (!this) return null
+
     let string = this
 
     if (typeof string !== 'string') return null

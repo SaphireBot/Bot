@@ -11,9 +11,10 @@ export default async () => {
 
     const fields = [
         { name: 'Balance', emoji: e.Bells, title: '👑 Ranking - Global Money' },
-        { name: 'Likes', emoji: e.Like, title: `${e.Like} Ranking - Global Likes` },
-        { name: 'Xp', emoji: e.RedStar, title: `${e.RedStar} Ranking - Global Experience` },
-        { name: 'GamingCount.Logomarca', emoji: e.logomarca, title: `${e.logomarca} Ranking - Logomarca Game` }
+        { name: 'Likes', emoji: e.Like, title: '👑 Ranking - Global Likes' },
+        { name: 'Xp', emoji: e.RedStar, title: '👑 Ranking - Global Experience' },
+        { name: 'GamingCount.Logomarca', emoji: e.logomarca, title: '👑 Ranking - Logomarca Game' },
+        { name: 'GamingCount.FlagCount', emoji: '🗺️', title: '👑 Ranking - Bandeiras Game' }
     ]
 
     const allUsersData = []

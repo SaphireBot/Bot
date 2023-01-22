@@ -136,8 +136,15 @@ export default new class SaphireClient extends Client {
          */
         this.MemesNotApproved = []
 
+        /**
+         * @returns Nome do client's cluster
+         */
         this.clusterName = "Bellatrix" // 30% Pronto
 
+        /**
+         * @returns Array com todos os canais em jogo
+         */
+        this.chatsInGame = []
     }
 
     /**

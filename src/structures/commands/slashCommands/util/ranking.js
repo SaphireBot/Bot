@@ -32,6 +32,10 @@ export default {
                 {
                     name: 'Logomarca Game',
                     value: 'GamingCount.Logomarca'
+                },
+                {
+                    name: 'Bandeiras Quiz',
+                    value: 'GamingCount.FlagCount'
                 }
             ]
         },
@@ -76,7 +80,8 @@ export default {
             Balance: moeda,
             Likes: '',
             Xp: '',
-            'GamingCount.Logomarca': 'Acertos'
+            'GamingCount.Logomarca': 'Acertos',
+            'GamingCount.FlagCount': 'Acertos'
         }
 
         const format = query
@@ -84,14 +89,12 @@ export default {
             .join('\n \n')
 
         return await interaction.reply({
-            embeds: [
-                {
-                    color: client.blue,
-                    title: embed.title,
-                    description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 60000 * 15), 'R', true)}\n \n${format.limit('MessageEmbedDescription')}`,
-                    footer: { text: `Seu ranking: ${userRanking}` }
-                }
-            ]
+            embeds: [{
+                color: client.blue,
+                title: embed.title,
+                description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 60000 * 15), 'R', true)}\n \n${format.limit('MessageEmbedDescription')}`,
+                footer: { text: `Seu ranking: ${userRanking}` }
+            }]
         })
 
         function top(i) {
