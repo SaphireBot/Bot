@@ -82,15 +82,19 @@ export default class Autocomplete extends Base {
     }
 
     async reminders(value) {
-        const reminders = [...managerReminder.reminders, ...managerReminder.over32Bits].filter(r => r.userId = this.user.id)
+        const reminders = [
+            ...managerReminder.reminders,
+            ...managerReminder.over32Bits
+        ]
+            .filter(r => r.userId === this.user.id)
         if (!reminders.length) return await this.respond()
 
-        const fill = reminders.filter(r =>
+        const filAndMap = reminders.filter(r =>
             r.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase())
             || r.id?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        const mapped = fill.map(r => ({ name: `${r.id} - ${r.RemindMessage}`, value: r.id }))
-        return await this.respond(mapped)
+            .map(r => ({ name: `${r?.id} - ${r?.RemindMessage}`, value: r?.id }))
+        return await this.respond(filAndMap)
     }
 
     async memesViewer() {
