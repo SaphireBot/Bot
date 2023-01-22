@@ -9,6 +9,7 @@ const data = {
     name: 'gifs',
     description: '[gifs] Interações gerais',
     category: "images",
+    name_localizations: { "en-US": "gifs", 'pt-BR': 'interações' },
     dm_permission: false,
     database: false,
     type: 1,

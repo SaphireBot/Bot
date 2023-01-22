@@ -2,10 +2,11 @@ import { ApplicationCommandOptionType } from 'discord.js'
 import newGame from '../../functions/tictactoe/newGame.tictactoe.js'
 
 export default {
-    name: 'jogodavelha',
+    name: 'tictactoe',
     description: '[games] O clássico jogo da velha',
     category: "games",
     dm_permission: false,
+    name_localizations: { "en-US": "tictactoe", 'pt-BR': 'jogo-da-velha' },
     database: false,
     type: 1,
     options: [

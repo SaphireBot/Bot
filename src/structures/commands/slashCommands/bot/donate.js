@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 
 export default {
     name: 'donate',
+    name_localizations: { "en-US": "donate", 'pt-BR': 'doar' },
     description: '[bot] Doe para a Saphire',
     category: "bot",
     dm_permission: false,

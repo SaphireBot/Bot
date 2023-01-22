@@ -4,6 +4,7 @@ import { Languages } from '../../../../util/Constants.js'
 export default {
     name: 'Translate Message',
     category: "context menu",
+    name_localizations: { "en-US": "Translate", 'pt-BR': 'Traduzir' },
     helpData: {
         color: 'Blue',
         description: 'Clique na mensagem e traduza ela para a língua padrão do seu Discord.',

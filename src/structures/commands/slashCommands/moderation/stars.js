@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ChannelType } from 'discord.js'
+import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 import { Emojis as e } from '../../../../util/util.js'
 import statusStars from './functions/status.stars.js'
@@ -7,6 +7,8 @@ export default {
     name: 'stars',
     description: '[moderation] Ative o recurso de estrelas',
     dm_permission: false,
+    default_member_permissions: `${PermissionFlagsBits.ManageChannels | PermissionFlagsBits.ManageMessages}`,
+    name_localizations: { "en-US": "stars", 'pt-BR': 'estrelas' },
     type: 1,
     options: [
         {

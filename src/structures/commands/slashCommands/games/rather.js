@@ -6,6 +6,7 @@ export default {
     name: 'rather',
     description: '[games] O que você prefere?',
     category: "games",
+    name_localizations: { "en-US": "rather", 'pt-BR': 'prefere' },
     dm_permission: false,
     database: false,
     type: 1,

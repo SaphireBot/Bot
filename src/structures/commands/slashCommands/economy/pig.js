@@ -3,6 +3,7 @@ import { Colors } from "../../../../util/Constants.js"
 export default {
     name: 'pig',
     description: '[economy] Tente quebrar o porquinho e ganhe todo o dinheiro dele',
+    name_localizations: { "en-US": "pig", 'pt-BR': 'porco' },
     category: "economy",
     dm_permission: false,
     type: 1,

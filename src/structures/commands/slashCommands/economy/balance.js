@@ -5,6 +5,7 @@ export default {
     name: 'balance',
     description: '[economy] Confira suas finanças',
     category: "economy",
+    name_localizations: { "en-US": "balance", 'pt-BR': 'saldo' },
     dm_permission: false,
     type: 1,
     options: [

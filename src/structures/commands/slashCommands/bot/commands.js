@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 
 export default {
     name: 'commands',
+    name_localizations: { "en-US": "commands", 'pt-BR': 'comandos' },
     description: '[bot] Veja seus últimos comandos usados',
     dm_permission: false,
     type: 1,

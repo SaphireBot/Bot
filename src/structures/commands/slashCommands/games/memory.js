@@ -59,6 +59,7 @@ export default {
     name: 'memory',
     description: '[games] Um jogo simples para testar sua memória',
     category: "games",
+    name_localizations: { "en-US": "memory", 'pt-BR': 'memória' },
     dm_permission: false,
     type: 1,
     options: [

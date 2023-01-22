@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
@@ -6,7 +6,7 @@ export default {
     description: '[moderation] Retirar banimento de pessoas do servidor',
     dm_permission: false,
     database: false,
-    default_member_permissions: Permissions.BanMembers,
+    default_member_permissions: `${PermissionFlagsBits.BanMembers} `,
     type: 1,
     options: [
         {
@@ -31,13 +31,13 @@ export default {
 
         if (!guild.members.me.permissions.has(DiscordPermissons.BanMembers))
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
+                content: `${e.Deny} | Eu preciso da permissão ** ${PermissionsTranslate.BanMembers}** para executar este comando.`,
                 ephemeral: true
             })
 
         if (!member.permissions.has(DiscordPermissons.BanMembers))
             return await interaction.reply({
-                content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.BanMembers}** para executar este comando.`,
+                content: `${e.Deny} | Você precisa da permissão ** ${PermissionsTranslate.BanMembers}** para executar este comando.`,
                 ephemeral: true
             })
 
@@ -50,7 +50,7 @@ export default {
                 ephemeral: true
             })
 
-        const result = await guild.bans.remove(userBanned, `${user.tag}: ${reason.slice(0, 100)}`)
+        const result = await guild.bans.remove(userBanned, `${user.tag}: ${reason.slice(0, 100)} `)
             .then(() => true)
             .catch(err => err.code)
 
@@ -64,7 +64,7 @@ export default {
 
             if (result === 'BanResolveId')
                 return await interaction.reply({
-                    content: `${e.Deny} | Nenhum usuário foi desbanido. Ish...`,
+                    content: `${e.Deny} | Nenhum usuário foi desbanido.Ish...`,
                     ephemeral: true
                 })
 

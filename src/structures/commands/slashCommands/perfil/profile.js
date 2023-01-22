@@ -8,9 +8,10 @@ import axios from 'axios'
 import { Emojis as e } from '../../../../util/util.js'
 
 export default {
-    name: 'perfil',
+    name: 'profile',
     description: '[perfil] Configura o seu perfil ou o de alguém',
     category: "perfil",
+    name_localizations: { "en-US": "profile", 'pt-BR': 'perfil' },
     dm_permission: false,
     type: 1,
     options: [

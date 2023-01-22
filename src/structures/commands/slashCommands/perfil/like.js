@@ -4,6 +4,7 @@ export default {
     name: 'like',
     description: '[perfil] De likes e aumente seu status',
     category: "perfil",
+    name_localizations: { "en-US": "like", 'pt-BR': 'curtir' },
     dm_permission: false,
     type: 1,
     options: [

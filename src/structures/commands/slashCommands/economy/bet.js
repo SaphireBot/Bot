@@ -8,6 +8,7 @@ export default {
     name: 'bet',
     description: '[economy] Sistema de aposta',
     category: "economy",
+    name_localizations: { "en-US": "bet", 'pt-BR': 'aposta' },
     dm_permission: false,
     type: 1,
     options: [

@@ -2,6 +2,7 @@ import { Colors } from '../../../../util/Constants.js'
 
 export default {
     name: 'invite',
+    name_localizations: { "en-US": "invite", 'pt-BR': 'convite' },
     description: '[bot] Um link rápido para me colocar no seu servidor',
     category: "bot",
     dm_permission: false,

@@ -4,10 +4,11 @@ import configAnunciar from '../../../classes/selectmenu/announce/config.anunciar
 import roleAnunciar from '../../functions/anunciar/role.anunciar.js'
 
 export default {
-    name: 'anunciar',
+    name: 'announce',
     description: '[moderation] Anúncie assuntos interessantes em forma de notícia.',
     dm_permission: false,
     type: 1,
+    name_localizations: { "en-US": "announce", 'pt-BR': 'anunciar' },
     options: [
         {
             name: 'config',

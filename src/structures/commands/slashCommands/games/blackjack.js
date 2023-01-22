@@ -5,6 +5,7 @@ export default {
     name: 'blackjack',
     description: '[games] Um simples jogo de blackjack',
     category: "games",
+    name_localizations: { "en-US": "blackjack", 'pt-BR': '21' },
     type: 1,
     dm_permission: false,
     options: [

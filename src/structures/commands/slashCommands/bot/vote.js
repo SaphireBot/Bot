@@ -3,6 +3,7 @@ import axios from 'axios'
 
 export default {
     name: 'vote',
+    name_localizations: { "en-US": "topgg", 'pt-BR': 'votar' },
     description: '[bot] Vote no Top.gg e ganhe uma recompensa',
     category: "bot",
     dm_permission: false,

@@ -6,6 +6,7 @@ export default {
     name: 'daily',
     description: '[economy] Obtenha uma recompensa diária.',
     category: "economy",
+    name_localizations: { "en-US": "daily", 'pt-BR': 'diário' },
     dm_permission: false,
     database: false,
     type: 1,

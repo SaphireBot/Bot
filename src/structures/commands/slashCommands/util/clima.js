@@ -2,9 +2,10 @@ import { ApplicationCommandOptionType } from 'discord.js'
 import weather from 'weather-js'
 
 export default {
-    name: 'clima',
+    name: 'weather',
     description: '[util] Confira o clima de uma cidade',
     category: "util",
+    name_localizations: { "en-US": "weather", 'pt-BR': 'clima' },
     dm_permission: false,
     database: false,
     type: 1,

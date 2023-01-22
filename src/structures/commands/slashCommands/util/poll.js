@@ -7,6 +7,7 @@ export default {
     description: '[util] Um jeito diferente de criar votações',
     category: "util",
     dm_permission: false,
+    name_localizations: { "en-US": "poll", 'pt-BR': 'votação' },
     type: 1,
     options: [
         {

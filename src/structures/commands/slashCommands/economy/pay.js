@@ -3,6 +3,7 @@ import { ButtonStyle } from "discord.js"
 export default {
     name: 'pay',
     description: '[economy] Pague ou envie dinheiro para outras pessoas',
+    name_localizations: { "en-US": "pay", 'pt-BR': 'pagar' },
     category: "economy",
     dm_permission: false,
     type: 1,

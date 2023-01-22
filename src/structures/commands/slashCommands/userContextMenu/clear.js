@@ -3,6 +3,7 @@ import { Permissions } from '../../../../util/Constants.js'
 export default {
     name: 'Clear 50 Messages',
     dm_permission: false,
+    name_localizations: { 'pt-BR': 'Limpar 50 Mensagens' },
     default_member_permissions: Permissions.ManageMessages,
     category: "context menu",
     type: 3,

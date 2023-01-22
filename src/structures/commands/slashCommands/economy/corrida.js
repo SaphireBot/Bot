@@ -7,9 +7,10 @@ import { Colors } from '../../../../util/Constants.js'
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
 export default {
-    name: 'corrida',
+    name: 'run',
     description: '[economy] Aposte no seu anime e boa sorte',
     category: "economy",
+    name_localizations: { "en-US": "run", 'pt-BR': 'corrida' },
     dm_permission: false,
     type: 1,
     options: [

@@ -3,6 +3,7 @@ import * as Discloud from './discloud/functions.discloud.js'
 
 export default {
     name: 'discloud',
+    name_localizations: { "en-US": "discloud", 'pt-BR': 'host' },
     description: '[admin] Comandos da Discloud Host',
     category: "admin",
     dm_permission: false,

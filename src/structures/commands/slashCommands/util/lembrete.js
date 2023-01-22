@@ -6,10 +6,11 @@ import managerReminder from '../../../../functions/update/reminder/manager.remin
 import reminderStart from '../../../../functions/update/reminder/src/start.reminder.js'
 
 export default {
-    name: 'lembrete',
+    name: 'reminder',
     description: '[util] Crie um lembrete e deixe que eu te aviso',
     dm_permission: false,
     database: false,
+    name_localizations: { "en-US": "reminder", 'pt-BR': 'lembrete' },
     type: 1,
     options: [
         {

@@ -1,12 +1,13 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
 import { Permissions, DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'clear',
     description: '[moderation] Limpe mensagens rapidamente no chat',
     dm_permission: false,
-    default_member_permissions: Permissions.ManageMessages,
+    default_member_permissions: `${PermissionsBitField.Flags.ManageMessages}`,
     type: 1,
+    name_localizations: { "en-US": "clear", 'pt-BR': 'limpar' },
     database: false,
     options: [
         {

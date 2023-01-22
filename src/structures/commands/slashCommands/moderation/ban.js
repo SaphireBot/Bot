@@ -1,12 +1,13 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
 import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'ban',
     description: '[moderation] Banir usuário',
     dm_permission: false,
-    default_member_permissions: Permissions.BanMembers,
+    default_member_permissions: `${PermissionsBitField.Flags.BanMembers}`,
     type: 1,
+    name_localizations: { "en-US": "ban", 'pt-BR': 'banir' },
     options: [
         {
             name: 'user',

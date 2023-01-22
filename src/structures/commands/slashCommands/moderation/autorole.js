@@ -1,5 +1,5 @@
-import { ApplicationCommandOptionType } from 'discord.js'
-import { DiscordPermissons, Permissions, PermissionsTranslate } from '../../../../util/Constants.js'
+import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
+import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 import addAutorole from '../../functions/autorole/add.autorole.js'
 import painelAutorole from '../../functions/autorole/painel.autorole.js'
 
@@ -7,7 +7,7 @@ export default {
     name: 'autorole',
     description: '[moderation] Gerencie o sistema de autorole por aqui',
     dm_permission: false,
-    default_member_permissions: Permissions.ManageRoles,
+    default_member_permissions: `${PermissionsBitField.Flags.ManageRoles}`,
     type: 1,
     options: [
         {

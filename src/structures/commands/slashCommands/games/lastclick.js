@@ -4,6 +4,7 @@ export default {
     name: 'lastclick',
     description: '[games] Quem clicar na bomba, perde.',
     dm_permission: false,
+    name_localizations: { "en-US": "lastclick", 'pt-BR': 'último-clique' },
     type: 1,
     options: [
         {

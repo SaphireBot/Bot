@@ -4,6 +4,7 @@ export default {
     name: 'transactions',
     description: '[economy] Confira suas transações',
     category: "economy",
+    name_localizations: { "en-US": "transactions", 'pt-BR': 'transações' },
     dm_permission: false,
     type: 1,
     options: [

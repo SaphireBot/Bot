@@ -7,6 +7,7 @@ export default {
     description: '[util] Pesquise por letras de músicas',
     dm_permission: false,
     database: false,
+    name_localizations: { "en-US": "lyrics", 'pt-BR': 'letras' },
     type: 1,
     options: [
         {

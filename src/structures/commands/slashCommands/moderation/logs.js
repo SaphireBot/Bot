@@ -1,5 +1,5 @@
 import { Colors, DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
-import { ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType, PermissionsBitField, PermissionFlagsBits } from "discord.js";
 import notify from "../../../../functions/plugins/notify.js";
 
 export default {
@@ -7,7 +7,7 @@ export default {
     description: '[moderation] Gerencie os meus sistemas de logs por aqui',
     category: "moderation",
     dm_permission: false,
-    default_member_permissions: Permissions.ManageGuild,
+    default_member_permissions: `${PermissionFlagsBits.ManageGuild}`,
     type: 1,
     options: [
         {

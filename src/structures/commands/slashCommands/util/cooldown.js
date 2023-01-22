@@ -4,6 +4,7 @@ export default {
     name: 'cooldown',
     description: '[util] Veja todos os seus cooldown em todos os meus comandos',
     category: "util",
+    name_localizations: { "en-US": "timeout", 'pt-BR': 'timeout' },
     dm_permission: false,
     type: 1,
     options: [

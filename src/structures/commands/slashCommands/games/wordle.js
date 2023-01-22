@@ -3,6 +3,7 @@ export default {
     description: '[games] O famoso jogo Wordle, só que no Discord.',
     category: "games",
     dm_permission: false,
+    name_localizations: { "en-US": "wordle", 'pt-BR': 'termo' },
     type: 1,
     options: [
         {

@@ -4,6 +4,7 @@ import { ButtonStyle } from 'discord.js'
 
 export default {
     name: 'help',
+    name_localizations: { "en-US": "help", 'pt-BR': 'ajuda' },
     description: '[bot] Comando de ajuda',
     category: "bot",
     dm_permission: false,

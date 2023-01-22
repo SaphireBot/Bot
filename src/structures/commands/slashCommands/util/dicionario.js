@@ -1,10 +1,11 @@
 import dicio from 'vxdicionario'
 
 export default {
-    name: 'dicionario',
+    name: 'dictionary',
     description: '[util] Pesquise por significados de palavras',
     category: "util",
     dm_permission: false,
+    name_localizations: { "en-US": "dictionary", 'pt-BR': 'dicionario' },
     database: false,
     type: 1,
     options: [
