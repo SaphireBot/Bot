@@ -379,7 +379,7 @@ export default class FlagGame {
                 
                 if (alreadyReplied.includes(user.id))
                     return await int.reply({
-                        content: `${e.Deny} | Você já errou está rodada. Espere a próxima, ok?`,
+                        content: `${e.Deny} | Você já errou esta rodada. Espere a próxima, ok?`,
                         ephemeral: true
                     })
 
