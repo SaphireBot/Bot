@@ -166,7 +166,6 @@ export default class FlagGame {
     async collect(flag) {
 
         let responded = false
-        console.log(flag)
 
         const filter = this.gameData.mode === 'solo'
             ? msg => flag.country.map(str => str.toLowerCase()).includes(msg?.content?.toLowerCase()) && msg.author.id === this.user.id
