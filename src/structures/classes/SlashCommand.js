@@ -20,7 +20,7 @@ export default class SlashCommand extends Base {
 
         this.guildData = guildData
         this.clientData = clientData
-        Experience.addXp(this.user.id, 5)
+        Experience.add(this.user.id, 5)
 
         return command.execute(this)
             .then(() => this.registerCommand(command.name))

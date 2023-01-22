@@ -8,7 +8,7 @@ import afkSystem from './system/afk.system.js'
 client.on('messageCreate', async message => {
 
     if (message?.author?.bot || !message.guild || message.webhookId) return
-    Experience.addXp(message.author.id, 1)
+    Experience.add(message.author.id, 1)
 
     afkSystem(message)
 
@@ -17,5 +17,5 @@ client.on('messageCreate', async message => {
             content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando \`/help\``
         }).catch(() => { })
 
-    return Experience.addXp(message.author.id, 1)
+    return Experience.add(message.author.id, 1)
 })

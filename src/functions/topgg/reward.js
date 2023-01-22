@@ -61,7 +61,7 @@ export default async userId => {
             }
         ).catch(() => { })
 
-        Experience.addXp(userId, 1000)
+        Experience.add(userId, 1000)
 
         return await Database.User.updateOne(
             { id: userId },

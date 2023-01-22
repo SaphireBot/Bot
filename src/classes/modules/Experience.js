@@ -6,7 +6,7 @@ export default new class Experience {
         this.users = []
     }
 
-    addXp(userId, xpPoints) {
+    add(userId, xpPoints) {
         const userData = this.users.find(user => user.id === userId)
 
         userData

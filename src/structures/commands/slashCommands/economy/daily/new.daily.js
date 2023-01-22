@@ -141,7 +141,7 @@ export default class Daily extends Base {
                 ChannelId: this.channel.id,
             })
 
-        Experience.addXp(this.user.id, prize.xp)
+        Experience.add(this.user.id, prize.xp)
 
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },
