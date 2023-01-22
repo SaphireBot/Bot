@@ -5,17 +5,19 @@ import {
     Database
 } from '../../../../../../classes/index.js'
 
-export default async ({ interaction, BlackJackEmojis }) => {
+export default async ({ interaction, BlackJackEmojis, guildData }) => {
 
-    const { options, user, guild } = interaction
+    const { options, user } = interaction
     const packs = options.getInteger('packs') || 2
     const bet = options.getInteger('bet') || 0
-    const moeda = await guild.getCoin()
+    const moeda = guildData?.Moeda || `${e.Coin} Safiras`
     const cards = []
 
     if (bet > 0) {
 
-        const userMoney = await user.balance()
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+
+        const userMoney = userData?.Balance || 0
 
         if (userMoney < bet)
             return await interaction.reply({

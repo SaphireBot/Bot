@@ -7,7 +7,6 @@ export default {
     category: "games",
     type: 1,
     dm_permission: false,
-    database: false,
     options: [
         {
             name: 'solo',
@@ -180,7 +179,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction }) {
-        return new Blackjack(interaction).validateOptions()
+    async execute({ interaction, guildData }) {
+        return new Blackjack(interaction, guildData).validateOptions()
     }
 }

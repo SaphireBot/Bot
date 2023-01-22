@@ -15,7 +15,8 @@ export default async (interaction, message, gameData) => {
         })
 
     if (gameData.bet > 0) {
-        const userMoney = await user.balance()
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userMoney = userData?.Balance || 0
         if (!userMoney || userMoney < gameData.bet)
             return await interaction.reply({
                 content: `${e.Deny} | Ainda falta mais **${gameData.bet - userMoney} ${await guild.getIcon()}** para você poder entrar nesta aposta.`,

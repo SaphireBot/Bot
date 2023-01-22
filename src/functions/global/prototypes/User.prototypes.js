@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { Database, SaphireClient as client } from '../../../classes/index.js'
 import { Config as config } from '../../../util/Constants.js'
-import { User } from 'discord.js'
-import { Routes, RouteBases } from 'discord.js'
+import { Routes, RouteBases, User } from 'discord.js'
+
 
 User.prototype.banner = async function () {
 

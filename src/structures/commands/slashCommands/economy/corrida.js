@@ -211,7 +211,8 @@ export default {
 
                 if (value > 0) {
 
-                    const userMoney = await user.balance()
+                    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+                    const userMoney = userData?.Balance || 0
 
                     if (!userMoney || userMoney < value)
                         return await int.reply({

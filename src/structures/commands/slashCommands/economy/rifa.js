@@ -9,7 +9,6 @@ export default {
     description: '[economy] Um sistema diferente de rifas',
     category: "economy",
     dm_permission: false,
-    database: false,
     type: 1,
     options: [
         {
@@ -44,7 +43,7 @@ export default {
     helpData: {
         description: ''
     },
-    async execute({ interaction, e }) {
+    async execute({ interaction, e, guildData }) {
 
         const { options } = interaction
         let command = options?.data[0]?.name || null
@@ -71,6 +70,6 @@ export default {
                 ephemeral: true
             })
 
-        return execute(interaction)
+        return execute(interaction, guildData)
     }
 }

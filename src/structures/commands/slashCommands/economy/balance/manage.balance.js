@@ -21,7 +21,8 @@ export default async (interaction, option, user) => {
     if (option === 'delete') return deleteBalance()
     if (option === 'report') return await interaction.showModal(Modals.reportBalance(author))
 
-    const userMoney = await user.balance() || 0
+    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userMoney = userData?.Balance || 0
 
     return await interaction.showModal(Modals.BalanceModal(option, user, userMoney))
 

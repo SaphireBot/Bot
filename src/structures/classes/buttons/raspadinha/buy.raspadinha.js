@@ -8,7 +8,8 @@ import buildRaspadinha from "./build.raspadinha.js"
 export default async interaction => {
 
     const { user, guild } = interaction
-    const userBalance = await user.balance()
+    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userBalance = userData?.Balance || 0
     const moeda = await guild.getCoin()
 
     if (userBalance < 100)

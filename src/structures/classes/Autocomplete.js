@@ -185,7 +185,8 @@ export default class Autocomplete extends Base {
 
     async rifaNumero(value) {
 
-        const userBalance = await this.user.balance() || 0
+        const userData = await this.Database.User.findOne({ id: this.user.id }, 'Balance')
+        const userBalance = userData?.Balance || 0
 
         if (!userBalance || userBalance < 1000)
             return await this.respond([{

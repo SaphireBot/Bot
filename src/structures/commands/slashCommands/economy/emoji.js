@@ -121,7 +121,8 @@ export default {
         const buttons = getButtons()
         const participants = []
         const value = parseInt(options.getInteger('value'))
-        const userBalance = await user.balance()
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userBalance = userData?.Balance || 0
         const moeda = guildData?.Moeda || `${e.Coin} Safiras`
         const alreadyWarned = []
         const rescue = options.getString('options') === 'rescue'
@@ -191,7 +192,8 @@ export default {
                     })
                 }
 
-                const authorBalance = await author.balance()
+                const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+                const authorBalance = userData?.Balance || 0
                 if (!authorBalance || authorBalance < value)
                     return await int.reply({
                         content: `${e.Deny} | Você não possui dinheiro suficiente para entrar neste emoji bet.`,

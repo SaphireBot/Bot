@@ -3,6 +3,7 @@ import { Config as config } from '../../../../../util/Constants.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 import revalidateReminder from './reminder.daily.js'
 import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
+import { Experience } from '../../../../../classes/index.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -118,7 +119,7 @@ export default class Daily extends Base {
                 color: client.green,
                 title: `${e.SaphireLove} ${client.user.username} Daily Rewards`,
                 description: `Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
-                fields: [...data.fields]
+                fields: data.fields
             }]
         })
 
@@ -140,22 +141,18 @@ export default class Daily extends Base {
                 ChannelId: this.channel.id,
             })
 
+        Experience.addXp(this.user.id, prize.xp)
+
         const data = {
-            $inc: {
-                DailyCount: 1,
-                Balance: prize.money,
-                Xp: prize.xp,
-            },
-            $set: {
-                'Timeouts.Daily': dateNow
-            }
+            $inc: { DailyCount: 1, Balance: prize.money },
+            $set: { 'Timeouts.Daily': dateNow }
         }
 
         if (prize.day > 0)
             data.$push = {
                 Transactions: {
                     $each: [{
-                        time: `${Date.format(0, true)} - ${await this.user.balance()}`,
+                        time: `${Date.format(0, true)}`,
                         data: `${this.emojis.gain} Ganhou ${prize.money} Safiras no ${prize.day}º dia do *daily*.`
                     }],
                     $position: 0

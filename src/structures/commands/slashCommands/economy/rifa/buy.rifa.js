@@ -5,9 +5,9 @@ import {
 import { Emojis as e } from "../../../../../util/util.js"
 import makeTheSuperGiveaway from "./giveaway.rifa.js"
 
-export default async interaction => {
+export default async (interaction, guildData) => {
 
-    const { options, user, guild } = interaction
+    const { options, user } = interaction
     const number = options.getInteger('comprar')
 
     if (number < 1 || number > 90)
@@ -16,8 +16,9 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const userBalance = await user.balance() || 0
-    const moeda = await guild.getCoin()
+    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userBalance = userData?.Balance || 0
+    const moeda = guildData?.Moeda || `${e.Coin} Safiras`
 
     if (!userBalance || userBalance < 1000)
         return await interaction.reply({

@@ -3,8 +3,9 @@ import { Emojis as e } from '../../../../../util/util.js'
 import * as fs from 'fs'
 
 export default class Blackjack extends Base {
-    constructor(interaction) {
+    constructor(interaction, guildData) {
         super()
+        this.guildData = guildData
         this.interaction = interaction
         this.options = interaction.options
     }

@@ -1,9 +1,6 @@
 import { ButtonStyle } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js"
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../../../classes/index.js"
+import { SaphireClient as client, Database } from "../../../../../../classes/index.js"
 
 export default async ({ interaction, BlackJackEmojis }) => {
 
@@ -16,7 +13,8 @@ export default async ({ interaction, BlackJackEmojis }) => {
     let authorMoney = 0
 
     if (betValue > 0) {
-        const userMoney = await user.balance()
+        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userMoney = userData?.Balance || 0
 
         if (!userMoney || userMoney < betValue)
             return await interaction.reply({
