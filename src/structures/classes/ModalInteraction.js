@@ -32,7 +32,7 @@ export default class ModalInteraction extends Base {
         if (this.customId.includes('reportBalance')) return this.reportBalance(this)
         if (this.customId.includes('fanart')) return this.addFanart(this)
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
-        if (/\d{18,}/.test(this.customId)) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
+        if (/\d{18,}/.test(this.customId) && !this.customId.startsWith('{')) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
 
         const ModalInteractionFunctions = {
             BugModalReport: [this.BugModalReport, this],
@@ -50,7 +50,8 @@ export default class ModalInteraction extends Base {
             botSugest: [this.botSugest],
             serverSugest: [this.serverSugest],
             serverReport: [this.serverReport],
-            cantada: [cantadasModal, this]
+            cantada: [cantadasModal, this],
+            anime: [this.editAnime, this]
         }[this.customId]
 
         if (ModalInteractionFunctions)
@@ -61,12 +62,28 @@ export default class ModalInteraction extends Base {
 
             if (data?.c === 'reminder')
                 return managerReminder.edit(this.interaction, data?.reminderId)
+
+            if (data.c === 'anime')
+                return this.editAnime(this)
         }
 
         return await this.interaction.reply({
             content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,
             ephemeral: true
         })
+    }
+
+    async editAnime({ interaction, message, fields }) {
+
+        const name = fields.getTextInputValue('name') || null
+        const anime = fields.getTextInputValue('anime') || null
+        const type = fields.getTextInputValue('type') || null
+
+        const embed = message?.embeds[0]?.data
+        embed.fields[1].value = name
+        embed.fields[2].value = anime
+        embed.fields[3].value = type
+        return await interaction.update({ embeds: [embed] }).catch(() => { })
     }
 
     async announce({ interaction, user, guild, member, fields }) {

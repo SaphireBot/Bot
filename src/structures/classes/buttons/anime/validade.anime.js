@@ -1,5 +1,5 @@
-import { AttachmentBuilder, WebhookClient } from "discord.js"
-import { Database, SaphireClient as client } from "../../../../classes/index.js"
+import { AttachmentBuilder, ButtonStyle, WebhookClient } from "discord.js"
+import { Database, Modals, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 const webhook = new WebhookClient({ url: `${process.env.WEBHOOK_ANIME_SUPPORTER}` })
 
@@ -12,7 +12,25 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
 
+    if (commandData.src === 'edit') return edit()
     return commandData.src === 'accept' ? accept() : decline()
+
+    async function edit() {
+
+        const embed = message?.embeds[0]?.data
+
+        if (!embed)
+            return await interaction.update({
+                content: `${e.Deny} | A embed com os dados não foi encontrada.`,
+                embeds: [], components: []
+            }).catch(() => { })
+
+        const name = embed?.fields[1]?.value
+        const anime = embed?.fields[2]?.value
+        const type = embed?.fields[3]?.value
+
+        return await interaction.showModal(Modals.editAnimeRequest(name, anime, type))
+    }
 
     async function accept() {
 
@@ -32,10 +50,9 @@ export default async (interaction, commandData) => {
             || client.animes.filter(an => an?.type === 'anime').find(an => an?.name?.toLowerCase() === name.toLowerCase())
         ) {
             removeIndication(id)
-            return await interaction.update({
-                content: `${e.Deny} | Este anime já foi registrado no banco de dados.`,
-                components: [], embeds: []
-            }).catch(() => { })
+            embed.color = client.red
+            embed.footer = { text: 'Anime já registrado' }
+            return await interaction.update({ embeds: [embed] }).catch(() => { })
         }
 
         const anime = embed?.fields[2]?.value
@@ -98,7 +115,21 @@ export default async (interaction, commandData) => {
                     { upsert: true }
                 )
 
-                return await interaction.update({ embeds: [embed], components: [] }).catch(() => { })
+                return await interaction.update({
+                    embeds: [embed],
+                    components: [{
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Analizar Outra Sugestão',
+                                emoji: '🔄',
+                                custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
+                                style: ButtonStyle.Primary
+                            }
+                        ]
+                    }]
+                }).catch(() => { })
             })
     }
 
@@ -118,7 +149,20 @@ export default async (interaction, commandData) => {
         embed.color = client.red
         embed.footer = { text: 'Sugestão Deletada' }
 
-        return await interaction.update({ components: [], embeds: [embed] }).catch(() => { })
+        return await interaction.update({
+            components: [{
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: 'Analizar Outra Sugestão',
+                        emoji: '🔄',
+                        custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
+                        style: ButtonStyle.Primary
+                    }
+                ]
+            }], embeds: [embed]
+        }).catch(() => { })
 
     }
 

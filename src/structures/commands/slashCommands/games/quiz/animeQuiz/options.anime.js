@@ -2,10 +2,10 @@ import { Database, SaphireClient as client } from '../../../../../../classes/ind
 import { ButtonStyle } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js"
 
-export default async interaction => {
+export default async (interaction, suggestId) => {
 
-    const { user, options } = interaction
-    const value = options.getString('method')
+    const { user } = interaction
+    const value = suggestId || interaction.options.getString('method')
     return value === 'view' ? view() : analize()
 
     async function view() {
@@ -34,10 +34,12 @@ export default async interaction => {
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'AnimeQuizIndication')
         const animes = clientData?.AnimeQuizIndication || []
 
-        if (!animes || !animes.length)
-            return await interaction.reply({
+        if (!animes || !animes.length) {
+            await interaction.update({ components: [] })
+            return interaction.channel.send({
                 content: `${e.Deny} | Nenhuma indicação de anime disponível no momento.`
             })
+        }
 
         const anime = animes[Math.floor(Math.random() * animes.length)]
 
@@ -95,7 +97,13 @@ export default async interaction => {
                         label: 'Excluir',
                         custom_id: JSON.stringify({ c: 'animeQuiz', src: 'delete', sendedFor: anime.sendedFor }),
                         style: ButtonStyle.Danger
-                    }
+                    },
+                    {
+                        type: 2,
+                        label: 'Editar',
+                        custom_id: JSON.stringify({ c: 'animeQuiz', src: 'edit' }),
+                        style: ButtonStyle.Secondary
+                    },
                 ]
             }]
         })

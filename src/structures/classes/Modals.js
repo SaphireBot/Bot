@@ -4,6 +4,60 @@ export default new class Modals {
         return { ...this }
     }
 
+    editAnimeRequest = (name, anime, type) => {
+        return {
+            title: "Anime Quiz Indication | Edition Painel",
+            custom_id: JSON.stringify({ c: 'anime' }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "name",
+                            label: "Nome do Personagem/Anime",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 1024,
+                            value: name,
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "anime",
+                            label: "Nome do Anime",
+                            style: 1,
+                            min_length: 2,
+                            max_length: 1000,
+                            value: anime,
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "type",
+                            label: "Tipo do Elemento",
+                            style: 1,
+                            min_length: 2,
+                            max_length: 1000,
+                            value: type,
+                            required: true
+                        }
+                    ]
+                } // MAX: 5 Fields
+            ]
+        }
+    }
+
     ReminderEdit = (hour, message, reminderId) => {
         return {
             title: "Edição de Lembrete",

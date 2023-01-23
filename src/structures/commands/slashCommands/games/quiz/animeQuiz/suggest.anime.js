@@ -17,13 +17,13 @@ export default async interaction => {
         })
 
     if (client.animes.find(an => an.name?.toLowerCase() === name.toLowerCase()))
-        return await interaction.update({
+        return await interaction.reply({
             content: `${e.Deny} | Este anime já foi registrado no banco de dados.`,
             components: [], embeds: []
         }).catch(() => { })
 
     if (client.animes.filter(an => an.type === 'anime').find(an => an.name?.toLowerCase() === name.toLowerCase()))
-        return await interaction.update({
+        return await interaction.reply({
             content: `${e.Deny} | Este anime já foi registrado no banco de dados.`,
             components: [], embeds: []
         }).catch(() => { })

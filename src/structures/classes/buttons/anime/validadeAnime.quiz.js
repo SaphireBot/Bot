@@ -4,6 +4,7 @@ import {
 } from "../../../../classes/index.js"
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
 import { Emojis as e } from "../../../../util/util.js"
+import optionsAnime from "../../../commands/slashCommands/games/quiz/animeQuiz/options.anime.js"
 import validadeAnime from "./validade.anime.js"
 
 export default async (interaction, commandData) => {
@@ -11,8 +12,24 @@ export default async (interaction, commandData) => {
     const { message, user } = interaction
     const authorId = message?.interaction?.user?.id
 
-    if (['accept', 'delete'].includes(commandData?.src))
+    if (['accept', 'delete', 'edit'].includes(commandData?.src))
         return validadeAnime(interaction, commandData)
+
+    if (commandData?.src === 'anotherOption') {
+
+        if (!['516048524388073516', ...client.staff].includes(user.id)) return
+
+        const clientData = await Database.Client.findOne({ id: client.user.id }, 'AnimeQuizIndication')
+        const AnimeQuizIndication = clientData?.AnimeQuizIndication || []
+
+        if (!AnimeQuizIndication || !AnimeQuizIndication) {
+            await interaction.update({ components: [] }).catch(() => { })
+            return interaction.channel.send({ content: `${e.Deny} | Acabou todas as sugestões` })
+        }
+
+        interaction.message.edit({ components: [] }).catch(() => { })
+        return optionsAnime(interaction, 'analize')
+    }
 
     if (user.id !== authorId) return
 
