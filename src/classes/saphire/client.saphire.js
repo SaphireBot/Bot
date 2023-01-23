@@ -145,6 +145,11 @@ export default new class SaphireClient extends Client {
          * @returns Array com todos os canais em jogo
          */
         this.chatsInGame = []
+
+        /**
+         * @returns Todos os animes registrados no banco de dados
+         */
+        this.animes = []
     }
 
     /**
@@ -202,6 +207,7 @@ export default new class SaphireClient extends Client {
         await this.setMemes()
         await managerReminder.define()
         this.fanarts = await Database.Fanart.find() || []
+        this.animes = await Database.Anime.find() || []
         console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts Loaded')
 
         console.log(`12/14 - Connected at Shard ${this.shardId}`)

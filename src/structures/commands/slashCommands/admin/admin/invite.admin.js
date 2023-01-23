@@ -10,6 +10,7 @@ export default async interaction => {
 
     const invites = await axios({
         url: `https://discord.com/api/v10/guilds/${guildId}/invites`,
+        method: 'GET',
         headers: {
             Authorization: `Bot ${process.env.DISCORD_TOKEN}`
         }

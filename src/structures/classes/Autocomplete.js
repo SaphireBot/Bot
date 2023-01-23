@@ -25,8 +25,6 @@ export default class Autocomplete extends Base {
         let { name, value } = this.options.getFocused(true)
 
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
-        if (name === 'view' && this.commandName === 'saphire') return this.fanartsSearch(value)
-        if (name === 'accept' && this.commandName === 'admin') return this.cantadasSuggest(value)
         if (name === 'search' && this.commandName === 'cantada') return this.showCantadas(value)
         if (name === 'opcoes' && this.commandName === 'cantada') return this.cantadaOptions()
 
@@ -35,6 +33,8 @@ export default class Autocomplete extends Base {
         const autocompleteFunctions = {
             look: ['indications', value],
             users_banned: ['usersBanned', value],
+            method: ['quizAnime', value],
+            saphire: ['fanartsSearch', value],
             color: ['utilColors', value],
             cor: ['utilColors', value],
             betchoice: ['betChoices', value],
@@ -79,6 +79,30 @@ export default class Autocomplete extends Base {
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async quizAnime() {
+
+        const methods = [
+            {
+                name: 'Ver minhas indicações',
+                value: 'view'
+            }
+        ]
+
+        if (this.client.staff.includes(this.user.id)) {
+
+            const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'AnimeQuizIndication')
+            const AnimeQuizIndication = clientData?.AnimeQuizIndication || []
+
+            methods.push({
+                name: `${AnimeQuizIndication.length || 0} indicações para analize`,
+                value: 'analize'
+            })
+
+        }
+
+        return await this.respond(methods)
     }
 
     async reminders(value) {

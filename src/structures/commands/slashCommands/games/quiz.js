@@ -153,12 +153,12 @@ export default {
                                     value: 'anime'
                                 },
                                 {
-                                    name: 'Personagem Masculino (Husband)',
-                                    value: 'husband'
+                                    name: 'Personagem Masculino',
+                                    value: 'male'
                                 },
                                 {
-                                    name: 'Personagem Feminino (Waifu)',
-                                    value: 'waifu'
+                                    name: 'Personagem Feminino',
+                                    value: 'female'
                                 },
                                 {
                                     name: 'Outros',
@@ -167,6 +167,18 @@ export default {
                             ]
                         }
                     ]
+                },
+                {
+                    name: 'options',
+                    description: 'Mais opções do comando aqui',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [{
+                        name: 'method',
+                        description: 'Método a ser executado',
+                        type: ApplicationCommandOptionType.String,
+                        autocomplete: true,
+                        required: true
+                    }]
                 }
             ]
         }
@@ -182,11 +194,7 @@ export default {
         const { options } = interaction
         const quiz = options.getSubcommandGroup() || options.getSubcommand()
 
-        const game = {
-            logomarca,
-            bandeiras,
-            anime
-        }[quiz]
+        const game = { logomarca, bandeiras, anime }[quiz]
 
         if (!game)
             return await interaction.reply({

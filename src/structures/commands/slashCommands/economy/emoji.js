@@ -39,29 +39,29 @@ export default {
                 }
             ]
         },
-        {
-            name: 'invest',
-            description: '[economy] Invista em um emoji e faça seu lucro',
-            type: ApplicationCommandOptionType.Subcommand,
-            options: [
-                {
-                    name: 'options',
-                    description: 'Escolha uma das opções',
-                    type: ApplicationCommandOptionType.String,
-                    required: true,
-                    choices: [
-                        {
-                            name: 'Investir/apostar em um emoji',
-                            value: 'bet'
-                        },
-                        // {
-                        //     name: 'Visualizar status geral',
-                        //     value: 'view'
-                        // }
-                    ]
-                }
-            ]
-        },
+        // {
+        //     name: 'invest',
+        //     description: '[economy] Invista em um emoji e faça seu lucro',
+        //     type: ApplicationCommandOptionType.Subcommand,
+        //     options: [
+        //         {
+        //             name: 'options',
+        //             description: 'Escolha uma das opções',
+        //             type: ApplicationCommandOptionType.String,
+        //             required: true,
+        //             choices: [
+        //                 {
+        //                     name: 'Investir/apostar em um emoji',
+        //                     value: 'bet'
+        //                 },
+        //                 // {
+        //                 //     name: 'Visualizar status geral',
+        //                 //     value: 'view'
+        //                 // }
+        //             ]
+        //         }
+        //     ]
+        // },
         {
             name: 'view',
             description: '[util] Veja um emoji de uma forma maior',

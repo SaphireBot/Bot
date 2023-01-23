@@ -152,6 +152,13 @@ export default class FlagGame {
 
         this.gameData.started = false
 
+        if (!this.message) {
+            this.unregister()
+            return await this.interaction.channel.send({
+                content: `${e.cry} | Não foi possível continuar com o quiz por razões desconhecidas do universo...`
+            })
+        }
+
         const collector = this.message.createMessageComponentCollector({
             filter: int => int.user.id === this.user.id,
             idle: 30000,

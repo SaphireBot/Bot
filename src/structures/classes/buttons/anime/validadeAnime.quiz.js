@@ -4,11 +4,15 @@ import {
 } from "../../../../classes/index.js"
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
 import { Emojis as e } from "../../../../util/util.js"
+import validadeAnime from "./validade.anime.js"
 
-export default async interaction => {
+export default async (interaction, commandData) => {
 
     const { message, user } = interaction
     const authorId = message?.interaction?.user?.id
+
+    if (['accept', 'delete'].includes(commandData?.src))
+        return validadeAnime(interaction, commandData)
 
     if (user.id !== authorId) return
 
@@ -26,12 +30,12 @@ export default async interaction => {
             value: 'anime'
         },
         {
-            name: 'Personagem Masculino (Husband)',
-            value: 'husband'
+            name: 'Personagem Masculino',
+            value: 'male'
         },
         {
-            name: 'Personagem Feminino (Waifu)',
-            value: 'waifu'
+            name: 'Personagem Feminino',
+            value: 'female'
         },
         {
             name: 'Outros',
@@ -56,11 +60,7 @@ export default async interaction => {
 
     return await Database.Client.updateOne(
         { id: client.user.id },
-        {
-            $push: {
-                AnimeQuizIndication: data
-            }
-        },
+        { $push: { AnimeQuizIndication: data } },
         { new: true }
     )
         .then(async doc => {

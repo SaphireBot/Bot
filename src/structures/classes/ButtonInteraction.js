@@ -62,7 +62,7 @@ export default class ButtonInteraction extends Base {
             redit: [ratherAdminEdit, this],
             rt: [rather, this.interaction, commandData],
             anime: [anime, this.interaction, commandData],
-            animeQuiz: [validadeAnimeQuiz, this.interaction],
+            animeQuiz: [validadeAnimeQuiz, this.interaction, commandData],
             channel: [channelIndex, this.interaction, commandData],
             rifa: [rifa, this.interaction, commandData],
             rasp: [raspadinha, this.interaction, commandData],
