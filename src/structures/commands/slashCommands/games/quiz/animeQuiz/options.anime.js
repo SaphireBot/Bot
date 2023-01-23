@@ -35,8 +35,8 @@ export default async (interaction, suggestId) => {
         const animes = clientData?.AnimeQuizIndication || []
 
         if (!animes || !animes.length) {
-            await interaction.update({ components: [] })
-            return interaction.channel.send({
+            await interaction.message?.edit({ components: [] }).catch(() => { })
+            return await interaction.reply({
                 content: `${e.Deny} | Nenhuma indicação de anime disponível no momento.`
             })
         }
