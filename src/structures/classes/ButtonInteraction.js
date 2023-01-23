@@ -23,6 +23,7 @@ import counterPoll from './buttons/poll/counter.poll.js'
 import executeCantada from './buttons/cantadas/execute.cantada.js'
 import executeAmongus from './buttons/amongus/execute.amongus.js'
 import indexBet from './buttons/bet/index.bet.js'
+import validadeAnimeQuiz from './buttons/anime/validadeAnime.quiz.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -61,6 +62,7 @@ export default class ButtonInteraction extends Base {
             redit: [ratherAdminEdit, this],
             rt: [rather, this.interaction, commandData],
             anime: [anime, this.interaction, commandData],
+            animeQuiz: [validadeAnimeQuiz, this.interaction],
             channel: [channelIndex, this.interaction, commandData],
             rifa: [rifa, this.interaction, commandData],
             rasp: [raspadinha, this.interaction, commandData],

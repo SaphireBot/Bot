@@ -8,6 +8,7 @@ import Rather from './models/Rather.js'
 import Indications from './models/Indications.js'
 import Cantadas from './models/Cantadas.js'
 import Memes from './models/Memes.js'
+import Anime from './models/Anime.js'
 
 /**
  * Unificação de todos os Models para extensão da Classe Database
@@ -25,6 +26,7 @@ class Models {
         this.Indications = Indications
         this.Cantadas = Cantadas
         this.Memes = Memes
+        this.Anime = Anime
     }
 }
 
@@ -39,5 +41,6 @@ export {
     Rather,
     Indications,
     Cantadas,
-    Memes
+    Memes,
+    Anime
 }
