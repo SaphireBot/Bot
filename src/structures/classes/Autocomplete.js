@@ -90,7 +90,7 @@ export default class Autocomplete extends Base {
             }
         ]
 
-        if (this.client.staff.includes(this.user.id)) {
+        if (['516048524388073516', ...this.client.staff].includes(this.user.id)) {
 
             const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'AnimeQuizIndication')
             const AnimeQuizIndication = clientData?.AnimeQuizIndication || []
