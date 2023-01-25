@@ -5,7 +5,7 @@ import {
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
 import { Emojis as e } from "../../../../util/util.js"
 import optionsAnime from "../../../commands/slashCommands/games/quiz/animeQuiz/options.anime.js"
-import validadeAnime from "./validade.anime.js"
+import validadeAnime from "./validate.anime.js"
 
 export default async (interaction, commandData) => {
 

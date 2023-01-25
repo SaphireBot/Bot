@@ -23,7 +23,7 @@ import counterPoll from './buttons/poll/counter.poll.js'
 import executeCantada from './buttons/cantadas/execute.cantada.js'
 import executeAmongus from './buttons/amongus/execute.amongus.js'
 import indexBet from './buttons/bet/index.bet.js'
-import validadeAnimeQuiz from './buttons/anime/validadeAnime.quiz.js'
+import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
