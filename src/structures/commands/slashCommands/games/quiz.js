@@ -192,6 +192,41 @@ export default {
                             autocomplete: true
                         }
                     ]
+                },
+                {
+                    name: 'start',
+                    description: 'Inicie um novo jogo',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [
+                        {
+                            name: 'category',
+                            description: 'Escolha a categoria do Quiz',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            choices: [
+                                {
+                                    name: 'Quiz de Animes',
+                                    value: 'anime'
+                                },
+                                {
+                                    name: 'Quiz de Personagens Masculinos',
+                                    value: 'male'
+                                },
+                                {
+                                    name: 'Quiz de Personagens Femininos',
+                                    value: 'female'
+                                },
+                                {
+                                    name: 'Quiz de Personagens Outros (Pets, dragões, robos, etc...)',
+                                    value: 'others'
+                                },
+                                {
+                                    name: 'Hiper Mix - Tudo Misturado',
+                                    value: 'all'
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
@@ -206,7 +241,6 @@ export default {
 
         const { options } = interaction
         const quiz = options.getSubcommandGroup() || options.getSubcommand()
-
         const game = { logomarca, bandeiras, anime }[quiz]
 
         if (!game)

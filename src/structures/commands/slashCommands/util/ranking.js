@@ -36,6 +36,10 @@ export default {
                 {
                     name: 'Bandeiras Quiz',
                     value: 'GamingCount.FlagCount'
+                },
+                {
+                    name: 'Quiz Anime',
+                    value: 'GamingCount.QuizAnime'
                 }
             ]
         },
@@ -81,7 +85,8 @@ export default {
             Likes: '',
             Xp: '',
             'GamingCount.Logomarca': 'Acertos',
-            'GamingCount.FlagCount': 'Acertos'
+            'GamingCount.FlagCount': 'Acertos',
+            'GamingCount.QuizAnime': 'Acertos'
         }
 
         const format = query

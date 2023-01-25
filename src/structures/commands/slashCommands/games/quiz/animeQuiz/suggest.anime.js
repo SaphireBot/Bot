@@ -10,9 +10,9 @@ export default async interaction => {
     const anime = options.getString('anime')
     const type = options.getString('type')
 
-    if (!['image/png', 'image/gif', 'image/jpeg'].includes(image.contentType))
+    if (!['image/png', 'image/gif', 'image/jpeg', 'image/jpg'].includes(image.contentType))
         return await interaction.reply({
-            content: `${e.Deny} | Apenas imagens no formato \`.png\`, \`.jpeg\`, \`.gif\` são suportados.`,
+            content: `${e.Deny} | Apenas imagens no formato \`.png\`, \`jpg\`, \`.jpeg\`, \`.gif\` são suportados.`,
             ephemeral: true
         })
 

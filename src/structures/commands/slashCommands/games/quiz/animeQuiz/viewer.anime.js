@@ -20,7 +20,6 @@ export default async (interaction, value) => {
         .catch(() => `Not Found - \`${anime.acceptedFor}\``)
 
     const sendedFor = await client.users.fetch(anime.sendedFor || "0")
-        .then(u => `${u.tag} - \`${u.id}\``)
         .catch(() => `Not Found - \`${anime.sendedFor}\``)
 
     const type = {
@@ -39,15 +38,23 @@ export default async (interaction, value) => {
         })
     else fields.push({ name: '⭐ Nome do Anime', value: anime.anime || "? Not Identified" })
 
-    fields.push({ name: '👤 Enviado por', value: sendedFor })
+    fields.push({ name: '👤 Enviado por', value: sendedFor?.tag ? `${sendedFor.tag} - \`${sendedFor.id}\`` : sendedFor })
 
     const embed = {
         color: client.blue,
         title: '🔍 Suggestion Quiz Viewer',
         description: `O ID desta sugestão é \`${anime.id}\` e foi aceito por ${acceptedFor}`,
         fields,
-        image: { url: anime.imageUrl || null }
+        image: { url: anime.imageUrl || null },
+        footer: {
+            text: `Este usuário possui `
+        }
     }
+
+    if (sendedFor?.tag)
+        embed.footer = {
+            text: `📨 ${sendedFor.tag} possui ${allAnimes?.filter(an => an.sendedFor == anime.sendedFor)?.length || 0} sugestões aceitas`
+        }
 
     const components = []
 
