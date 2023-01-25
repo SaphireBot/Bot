@@ -4,10 +4,10 @@ export default new class Modals {
         return { ...this }
     }
 
-    editAnimeRequest = (name, anime, type) => {
+    editAnimeRequest = (customId, name, anime, type, id) => {
         return {
             title: "Anime Quiz Indication | Edition Painel",
-            custom_id: JSON.stringify({ c: 'anime' }),
+            custom_id: JSON.stringify({ c: 'anime', src: customId, id }),
             components: [
                 {
                     type: 1,

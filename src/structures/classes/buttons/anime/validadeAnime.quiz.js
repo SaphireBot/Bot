@@ -17,7 +17,7 @@ export default async (interaction, commandData) => {
 
     if (commandData?.src === 'anotherOption') {
 
-        if (!['516048524388073516', ...client.staff].includes(user.id)) return
+        if (!client.staff.includes(user.id)) return
 
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'AnimeQuizIndication')
         const AnimeQuizIndication = clientData?.AnimeQuizIndication || []

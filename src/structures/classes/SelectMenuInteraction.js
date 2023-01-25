@@ -213,12 +213,12 @@ export default class SelectMenuInteraction extends Base {
         const clientData = await Database.Client.findOne({ id: client.user.id })
 
         return await profileCommand.execute({
-            interaction: interaction,
-            client: client,
+            interaction,
+            client,
+            Database,
+            Moeda,
+            clientData,
             emojis: e,
-            Database: Database,
-            Moeda: Moeda,
-            clientData: clientData,
             refresh: true
         })
     }

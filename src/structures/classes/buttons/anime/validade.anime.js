@@ -6,14 +6,32 @@ const webhook = new WebhookClient({ url: `${process.env.WEBHOOK_ANIME_SUPPORTER}
 export default async (interaction, commandData) => {
 
     const { user, message } = interaction
-    if (!client.staff.includes(user.id) && user.id !== '516048524388073516')
+    if (!client.staff.includes(user.id))
         return await interaction.reply({
             content: `${e.Deny} | Você não é um membro autorizado para aceitar/deletar solicitações de animes.`,
             ephemeral: true
         })
 
+    if (commandData.srcAdd === 'edit') return editApproved()
     if (commandData.src === 'edit') return edit()
     return commandData.src === 'accept' ? accept() : decline()
+
+    async function editApproved() {
+
+        const anime = client.animes.find(an => an.id == commandData.id)
+
+        if (!anime)
+            return await interaction.update({ content: `${e.Deny} | Anime não encontrado.`, components: [] })
+
+        if (!anime.name || !anime.anime || !anime.type)
+            return await interaction.reply({
+                content: `${e.Deny} | Dados estão faltando nesta indicação de personagem/anime.`,
+                components: []
+            })
+
+        return await interaction.showModal(Modals.editAnimeRequest('correct', anime.name, anime.anime, anime.type, anime.id))
+
+    }
 
     async function edit() {
 
@@ -29,7 +47,7 @@ export default async (interaction, commandData) => {
         const anime = embed?.fields[2]?.value
         const type = embed?.fields[3]?.value
 
-        return await interaction.showModal(Modals.editAnimeRequest(name, anime, type))
+        return await interaction.showModal(Modals.editAnimeRequest('edit', name, anime, type))
     }
 
     async function accept() {
@@ -51,7 +69,7 @@ export default async (interaction, commandData) => {
         ) {
             removeIndication(id)
             embed.color = client.red
-            embed.footer = { text: 'Anime já registrado' }
+            embed.footer = { text: 'Personagem/Anime já registrado' }
             return await interaction.update({ embeds: [embed] }).catch(() => { })
         }
 
@@ -96,7 +114,7 @@ export default async (interaction, commandData) => {
                 embed.color = client.green
                 embed.footer = { text: 'Sugestão Aceita' }
                 client.animes.push(doc)
-                removeIndication(id)
+                removeIndication(id, true)
 
                 await Database.User.updateOne(
                     { id: sendedFor },
@@ -143,7 +161,7 @@ export default async (interaction, commandData) => {
                 embeds: [], components: []
             }).catch(() => { })
 
-        const id = embed.fields[0].value
+        const id = commandData?.id || embed.fields[0].value
         removeIndication(id)
 
         embed.color = client.red
@@ -166,11 +184,21 @@ export default async (interaction, commandData) => {
 
     }
 
-    async function removeIndication(id) {
+    async function removeIndication(id, isIndication) {
+
+        if (!isIndication) {
+            await Database.Anime.deleteOne({ id: id })
+
+            client.animes.splice(
+                client.animes.findIndex(an => an.id == id),
+                1
+            )
+        }
 
         await Database.Client.updateOne(
             { id: client.user.id },
             { $pull: { AnimeQuizIndication: { id } } }
         )
+
     }
 }

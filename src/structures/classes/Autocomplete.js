@@ -25,6 +25,8 @@ export default class Autocomplete extends Base {
         let { name, value } = this.options.getFocused(true)
 
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
+        if (name === 'search' && this.options?.data[0]?.options[0]?.name == 'options') return this.quizAnime(value, true)
+        if (name === 'my_content' && this.options?.data[0]?.options[0]?.name == 'options') return this.quizAnime(value, 1)
         if (name === 'search' && this.commandName === 'cantada') return this.showCantadas(value)
         if (name === 'opcoes' && this.commandName === 'cantada') return this.cantadaOptions()
 
@@ -81,20 +83,15 @@ export default class Autocomplete extends Base {
         return await this.respond()
     }
 
-    async quizAnime() {
+    async quizAnime(value, isSearch) {
 
-        const methods = [
-            {
-                name: 'Ver minhas indicações',
-                value: 'view'
-            }
-        ]
+        const methods = []
 
-        if (['516048524388073516', ...this.client.staff].includes(this.user.id)) {
+        if (isSearch) return this.inSearchBuild(value, isSearch)
 
+        if (this.client.staff.includes(this.user.id)) {
             const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'AnimeQuizIndication')
             const AnimeQuizIndication = clientData?.AnimeQuizIndication || []
-
             methods.push({
                 name: `${AnimeQuizIndication.length || 0} indicações para analize`,
                 value: 'analize'
@@ -103,6 +100,40 @@ export default class Autocomplete extends Base {
         }
 
         return await this.respond(methods)
+    }
+
+    async inSearchBuild(value, searchValue) {
+        let AnimeQuizIndication = this.client.animes
+        if (!AnimeQuizIndication.length) return await this.respond()
+
+        if (searchValue === 1)
+            AnimeQuizIndication = AnimeQuizIndication.filter(an => an.sendedFor === this.user.id) || []
+        if (!AnimeQuizIndication.length) return await this.respond()
+
+        const fill = AnimeQuizIndication
+            .filter(an => an.acceptedFor.includes(value)
+                || an.name?.toLowerCase()?.includes(value?.toLowerCase())
+                || an.anime?.toLowerCase()?.includes(value?.toLowerCase())
+                || an.type?.toLowerCase()?.includes(value?.toLowerCase())
+                || an.imageUrl?.toLowerCase()?.includes(value?.toLowerCase())
+                || an.id?.toLowerCase()?.includes(value?.toLowerCase())
+            )
+        if (!fill.length) return await this.respond()
+
+        const types = {
+            anime: 'Anime',
+            male: 'Personagem Masculino',
+            female: 'Personagem Feminino',
+            others: 'Outros'
+        }
+
+        const mapped = fill
+            .map(an => ({
+                name: `${an.name} - ${an.anime} - ${types[an.type]}`,
+                value: an.id
+            }))
+
+        return await this.respond(mapped)
     }
 
     async reminders(value) {

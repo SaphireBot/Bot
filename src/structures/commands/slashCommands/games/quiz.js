@@ -121,7 +121,7 @@ export default {
             options: [
                 {
                     name: 'suggest',
-                    description: 'Sugira um novo personagem/anime',
+                    description: 'Sugira um novo personagem/anime para o Quiz',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
@@ -172,13 +172,26 @@ export default {
                     name: 'options',
                     description: 'Mais opções do comando aqui',
                     type: ApplicationCommandOptionType.Subcommand,
-                    options: [{
-                        name: 'method',
-                        description: 'Método a ser executado',
-                        type: ApplicationCommandOptionType.String,
-                        autocomplete: true,
-                        required: true
-                    }]
+                    options: [
+                        {
+                            name: 'method',
+                            description: 'Saphire\'s Team Only - Método a ser executado',
+                            type: ApplicationCommandOptionType.String,
+                            autocomplete: true
+                        },
+                        {
+                            name: 'search',
+                            description: 'Pesquise por qualquer personagens/animes armazenados no banco de dados',
+                            type: ApplicationCommandOptionType.String,
+                            autocomplete: true
+                        },
+                        {
+                            name: 'my_content',
+                            description: 'Pesquise pelos seus personagens/animes aceitos',
+                            type: ApplicationCommandOptionType.String,
+                            autocomplete: true
+                        }
+                    ]
                 }
             ]
         }

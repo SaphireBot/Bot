@@ -58,12 +58,12 @@ export default class ModalInteraction extends Base {
             return ModalInteractionFunctions[0](ModalInteractionFunctions[1])
 
         if (this.customId.startsWith('{')) {
-            const data = JSON.parse(this.customId)
+            this.customId = JSON.parse(this.customId)
 
-            if (data?.c === 'reminder')
-                return managerReminder.edit(this.interaction, data?.reminderId)
+            if (this.customId?.c === 'reminder')
+                return managerReminder.edit(this.interaction, this.customId?.reminderId)
 
-            if (data.c === 'anime')
+            if (this.customId.c === 'anime')
                 return this.editAnime(this)
         }
 
@@ -73,17 +73,63 @@ export default class ModalInteraction extends Base {
         })
     }
 
-    async editAnime({ interaction, message, fields }) {
+    async editAnime({ interaction, message, fields, customId }) {
 
-        const name = fields.getTextInputValue('name') || null
-        const anime = fields.getTextInputValue('anime') || null
-        const type = fields.getTextInputValue('type') || null
+        if (customId.src === 'edit') {
+            const name = fields.getTextInputValue('name') || null
+            const anime = fields.getTextInputValue('anime') || null
+            const type = fields.getTextInputValue('type') || null
 
-        const embed = message?.embeds[0]?.data
-        embed.fields[1].value = name
-        embed.fields[2].value = anime
-        embed.fields[3].value = type
-        return await interaction.update({ embeds: [embed] }).catch(() => { })
+            const embed = message?.embeds[0]?.data
+            embed.fields[1].value = name
+            embed.fields[2].value = anime
+            embed.fields[3].value = type
+            return await interaction.update({ embeds: [embed] }).catch(() => { })
+        }
+
+        if (customId.src === 'correct') {
+            const name = fields.getTextInputValue('name') || null
+            const anime = fields.getTextInputValue('anime') || null
+
+            const embed = message?.embeds[0]?.data
+
+            if (client.animes.find(an => an?.name?.toLowerCase() === name.toLowerCase())
+                || client.animes.filter(an => an?.type === 'anime').find(an => an?.name?.toLowerCase() === name.toLowerCase())
+            )
+                return await interaction.reply({ content: `${e.Deny} | Alteração inválida. Nome/Anime já existe no banco de dados.` }).catch(() => { })
+
+            const type = {
+                anime: 'Anime',
+                male: 'Personagem Masculino',
+                female: 'Personagem Feminino',
+                others: 'Outros'
+            }[fields.getTextInputValue('type')] || 'Não identificado'
+
+            const sendedFor = embed.fields.at(-1).value
+
+            embed.fields = [{ name: '📝 Tipo do Elemento', value: type }]
+
+            if (type !== 'Anime')
+                embed.fields.push({
+                    name: '⭐ Nome do Personagem/Anime',
+                    value: `**${name || "? Not Identified"}** do anime **${anime || "? Not Identified"}**`
+                })
+            else embed.fields.push({ name: '⭐ Nome do Anime', value: anime || "? Not Identified" })
+
+            embed.fields.push({ name: '👤 Enviado por', value: sendedFor })
+
+            await Database.Anime.findOneAndUpdate(
+                { id: customId.id },
+                { $set: { name, anime, type: fields.getTextInputValue('type') } },
+                { new: true }
+            ).then(doc => client.animes[client.animes.findIndex(an => an.id == customId.id)] = doc)
+
+            return await interaction.update({ embeds: [embed] })
+        }
+
+        return await interaction.reply({
+            content: `${e.Deny} | Sub-comando não encontrado. #9877987`
+        })
     }
 
     async announce({ interaction, user, guild, member, fields }) {

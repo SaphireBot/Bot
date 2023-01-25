@@ -20,7 +20,7 @@ const SaphireClientOptions = {
     ],
     sweepers: {
         users: {
-            filter: () => user => user.id !== config.ownerId,
+            filter: () => user => [!user.bot || user.id !== config.ownerId],
             interval: 14400
         },
         bans: {
