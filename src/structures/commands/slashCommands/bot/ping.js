@@ -72,7 +72,7 @@ export default {
             .catch(() => "🔴 Offline")
 
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging Counter\n${e.slash} | Interações: ${client.interactions || 0}\n${e.topgg} | Top.gg API Latency: ${discloudAPI}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Response Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging Counter\n${e.slash} | Interações: ${client.interactions || 0}\n${e.discloud} | Discloud Host Latency: ${discloudAPI || 0}\n${e.topgg} | Top.gg API Latency: ${topGG}\n${e.api} | Saphire API Latency: ${saphireAPI}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.Database} | Database Response Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
             components: [
                 {
                     type: 1,

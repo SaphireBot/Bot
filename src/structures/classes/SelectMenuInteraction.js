@@ -199,7 +199,7 @@ export default class SelectMenuInteraction extends Base {
 
         if (user.id !== message.interaction.user.id) return
 
-        const profileCommand = client.slashCommands.find(cmd => cmd.name === 'perfil')
+        const profileCommand = client.slashCommands.find(cmd => cmd.name === 'profile')
 
         if (!profileCommand)
             return await interaction.update({
