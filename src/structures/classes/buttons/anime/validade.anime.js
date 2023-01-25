@@ -76,6 +76,7 @@ export default async (interaction, commandData) => {
         const anime = embed?.fields[2]?.value
         const type = embed?.fields[3]?.value
         const sendedFor = commandData.sendedFor
+        const acceptedFor = user.id
         let imageUrl = embed?.image?.url
 
         if (!id || !name || !anime || !type || !imageUrl || !sendedFor)
@@ -104,10 +105,11 @@ export default async (interaction, commandData) => {
 
         imageUrl = attachment.attachment
 
-        return new Database.Anime({
-            acceptedFor: user.id,
-            anime, id, imageUrl, name, sendedFor, type
-        })
+        return new Database
+            .Anime({
+                acceptedFor, anime, id,
+                imageUrl, name, sendedFor, type
+            })
             .save()
             .then(async doc => {
 
@@ -146,6 +148,30 @@ export default async (interaction, commandData) => {
                                 style: ButtonStyle.Primary
                             }
                         ]
+                    }]
+                }).catch(() => { })
+            })
+            .catch(async err => {
+
+                embed.color = client.red
+                embed.footer = { text: 'Erro na validação' }
+
+                embed.fields.push({
+                    name: `${e.bug} Bug Bug Bug`,
+                    value: `\`${err}\``
+                })
+
+                return await interaction.update({
+                    embeds: [embed],
+                    components: [{
+                        type: 1,
+                        components: [{
+                            type: 2,
+                            label: 'Analizar Outra Sugestão',
+                            emoji: '🔄',
+                            custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
+                            style: ButtonStyle.Primary
+                        }]
                     }]
                 }).catch(() => { })
             })
