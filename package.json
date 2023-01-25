@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@iamtraction/google-translate": "^2.0.1",
-    "axios": "^1.2.2",
+    "axios": "^1.2.4",
     "better-sqlite3": "^8.0.1",
     "canvacord": "^5.4.8",
     "canvas": "^2.11.0",
@@ -22,7 +22,7 @@
     "lyrics-parse": "^1.1.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
-    "mongoose": "^6.8.3",
+    "mongoose": "^6.9.0",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.0.8",
     "statcord.js": "^3.4.3",
