@@ -1,6 +1,7 @@
 import { ButtonStyle, time } from "discord.js"
 import { Database, SaphireClient as client } from "../../../../../../classes/index.js"
 import { emoji } from "../../../../../../functions/plugins/plugins.js"
+import { DiscordPermissons } from "../../../../../../util/Constants.js"
 import { Emojis as e } from "../../../../../../util/util.js"
 
 export default class AnimeQuizManager {
@@ -41,6 +42,24 @@ export default class AnimeQuizManager {
     }
 
     async analize() {
+
+        if (this.type === 'liberate') {
+            if (!this.interaction.member.permissions.has(DiscordPermissons.Administrator))
+                return await this.interaction.reply({
+                    content: `${e.Deny} | Apenas um administrador por liberar este canal.`,
+                    ephemeral: true
+                })
+
+            if (!client.chatsInGame.includes(this.channel.id))
+                return await this.interaction.reply({
+                    content: `${e.Check} | Hey! O canal já está liberado, beleza?`
+                })
+
+            this.unregister()
+            return await this.interaction.reply({
+                content: `${e.Check} | O canal foi liberado.`
+            })
+        }
 
         if (!this.allSuggests.length)
             return await this.interaction.reply({
@@ -245,7 +264,7 @@ export default class AnimeQuizManager {
             .on('end', async (_, reason) => {
 
                 if (!['time', 'messageDelete', 'channelDelete'].includes(reason)) return
-                this.unregister()
+                await this.unregister()
 
                 if (['channelDelete', 'messageDelete'].includes(reason))
                     return this.channel.send({

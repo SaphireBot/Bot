@@ -223,6 +223,10 @@ export default {
                                 {
                                     name: 'Hiper Mix - Tudo Misturado',
                                     value: 'all'
+                                },
+                                {
+                                    name: '[ADMIN ONLY] Liberar Canal',
+                                    value: 'liberate'
                                 }
                             ]
                         }
