@@ -12,7 +12,8 @@ export default model("Guild", new Schema({
     announce: {
         channel: String,
         allowedRole: String,
-        notificationRole: String
+        notificationRole: String,
+        crosspost: Boolean
     },
     LogSystem: {
         channel: String,

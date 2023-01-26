@@ -1,4 +1,4 @@
-import { Modals } from "../../../../classes/index.js"
+import { Database, Modals } from "../../../../classes/index.js"
 import { ApplicationCommandOptionType, ChannelType, PermissionsBitField } from "discord.js"
 import { DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import categoryChannel from "../../functions/channel/category.channel.js"
@@ -15,7 +15,6 @@ export default {
     category: "moderation",
     dm_permission: false,
     name_localizations: { "en-US": "channel", 'pt-BR': 'canal' },
-    database: false,
     default_member_permissions: `${PermissionsBitField.Flags.ManageChannels}`,
     type: 1,
     options: [
@@ -24,6 +23,10 @@ export default {
             description: 'Escolha uma função a ser executada',
             type: ApplicationCommandOptionType.String,
             choices: [
+                {
+                    name: 'Ativar Postagens de Mensagens Automática',
+                    value: 'crosspost'
+                },
                 {
                     name: 'Trancar canal (lock)',
                     value: 'lock'
@@ -76,7 +79,7 @@ export default {
     helpData: {
         description: 'Comando para administrar o canal facilmente'
     },
-    async execute({ interaction, e }) {
+    async execute({ interaction, e, guildData }) {
 
         const { options, guild, channel: currentChannel, member } = interaction
 
@@ -94,6 +97,8 @@ export default {
 
         const channel = options.getChannel('channel') || currentChannel
         const method = options.getString('method')
+
+        if (method === 'crosspost') return crosspost()
 
         if (!channel || !method)
             return await interaction.reply({
@@ -141,5 +146,36 @@ export default {
             })
 
         return execute(interaction, channel)
+
+        async function crosspost() {
+
+            if (!guild.members.me.permissions.has(DiscordPermissons.Administrator))
+                return await interaction.reply({
+                    content: `${e.Deny} | Eu preciso da permissão de Administrador para postar mensagens em canais de anúncios.`,
+                    ephemeral: true
+                })
+
+            if (!interaction.member.permissions.has(DiscordPermissons.Administrator))
+                return await interaction.reply({
+                    content: `${e.Deny} | Apenas um adminsitrador pode ativar este sistema, ok?`,
+                    ephemeral: true
+                })
+
+            await Database.Guild.updateOne(
+                { id: guild.id },
+                {
+                    $set: {
+                        'announce.crosspost': !guildData?.announce?.crosspost
+                    }
+                }
+            )
+
+            return await interaction.reply({
+                content: `${e.Check} | ${!guildData?.announce?.crosspost
+                    ? 'Sistema ativado! De agora em diante eu vou postar as mensagens que mandarem nos canais de anúncios automaticamente.'
+                    : 'Ok ok! Não vou postar mais nada.'
+                    }`
+            })
+        }
     }
 }
