@@ -283,7 +283,7 @@ export default class AnimeQuizManager {
                 embed.color = client.red
                 embed.fields.unshift({
                     name: '⭐ Nome',
-                    value: alternative.name.captalize()
+                    value: `**${alternative.name.captalize()}**${alternative.type === 'anime' ? '' : `\n**${alternative.anime.captalize()}**`}`
                 })
                 embed.description = `Ninguém acertou esta alternativa.`
 
@@ -321,7 +321,7 @@ export default class AnimeQuizManager {
         embed.color = client.green
         embed.fields.unshift({
             name: '⭐ Nome',
-            value: alternative.name.captalize()
+            value: `**${alternative.name.captalize()}**${alternative.type === 'anime' ? '' : `\n**${alternative.anime.captalize()}**`}`
         })
         embed.description = `${user} acertou esta alternativa.`
 
