@@ -188,7 +188,7 @@ export default class AnimeQuizManager {
         if (userSend)
             fields.push({
                 name: '👤 Enviado por',
-                value: `${userSend} - \`${userSend.id}\``
+                value: `${userSend.tag} - \`${userSend.id}\``
             })
 
         const data = {
@@ -270,6 +270,7 @@ export default class AnimeQuizManager {
 
                 const ranking = Object
                     .entries(this.points || {})
+                    .sort((a, b) => b[1] - a[1])
                     .map(([id, points], i) => `${emoji(i)} <@${id}> ${points} acertos`)
 
                 let aditional = ''
@@ -307,6 +308,7 @@ export default class AnimeQuizManager {
 
         const ranking = Object
             .entries(this.points || {})
+            .sort((a, b) => b[1] - a[1])
             .map(([id, points], i) => `${emoji(i)} <@${id}> ${points} acertos`)
 
         let aditional = ''
