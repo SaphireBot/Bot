@@ -18,10 +18,50 @@ export default {
             options: [
                 {
                     name: 'limit',
-                    description: 'Quantas reações deve ter a mensagem? (2~10)',
+                    description: 'Quantas reações deve ter a mensagem?',
                     type: ApplicationCommandOptionType.Integer,
-                    max_value: 10,
-                    min_value: 2,
+                    choices: [
+                        {
+                            name: 'Desativar Sistema',
+                            value: 0
+                        },
+                        {
+                            name: '2 Reações',
+                            value: 2
+                        },
+                        {
+                            name: '3 Reações',
+                            value: 3
+                        },
+                        {
+                            name: '4 Reações',
+                            value: 4
+                        },
+                        {
+                            name: '5 Reações',
+                            value: 5
+                        },
+                        {
+                            name: '6 Reações',
+                            value: 6
+                        },
+                        {
+                            name: '7 Reações',
+                            value: 7
+                        },
+                        {
+                            name: '8 Reações',
+                            value: 8
+                        },
+                        {
+                            name: '9 Reações',
+                            value: 9
+                        },
+                        {
+                            name: '10 Reações',
+                            value: 10
+                        }
+                    ],
                     required: true
                 },
                 {
@@ -106,9 +146,21 @@ export default {
         const channel = options.getChannel('channel')
         const limit = options.getInteger('limit')
 
+        if (limit == 0) {
+            await Database.Guild.updateOne(
+                { id: guild.id },
+                { $unset: { Stars: 1 } },
+                { upsert: true }
+            )
+
+            return await interaction.reply({
+                content: `${e.Check} | Ok ok, sistema de estrelas desligado.`
+            })
+        }
+
         if (limit < 2 || limit > 10)
             return await interaction.reply({
-                content: `${e.Deny} | O limite máximo/minímo de reações é 2 e 10.`,
+                content: `${e.Deny} | A quantidade deve estar entre 2 e 10 reações`,
                 ephemeral: true
             })
 
