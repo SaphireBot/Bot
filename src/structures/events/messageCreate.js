@@ -4,6 +4,7 @@ import {
     Experience,
     Database
 } from '../../classes/index.js'
+import { DiscordPermissons } from '../../util/Constants.js';
 import { Emojis as e } from '../../util/util.js'
 import afkSystem from './system/afk.system.js'
 
@@ -14,10 +15,8 @@ client.on('messageCreate', async message => {
         const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'announce.crosspost')
         const isChannelCrosspostable = guildData?.announce?.crosspost
 
-        if (isChannelCrosspostable)
-            await message.crosspost()
-                .then(() => message.react('⭐'))
-                .catch(() => { })
+        if (isChannelCrosspostable && message.guild.members.me.permissions.has(DiscordPermissons.Administrator))
+            await message.crosspost().then(() => message.react('📨')).catch(() => { })
     }
 
     if (message?.author?.bot || !message.guild || message.webhookId) return

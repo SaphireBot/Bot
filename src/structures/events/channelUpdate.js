@@ -8,9 +8,11 @@ import { ChannelsTypes, PermissionsTranslate } from "../../util/Constants.js";
 
 client.on("channelUpdate", async (oldChannel, newChannel) => {
 
+    if (!oldChannel || !newChannel) return
     const { guild } = oldChannel
+    if (!guild) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const guildData = await Database.Guild.findOne({ id: guild?.id }, "LogSystem")
     if (!guildData) return
 
     const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
@@ -104,12 +106,12 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
         if (allMembersInChannelPermissions !== null) {
             fields.push({
                 name: "👥 Permissões Membros | Antigo",
-                value: `${allMembersInChannelPermissions.toJSON().filter(u => oldMembers.includes(u.id)).join(", ") || "`Nenhum membro`"}`.limit("MessageEmbedFieldValue")
+                value: `${allMembersInChannelPermissions.toJSON().filter(u => oldMembers.includes(u?.id)).join(", ") || "`Nenhum membro`"}`.limit("MessageEmbedFieldValue")
             })
 
             fields.push({
                 name: "👥 Permissões Membros | Atualizado",
-                value: `${allMembersInChannelPermissions.toJSON().filter(u => newMembers.includes(u.id)).join(", ") || "`Nenhum membro`"}`.limit("MessageEmbedFieldValue")
+                value: `${allMembersInChannelPermissions.toJSON().filter(u => newMembers.includes(u?.id)).join(", ") || "`Nenhum membro`"}`.limit("MessageEmbedFieldValue")
             })
         }
     }
@@ -117,11 +119,11 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
 
     function formatRoles(roles) {
         const rolesAllowed = roles
-            .filter(perm => perm.type === 0 && perm.id !== guild.roles.everyone.id)
+            .filter(perm => perm.type === 0 && perm?.id !== guild.roles.everyone?.id)
             ?.map(perm => perm?.id)
             ?.filter(i => i)
 
-        const adminRoles = guild.roles.cache.filter(role => role.permissions.toArray().includes("Administrator")).map(role => role.id)
+        const adminRoles = guild.roles.cache.filter(role => role.permissions.toArray().includes("Administrator")).map(role => role?.id)
 
         return [adminRoles, rolesAllowed]
             ?.flat()
@@ -131,7 +133,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     function formatMembers(members) {
         return members
             .filter(perm => perm.type === 1)
-            ?.map(perm => perm.id) // 1 Member
+            ?.map(perm => perm?.id) // 1 Member
             ?.filter(i => i)
     }
 
@@ -167,7 +169,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     if (Log?.executor)
         fields.push({
             name: `${e.Info} Informações Extra`,
-            value: `${e.Admin} **${Log?.executor.tag}** - *\`${Log?.executor.id}\`*\n📅 ${Date.Timestamp()}\n💬 ${newChannel}`
+            value: `${e.Admin} **${Log?.executor.tag}** - *\`${Log?.executor?.id}\`*\n📅 ${Date.Timestamp()}\n💬 ${newChannel}`
         })
 
     if (((!description || !description.length) && !fields.length) || (fields.length === 1 && !description)) return

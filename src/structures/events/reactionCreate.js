@@ -1,5 +1,4 @@
 import { SaphireClient as client, Database } from '../../classes/index.js'
-// import executeTranslate from '../../functions/plugins/execute.translate.js'
 import votePoll from '../classes/buttons/poll/vote.poll.js'
 import availableEmojis from './system/emojis.reactions.js'
 import executeStars from './system/execute.stars.js'
