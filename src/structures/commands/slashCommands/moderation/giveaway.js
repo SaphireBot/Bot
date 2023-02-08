@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
+import { ApplicationCommandOptionType } from 'discord.js'
 import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
@@ -7,11 +7,11 @@ import infoGiveaway from '../../functions/giveaway/info.giveaway.js'
 import listGiveaway from '../../functions/giveaway/list.giveaway.js'
 import rerollGiveaway from '../../functions/giveaway/reroll.giveaway.js'
 import resetGiveaway from '../../functions/giveaway/reset.giveaway.js'
+
 export default {
     name: 'giveaway',
     description: '[moderation] Crie sorteios no servidor',
     category: "moderation",
-    default_member_permissions: `${PermissionsBitField.Flags.ManageEvents}`,
     type: 1,
     name_localizations: { "en-US": "giveaway", 'pt-BR': 'sorteio' },
     dm_permission: false,
