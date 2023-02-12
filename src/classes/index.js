@@ -6,7 +6,7 @@ import ShardManager from './saphire/manager.shard.js'
 import Autocomplete from '../structures/classes/Autocomplete.js'
 import Base from '../structures/classes/Base.js'
 import Modals from '../structures/classes/Modals.js'
-import SlashCommand from '../structures/classes/SlashCommand.js'
+import SlashCommandInteraction from '../structures/classes/SlashCommand.js'
 import ButtonInteraction from '../structures/classes/ButtonInteraction.js'
 import ModalInteraction from '../structures/classes/ModalInteraction.js'
 import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.js'
@@ -23,7 +23,7 @@ export {
     Autocomplete,
     Base,
     Modals,
-    SlashCommand,
+    SlashCommandInteraction,
     ButtonInteraction,
     ModalInteraction,
     SelectMenuInteraction,

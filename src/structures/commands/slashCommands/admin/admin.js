@@ -120,6 +120,18 @@ export default {
                     autocomplete: true
                 }
             ]
+        },
+        {
+            name: 'reboot',
+            description: '[admin] Comando iniciar um reboot',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'message',
+                    description: 'Mensagem e ser mostrada no reboot',
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
         }
     ],
     helpData: {

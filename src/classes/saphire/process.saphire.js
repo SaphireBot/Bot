@@ -11,13 +11,13 @@ process.on('uncaughtException', (error, origin) => {
     return uncaughtException(error, origin)
 })
 
-process.on('exit', async exitCode => {
+process.on('exit', async code => {
     const reason = {
         1: "Host Disabled Application",
         10: "No host name provided #6815",
         11: "Bot is already online in another host",
         12: "Mongoose Database Connection Failed",
         13: "Cluster has been disconnected."
-    }[exitCode] || "Motivo desconhecido"
-    console.log(`[${exitCode}] ${reason}`)
+    }[code] || "Motivo desconhecido"
+    console.log(`[${code}] ${reason}`)
 })

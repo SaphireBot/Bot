@@ -1,7 +1,7 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
-client.on('ready', async (client) => {
+client.once('ready', async client => {
 
     // EXTERNAL SERVICES
     client.topGGAutoPoster()
@@ -9,28 +9,29 @@ client.on('ready', async (client) => {
     Database.registerClient(client.user.id)
     await Database.Cache.GameChannels.deleteAll()
 
-    const restartInfo = await Database.Cache.Client.get(`${client.shardId}.RESTART`)
+    const restart = await Database.Cache.Client.get('Restart')
 
-    if (restartInfo) {
+    if (restart) {
 
-        if (!restartInfo.channnelId || !restartInfo.messageId) return deleteRestartData()
+        if (!restart.channelId || !restart.messageId)
+            return deleteRestartData()
 
-        const channel = await client.channels.fetch(restartInfo.channnelId)
+        const channel = await client.channels.fetch(restart.channelId || '0').catch(() => null)
         if (!channel) return deleteRestartData()
 
-        const message = await channel.messages.fetch(restartInfo.messageId)
+        const message = await channel.messages.fetch(restart.messageId || '0').catch(() => null)
         if (!message) return deleteRestartData()
 
-        return message.edit({
-            content: `${e.Check} | Reboot concluído.`
-        })
+        return message.edit({ content: `${e.CheckV} | Reboot concluído.` })
             .then(deleteRestartData)
             .catch(() => { })
 
         async function deleteRestartData() {
-            return await Database.Cache.Client.delete(`${client.shardId}.RESTART`)
+            return await Database.Cache.Client.delete('Restart')
         }
 
     }
+
+    return
 
 })

@@ -2,14 +2,9 @@ import 'dotenv/config'
 import { Client, Collection, Guild } from 'discord.js'
 import { ClientOptions } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import slashCommand from '../../structures/handler/slashCommands.js'
-import { Database, Discloud } from '../index.js'
-import automaticSystems from '../../functions/update/index.js'
+import { Database } from '../index.js'
 import * as TopGG from 'topgg-autoposter'
-import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
-import PollManager from '../../functions/update/polls/poll.manager.js'
 import axios from 'axios'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 
 const { AutoPoster } = TopGG
 
@@ -44,6 +39,11 @@ export default new class SaphireClient extends Client {
          * @returns Command name and your id [array]
          */
         this.slashCommandsData = []
+
+        /**
+         * @returns Uma string com dados da atualização
+         */
+        this.restart = null
 
         /**
          * @param Nothing
@@ -150,79 +150,6 @@ export default new class SaphireClient extends Client {
          * @returns Todos os animes registrados no banco de dados
          */
         this.animes = []
-    }
-
-    /**
-     * @param Nothing
-     * Leitura dos prototypes e eventos
-     * 
-     * Login do Client e Database
-     * 
-     * Registro dos SlashCommands
-     * 
-     * Shard 0 - Exclusão do Cache
-     * 
-     * Console Log da Shard
-     */
-    async start() {
-
-        process.env.TZ = "America/Sao_Paulo"
-
-        import('./process.saphire.js')
-        console.log('1/14 - Process Handler Readed')
-
-        await super.login()
-        console.log('2/14 - Client Logged')
-
-        const discloudResult = await Discloud.login()
-            .then(() => "Discloud Host API Logged")
-            .catch(() => "Discloud Host API Logged Failed")
-        console.log('3/14 - ' + discloudResult)
-
-        import('../../functions/global/prototypes.js')
-        import('../../structures/events/index.js')
-        console.log('4/14 - Prototypes & Events Connected')
-
-        this.shardId = this.shard.ids.at(-1) || 0
-
-        const databaseResponse = await Database.MongoConnect(this)
-        console.log('5/14 - ' + databaseResponse)
-
-        const slashCommandsResponse = await slashCommand(this)
-        console.log('6/14 - ' + slashCommandsResponse)
-
-        await Database.Cache.clearTables(`${this.shardId}`)
-        console.log('7/14 - Cache\'s Tables Cleaned')
-
-        await GiveawayManager.setGiveaways()
-        console.log('8/14 - Giveaways System Started')
-
-        await PollManager.set()
-        console.log('9/14 - Polls System Started')
-
-        automaticSystems()
-        console.log('10/14 - Automatic System Started')
-
-        await this.setCantadas()
-        await this.setMemes()
-        await managerReminder.define()
-        this.fanarts = await Database.Fanart.find() || []
-        this.animes = await Database.Anime.find() || []
-        console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts Loaded')
-
-        console.log(`12/14 - Connected at Shard ${this.shardId}`)
-        import('../../api/app.js')
-
-        await this.guilds.all(false, true)
-        this.user.setPresence({
-            activities: [
-                { name: `${this.slashCommands.size} comandos em ${this.allGuilds?.length || 0}  servidores [Shard ${this.shardId} in Cluster ${this.clusterName}]` },
-                { name: `Tentando entregar a melhor qualidade possível [Shard ${this.shardId} in Cluster ${this.clusterName}]` }
-            ],
-            status: 'idle'
-        })
-
-        return
     }
 
     /**

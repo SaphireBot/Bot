@@ -14,19 +14,23 @@ export default async interaction => {
         fetchReply: true
     })
 
-    const response = await Discloud.apps.restart('saphire')
-
-    if (!response)
-        return await interaction.editReply({
-            content: `${e.Deny} | Não foi possível concluir o restart.`
-        })
-
-    await msg.edit({
-        content: `${e.Loading} | Reiniciando...`,
-    }).catch(() => { })
-
-    return await Database.Cache.Client.set(`${client.shardId}.RESTART`, {
+    client.restart = 'System reload was required.'
+    await Database.Cache.Client.set('Restart', {
         channelId: channel.id,
         messageId: msg.id
     })
+    const response = await Discloud.apps.restart('saphire')
+
+    if (!response) {
+        delete client.restart
+        await Database.Cache.Client.delete('Restart')
+        return await interaction.editReply({
+            content: `${e.Deny} | Não foi possível concluir o restart.`
+        })
+    }
+
+    return await interaction.editReply({ content: `${e.Loading} | Reiniciando...` }).catch(() => { })
+
 }
+
+process.on('multipleResolves')

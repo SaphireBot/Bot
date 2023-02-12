@@ -5,11 +5,12 @@ import test from './test.admin.js'
 import fanart from './fanart.admin.js'
 import commit from './commit.admin.js'
 import invite from './invite.admin.js'
+import reboot from './reboot.admin.js'
 
 export default async (interaction, subCommand) => {
 
     const command = {
-        register, commands, test, fanart, commit, invite,
+        register, commands, test, fanart, commit, invite, reboot,
         delete: deleteDb,
     }[subCommand]
 

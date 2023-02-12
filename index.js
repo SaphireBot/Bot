@@ -1,1 +1,1 @@
-import('./src/classes/saphire/client.saphire.js').then(client => client.default.start())
+import('./src/classes/saphire/start.saphire.js').then(module => module.default())

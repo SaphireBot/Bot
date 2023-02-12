@@ -4,7 +4,7 @@ import * as Statcord from 'statcord.js'
 import { Emojis } from '../../util/util.js'
 import { Experience } from '../../classes/index.js'
 
-export default class SlashCommand extends Base {
+export default class SlashCommandInteraction extends Base {
     constructor(interaction) {
         super()
         this.interaction = interaction
