@@ -55,7 +55,7 @@ export default class SlashCommand extends Base {
 
     async checkAndDefineDatabase(command) {
 
-        const { guild, e, Database, interaction, user, channel, client } = this
+        const { guild, e, Database, interaction, user } = this
         const guildData = await Database.Guild.findOne({ id: guild?.id })
 
         if (!guildData && guild) {
