@@ -32,5 +32,3 @@ export default async interaction => {
     return await interaction.editReply({ content: `${e.Loading} | Reiniciando...` }).catch(() => { })
 
 }
-
-process.on('multipleResolves')
