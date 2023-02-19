@@ -87,6 +87,10 @@ export default async (interaction, commandData) => {
 
         const attachment = new AttachmentBuilder(imageUrl, { name: `${id}.${imageUrl.split('.').pop()}`, description: 'Saphire Anime Quiz' })
 
+        const channel = await client.channels.fetch('1066868693532950699').catch(() => null)
+        if (channel)
+            channel.send({ files: [attachment] })
+
         const messageSavedUrl = await webhook.send({
             embeds: [{
                 color: client.blue,
