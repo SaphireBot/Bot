@@ -6,7 +6,7 @@ import { Emojis as e } from '../../util/util.js'
 
 client.on('guildDelete', async guild => {
 
-    if (!guild) return
+    if (!guild || !guild.name || !guild.available) return
 
     await Database.Guild.deleteMany({ id: guild.id })
 
