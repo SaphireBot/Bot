@@ -81,7 +81,7 @@ export default async (interaction, commandData) => {
             removeIndication(id)
             embed.color = client.red
             embed.footer = { text: 'Personagem/Anime já registrado' }
-            return await msg.edit({ embeds: [embed] }).catch(() => { })
+            return await msg.edit({ content: null, embeds: [embed] }).catch(() => { })
         }
 
         const anime = embed?.fields[2]?.value
