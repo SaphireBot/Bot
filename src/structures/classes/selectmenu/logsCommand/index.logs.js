@@ -113,10 +113,10 @@ export default async ({ interaction, values: keys }) => {
 
     const textValue = dataToArray.map(key => {
         const emoji = key.active
-            ? e.Check
+            ? e.CheckV
             : key.name.includes("_")
                 ? e.Loading
-                : e.Deny
+                : e.DenyX
 
         return `${emoji} ${key.name}`
     }).join("\n")
@@ -141,7 +141,7 @@ export default async ({ interaction, values: keys }) => {
                 },
                 {
                     name: `${e.Info} Status`,
-                    value: `${e.Check} Sistema de logs ativado\n${e.Deny} Sistema de logs desativado\n${e.Loading} Sistema de logs em construção\n${e.Warn} Sistema de logs em manutenção`
+                    value: `${e.CheckV} Sistema de logs ativado\n${e.DenyX} Sistema de logs desativado\n${e.Loading} Sistema de logs em construção\n${e.Warn} Sistema de logs em manutenção`
                 }
             ]
         }],
