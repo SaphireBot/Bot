@@ -2,7 +2,6 @@ import { AttachmentBuilder, ButtonStyle, WebhookClient } from "discord.js"
 import { Database, Modals, SaphireClient as client } from "../../../../classes/index.js"
 import { Config } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
-const webhook = new WebhookClient({ url: `${process.env.WEBHOOK_ANIME_SUPPORTER}` })
 
 export default async (interaction, commandData) => {
 
@@ -12,6 +11,12 @@ export default async (interaction, commandData) => {
             content: `${e.Deny} | Você não é um membro autorizado para aceitar/deletar solicitações de animes.`,
             ephemeral: true
         })
+
+    if (!Config.webhookAnimeReporter)
+        return await interaction.update({
+            content: `${e.DenyX} | A webhook principal de reporte não está ativa.`,
+            components: [], embeds: []
+        }).catch(() => { })
 
     if (commandData.srcAdd === 'edit') return editApproved()
     if (commandData.src === 'edit') return edit()
@@ -55,8 +60,13 @@ export default async (interaction, commandData) => {
 
         const embed = message?.embeds[0]?.data
 
+        const msg = await interaction.update({
+            content: `${e.Loading} | Validando sugestão...`,
+            components: [], embeds: [], fetchReply: true
+        }).catch(() => { })
+
         if (!embed)
-            return await interaction.update({
+            return await msg.edit({
                 content: `${e.Deny} | A embed com os dados não foi encontrada.`,
                 embeds: [], components: []
             }).catch(() => { })
@@ -71,7 +81,7 @@ export default async (interaction, commandData) => {
             removeIndication(id)
             embed.color = client.red
             embed.footer = { text: 'Personagem/Anime já registrado' }
-            return await interaction.update({ embeds: [embed] }).catch(() => { })
+            return await msg.edit({ embeds: [embed] }).catch(() => { })
         }
 
         const anime = embed?.fields[2]?.value
@@ -81,14 +91,15 @@ export default async (interaction, commandData) => {
         let imageUrl = embed?.image?.url
 
         if (!id || !name || !anime || !type || !imageUrl || !sendedFor)
-            return await interaction.update({
+            return await msg.edit({
                 content: `${e.Deny} | Os dados de validação não estão completos`,
                 embeds: [], components: []
             }).catch(() => { })
 
         const attachment = new AttachmentBuilder(imageUrl, { name: `${id}.${imageUrl.split('.').pop()}`, description: 'Saphire Anime Quiz' })
 
-        const messageSavedUrl = await webhook.send({
+        const messageSavedUrl = await Config.webhookAnimeReporter.send({
+            content: `${name}`,
             embeds: [{
                 color: client.blue,
                 title: '📝 Anime Register',
@@ -96,21 +107,32 @@ export default async (interaction, commandData) => {
             }],
             files: [attachment]
         })
-            .catch(() => 5)
+            .catch(error => error.code)
 
-        imageUrl = messageSavedUrl?.attachments[0]?.url
+        if (!isNaN(messageSavedUrl)) {
 
-        if (messageSavedUrl === 5 || !attachment?.attachment || !imageUrl)
-            return await interaction.update({
+            if (messageSavedUrl == 40005) {
+                await msg.edit({
+                    content: `${e.DenyX} | O tamanho da imagem é maior que 8 MiB (8.38 MB - 8388.6 kB).`,
+                    embeds: [], components: []
+                })
+                return await decline(embed, msg)
+            }
+
+        }
+
+        if (messageSavedUrl !== 5)
+            imageUrl = messageSavedUrl?.attachments[0]?.url
+
+        if (messageSavedUrl === 5 || !imageUrl)
+            return await msg.edit({
+                content: null,
                 content: `${e.Deny} | Não foi possível obter a URL da imagem salvada.`,
                 embeds: [], components: []
             }).catch(() => { })
 
         return new Database
-            .Anime({
-                acceptedFor, anime, id,
-                imageUrl, name, sendedFor, type
-            })
+            .Anime({ acceptedFor, anime, id, imageUrl, name, sendedFor, type })
             .save()
             .then(async doc => {
 
@@ -136,7 +158,8 @@ export default async (interaction, commandData) => {
                     { upsert: true }
                 )
 
-                return await interaction.update({
+                return await msg.edit({
+                    content: null,
                     embeds: [embed],
                     components: [{
                         type: 1,
@@ -162,7 +185,8 @@ export default async (interaction, commandData) => {
                     value: `\`${err}\``
                 })
 
-                return await interaction.update({
+                return await msg.edit({
+                    content: null,
                     embeds: [embed],
                     components: [{
                         type: 1,
@@ -178,15 +202,15 @@ export default async (interaction, commandData) => {
             })
     }
 
-    async function decline() {
+    async function decline(embedData, msg) {
 
-        const embed = message?.embeds[0]?.data
+        const embed = embedData || message?.embeds[0]?.data
 
         if (!embed)
-            return await interaction.update({
+            return edit({
                 content: `${e.Deny} | A embed com os dados não foi encontrada.`,
                 embeds: [], components: []
-            }).catch(() => { })
+            })
 
         const id = commandData?.id || embed.fields[0].value
         removeIndication(id)
@@ -194,7 +218,8 @@ export default async (interaction, commandData) => {
         embed.color = client.red
         embed.footer = { text: 'Sugestão Deletada' }
 
-        return await interaction.update({
+        return edit({
+            content: null,
             components: [{
                 type: 1,
                 components: [
@@ -206,9 +231,15 @@ export default async (interaction, commandData) => {
                         style: ButtonStyle.Primary
                     }
                 ]
-            }], embeds: [embed]
-        }).catch(() => { })
+            }],
+            embeds: [embed]
+        })
 
+        async function edit(data) {
+            return msg
+                ? await msg.edit(data).catch(() => { })
+                : await interaction.update(data).catch(() => { })
+        }
     }
 
     async function removeIndication(id, isIndication) {

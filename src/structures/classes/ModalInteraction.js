@@ -1423,12 +1423,10 @@ export default class ModalInteraction extends Base {
                     ephemeral: true
                 })
             })
-            .catch(async () => {
-                return await interaction.reply({
-                    content: `${e.Deny} | Não foi possível concluir a alteração do seu perfil.`,
-                    ephemeral: true
-                })
-            })
+            .catch(async () => await interaction.reply({
+                content: `${e.Deny} | Não foi possível concluir a alteração do seu perfil.`,
+                ephemeral: true
+            }))
     }
 
     botSugest = async ({ interaction, fields, user, client, guild } = this) => {

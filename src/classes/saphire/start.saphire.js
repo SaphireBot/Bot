@@ -61,7 +61,8 @@ export default async () => {
     await managerReminder.define()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
-    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts Loaded')
+    import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
+    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks Loaded')
 
     console.log(`12/14 - Connected at Shard ${client.shardId}`)
     import('../../api/app.js')

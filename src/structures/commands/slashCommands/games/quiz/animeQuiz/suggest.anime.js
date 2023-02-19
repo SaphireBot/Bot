@@ -1,6 +1,7 @@
 import { SaphireClient as client } from '../../../../../../classes/index.js'
 import { ButtonStyle } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js"
+import Bytes from '../../../../../../util/Bytes.js'
 
 export default async interaction => {
 
@@ -9,6 +10,12 @@ export default async interaction => {
     const name = options.getString('name')
     const anime = options.getString('anime')
     const type = options.getString('type')
+
+    // unit of measurement in bytes
+    if (image.size > 8388608) // 8 MiB - Discord's API Limit Size
+        return await interaction.reply({
+            content: `${e.DenyX} | O tamanho da imagem é maior que 8 MiB (8.38 MB - 8388.6 kB). Por favor, envie uma imagem menor que isso, ok?\n${e.Info} | A imagem enviada possui **${image.size} B** | **${new Bytes(image.size).toString()}**`
+        })
 
     if (!['image/png', 'image/gif', 'image/jpeg', 'image/jpg'].includes(image.contentType))
         return await interaction.reply({
@@ -88,4 +95,5 @@ export default async interaction => {
             ]
         }]
     })
+
 }
