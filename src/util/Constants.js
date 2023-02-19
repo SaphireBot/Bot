@@ -2,6 +2,7 @@ const ConfigurationBase = {
     ownerId: "451619591320371213",
     designerId: "830226550116057149",
     clientId: "837147659898191902",
+    quizAnimeAttachmentChannel: "1066868693532950699",
     guildId: "952214872584749056",
     guildPackageId: "882475447387054081",
     logomarcaIndicateChannelId: "995151748148768839",

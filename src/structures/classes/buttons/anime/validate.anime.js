@@ -1,5 +1,6 @@
 import { AttachmentBuilder, ButtonStyle, WebhookClient } from "discord.js"
 import { Database, Modals, SaphireClient as client } from "../../../../classes/index.js"
+import { Config } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 const webhook = new WebhookClient({ url: `${process.env.WEBHOOK_ANIME_SUPPORTER}` })
 
@@ -87,27 +88,23 @@ export default async (interaction, commandData) => {
 
         const attachment = new AttachmentBuilder(imageUrl, { name: `${id}.${imageUrl.split('.').pop()}`, description: 'Saphire Anime Quiz' })
 
-        const channel = await client.channels.fetch('1066868693532950699').catch(() => null)
-        if (channel)
-            channel.send({ files: [attachment] })
-
         const messageSavedUrl = await webhook.send({
             embeds: [{
                 color: client.blue,
                 title: '📝 Anime Register',
                 description: `ID: \`${id}\`\nElement Name: \`${name}\`\nAnime Name: \`${anime}\`\nType: \`${type}\`\nSendedFor: \`${sendedFor}\`\nAcceptedFor: \`${user.id}\``,
-                image: { url: attachment.attachment }
-            }]
+            }],
+            files: [attachment]
         })
             .catch(() => 5)
 
-        if (messageSavedUrl === 5 || !attachment?.attachment)
+        imageUrl = messageSavedUrl?.attachments[0]?.url
+
+        if (messageSavedUrl === 5 || !attachment?.attachment || !imageUrl)
             return await interaction.update({
                 content: `${e.Deny} | Não foi possível obter a URL da imagem salvada.`,
                 embeds: [], components: []
             }).catch(() => { })
-
-        imageUrl = attachment.attachment
 
         return new Database
             .Anime({
