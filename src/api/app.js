@@ -1,11 +1,24 @@
 import express from 'express'
-import topggReward from '../functions/topgg/reward.js'
 import axios from 'axios'
 import { SaphireClient as client } from '../classes/index.js'
 import { Emojis as e } from '../util/util.js'
 import os from 'os'
+import topggPost from './functions/topgg.post.js'
+import slashcommandsGet from './functions/slashcommands.get.js'
+import animesFromDB from './functions/animes.get.js'
+import cantadasFromDB from './functions/cantadas.get.js'
+import clientFromDB from './functions/client.get.js'
+import economiesFromDB from './functions/economies.get.js'
+import fanartsFromDB from './functions/fanarts.get.js'
+import guildsFromDB from './functions/guilds.get.js'
+import indicationsFromDB from './functions/indications.get.js'
+import memesFromDB from './functions/memes.get.js'
+import rathersFromDB from './functions/rathers.get.js'
+import remindersFromDB from './functions/reminders.get.js'
+import usersFromDB from './functions/users.get.js'
+
 const hostName = os.hostname()
-let system = {
+const system = {
   name: hostName === 'RodrigoPC' ? 'RodrigoPC' : 'Discloud',
   port: hostName === 'RodrigoPC' ? 1000 : 8080
 }
@@ -24,35 +37,21 @@ app.use((_, res, next) => {
 
 app.use(express.json())
 
-app.post(`${process.env.ROUTE_TOP_GG}`, async (req, res) => {
+app.post(`${process.env.ROUTE_TOP_GG}`, topggPost)
+app.get(`${process.env.ROUTE_COMMANDS}`, slashcommandsGet)
 
-  if (req.headers?.authorization !== process.env.TOP_GG_ACCESS)
-    return res
-      .send({ status: 401, response: "Authorization is not defined correctly." });
-
-  const userId = req.body?.user
-
-  if (!userId)
-    return res.status(206).send('A partial content was given.')
-
-  topggReward(userId || null).catch(() => null)
-
-  return res.status(200).send()
-})
-
-app.get(`${process.env.ROUTE_COMMANDS}`, async (req, res) => {
-
-  if (req.headers?.authorization !== process.env.COMMAND_ACCESS)
-    return res
-      .send({
-        status: 401,
-        response: "Authorization is not defined correctly."
-      });
-
-  return res
-    .send(client?.slashCommandsData || [])
-
-})
+// Backup Database Routes
+app.get(`${process.env.ROUTE_ANIMES_FROM_DATABASE}`, animesFromDB)
+app.get(`${process.env.ROUTE_CANTADAS_FROM_DATABASE}`, cantadasFromDB)
+app.get(`${process.env.ROUTE_CLIENTS_FROM_DATABASE}`, clientFromDB)
+app.get(`${process.env.ROUTE_ECONOMIES_FROM_DATABASE}`, economiesFromDB)
+app.get(`${process.env.ROUTE_FANARTS_FROM_DATABASE}`, fanartsFromDB)
+app.get(`${process.env.ROUTE_GUILDS_FROM_DATABASE}`, guildsFromDB)
+app.get(`${process.env.ROUTE_INDICATIONS_FROM_DATABASE}`, indicationsFromDB)
+app.get(`${process.env.ROUTE_MEMES_FROM_DATABASE}`, memesFromDB)
+app.get(`${process.env.ROUTE_RATHERS_FROM_DATABASE}`, rathersFromDB)
+app.get(`${process.env.ROUTE_REMINDERS_FROM_DATABASE}`, remindersFromDB)
+app.get(`${process.env.ROUTE_USERS_FROM_DATABASE}`, usersFromDB)
 
 app.get(`${process.env.ROUTE_ALL_GUILDS}`, async (req, res) => {
 
