@@ -6,12 +6,13 @@ import fanart from './fanart.admin.js'
 import commit from './commit.admin.js'
 import invite from './invite.admin.js'
 import reboot from './reboot.admin.js'
+import backup from './backup.admin.js'
 
 export default async (interaction, subCommand) => {
 
     const command = {
         register, commands, test, fanart, commit, invite, reboot,
-        delete: deleteDb,
+        delete: deleteDb, backup
     }[subCommand]
 
     if (!command)

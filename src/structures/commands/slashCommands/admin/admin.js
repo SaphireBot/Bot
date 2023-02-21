@@ -132,6 +132,19 @@ export default {
                     type: ApplicationCommandOptionType.String
                 }
             ]
+        },
+        {
+            name: 'backup',
+            description: '[admin] Obter o backup salvo na API',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'password',
+                    description: 'Insira a senha do backup',
+                    required: true,
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
         }
     ],
     helpData: {
