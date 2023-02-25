@@ -10,10 +10,10 @@ client.on('error', error => {
     console.log(error)
 })
 
-client.on('debug', message => {
+client.on('shardError', async (error, shardId) => {
 
-    if (message.includes('Heartbeat acknowledged') || message.includes('Sending a heartbeat'))
-        return client.Heartbeat++
+    if (error.code == 'ShardingReadyDied')
+        return console.log(`A shard ${shardId} foi de comes e bebes antes de ligar.`)
 
-    return console.log(message)
+    return console.log(error)
 })

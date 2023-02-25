@@ -106,24 +106,13 @@ async function alertLogin(host) {
 
   console.log('13/14 - Saphire\'s Local API Connected')
 
-  await client.sendWebhook(
+  return await client.sendWebhook(
     process.env.WEBHOOK_STATUS,
     {
       username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
       content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
     }
   )
+    .then(() => console.log('14/14 - Saphire\'s API Connected'))
 
-  return await axios({
-    url: 'https://ways.discloud.app/online',
-    method: "POST",
-    headers: {
-      authorization: `${process.env.LOGIN_ACCESS}`,
-      hostname: `${host} - ${hostName}`,
-      "Content-Type": "application/json"
-    },
-    data: {}
-  })
-    .then(() => console.log('14/14 - Saphire\'s API Logged'))
-    .catch(err => console.log(err.response.data))
 }

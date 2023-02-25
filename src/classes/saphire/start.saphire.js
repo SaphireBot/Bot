@@ -4,6 +4,7 @@ import automaticSystems from '../../functions/update/index.js'
 import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+import Socket from './websocket.saphire.js'
 
 /**
  * @param Nothing
@@ -20,16 +21,15 @@ import managerReminder from '../../functions/update/reminder/manager.reminder.js
 export default async () => {
 
     process.env.TZ = "America/Sao_Paulo"
+    await import('./process.saphire.js')
 
-    import('./process.saphire.js')
     console.log('1/14 - Process Handler Readed')
 
     import('../../structures/events/index.js')
     import('../../functions/global/prototypes.js')
     console.log('2/14 - Prototypes & Events Connected')
 
-    await client.login()
-    console.log('3/14 - Client Logged')
+    await client.login().then(() => console.log('Client Logged'))
 
     const discloudResult = await Discloud.login()
         .then(() => "Discloud Host API Logged")
@@ -37,6 +37,8 @@ export default async () => {
     console.log('3/14 - ' + discloudResult)
 
     client.shardId = client.shard.ids.at(-1) || 0
+
+    client.socket = new Socket(client.shardId).enableListeners()
 
     const databaseResponse = await Database.MongoConnect(client)
     console.log('5/14 - ' + databaseResponse)
