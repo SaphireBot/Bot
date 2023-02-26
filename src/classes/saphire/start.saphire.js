@@ -38,6 +38,7 @@ export default async () => {
 
     client.shardId = client.shard.ids.at(-1) || 0
 
+    console.log('4/14 - Tentiva de Websocket Connection')
     client.socket = new Socket(client.shardId).enableListeners()
 
     const databaseResponse = await Database.MongoConnect(client)

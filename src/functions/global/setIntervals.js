@@ -1,3 +1,4 @@
+import { Database } from '../../classes/index.js'
 import PollManager from '../update/polls/poll.manager.js'
 
 const pollInterval = () => setInterval(async () => {
@@ -10,6 +11,8 @@ const pollInterval = () => setInterval(async () => {
             return await PollManager.cancel(poll)
 
 }, 5000)
+
+setInterval(async () => await Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
 
 export {
     pollInterval

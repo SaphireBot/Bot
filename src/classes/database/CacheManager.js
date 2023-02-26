@@ -18,6 +18,7 @@ export default new class CacheManager extends Cache {
         this.AfkSystem = this.table('Afk')
         this.AmongUs = this.table('Amongus')
         this.Commands = this.table('Commands')
+        this.Chat = this.table('Chat')
     }
 
     async clearTables(shardId) {

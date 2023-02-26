@@ -51,7 +51,8 @@ export default class ModalInteraction extends Base {
             serverSugest: [this.serverSugest],
             serverReport: [this.serverReport],
             cantada: [cantadasModal, this],
-            anime: [this.editAnime, this]
+            anime: [this.editAnime, this],
+            saphireGlobalChat: [this.globalChat, this]
         }[this.customId]
 
         if (ModalInteractionFunctions)
@@ -69,6 +70,33 @@ export default class ModalInteraction extends Base {
 
         return await this.interaction.reply({
             content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,
+            ephemeral: true
+        })
+    }
+
+    async globalChat({ interaction, user, guild, fields }) {
+
+        const content = fields.getTextInputValue('content') || null
+
+        if (!content)
+            return await interaction.reply({
+                content: `${e.DenyX} | Nenhuma mensagem foi encontrada.`,
+                ephemeral: true
+            })
+
+        const messageObject = {
+            userId: user.id,
+            userTag: user.tag,
+            userAvatar: user.avatarURL(),
+            guildId: guild.id,
+            guildName: guild.name,
+            guildAvatar: guild.iconURL(),
+            content: content
+        }
+
+        await Database.Cache.Chat.push("Global", messageObject)
+        return await interaction.reply({
+            content: `${e.Check} | Sua mensagem foi enviada. Ela aparecerá no chat global dentro de 5 segundos.`,
             ephemeral: true
         })
     }

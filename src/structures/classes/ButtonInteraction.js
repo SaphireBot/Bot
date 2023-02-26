@@ -1,4 +1,4 @@
-import { SaphireClient as client } from '../../classes/index.js'
+import { Modals, SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import Base from './Base.js'
 import memoryGame from './buttons/memoryGame/solo.memory.js'
@@ -24,6 +24,7 @@ import executeCantada from './buttons/cantadas/execute.cantada.js'
 import executeAmongus from './buttons/amongus/execute.amongus.js'
 import indexBet from './buttons/bet/index.bet.js'
 import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
+import { ButtonStyle } from 'discord.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -75,7 +76,8 @@ export default class ButtonInteraction extends Base {
             poll: [counterPoll, this, commandData],
             cantada: [executeCantada, this, commandData],
             amongus: [executeAmongus, this, commandData],
-            bet: [indexBet, this, commandData]
+            bet: [indexBet, this, commandData],
+            chat: [this.sendGlobalChatModel, this]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
@@ -96,6 +98,123 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
+    }
+
+    async sendGlobalChatModel({ interaction, customId }) {
+
+        if (customId == "send")
+            return interaction.showModal(Modals.globalChat)
+
+        if (customId == "refresh") {
+            await interaction.message.delete().catch(() => { })
+            const fields = await getMessagesAndFormat() || []
+
+            if (!fields || !fields.length)
+                return await interaction.reply({
+                    content: `${e.Deny} | Não tem nenhum mensagem global por enquanto.`,
+                    components: [{
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: "Enviar uma mensagem",
+                                custom_id: JSON.stringify({ c: "chat", src: "send" }),
+                                style: ButtonStyle.Primary
+                            }
+                        ]
+                    }],
+                    ephemeral: true
+                })
+
+            return await interaction.reply({
+                embeds: [
+                    {
+                        color: client.blue,
+                        title: `📨 ${client.user.username}'s Global Chat`,
+                        description: "1. Somente as últimas **9 mensagens globais** aparecem.\n2. As mensagens são atualizadas a cada 5 segundos.\n3. Se as mensagens não aparecer, clique em 🔄️.\n4. Este é um recurso beta.",
+                        timestamp: new Date()
+                    },
+                    ...fields
+                ],
+                components: [{
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "Enviar uma mensagem",
+                            custom_id: JSON.stringify({ c: "chat", src: "send" }),
+                            style: ButtonStyle.Primary
+                        },
+                        {
+                            type: 2,
+                            emoji: "🔄",
+                            custom_id: JSON.stringify({ c: "chat", src: "refresh" }),
+                            style: ButtonStyle.Primary
+                        }
+                    ]
+                }]
+            })
+                .then(() => refreshing())
+                .catch(() => null)
+
+            async function refreshing() {
+
+                const interval = setInterval(async () => {
+                    const fields = await getMessagesAndFormat() || []
+                    if (!fields.length) return
+
+                    return await interaction.editReply({
+                        embeds: [
+                            {
+                                color: client.blue,
+                                title: `📨 ${client.user.username}'s Global Chat`,
+                                description: "Neste comando aparece apenas as últimas 9 mensagens globais.\nAs mensagens são atualizadas a cada 5 segundos.\nEste é um recurso beta.",
+                                timestamp: new Date()
+                            },
+                            ...fields
+                        ]
+                    })
+                        .catch(() => clearInterval(interval))
+
+                }, 5000)
+
+                return
+            }
+
+            async function getMessagesAndFormat() {
+
+                const data = await Database.Cache.Chat.get("Global") || []
+                const messages = data.slice(-9)
+
+                let fields = []
+
+                if (messages) {
+
+                    fields = messages.map(data => ({
+                        color: client.blue,
+                        author: {
+                            name: `${data.userTag} [${data.userId}]`,
+                            icon_url: data.userAvatar || null
+                        },
+                        description: data.content || "Nothing Here",
+                        footer: {
+                            text: `${data.guildName} - ${data.guildId}`,
+                            icon_url: data.guildAvatar || null
+                        }
+                    }))
+
+                    if (fields.length > 9)
+                        fields.length = 9
+                }
+
+                return fields
+            }
+        }
+
+        return await interaction.reply({
+            content: `${e.DenyX} | Nenhuma função encontrada para este botão.`,
+            ephemeral: true
+        })
     }
 
     async deleteMessage({ message, user }, commandData) {

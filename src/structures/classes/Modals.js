@@ -4,6 +4,28 @@ export default new class Modals {
         return { ...this }
     }
 
+    globalChat = {
+        title: "Saphire Global Chat",
+        custom_id: "saphireGlobalChat",
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "content",
+                        label: "Mensagem a ser enviada",
+                        style: 2,
+                        min_length: 10,
+                        max_length: 900,
+                        placeholder: "Eai galera, tudo bem?",
+                        required: true
+                    }
+                ]
+            } // MAX: 5 Fields
+        ]
+    }
+
     editAnimeRequest = (customId, name, anime, type, id) => {
         return {
             title: "Anime Quiz Indication | Edition Painel",
