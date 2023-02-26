@@ -205,8 +205,8 @@ export default {
 
                     control.customIds.push(customId)
 
-                    let buttom = control.buttons[buttonIndex].components.find(data => data.custom_id === customId)
-
+                    let buttom = control.buttons[buttonIndex]?.components.find(data => data.custom_id === customId)
+                    if (!buttom) return
                     let isBomb = Math.floor(Math.random() * 100) < 10
 
                     control.clicks++
