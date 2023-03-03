@@ -131,7 +131,7 @@ export default class ButtonInteraction extends Base {
                     {
                         color: client.blue,
                         title: `📨 ${client.user.username}'s Global Chat`,
-                        description: "1. Somente as últimas **9 mensagens globais** aparecem.\n2. As mensagens são atualizadas a cada 5 segundos.\n3. Se as mensagens não aparecer, clique em 🔄️.\n4. Este é um recurso beta.",
+                        description: "Neste comando aparece apenas as últimas 9 mensagens globais.\nAs mensagens são atualizadas a cada 5 segundos.\nEste é um recurso beta.",
                         timestamp: new Date()
                     },
                     ...fields
