@@ -25,6 +25,7 @@ import executeAmongus from './buttons/amongus/execute.amongus.js'
 import indexBet from './buttons/bet/index.bet.js'
 import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
 import { ButtonStyle } from 'discord.js'
+import checkerQuiz from './buttons/quiz/checker.quiz.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -64,6 +65,7 @@ export default class ButtonInteraction extends Base {
             rt: [rather, this.interaction, commandData],
             anime: [anime, this.interaction, commandData],
             animeQuiz: [validadeAnimeQuiz, this.interaction, commandData],
+            quiz: [checkerQuiz, this.interaction, commandData],
             channel: [channelIndex, this.interaction, commandData],
             rifa: [rifa, this.interaction, commandData],
             rasp: [raspadinha, this.interaction, commandData],

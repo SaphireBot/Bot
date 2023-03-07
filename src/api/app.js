@@ -16,6 +16,7 @@ import memesFromDB from './functions/memes.get.js'
 import rathersFromDB from './functions/rathers.get.js'
 import remindersFromDB from './functions/reminders.get.js'
 import usersFromDB from './functions/users.get.js'
+import quizFromDB from './functions/quiz.get.js'
 
 const hostName = os.hostname()
 const system = {
@@ -52,6 +53,7 @@ app.get(`${process.env.ROUTE_MEMES_FROM_DATABASE}`, memesFromDB)
 app.get(`${process.env.ROUTE_RATHERS_FROM_DATABASE}`, rathersFromDB)
 app.get(`${process.env.ROUTE_REMINDERS_FROM_DATABASE}`, remindersFromDB)
 app.get(`${process.env.ROUTE_USERS_FROM_DATABASE}`, usersFromDB)
+app.get("quiz", quizFromDB)
 
 app.get(`${process.env.ROUTE_ALL_GUILDS}`, async (req, res) => {
 

@@ -2,6 +2,7 @@ const ConfigurationBase = {
     ownerId: "451619591320371213",
     designerId: "830226550116057149",
     clientId: "837147659898191902",
+    saphireApiId: "1035037311907405834",
     quizAnimeAttachmentChannel: "1076890989395984454",
     guildId: "952214872584749056",
     guildPackageId: "882475447387054081",
@@ -19,8 +20,10 @@ const ConfigurationBase = {
     PackageLogsWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1018699630998986752/data-management.png?width=484&height=484",
     RefundSystemIcon: "https://media.discordapp.net/attachments/893361065084198954/1028707418789642300/refund.png?width=473&height=473",
     webhookAnimeReporter: undefined,
+    webhookQuizReporter: undefined,
     vocePrefereChannel: "1018945013016690708",
     animeSuggetionsChannel: "1022307959436492941",
+    questionSuggestionsSave: "1082424705832718446",
     guildsToPrivateCommands: [
         "986292524790464562",
         "888464632291917956",

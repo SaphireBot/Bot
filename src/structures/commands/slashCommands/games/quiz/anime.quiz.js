@@ -1,7 +1,7 @@
 import { Emojis as e } from "../../../../../util/util.js"
-import options from "./animeQuiz/options.anime.js"
-import start from "./animeQuiz/start.anime.js"
-import suggest from './animeQuiz/suggest.anime.js'
+import options from "./anime/options.anime.js"
+import start from "./anime/start.anime.js"
+import suggest from './anime/suggest.anime.js'
 
 export default async interaction => {
 
@@ -16,4 +16,5 @@ export default async interaction => {
         })
 
     return execute(interaction)
+
 }

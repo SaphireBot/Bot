@@ -4,6 +4,326 @@ export default new class Modals {
         return { ...this }
     }
 
+    addCuriosity = question => {
+
+        const components = []
+
+        for (let i = 0; i <= 2; i++) {
+            const curiosity = question?.curiosity[i] || null
+            components.push({
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: `curiosity-${i}`,
+                        label: "Digite uma super curiosidade",
+                        style: 2,
+                        min_length: 5,
+                        max_length: 340,
+                        placeholder: "Você pode que colocar uma curiosidade bem curiosa",
+                        required: false,
+                        value: curiosity
+                    }
+                ]
+            })
+            continue
+        }
+
+        return {
+            title: "Adicionar Curiosidade",
+            custom_id: JSON.stringify({ c: "newQuizCuriosity" }),
+            components
+        }
+    }
+
+    feedbackModal = questionId => {
+        return {
+            title: "Report Feedback",
+            custom_id: JSON.stringify({ c: "newQuizfeedback", id: questionId }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "feedback",
+                            label: "Comentário de feedback do reporte",
+                            style: 2,
+                            min_length: 5,
+                            max_length: 100,
+                            placeholder: "Seu reporte foi analisado com sucesso. Obrigado.",
+                            required: true,
+                            value: "Seu reporte foi analisado com sucesso. Obrigado."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
+    RefuseReason = questionId => {
+        return {
+            title: "Recusa de Indicação",
+            custom_id: JSON.stringify({ c: "newQuizRefuse", id: questionId }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "reason",
+                            label: "Razão da recusa",
+                            style: 2,
+                            min_length: 5,
+                            max_length: 500,
+                            placeholder: "As respostas não condiz com a pergunta. Por favor, coloque respostas originais e reenvie a pergunta.",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
+    newQuizReport = questionId => {
+        return {
+            title: "Quiz System Report",
+            custom_id: JSON.stringify({ c: "newQuizReport", id: questionId }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "content",
+                            label: "Escreva seu reporte detalhadamente",
+                            style: 2,
+                            min_length: 30,
+                            max_length: 4000,
+                            placeholder: "Essa pergunta tem respostas que não tem condiz com a pergunta...",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
+    editQuestionData = (question, isAdmin, byReport) => {
+        return {
+            title: "Indication Edition Request",
+            custom_id: JSON.stringify({ c: isAdmin ? "newQuizEditionAdmin" : "newQuizEdition", category: question.category, byReport }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "question",
+                            label: "Pergunta",
+                            style: 1,
+                            min_length: 10,
+                            max_length: 500,
+                            placeholder: "Porquê o céu é azul?",
+                            required: true,
+                            value: question.question
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "correctQuestion",
+                            label: "Resposta Correta",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Azul",
+                            required: true,
+                            value: question.answers[0].answer
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong1",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 1",
+                            required: true,
+                            value: question.answers[1].answer
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong2",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 2",
+                            required: true,
+                            value: question.answers[2].answer
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong3",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 3",
+                            required: true,
+                            value: question.answers[3].answer
+                        }
+                    ]
+                },
+            ]
+        }
+    }
+
+    newQuizQuestion = (category) => {
+        let title = `Pergunta para: ${category}`
+
+        if (title.length > 45)
+            title = title.slice(0, 42) + '...'
+
+        return {
+            title,
+            custom_id: JSON.stringify({ c: "newQuizQuestion", category }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "question",
+                            label: "Pergunta",
+                            style: 1,
+                            min_length: 4,
+                            max_length: 500,
+                            placeholder: "Por que o céu é azul?",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "correctQuestion",
+                            label: "Resposta Correta",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Azul",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong1",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 1",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong2",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 2",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "wrong3",
+                            label: "Resposta Errada",
+                            style: 1,
+                            min_length: 1,
+                            max_length: 100,
+                            placeholder: "Resposta Errada 3",
+                            required: true
+                        }
+                    ]
+                },
+            ]
+        }
+    }
+
+    newQuizCategory = {
+        title: "Nova Categoria do Quiz",
+        custom_id: JSON.stringify({ c: "newQuizCategory" }),
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "category",
+                        label: "Nome da Categoria",
+                        style: 1,
+                        min_length: 3,
+                        max_length: 50,
+                        placeholder: "Conhecimentos Gerais",
+                        required: true
+                    }
+                ]
+            },
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: "reason",
+                        label: "Motivo da criação",
+                        style: 2,
+                        min_length: 10,
+                        max_length: 1024,
+                        placeholder: "Essa é uma boa categoria para o quiz, porque...",
+                        required: true
+                    }
+                ]
+            }
+        ]
+    }
+
     globalChat = {
         title: "Saphire Global Chat",
         custom_id: "saphireGlobalChat",

@@ -3,6 +3,7 @@ import { ApplicationCommandOptionType } from 'discord.js'
 import logomarca from './quiz/logomarca.quiz.js'
 import bandeiras from './quiz/bandeiras.quiz.js'
 import anime from './quiz/anime.quiz.js'
+import perguntas from './quiz/perguntas/showup.perguntas.js'
 
 export default {
     name: 'quiz',
@@ -18,7 +19,7 @@ export default {
                 {
                     name: 'view',
                     description: '[games] Veja uma única marca',
-                    type: 1,
+                    type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'select_logo_marca',
@@ -32,7 +33,7 @@ export default {
                 {
                     name: 'list',
                     description: '[games] Ver a lista de logo/marcas',
-                    type: 1,
+                    type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'filter',
@@ -44,7 +45,7 @@ export default {
                 {
                     name: 'game',
                     description: '[games] Começar o quiz de logo/marcas',
-                    type: 1,
+                    type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'color',
@@ -57,7 +58,7 @@ export default {
                 {
                     name: 'options',
                     description: '[games] Opções gerais do comando',
-                    type: 1,
+                    type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'option',
@@ -84,6 +85,19 @@ export default {
                             ]
                         }
                     ]
+                }
+            ]
+        },
+        {
+            name: 'perguntas',
+            description: '[game] Um quiz clássico de perguntas e respostas',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'selecionar',
+                    description: 'Selecione uma pergunta, veja informações entre outras opções.',
+                    type: ApplicationCommandOptionType.String,
+                    autocomplete: true
                 }
             ]
         },
@@ -245,7 +259,7 @@ export default {
 
         const { options } = interaction
         const quiz = options.getSubcommandGroup() || options.getSubcommand()
-        const game = { logomarca, bandeiras, anime }[quiz]
+        const game = { logomarca, bandeiras, anime, perguntas }[quiz]
 
         if (!game)
             return await interaction.reply({

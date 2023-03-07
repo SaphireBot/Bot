@@ -1,12 +1,11 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
 import deleteGiveaway from '../commands/functions/giveaway/delete.giveaway.js'
 import finishGiveaway from '../commands/functions/giveaway/finish.giveaway.js'
-import infoGiveaway from '../commands/functions/giveaway/info.giveaway.js'
 import rerollGiveaway from '../commands/functions/giveaway/reroll.giveaway.js'
 import resetGiveaway from '../commands/functions/giveaway/reset.giveaway.js'
 import genderProfile from '../commands/slashCommands/perfil/perfil/gender.profile.js'
@@ -18,6 +17,8 @@ import configAnunciar from './selectmenu/announce/config.anunciar.js'
 import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
 import translateSearch from './selectmenu/search/translate.search.js'
+import checkerQuiz from './buttons/quiz/checker.quiz.js'
+import Quiz from '../../classes/games/Quiz.js'
 
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {
@@ -50,6 +51,7 @@ export default class SelectMenuInteraction extends Base {
             rifa: 'refundFunction',
             logs: 'logsFunction',
             sign: 'chooseSign',
+            quizOptions: 'quizOptions',
             gender: 'chooseGender',
             signEphemeral: 'chooseSign',
             genderEphemeral: 'chooseGender',
@@ -87,6 +89,12 @@ export default class SelectMenuInteraction extends Base {
 
         if (result2)
             return result2(this)
+    }
+
+    async quizOptions() {
+        
+        if (!['reviewReports', 'reviewCategory', 'back', 'reviewQuestion', 'play'].includes(this.value)) await this.interaction.message.edit({ components: this.interaction.message.components }).catch(() => { })
+        return checkerQuiz(this.interaction, { src: this.value })
     }
 
     async deleteMessage({ message, user }) {

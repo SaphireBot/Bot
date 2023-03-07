@@ -6,7 +6,7 @@ export default async (interaction, cantadaId, cantadas = null, option, toDeleteI
 
     if (!client.staff.includes(interaction.user.id))
         return await interaction.reply({
-            content: `${e.Deny} | Apenas membros da Saphire's Team tem poder de analize neste sistema.`,
+            content: `${e.Deny} | Apenas membros da Saphire's Team tem poder de análise neste sistema.`,
             ephemeral: true
         })
 

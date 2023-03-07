@@ -1,7 +1,4 @@
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../../classes/index.js"
+import { SaphireClient as client, Database } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
 
 export default async interaction => {
@@ -51,7 +48,12 @@ export default async interaction => {
                 }
             }
         )
-            .then(() => responseMessage += `\n${e.Check} | O comando \`${commandToOpen}\` foi liberado com sucesso.`)
+            .then(() => {
+                client.clientData.ComandosBloqueadosSlash.splice(
+                    client.clientData.ComandosBloqueadosSlash.findIndex(Cmd => Cmd.cmd === commandToOpen), 1
+                );
+                responseMessage += `\n${e.Check} | O comando \`${commandToOpen}\` foi liberado com sucesso.`
+            })
             .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar o comando \`${commandToOpen}\`.`)
 
         async function openAll() {
@@ -64,7 +66,10 @@ export default async interaction => {
                     }
                 }
             )
-                .then(() => responseMessage += `\n${e.Check} | Todos os ${bugs.length} comandos foram liberados.`)
+                .then(() => {
+                    client.clientData.ComandosBloqueadosSlash = []
+                    responseMessage += `\n${e.Check} | Todos os ${bugs.length} comandos foram liberados.`
+                })
                 .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar todos os comandos.`)
         }
     }

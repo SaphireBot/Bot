@@ -65,5 +65,8 @@ export default model("Client", new Schema({
         '100000': Array
     },
     CantadasIndicadas: Array,
-    AnimeQuizIndication: Array
+    AnimeQuizIndication: Array,
+    QuizCategoryIndications: Array,
+    QuizQuestionsIndications: Array,
+    QuizQuestionsReports: Array
 }))

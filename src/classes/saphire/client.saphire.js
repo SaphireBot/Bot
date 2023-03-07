@@ -150,6 +150,7 @@ export default new class SaphireClient extends Client {
          * @returns Todos os animes registrados no banco de dados
          */
         this.animes = []
+
     }
 
     /**

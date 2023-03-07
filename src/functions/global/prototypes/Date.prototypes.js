@@ -95,10 +95,10 @@ Date.prototype.constructor.stringDate = ms => {
     if (!ms || isNaN(ms)) return '0 segundo'
 
     const translate = {
-        days: (n) => n > 1 ? 'dias' : 'dia',
-        hours: (n) => n > 1 ? 'horas' : 'hora',
-        minutes: (n) => n > 1 ? 'minutos' : 'minuto',
-        seconds: (n) => n > 1 ? 'segundos' : 'segundo'
+        days: (n) => n == 1 ? 'dia' : 'dias',
+        hours: (n) => n == 1 ? 'hora' : 'horas',
+        minutes: (n) => n == 1 ? 'minuto' : 'minutos',
+        seconds: (n) => n == 1 ? 'segundo' : 'segundos'
     }
 
     const date = parsems(ms)

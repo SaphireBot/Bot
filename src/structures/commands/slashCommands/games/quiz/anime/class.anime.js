@@ -41,7 +41,7 @@ export default class AnimeQuizManager {
         this.gameData = {}
     }
 
-    async analize() {
+    async analise() {
 
         if (this.type === 'liberate') {
             if (!this.interaction.member.permissions.has(DiscordPermissons.Administrator))

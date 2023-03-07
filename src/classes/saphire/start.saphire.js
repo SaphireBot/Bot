@@ -1,10 +1,13 @@
 import slashCommand from '../../structures/handler/slashCommands.js'
-import { Database, Discloud, SaphireClient as client } from '../index.js'
 import automaticSystems from '../../functions/update/index.js'
 import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Socket from './websocket.saphire.js'
+import Quiz from '../games/Quiz.js'
+import webhook from './webhooks.saphire.js'
+import { Database, Discloud, SaphireClient as client } from '../index.js'
+import { Config } from '../../util/Constants.js'
 
 /**
  * @param Nothing
@@ -39,9 +42,9 @@ export default async () => {
     client.shardId = client.shard.ids.at(-1) || 0
 
     console.log('4/14 - Tentiva de Websocket Connection')
-    client.socket = new Socket(client.shardId).enableListeners()
+    client.socket = new Socket(client.shardId || 0).enableListeners()
 
-    const databaseResponse = await Database.MongoConnect(client)
+    const databaseResponse = await Database.MongoConnect()
     console.log('5/14 - ' + databaseResponse)
 
     const slashCommandsResponse = await slashCommand(client)
@@ -61,11 +64,15 @@ export default async () => {
 
     await client.setCantadas()
     await client.setMemes()
+    await client.refreshStaff()
     await managerReminder.define()
+    await Quiz.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
-    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks Loaded')
+    Config.webhookAnimeReporter = await webhook(Config.quizAnimeAttachmentChannel)
+    Config.webhookQuizReporter = await webhook(Config.questionSuggestionsSave)
+    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks/Quiz Loaded')
 
     console.log(`12/14 - Connected at Shard ${client.shardId}`)
     import('../../api/app.js')

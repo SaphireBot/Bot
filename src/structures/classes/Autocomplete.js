@@ -1,11 +1,8 @@
 import Base from './Base.js'
-import { formatString } from '../../functions/plugins/plugins.js'
-import {
-    Colors,
-    ColorsTranslate,
-    Languages
-} from '../../util/Constants.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+import { formatString } from '../../functions/plugins/plugins.js'
+import { Colors, ColorsTranslate, Languages } from '../../util/Constants.js'
+import Quiz from '../../classes/games/Quiz.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -74,13 +71,46 @@ export default class Autocomplete extends Base {
             comprar: ['rifaNumero', value],
             id: ['giveaway_id', value],
             funcao: ['memesViewer'],
-            itens: ['reminders', value]
+            itens: ['reminders', value],
+            selecionar: ['quiz_selecionar', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async quiz_selecionar(value) {
+
+        const questions = Quiz.questions
+        const fill = questions.filter(question => check(question))
+
+        if (!fill?.length) return await this.respond()
+
+        const mapped = fill
+            .sort((a, b) => b.hits - a.hits)
+            .map(q => ({
+                name: `↑${q.hits || 0} x ${q.misses || 0}↓ ${q.question}`,
+                value: `${q.questionId}`
+            }))
+
+        return await this.respond(mapped)
+
+        function check(q) {
+            if (!value) return true
+            return [
+                q.questionId,
+                q.question,
+                q.category,
+                ...q.answers.map(answer => answer.answer),
+                q.suggestedBy,
+                `${q.hits || 0}`,
+                `${q.misses || 0}`
+            ]
+                .map(str => str?.toLowerCase())
+                .some(str => str.includes(`${value}`.toLowerCase()))
+        }
     }
 
     async quizAnime(value, isSearch) {
@@ -93,8 +123,8 @@ export default class Autocomplete extends Base {
             const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'AnimeQuizIndication')
             const AnimeQuizIndication = clientData?.AnimeQuizIndication || []
             methods.push({
-                name: `${AnimeQuizIndication.length || 0} indicações para analize`,
-                value: 'analize'
+                name: `${AnimeQuizIndication.length || 0} indicações para análise`,
+                value: 'analise'
             })
 
         }
@@ -166,7 +196,7 @@ export default class Autocomplete extends Base {
         ]
 
         if (this.client.staff.includes(this.user.id))
-            data.push({ name: `${this.client.MemesNotApproved.length} memes a serem analizados`, value: 'analize' })
+            data.push({ name: `${this.client.MemesNotApproved.length} memes a serem analisados`, value: 'analise' })
 
         return await this.respond(data)
     }
@@ -215,7 +245,7 @@ export default class Autocomplete extends Base {
             options.push(
                 {
                     name: `${cantadas.length} cantadas a ser avaliadas`,
-                    value: 'analize'
+                    value: 'analise'
                 },
                 {
                     name: 'Deletar cantada',

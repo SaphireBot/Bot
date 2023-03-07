@@ -11,6 +11,6 @@ export default async interaction => {
             ephemeral: true
         })
 
-    return new AnimeQuizManager(interaction).analize()
+    return new AnimeQuizManager(interaction).analise()
 
 }

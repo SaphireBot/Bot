@@ -1,5 +1,5 @@
 import { Emojis as e } from "../../../../../../util/util.js"
-import analize from './analize.anime.js'
+import analise from './analise.anime.js'
 import viewer from "./viewer.anime.js"
 
 export default async (interaction, suggestId) => {
@@ -7,7 +7,7 @@ export default async (interaction, suggestId) => {
     const { options } = interaction
     const value = suggestId || options.getString('method')
 
-    const execute = { analize }[value]
+    const execute = { analise }[value]
     if (execute) return execute(interaction)
 
     const isSearchValue = options.getString('search') || options.getString('my_content')

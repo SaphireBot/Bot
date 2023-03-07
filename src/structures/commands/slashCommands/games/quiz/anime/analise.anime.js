@@ -10,7 +10,7 @@ export default async interaction => {
     const { user } = interaction
     if (!client.staff.includes(user.id))
         return await interaction.reply({
-            content: `${e.Deny} | Apenas membros da Staff tem poder para analizar indicações de animes.`,
+            content: `${e.Deny} | Apenas membros da Staff tem poder para analisar indicações de animes.`,
             ephemeral: true
         })
 
@@ -38,8 +38,8 @@ export default async interaction => {
     return await interaction.reply({
         embeds: [{
             color: client.blue,
-            title: `${e.QuestionMark} ${client.user.username}'s Anime Quiz Indication | Analize Session`,
-            description: 'Confira os dados do anime abaixo e confirme sua analize',
+            title: `${e.QuestionMark} ${client.user.username}'s Anime Quiz Indication | Análise Session`,
+            description: 'Confira os dados do anime abaixo e confirme sua análise',
             fields: [
                 {
                     name: '🆔 Database Anime ID',

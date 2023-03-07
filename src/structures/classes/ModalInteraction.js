@@ -11,6 +11,7 @@ import { ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js'
 import axios from 'axios'
 import cantadasModal from './modals/cantadas/cantadas.modal.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+import checkerQuiz from './buttons/quiz/checker.quiz.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -52,7 +53,7 @@ export default class ModalInteraction extends Base {
             serverReport: [this.serverReport],
             cantada: [cantadasModal, this],
             anime: [this.editAnime, this],
-            saphireGlobalChat: [this.globalChat, this]
+            saphireGlobalChat: [this.globalChat, this],
         }[this.customId]
 
         if (ModalInteractionFunctions)
@@ -66,6 +67,9 @@ export default class ModalInteraction extends Base {
 
             if (this.customId.c === 'anime')
                 return this.editAnime(this)
+
+            if (this.customId.c.startsWith('newQuiz'))
+                return checkerQuiz(this.interaction, { src: this.customId.c })
         }
 
         return await this.interaction.reply({

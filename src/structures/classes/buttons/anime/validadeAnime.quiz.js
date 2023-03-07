@@ -28,7 +28,7 @@ export default async (interaction, commandData) => {
         }
 
         interaction.message.edit({ components: [] }).catch(() => { })
-        return optionsAnime(interaction, 'analize')
+        return optionsAnime(interaction, 'analise')
     }
 
     if (user.id !== authorId) return

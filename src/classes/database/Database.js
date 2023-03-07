@@ -50,10 +50,6 @@ export default new class Database extends Models {
         return JSON.parse(fs.readFileSync('./JSON/logomarca.json'))
     }
 
-    get Quiz() {
-        return JSON.parse(fs.readFileSync('./JSON/quiz.json'))
-    }
-
     get Wallpapers() {
         return JSON.parse(fs.readFileSync('./JSON/wallpaperanime.json'))
     }
@@ -62,10 +58,10 @@ export default new class Database extends Models {
         return await this.Indications.find({})
     }
 
-    MongoConnect = async (client) => {
+    MongoConnect = async () => {
 
         Mongoose.set("strictQuery", true)
-        return connect(process.env.DATABASE_LINK_CONNECTION, {
+        return await connect(process.env.DATABASE_LINK_CONNECTION, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })

@@ -36,7 +36,7 @@ export default async ({ interaction, e, client, embed, message }) => {
     })
         .then(async () => {
             return await interaction.update({
-                content: `${e.Check} | Solicitação enviada com sucesso. A Saphire's Team vai analizar a sua alteração. Você pode conferir suas perguntas usando \`/rather options questions:Minhas perguntas\` ou </rather options view:${message.interaction.id}>`,
+                content: `${e.Check} | Solicitação enviada com sucesso. A Saphire's Team vai analisar a sua alteração. Você pode conferir suas perguntas usando \`/rather options questions:Minhas perguntas\` ou </rather options view:${message.interaction.id}>`,
                 embeds: [],
                 components: []
             }).catch(() => { })

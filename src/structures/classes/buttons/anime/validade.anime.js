@@ -142,7 +142,7 @@ export default async (interaction, commandData) => {
                         components: [
                             {
                                 type: 2,
-                                label: 'Analizar Outra Sugestão',
+                                label: 'Analisar Outra Sugestão',
                                 emoji: '🔄',
                                 custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                                 style: ButtonStyle.Primary
@@ -167,7 +167,7 @@ export default async (interaction, commandData) => {
                         type: 1,
                         components: [{
                             type: 2,
-                            label: 'Analizar Outra Sugestão',
+                            label: 'Analisar Outra Sugestão',
                             emoji: '🔄',
                             custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                             style: ButtonStyle.Primary
@@ -199,7 +199,7 @@ export default async (interaction, commandData) => {
                 components: [
                     {
                         type: 2,
-                        label: 'Analizar Outra Sugestão',
+                        label: 'Analisar Outra Sugestão',
                         emoji: '🔄',
                         custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                         style: ButtonStyle.Primary

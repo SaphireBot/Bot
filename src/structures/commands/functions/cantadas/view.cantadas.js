@@ -15,7 +15,7 @@ export default async ({ interaction, buttonInteraction, clientData, commandData,
         option = interaction.options.getString('opcoes')
         cId = interaction?.message?.embeds[0]?.data?.footer?.text || interaction.options.getString('search')
 
-        if (['analize', 'delete'].includes(option))
+        if (['analise', 'delete'].includes(option))
             return cantadaAdmin(interaction, null, clientData.CantadasIndicadas, option, cId)
     }
 

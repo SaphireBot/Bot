@@ -1,4 +1,4 @@
-import { AttachmentBuilder, ButtonStyle, WebhookClient } from "discord.js"
+import { AttachmentBuilder, ButtonStyle } from "discord.js"
 import { Database, Modals, SaphireClient as client } from "../../../../classes/index.js"
 import { Config } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
@@ -166,7 +166,7 @@ export default async (interaction, commandData) => {
                         components: [
                             {
                                 type: 2,
-                                label: 'Analizar Outra Sugestão',
+                                label: 'Analisar Outra Sugestão',
                                 emoji: '🔄',
                                 custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                                 style: ButtonStyle.Primary
@@ -192,7 +192,7 @@ export default async (interaction, commandData) => {
                         type: 1,
                         components: [{
                             type: 2,
-                            label: 'Analizar Outra Sugestão',
+                            label: 'Analisar Outra Sugestão',
                             emoji: '🔄',
                             custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                             style: ButtonStyle.Primary
@@ -225,7 +225,7 @@ export default async (interaction, commandData) => {
                 components: [
                     {
                         type: 2,
-                        label: 'Analizar Outra Sugestão',
+                        label: 'Analisar Outra Sugestão',
                         emoji: '🔄',
                         custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
                         style: ButtonStyle.Primary
