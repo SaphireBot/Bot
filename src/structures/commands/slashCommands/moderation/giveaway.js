@@ -136,11 +136,19 @@ export default {
     ],
     async execute({ interaction, guildData, e }) {
 
-        const { options, guild, member } = interaction
+        const { options, guild } = interaction
 
         if (!guild.members.me.permissions.has(DiscordPermissons.ManageMessages, true))
             return await interaction.reply({
                 content: `❌ | Eu preciso da permissão **\`${PermissionsTranslate.ManageMessages}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
+                ephemeral: true
+            })
+
+        const member = guild.members.cache.get(interaction.user.id)
+
+        if (!member)
+            return await interaction.reply({
+                content: `${e.Deny} | Por favor, use o comando novamente.`,
                 ephemeral: true
             })
 
