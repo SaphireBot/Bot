@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js"
+import Quiz from "../../../../classes/games/QuizManager.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
@@ -68,6 +68,7 @@ export default async interaction => {
         )
 
     return await interaction.update({
+        content: null,
         embeds: [{
             color: client.blue,
             title: `${e.QuizLogo} ${client.user.username}'s Quiz Manager Request`,

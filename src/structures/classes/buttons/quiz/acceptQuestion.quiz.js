@@ -1,5 +1,5 @@
 import axios from "axios";
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { ButtonStyle } from "discord.js";
 import { SaphireClient as client, Database } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
@@ -48,7 +48,8 @@ export default async interaction => {
                 hits: question.hits || 0, misses: question.misses || 0,
                 question: question.question,
                 questionId: question.questionId,
-                suggestedBy: question.suggestedBy
+                suggestedBy: question.suggestedBy,
+                curiosity: question.curiosity?.length ? [...question.curiosity] : []
             }
         }, { new: true, upsert: true })
             .then(async doc => {
@@ -118,7 +119,8 @@ export default async interaction => {
             hits: question.hits || 0, misses: question.misses || 0,
             question: question.question,
             questionId: question.questionId,
-            suggestedBy: question.suggestedBy
+            suggestedBy: question.suggestedBy,
+            curiosity: question.category?.length ? [...question.curiosity] : []
         })
             .save()
             .then(async document => {

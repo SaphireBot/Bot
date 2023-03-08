@@ -1,5 +1,5 @@
 import axios from "axios";
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { ButtonStyle } from "discord.js";
 import { SaphireClient as client, Database } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
@@ -35,7 +35,7 @@ export default async interaction => {
             embeds: [], components: []
         }).catch(() => { })
 
-    if (indicationData.weebhookUrl) GSNSendMessage()
+    if (indicationData.webhookUrl) GSNSendMessage()
 
     return await Database.Quiz.updateOne(
         { category: "SaveCategories" },
@@ -78,7 +78,7 @@ export default async interaction => {
 
     async function GSNSendMessage() {
 
-        return await axios.post(indicationData.weebhookUrl, {
+        return await axios.post(indicationData.webhookUrl, {
             username: "Saphire Global System Notification",
             avatarURL: "./src/images/webhooks/anime_reporter.png",
             content: `${e.Notification} | <@${indicationData.userId}>, sua indicação para uma nova categoria no comando \`/quiz personagens\` foi **aceita**.\n${e.Info} | Categoria indicada: \`${indicationData.category}\``,

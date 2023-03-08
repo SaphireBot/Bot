@@ -1,4 +1,4 @@
-import Quiz from '../../../../classes/games/Quiz.js';
+import Quiz from '../../../../classes/games/QuizManager.js';
 import options from './options.quiz.js';
 import play from './play.quiz.js';
 import newQuizCategory from './newQuizCategory.quiz.js';
@@ -78,13 +78,16 @@ export default async (interaction, { src }) => {
             })
 
         return await interaction.update({
-            embeds: [{
-                color: client.blue,
-                title: `${e.QuizLogo} ${client.user.username}'s Quiz`,
-                footer: {
-                    text: `❤️ Powered By: ${client.user.username}'s Community`
+            content: null,
+            embeds: [
+                {
+                    color: client.blue,
+                    title: `${e.QuizLogo} ${client.user.username}'s Quiz`,
+                    description: `Estamos construindo esse Quiz com todo o amor, ok?\nVocê pode mandar perguntar clicando no botão \`Mais Opções\`.\n \nAgradecemos a sua ajuda.\n${e.Admin} Saphire's Team Developers & Resourcers Management`,
+                    footer: {
+                        text: `❤️ Powered By: ${client.user.username}'s Community`
+                    }
                 }
-            }
             ],
             components: [{
                 type: 1,
@@ -92,18 +95,20 @@ export default async (interaction, { src }) => {
                     {
                         type: 2,
                         label: "Jogar",
+                        emoji: e.amongusdance,
                         custom_id: JSON.stringify({ c: 'quiz', src: 'play' }),
                         style: ButtonStyle.Success
                     },
                     {
                         type: 2,
                         label: "Mais Opções",
+                        emoji: e.saphireLendo,
                         custom_id: JSON.stringify({ c: 'quiz', src: 'options' }),
                         style: ButtonStyle.Primary
                     }
                 ]
             }]
-        })
+        }).catch(() => { })
     }
 
 }

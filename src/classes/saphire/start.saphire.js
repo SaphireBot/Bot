@@ -4,10 +4,11 @@ import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Socket from './websocket.saphire.js'
-import Quiz from '../games/Quiz.js'
+import QuizManager from '../games/QuizManager.js'
 import webhook from './webhooks.saphire.js'
 import { Database, Discloud, SaphireClient as client } from '../index.js'
 import { Config } from '../../util/Constants.js'
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 /**
  * @param Nothing
@@ -66,7 +67,7 @@ export default async () => {
     await client.setMemes()
     await client.refreshStaff()
     await managerReminder.define()
-    await Quiz.load()
+    await QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
@@ -78,10 +79,10 @@ export default async () => {
     import('../../api/app.js')
 
     await client.guilds.all(false, true)
+    delay(5000)
     client.user.setPresence({
         activities: [
-            { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0}  servidores [Shard ${client.shardId} in Cluster ${client.clusterName}]` },
-            { name: `Tentando entregar a melhor qualidade possível [Shard ${client.shardId} in Cluster ${client.clusterName}]` }
+            { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0}  servidores [Shard ${client.shardId} in Cluster ${client.clusterName}]` }
         ],
         status: 'idle'
     })

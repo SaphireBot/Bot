@@ -1,5 +1,5 @@
 import { ButtonStyle } from "discord.js";
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
 
@@ -14,7 +14,7 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const userSuggested = await client.users.fetch(question.suggestedBy || "0").catch(() => null)
+    const userSuggested = await client.users.fetch(question.suggestedBy).catch(() => null)
 
     const embed = {
         color: client.blue,
@@ -54,6 +54,9 @@ export default async interaction => {
             text: `Question ID: ${question.questionId}`
         }
     }
+
+    if (question.curiosity?.length)
+        embed.fields.splice(3, 0, { name: `${e.Info} Curiosidades`, value: question.curiosity.join('\n') })
 
     const components = [{
         type: 1,

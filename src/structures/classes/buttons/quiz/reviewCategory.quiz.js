@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { ButtonStyle } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
@@ -46,7 +46,7 @@ export default async interaction => {
                 },
                 {
                     name: "🛰️ Global System Notification",
-                    value: indication?.weebhookUrl ? "Ativado" : "Desativado"
+                    value: indication?.webhookUrl ? "Ativado" : "Desativado"
                 }
             ],
             footer: {

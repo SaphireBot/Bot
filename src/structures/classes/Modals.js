@@ -139,7 +139,7 @@ export default new class Modals {
                             label: "Resposta Correta",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Azul",
                             required: true,
                             value: question.answers[0].answer
@@ -155,7 +155,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 1",
                             required: true,
                             value: question.answers[1].answer
@@ -171,7 +171,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 2",
                             required: true,
                             value: question.answers[2].answer
@@ -187,7 +187,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 3",
                             required: true,
                             value: question.answers[3].answer
@@ -232,7 +232,7 @@ export default new class Modals {
                             label: "Resposta Correta",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Azul",
                             required: true
                         }
@@ -247,7 +247,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 1",
                             required: true
                         }
@@ -262,7 +262,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 2",
                             required: true
                         }
@@ -277,7 +277,7 @@ export default new class Modals {
                             label: "Resposta Errada",
                             style: 1,
                             min_length: 1,
-                            max_length: 100,
+                            max_length: 80,
                             placeholder: "Resposta Errada 3",
                             required: true
                         }

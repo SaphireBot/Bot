@@ -60,13 +60,6 @@ export default new class SaphireClient extends Client {
         this.allGuilds = []
 
         /**
-         * @param Nothing
-         * @returns Um array com todos os Ids de todos os usuários presentes no banco de dados
-         * @example [id, id, id, id, id, id]
-         */
-        this.databaseUsers = []
-
-        /**
          * @returns Shard Client ID
          */
         this.shardId = 0

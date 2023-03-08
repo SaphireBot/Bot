@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js"
+import Quiz from "../../../../classes/games/QuizManager.js"
 import { Database, SaphireClient as client } from "../../../../classes/index.js"
 import { readFileSync, rm, writeFileSync } from 'fs'
 import { Emojis as e } from "../../../../util/util.js"
@@ -75,7 +75,7 @@ Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de
             }).catch(() => { })
             return 
         } catch (err) {
-            return await interaction.update({
+            return await interaction.message.edit({
                 content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
                 embeds: [],
                 components: []

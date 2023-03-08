@@ -1,7 +1,9 @@
-import Quiz from "../../../../classes/games/Quiz.js"
+import Quiz from "../../../../classes/games/QuizManager.js"
 import { SaphireClient as client, Database } from "../../../../classes/index.js"
-import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
+import { readFileSync, rm, writeFileSync } from "fs"
 import { Emojis as e } from "../../../../util/util.js"
+import { AttachmentBuilder } from "discord.js"
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async interaction => {
 
@@ -22,44 +24,13 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const embed = {
-        color: client.green,
-        title: `${e.QuizLogo} New Suggestion Quiz Category`,
-        fields: [
-            {
-                name: "📨 Register Data",
-                value: `Usuário: **${user.tag} - \`${user.id}\`**\nServidor: **${guild.name} - \`${guild.id}\`**.`
-            },
-            {
-                name: "🏷️ Categoria",
-                value: category
-            },
-            {
-                name: "📝 Motivo da Criação",
-                value: reason
-            }
-        ]
-    }
-
-    const weebhookUrl = await Quiz.getWebhookUrl(channel)
-
-    embed.fields.push(
-        weebhookUrl
-            ? {
-                name: `🛰️ Global System Notification`,
-                value: "Fique de boas, você será avisado aqui neste canal quando sua indicação for aceita/recusada."
-            }
-            : {
-                name: `${e.Info} Dica Importante`,
-                value: `Este comando é interligado com o GSN \`Global System Notification\`.\nEu preciso da permissão **${PermissionsTranslate[DiscordPermissons.ManageWebhooks]}** para te avisar se a sua indicação for aceita ou não aqui neste chat.`
-            }
-    )
+    const webhookUrl = await Quiz.getWebhookUrl(channel)
 
     const dataSave = {
         userId: user.id,
         guildId: guild.id,
         channelId: channel.id,
-        category, reason, weebhookUrl
+        category, reason, webhookUrl
     }
 
     return await Database.Client.updateOne(
@@ -67,19 +38,57 @@ export default async interaction => {
         { $push: { QuizCategoryIndications: { $each: [dataSave] } } }
     )
         .then(async () => {
-
             Quiz.CategoriesIndications.push(dataSave)
-            embed.color = client.green
-            embed.description = 'Sua indicação foi indicada com sucesso.'
-
-            return await interaction.reply({ embeds: [embed] })
+            return await registerCategorySuggestion()
         })
-        .catch(async err => {
+        .catch(err => registerCategorySuggestion(err))
 
-            embed.color = client.red
-            embed.description = `Sua indicação não foi indicada com sucesso.\n \n${e.bug} \`${err}\``
+    async function registerCategorySuggestion(err) {
 
-            return await interaction.reply({ mbeds: [embed] })
-        })
+        if (err)
+            return await interaction.update({ content: `${e.DenyX} | Não foi possível concluir a indicação.\n${e.bug} | \`${err}\``, embeds: [], components: [] }).catch(() => { })
+
+        await interaction.update({ content: `${e.Loading} | Um segundo, sua indicação já foi salva. Estou autenticando alguns dados...`, embeds: [], components: [] }).catch(() => { })
+
+        writeFileSync(
+            `${user.id.slice(5)}-${user.id}.txt`,
+            `--- SOLICITAÇÃO DE CATEGORIA | QUIZ QUESTION SYSTEM | FILE SECURITY REVIEW ---
+
+Status: ENVIADO PARA ANÁLISE
+Categoria Solicitada: ${dataSave.category}
+Solicitante: ${user.tag} - ${user.id}
+Servidor de Origem: ${guild.name} - ${guild.id}
+Global System Notification: ${dataSave.webhookUrl ? 'Ativado' : 'Desativado'}
+
+Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.
+            `
+        )
+
+        await delay(2000)
+
+        try {
+            const buffer = readFileSync(`${user.id.slice(5)}-${user.id}.txt`)
+            const attachment = new AttachmentBuilder(buffer, { name: `${user.id}.txt`, description: 'Solicitação de Nova Pergunta para o Quiz' })
+            await Quiz.sendDocument(attachment).catch(() => { })
+            rm(`${user.id.slice(5)}-${user.id}.txt`, err => {
+                if (err)
+                    return console.log(`Não foi possível deletar a suagestão de perguntas no Quiz: ${user.id.slice(5)}-${user.id}.txt`)
+            })
+
+            await interaction.message.edit({
+                content: `${e.Check} | A sua solicitação foi enviada com sucesso.\n${e.Info} | Sua indicação está na posição **${Quiz.CategoriesIndications.length}°** na fila de espera.`,
+                embeds: [],
+                components: [],
+                files: [attachment]
+            }).catch(() => { })
+            return
+        } catch (err) {
+            return await interaction.message.edit({
+                content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.CategoriesIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
+                embeds: [],
+                components: []
+            }).catch(() => { })
+        }
+    }
 
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ButtonStyle } from "discord.js";
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { SaphireClient as client, Database } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
 
@@ -35,7 +35,7 @@ export default async interaction => {
             embeds: [], components: []
         }).catch(() => { })
 
-    if (indicationData.weebhookUrl) GSNSendMessage()
+    if (indicationData.webhookUrl) GSNSendMessage()
 
     Quiz.CategoriesIndications.shift()
     await Database.Client.updateOne({ id: client.user.id }, { $pull: { QuizCategoryIndications: { category: category } } })
@@ -51,12 +51,14 @@ export default async interaction => {
                 {
                     type: 2,
                     label: 'Próximo',
+                    emoji: e.saphireRight,
                     custom_id: JSON.stringify({ c: 'quiz', src: 'reviewCategory' }),
                     style: ButtonStyle.Primary
                 },
                 {
                     type: 2,
                     label: 'Apagar mensagem',
+                    emoji: e.Trash,
                     custom_id: JSON.stringify({ c: 'delete' }),
                     style: ButtonStyle.Danger
                 }
@@ -66,7 +68,7 @@ export default async interaction => {
 
     async function GSNSendMessage() {
 
-        return await axios.post(indicationData.weebhookUrl, {
+        return await axios.post(indicationData.webhookUrl, {
             username: "Saphire Global System Notification",
             avatarURL: "./src/images/webhooks/anime_reporter.png",
             content: `${e.Notification} | <@${indicationData.userId}>, sua indicação de uma nova categoria no comando \`/quiz personagens\` foi **negada**.\n${e.Info} | Categoria indicada: \`${indicationData.category}\``,

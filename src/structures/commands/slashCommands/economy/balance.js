@@ -15,12 +15,6 @@ export default {
             type: ApplicationCommandOptionType.User
         },
         {
-            name: 'database_users',
-            description: 'Pesquise por um usuário no banco de dados',
-            type: ApplicationCommandOptionType.String,
-            autocomplete: true
-        },
-        {
             name: 'options',
             description: 'Mais opções do comando',
             type: ApplicationCommandOptionType.String,
@@ -32,9 +26,7 @@ export default {
         const { options, guild, user: author } = interaction
         const option = options.getString('options') || false
         const hide = option === 'hide'
-        const user = options.getUser('user')
-            || await client.users.fetch(options.getString('database_users')).catch(() => null)
-            || author
+        const user = options.getUser('user') || author
 
         if (option && option !== 'hide') return balanceOptions(interaction, option, user)
 

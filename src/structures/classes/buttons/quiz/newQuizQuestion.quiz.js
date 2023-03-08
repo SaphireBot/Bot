@@ -1,5 +1,5 @@
 import { ButtonStyle } from "discord.js";
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { Database, SaphireClient as client } from "../../../../classes/index.js";
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js";
 import { Emojis as e } from "../../../../util/util.js";
@@ -75,68 +75,68 @@ export default async interaction => {
 
     Quiz.QuestionsIndications.push(dataSave)
 
-    const embed = {
-        color: client.blue,
-        description: `${e.Loading} Aguardando envio...`,
-        title: `${e.QuizLogo} ${client.user.username}'s Quiz Question Manager`,
-        fields: [
-            {
-                name: '📝 Pergunta Solicitada',
-                value: question
-            },
-            {
-                name: '🏷️ Categoria Selecionada',
-                value: category
-            },
-            {
-                name: '✏️ Respostas',
-                value: answers.map((wrong) => `${wrong.correct ? e.CheckV : e.DenyX} ${wrong.answer}`).join('\n')
-            },
-            {
-                name: '🔎 Curiosidades',
-                value: 'Nenhuma curiosidade informada'
-            },
-            {
-                name: '🚩 Localidade',
-                value: `👤 **${user.tag}** \`${user.id}\`\n🏠 **${guild.name}** \`${guild.id}\``
-            },
-            {
-                name: '🛰️ Global System Notification - GSN',
-                value: webhookUrl ? 'Ativado' : 'Desativado'
+    return await interaction.reply({
+        content: null,
+        embeds: [{
+            color: client.blue,
+            description: `${e.Loading} Aguardando envio...`,
+            title: `${e.QuizLogo} ${client.user.username}'s Quiz Question Manager`,
+            fields: [
+                {
+                    name: '📝 Pergunta Solicitada',
+                    value: question
+                },
+                {
+                    name: '🏷️ Categoria Selecionada',
+                    value: category
+                },
+                {
+                    name: '✏️ Respostas',
+                    value: answers.map((wrong) => `${wrong.correct ? e.CheckV : e.DenyX} ${wrong.answer}`).join('\n')
+                },
+                {
+                    name: '🔎 Curiosidades',
+                    value: 'Nenhuma curiosidade informada'
+                },
+                {
+                    name: '🚩 Localidade',
+                    value: `👤 **${user.tag}** \`${user.id}\`\n🏠 **${guild.name}** \`${guild.id}\``
+                },
+                {
+                    name: '🛰️ Global System Notification - GSN',
+                    value: webhookUrl ? 'Ativado' : 'Desativado'
+                }
+            ],
+            footer: {
+                text: `Question ID: ${dataSave.questionId}`
             }
-        ],
-        footer: {
-            text: `Question ID: ${dataSave.questionId}`
-        }
-    }
-
-    const components = [{
-        type: 1,
-        components: [
-            {
-                type: 2,
-                label: 'Adicionar Curiosidade (3)',
-                emoji: e.saphireLendo,
-                custom_id: JSON.stringify({ c: 'quiz', src: 'addCuriosity', id: dataSave.questionId, userId: interaction.user.id }),
-                style: ButtonStyle.Primary
-            },
-            {
-                type: 2,
-                label: 'Enviar Pergunta',
-                emoji: '📨',
-                custom_id: JSON.stringify({ c: 'quiz', src: 'saveQuestion', id: dataSave.questionId }),
-                style: ButtonStyle.Success
-            },
-            {
-                type: 2,
-                label: 'Cancelar',
-                emoji: e.Trash,
-                custom_id: JSON.stringify({ c: 'delete', userId: interaction.user.id }),
-                style: ButtonStyle.Danger
-            }
-        ]
-    }]
-
-    return await interaction.reply({ embeds: [embed], components })
+        }],
+        components: [{
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Adicionar Curiosidade (3)',
+                    emoji: e.saphireLendo,
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'addCuriosity', id: dataSave.questionId, userId: interaction.user.id }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Enviar Pergunta',
+                    emoji: '📨',
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'saveQuestion', id: dataSave.questionId }),
+                    style: ButtonStyle.Success
+                },
+                {
+                    type: 2,
+                    label: 'Cancelar',
+                    emoji: e.Trash,
+                    custom_id: JSON.stringify({ c: 'delete', userId: interaction.user.id }),
+                    style: ButtonStyle.Danger
+                }
+            ]
+        }]
+    })
 
 }

@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { Database, SaphireClient as client } from "../../../../classes/index.js";
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js";
 import { Emojis as e } from "../../../../util/util.js";

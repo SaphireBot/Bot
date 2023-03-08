@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js";
+import Quiz from "../../../../classes/games/QuizManager.js";
 import { ButtonStyle } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
@@ -30,36 +30,41 @@ export default async interaction => {
     const userWhoSuggest = await client.users.fetch(question.suggestedBy).catch(() => null)
     const guild = await client.guilds.fetch(question.guildId).catch(() => null)
 
-    return await interaction.update({
-        embeds: [{
-            color: client.blue,
-            title: `${e.QuizLogo} Question Suggest Analise`,
-            fields: [
-                {
-                    name: '📝 Pergunta Indicada',
-                    value: question.question
-                },
-                {
-                    name: '🏷️ Categoria Selecionada',
-                    value: question.category
-                },
-                {
-                    name: '✏️ Respostas Relacionadas',
-                    value: question.answers.map(answer => `${answer.correct ? e.CheckV : e.DenyX} \`${answer.answer}\``).join('\n')
-                },
-                {
-                    name: '🚩 Localização de Envio',
-                    value: `👤 ${userWhoSuggest?.tag || 'Not Found'} \`${question.suggestedBy}\`\n🏠 ${guild?.name || 'Not Found'} \`${question.guildId}\``
-                },
-                {
-                    name: '🛰️ Global System Notification',
-                    value: question.webhookUrl ? 'Ativado' : 'Desativado'
-                }
-            ],
-            footer: {
-                text: `Question ID: ${question.questionId}`
+    const embed = {
+        color: client.blue,
+        title: `${e.QuizLogo} Question Suggest Analise`,
+        fields: [
+            {
+                name: '📝 Pergunta Indicada',
+                value: question.question
+            },
+            {
+                name: '🏷️ Categoria Selecionada',
+                value: question.category
+            },
+            {
+                name: '✏️ Respostas Relacionadas',
+                value: question.answers.map(answer => `${answer.correct ? e.CheckV : e.DenyX} \`${answer.answer}\``).join('\n')
+            },
+            {
+                name: '🚩 Localização de Envio',
+                value: `👤 ${userWhoSuggest?.tag || 'Not Found'} \`${question.suggestedBy}\`\n🏠 ${guild?.name || 'Not Found'} \`${question.guildId}\``
+            },
+            {
+                name: '🛰️ Global System Notification',
+                value: question.webhookUrl ? 'Ativado' : 'Desativado'
             }
-        }],
+        ],
+        footer: {
+            text: `Question ID: ${question.questionId}`
+        }
+    }
+
+    if (question.curiosity?.length)
+        embed.fields.splice(3, 0, { name: `${e.Info} Curiosidades`, value: question.curiosity.join('\n') })
+
+    return await interaction.update({
+        embeds: [embed],
         components: [{
             type: 1,
             components: [

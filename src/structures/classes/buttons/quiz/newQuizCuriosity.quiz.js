@@ -1,4 +1,4 @@
-import Quiz from "../../../../classes/games/Quiz.js"
+import Quiz from "../../../../classes/games/QuizManager.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 

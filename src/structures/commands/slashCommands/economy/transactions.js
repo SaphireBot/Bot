@@ -7,22 +7,18 @@ export default {
     name_localizations: { "en-US": "transactions", 'pt-BR': 'transações' },
     dm_permission: false,
     type: 1,
-    options: [
-        {
-            name: 'user',
-            description: 'Selecione um usuário para ver suas transações',
-            type: 6
-        }
-    ],
+    options: [{
+        name: 'user',
+        description: 'Selecione um usuário para ver suas transações',
+        type: 6
+    }],
     helpData: {
         description: 'Com este comando você consegue ver toda a sua movimentação econômica'
     },
     async execute({ interaction, client, Database, e, modals }) {
 
         const { options, user: author } = interaction
-        const user = options.getUser('user')
-            || await client.users.fetch(options.getString('database_users')).catch(() => null)
-            || author
+        const user = options.getUser('user') || author
 
         if (!user || user.bot)
             return await interaction.reply({

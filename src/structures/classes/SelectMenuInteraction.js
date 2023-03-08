@@ -18,7 +18,7 @@ import logsChange from './selectmenu/logsCommand/index.logs.js'
 import refundRifa from './selectmenu/rifa/refund.rifa.js'
 import translateSearch from './selectmenu/search/translate.search.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
-import Quiz from '../../classes/games/Quiz.js'
+import Quiz from '../../classes/games/QuizManager.js'
 
 export default class SelectMenuInteraction extends Base {
     constructor(interaction) {

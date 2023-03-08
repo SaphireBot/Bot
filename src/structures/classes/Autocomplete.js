@@ -2,7 +2,7 @@ import Base from './Base.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import { formatString } from '../../functions/plugins/plugins.js'
 import { Colors, ColorsTranslate, Languages } from '../../util/Constants.js'
-import Quiz from '../../classes/games/Quiz.js'
+import Quiz from '../../classes/games/QuizManager.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -38,7 +38,6 @@ export default class Autocomplete extends Base {
             cor: ['utilColors', value],
             betchoice: ['betChoices', value],
             blocked_commands: ['blockCommands', value],
-            database_users: ['databaseUsers', value],
             balance: ['balanceOptions', value],
             de: ['translateLanguages', value],
             para: ['translateLanguages', value],
@@ -83,7 +82,7 @@ export default class Autocomplete extends Base {
 
     async quiz_selecionar(value) {
 
-        const questions = Quiz.questions
+        const questions = Quiz.questions || []
         const fill = questions.filter(question => check(question))
 
         if (!fill?.length) return await this.respond()
@@ -103,7 +102,7 @@ export default class Autocomplete extends Base {
                 q.questionId,
                 q.question,
                 q.category,
-                ...q.answers.map(answer => answer.answer),
+                ...q.answers?.map(answer => answer?.answer),
                 q.suggestedBy,
                 `${q.hits || 0}`,
                 `${q.misses || 0}`
@@ -813,28 +812,6 @@ export default class Autocomplete extends Base {
         const fill = options.filter(data => data.name?.toLowerCase()?.includes(value?.toLowerCase()))
         return await this.respond(fill)
 
-    }
-
-    async databaseUsers(value) {
-
-        const dataUsers = this.client.databaseUsers
-        const users = this.client.users.cache
-        if (!dataUsers || dataUsers.length === 0) return this.respond()
-
-        const fill = dataUsers
-            .map(id => users.find(data => data.id === id))
-            .filter(user => {
-                return user?.tag?.toLowerCase()?.includes(value?.toLowerCase())
-                    || user?.id?.includes(value)
-            })
-
-        const mapped = fill
-            .filter(x => x)
-            .map(user => ({
-                name: `${user.tag} | ${user.id}`,
-                value: user.id
-            }))
-        return await this.respond(mapped).catch(() => { })
     }
 
     async allGuilds(value) {

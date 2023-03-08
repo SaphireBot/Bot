@@ -5,19 +5,16 @@ import checkerQuiz from "../../../../../classes/buttons/quiz/checker.quiz.js"
 
 export default async interaction => {
 
-    return await interaction.reply({
-        content: `${e.Loading} | Calma calma... Esse comando está sob um grandiosa construção.`,
-        ephemeral: true
-    })
-
     if (interaction.options.getString('selecionar'))
         return checkerQuiz(interaction, { src: 'questionInfo' })
 
     return await interaction.reply({
+        content: null,
         embeds: [
             {
                 color: client.blue,
                 title: `${e.QuizLogo} ${client.user.username}'s Quiz`,
+                description: `Estamos construindo esse Quiz com todo o amor, ok?\nVocê pode mandar perguntar clicando no botão \`Mais Opções\`.\n \nAgradecemos a sua ajuda.\n${e.Admin} Saphire's Team Developers & Resourcers Management`,
                 footer: {
                     text: `❤️ Powered By: ${client.user.username}'s Community`
                 }
@@ -29,12 +26,14 @@ export default async interaction => {
                 {
                     type: 2,
                     label: "Jogar",
+                    emoji: e.amongusdance,
                     custom_id: JSON.stringify({ c: 'quiz', src: 'play' }),
                     style: ButtonStyle.Success
                 },
                 {
                     type: 2,
                     label: "Mais Opções",
+                    emoji: e.saphireLendo,
                     custom_id: JSON.stringify({ c: 'quiz', src: 'options' }),
                     style: ButtonStyle.Primary
                 }
