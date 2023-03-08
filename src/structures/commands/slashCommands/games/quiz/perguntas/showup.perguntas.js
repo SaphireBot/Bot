@@ -1,9 +1,16 @@
 import { ButtonStyle } from "discord.js"
+import QuizManager from "../../../../../../classes/games/QuizManager.js"
 import { SaphireClient as client } from "../../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../../util/util.js"
 import checkerQuiz from "../../../../../classes/buttons/quiz/checker.quiz.js"
 
 export default async interaction => {
+
+    if (QuizManager.channelsInGames.includes(interaction.channel.id))
+        return await interaction.reply({
+            content: `${e.Deny} | Já tem um Quiz rolando nesse chat, ele precisa terminar para o comando ser desbloqueado, beleza?`,
+            ephemeral: true
+        })
 
     if (interaction.options.getString('selecionar'))
         return checkerQuiz(interaction, { src: 'questionInfo' })

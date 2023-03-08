@@ -43,7 +43,7 @@ export default async (interaction, buttons) => {
     for await (let condicional of winCondicionals) {
         if (condicional.every(data => data.emoji.name === condicional[0].emoji.name && data.emoji.name !== 'raspadinha')) {
             for (let button of condicional)
-                button.emoji.name !== '🦤' ? button.style = ButtonStyle.Success : button.style = ButtonStyle.Danger
+                button.style = button.emoji.name == '🦤' ? ButtonStyle.Danger : ButtonStyle.Success
 
             disableAllButtons()
             win(interaction, condicional[0].emoji.name, buttons)
