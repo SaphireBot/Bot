@@ -185,20 +185,26 @@ export default async (interaction, commandData) => {
                     value: `\`${err}\``
                 })
 
-                return await msg.edit({
-                    content: null,
-                    embeds: [embed],
-                    components: [{
-                        type: 1,
+                if (msg)
+                    return await msg.edit({
+                        content: null,
+                        embeds: [embed],
                         components: [{
-                            type: 2,
-                            label: 'Analisar Outra Sugestão',
-                            emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
-                            style: ButtonStyle.Primary
+                            type: 1,
+                            components: [{
+                                type: 2,
+                                label: 'Analisar Outra Sugestão',
+                                emoji: '🔄',
+                                custom_id: JSON.stringify({ c: 'animeQuiz', src: 'anotherOption' }),
+                                style: ButtonStyle.Primary
+                            }]
                         }]
-                    }]
-                }).catch(() => { })
+                    }).catch(() => { })
+                else {
+                    interaction.message?.delete().catch(() => { })
+                    msg?.delete().catch(() => { })
+                    return await interaction.channel.send({ content: `${e.Deny} | Nenhuma mensagem foi encontrada.` })
+                }
             })
     }
 
