@@ -24,10 +24,13 @@ import editCategory from './editCategory.quiz.js';
 import newEditCategory from './newEditCategory.quiz.js';
 import newQuizCuriosity from './newQuizCuriosity.quiz.js';
 import saveQuestion from './saveQuestion.quiz.js';
-import { Emojis as e } from '../../../../util/util.js';
+import custom from './custom.quiz.js'
+import config from './config.quiz.js'
+import deleteConfig from './deleteConfig.quiz.js'
+import { Buttons, Emojis as e } from '../../../../util/util.js';
 import { SaphireClient as client } from '../../../../classes/index.js';
-import { ButtonStyle } from 'discord.js';
 
+// Button/Modal/SelectMenu Interaction
 export default async (interaction, { src }) => {
 
     if (!src)
@@ -47,7 +50,8 @@ export default async (interaction, { src }) => {
         refuseModel: Quiz.defineRefuseReason,
         newQuizReport, reviewReports,
         modalFeedback: Quiz.showModalFeedback,
-        addCuriosity: Quiz.addCuriosity
+        addCuriosity: Quiz.addCuriosity,
+        custom, config, deleteConfig
     }[src]
 
     if (!execute) {
@@ -71,7 +75,14 @@ export default async (interaction, { src }) => {
 
     async function back() {
 
-        if (interaction.user.id !== interaction.message?.interaction?.user?.id)
+        let userId = interaction.message?.interaction?.user?.id
+
+        if (!userId && interaction.customId.startsWith('{')) {
+            const customData = JSON.parse(interaction.customId)
+            if (customData.userId) userId = customData.userId
+        }
+
+        if (userId && interaction.user.id !== userId)
             return await interaction.reply({
                 content: `${e.DenyX} | Epa epa, só <@${interaction.message?.interaction?.user?.id}> pode usar essa função, beleza?`,
                 ephemeral: true
@@ -89,25 +100,7 @@ export default async (interaction, { src }) => {
                     }
                 }
             ],
-            components: [{
-                type: 1,
-                components: [
-                    {
-                        type: 2,
-                        label: "Jogar",
-                        emoji: e.amongusdance,
-                        custom_id: JSON.stringify({ c: 'quiz', src: 'play' }),
-                        style: ButtonStyle.Success
-                    },
-                    {
-                        type: 2,
-                        label: "Mais Opções",
-                        emoji: e.saphireLendo,
-                        custom_id: JSON.stringify({ c: 'quiz', src: 'options' }),
-                        style: ButtonStyle.Primary
-                    }
-                ]
-            }]
+            components: Buttons.QuizQuestionsFirstPage
         }).catch(() => { })
     }
 

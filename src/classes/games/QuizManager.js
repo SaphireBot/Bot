@@ -1,3 +1,4 @@
+import saveQuestionQuiz from "../../structures/classes/buttons/quiz/saveQuestion.quiz.js"
 import { bindFunctions } from "../../util/Bind.js"
 import { Config, DiscordPermissons } from "../../util/Constants.js"
 import { Emojis as e } from "../../util/util.js"
@@ -7,29 +8,33 @@ export default new class QuizManager {
     constructor() {
         bindFunctions(this)
         /**
-         * @returns Todas as indicações de categorias atuais
+         * @returns All Categories Indications
          */
         this.CategoriesIndications = []
         /**
-         * @returns Todas as indicações perguntas atuais
+         * @returns All Questions Indications
          */
         this.QuestionsIndications = []
         /**
-         * @returns Todas as categorias válidas
+         * @returns All categories
          */
         this.categories = []
         /**
-         * @returns Todas as perguntas do quiz
+         * @returns All Quiz's Questions
          */
         this.questions = []
         /**
-         * @returns Todos os reportes efetuados
+         * @returns Reports sended
          */
         this.reports = []
         /**
-         * @returns Todas os ID de canais em jogo
+         * @returns All channels's ID with game enabled
          */
         this.channelsInGames = []
+        /**
+         * @returns All users options to Quiz
+         */
+        this.usersOptions = []
     }
 
     async load() {
@@ -38,11 +43,11 @@ export default new class QuizManager {
         this.QuestionsIndications = clientData?.QuizQuestionsIndications || []
         this.reports = clientData?.QuizQuestionsReports || []
         const documents = await Database.Quiz.find({}).catch(() => []) || []
-
-        if (documents.find(doc => doc?.category == "SaveCategories")?.enableCategories?.length)
-            this.categories.push(...documents.find(doc => doc?.category == "SaveCategories")?.enableCategories)
+        const SaveCategoriesDocument = documents.find(doc => doc?.category == "SaveCategories")
 
         documents.splice(documents.findIndex(doc => doc?.category == "SaveCategories"), 1)
+        this.categories = SaveCategoriesDocument?.enableCategories || []
+        this.usersOptions = SaveCategoriesDocument.customGameOptions || []
         this.questions.push(...documents)
         return
     }

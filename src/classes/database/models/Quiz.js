@@ -11,5 +11,5 @@ export default model("Quiz", new Schema({
     suggestedBy: String,
     hits: { type: Number, default: 0 },
     misses: { type: Number, default: 0 },
-    usersTimePreference: Array
+    customGameOptions: Array
 }))

@@ -18,6 +18,12 @@ export default async interaction => {
             placeholder: 'Opções disponíveis',
             options: [
                 {
+                    label: 'Voltar para a página inicial',
+                    emoji: '⬅️',
+                    description: 'Voltar para o começo, lá pro início',
+                    value: 'back'
+                },
+                {
                     label: 'Indicar nova categoria',
                     emoji: '📨',
                     description: 'Indique uma nova categoria',
@@ -34,19 +40,13 @@ export default async interaction => {
                     emoji: "🧩",
                     description: "Iniciar uma partida do quiz",
                     value: 'play'
-                },
-                {
-                    label: 'Voltar para a página inicial',
-                    emoji: '⬅️',
-                    description: 'Voltar para o começo, lá pro início',
-                    value: 'back'
                 }
             ]
         }]
     }
 
     if (client.staff.includes(interaction.user.id))
-        components.components[0].options.unshift(
+        components.components[0].options.splice(1, 0,
             {
                 label: 'Analisar Reportes',
                 emoji: '🔎',

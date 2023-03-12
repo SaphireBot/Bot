@@ -1,7 +1,6 @@
-import { ButtonStyle } from "discord.js"
 import QuizManager from "../../../../../../classes/games/QuizManager.js"
 import { SaphireClient as client } from "../../../../../../classes/index.js"
-import { Emojis as e } from "../../../../../../util/util.js"
+import { Buttons, Emojis as e } from "../../../../../../util/util.js"
 import checkerQuiz from "../../../../../classes/buttons/quiz/checker.quiz.js"
 
 export default async interaction => {
@@ -27,25 +26,7 @@ export default async interaction => {
                 }
             }
         ],
-        components: [{
-            type: 1,
-            components: [
-                {
-                    type: 2,
-                    label: "Jogar",
-                    emoji: e.amongusdance,
-                    custom_id: JSON.stringify({ c: 'quiz', src: 'play' }),
-                    style: ButtonStyle.Success
-                },
-                {
-                    type: 2,
-                    label: "Mais Opções",
-                    emoji: e.saphireLendo,
-                    custom_id: JSON.stringify({ c: 'quiz', src: 'options' }),
-                    style: ButtonStyle.Primary
-                }
-            ]
-        }]
+        components: Buttons.QuizQuestionsFirstPage
     })
 
 }

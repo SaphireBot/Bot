@@ -1,3 +1,4 @@
+import { ButtonStyle } from "discord.js"
 import QuizManager from "../../../../classes/games/QuizManager.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
@@ -9,31 +10,29 @@ export default async interaction => {
         embeds: [],
         components: [{
             type: 1,
-            components: [{
-                type: 3,
-                custom_id: 'quizOptions',
-                placeholder: 'Opções disponíveis',
-                options: [
-                    {
-                        label: 'Indicar nova categoria',
-                        emoji: '📨',
-                        description: 'Indique uma nova categoria',
-                        value: 'newCategory',
-                    },
-                    {
-                        label: 'Indicar nova pergunta',
-                        emoji: '📨',
-                        description: 'Indique uma nova pergunta',
-                        value: 'newQuestion'
-                    },
-                    {
-                        label: 'Voltar para a página inicial',
-                        emoji: '⬅️',
-                        description: 'Voltar para o começo, lá pro início',
-                        value: 'back'
-                    }
-                ]
-            }]
+            components: [
+                {
+                    type: 2,
+                    label: 'Voltar',
+                    emoji: '⬅️',
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: interaction.user.id }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Segerir uma nova categoria',
+                    emoji: '📨',
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'newCategory', userId: interaction.user.id }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Segurir uma nova pergunta',
+                    emoji: '📨',
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'newQuestion', userId: interaction.user.id }),
+                    style: ButtonStyle.Primary
+                }
+            ]
         }]
     }).catch(() => { })
 

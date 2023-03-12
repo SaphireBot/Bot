@@ -41,19 +41,29 @@ export default async interaction => {
         }]
     }
 
-    return await interaction.reply({
+    return await interaction.update({
         content: `${e.CheckV} | Tudo ok! Agora é só escolher para qual categoria você quer mandar sua pergunta.`,
-        embeds: [], ephemeral: true,
+        embeds: [],
         components: [
             selectMenuObject,
             {
                 type: 1,
-                components: [{
-                    type: 2,
-                    label: 'Sugerir uma nova categoria',
-                    custom_id: JSON.stringify({ c: 'quiz', src: 'newCategory' }),
-                    style: ButtonStyle.Primary
-                }]
+                components: [
+                    {
+                        type: 2,
+                        label: 'Voltar',
+                        emoji: '⬅️',
+                        custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: interaction.user.id }),
+                        style: ButtonStyle.Primary
+                    },
+                    {
+                        type: 2,
+                        label: 'Sugerir uma nova categoria',
+                        emoji: '📨',
+                        custom_id: JSON.stringify({ c: 'quiz', src: 'newCategory' }),
+                        style: ButtonStyle.Primary
+                    }
+                ]
             }
         ]
     }).catch(() => { })
