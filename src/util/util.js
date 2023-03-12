@@ -7,7 +7,7 @@ const SaphireClientOptions = {
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildBans,
+        GatewayIntentBits.GuildModeration,
         GatewayIntentBits.GuildEmojisAndStickers,
         GatewayIntentBits.GuildIntegrations,
         GatewayIntentBits.GuildWebhooks,
@@ -20,7 +20,7 @@ const SaphireClientOptions = {
     ],
     sweepers: {
         users: {
-            filter: () => user => [!user.bot || user.id !== config.ownerId],
+            filter: () => user => !user.bot || user.id !== config.ownerId,
             interval: 14400
         },
         bans: {
@@ -79,7 +79,6 @@ const SaphireClientOptions = {
     ],
     allowedMentions: { parse: ['users', 'roles'] },
     closeTimeout: 6000,
-    shardCount: 1,
     failIfNotExists: false,
     waitGuildTimeout: 20000
 }

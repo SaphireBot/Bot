@@ -3,12 +3,11 @@ import { ShardManager as Shard } from './src/classes/index.js'
 import Statcord from 'statcord.js'
 // TODO: ATUALIZAR O STATCORD NO SISTEMA PRINCIPAL
 const { ShardingClient } = Statcord
-const { execArgv, env } = process
 
-const ShardManager = new Shard('./index.js', { execArgv })
+const ShardManager = new Shard('./index.js')
 
 new ShardingClient({
-    key: env.STATCORD_TOKEN,
+    key: process.env.STATCORD_TOKEN,
     manager: ShardManager,
     postCpuStatistics: true,
     postMemStatistics: true,

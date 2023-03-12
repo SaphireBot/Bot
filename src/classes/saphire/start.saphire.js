@@ -82,7 +82,7 @@ export default async () => {
     delay(5000)
     client.user.setPresence({
         activities: [
-            { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0}  servidores [Shard ${client.shardId} in Cluster ${client.clusterName}]` }
+            { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0} servidores\n[Shard ${client.shardId + 1}/${client.ws.shards.size} in Cluster ${client.clusterName}]` }
         ],
         status: 'idle'
     })

@@ -86,7 +86,7 @@ export default {
 
         async function pingShard() {
             const shardPings = client.ws.shards
-                .map((shard, i) => `\`${i}\` ${emojiFormat(shard.ping)}`)
+                .map((shard, i) => `\`${i + 1}\` ${emojiFormat(shard.ping)}`)
                 .join('\n')
 
             const data = {
