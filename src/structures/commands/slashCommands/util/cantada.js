@@ -49,7 +49,7 @@ export default {
             },
             {
                 name: '❤️‍🔥 Like Unlike Refresh',
-                value: 'Você pode dar like ❤️‍🔥 e 🖤 unlike em cada cantada.\nO 🔄️ Refresh é para mudar de cantada'
+                value: 'Você pode dar like ❤️‍🔥 e 🖤 unlike em cada cantada.\nO 🔄 Refresh é para mudar de cantada'
             }
         ]
     },

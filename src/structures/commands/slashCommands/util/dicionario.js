@@ -48,7 +48,7 @@ export default {
             embeds.push({
                 color: client.blue,
                 title: `🔍 Palavra Pesquisada: ${query.toLowerCase().captalize()}`.limit('MessageEmbedTitle'),
-                description: `${e.Info} ${result.sinonimos || 'Nenhum sinônino encontrado.'}\n🔄️ ${result.antonimos || 'Nenhum antônimo encontrado.'}\n✍️ ${result.etimologia || 'Sem etimogolia'}\n🇵 Plural: ${result.plural || 'Sem Plural'}\n💭 Separação Silábica: ${result.separacaoSilabica || 'Sem Separação'}`.limit('MessageEmbedDescription'),
+                description: `${e.Info} ${result.sinonimos || 'Nenhum sinônino encontrado.'}\n🔄 ${result.antonimos || 'Nenhum antônimo encontrado.'}\n✍️ ${result.etimologia || 'Sem etimogolia'}\n🇵 Plural: ${result.plural || 'Sem Plural'}\n💭 Separação Silábica: ${result.separacaoSilabica || 'Sem Separação'}`.limit('MessageEmbedDescription'),
             })
 
             for (let data of result.data) {

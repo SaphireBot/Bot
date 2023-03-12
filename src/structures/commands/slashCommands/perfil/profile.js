@@ -228,7 +228,7 @@ export default {
         clientData.TopGlobal?.Mix === user.id ? titles.push(`🔡 **Top Global Mix**`) : ''
         clientData.TopGlobal?.Jokempo === user.id ? titles.push(`✂️ **Top Global Jokempo**`) : ''
         clientData.TopGlobal?.TicTacToe === user.id ? titles.push(`#️⃣ **Top Global TicTacToe**`) : ''
-        clientData.TopGlobal?.Memory === user.id ? titles.push(`${e.duvida || '❔'} **Top Global Memory**`) : ''
+        clientData.TopGlobal?.Memory === user.id ? titles.push(`${e.SaphireWhat || '❔'} **Top Global Memory**`) : ''
         clientData.TopGlobal?.Forca === user.id ? titles.push(`😵 **Top Global Forca**`) : ''
         clientData.TopGlobal?.Flag === user.id ? titles.push(`🎌 **Top Global Flag Gaming**`) : ''
 

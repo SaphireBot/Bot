@@ -9,7 +9,7 @@ export default (emojis, e, limitedMode) => {
         .randomize()
         .map((emoji, i) => ({
             type: 2,
-            emoji: e.duvida,
+            emoji: e.SaphireWhat,
             custom_id: JSON.stringify(jsonData(i, emoji)),
             style: ButtonStyle.Secondary
         }))

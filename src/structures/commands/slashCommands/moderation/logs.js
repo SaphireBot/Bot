@@ -40,7 +40,7 @@ export default {
 
         if (configChannel) return setChannel()
 
-        const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
+        const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel || '0').catch(() => null)
 
         if (!logChannel)
             return await interaction.reply({
