@@ -1,7 +1,4 @@
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../classes/index.js"
+import { SaphireClient as client, Database } from "../../../../classes/index.js"
 import { Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 import disableLogs from "./disable.logs.js"
@@ -35,7 +32,8 @@ export default async ({ interaction, values: keys }) => {
         unban: logData?.LogSystem?.unban?.active || false,
         channels: logData?.LogSystem?.channels?.active || false,
         messages: logData?.LogSystem?.messages?.active || false,
-        mute: logData?.LogSystem?.mute?.active || false
+        mute: logData?.LogSystem?.mute?.active || false,
+        botAdd: logData?.LogSystem?.botAdd?.active || false
     }
 
     const toUpdate = {}
@@ -48,7 +46,8 @@ export default async ({ interaction, values: keys }) => {
             Desbanimento: "LogSystem.unban.active",
             Canais: "LogSystem.channels.active",
             Mensagens: "LogSystem.messages.active",
-            Mute: "LogSystem.mute.active"
+            Mute: "LogSystem.mute.active",
+            Bots: "LogSystem.botAdd.active"
         }[key]
 
         const result = {
@@ -57,7 +56,8 @@ export default async ({ interaction, values: keys }) => {
             Desbanimento: !baseData?.unban,
             Canais: !baseData?.channels,
             Mensagens: !baseData?.messages,
-            Mute: !baseData?.mute
+            Mute: !baseData?.mute,
+            Bots: !baseData?.bot
         }[key]
 
         if (!primaryKey && !result) continue;
@@ -81,8 +81,8 @@ export default async ({ interaction, values: keys }) => {
         { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
         { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
         { active: guildData?.LogSystem?.mute?.active || false, name: "Mute" },
-        { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
-        { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
+        { active: guildData?.LogSystem?.botAdd?.active || false, name: "Bots" },
+        { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" }
     ]
 
     const componentOptions = dataToArray.map(data => {
@@ -93,7 +93,8 @@ export default async ({ interaction, values: keys }) => {
             Expulsão: "🦶",
             Mute: "🔇",
             Canais: "💬",
-            Mensagens: "🗨"
+            Mensagens: "🗨",
+            Bots: "🤖"
         }[data.name] || e.Loading
 
         return {

@@ -1,5 +1,5 @@
 import { Colors, DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
-import { ApplicationCommandOptionType, PermissionsBitField, PermissionFlagsBits } from "discord.js";
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import notify from "../../../../functions/plugins/notify.js";
 
 export default {
@@ -55,8 +55,8 @@ export default {
             { active: guildData?.LogSystem?.channels?.active || false, name: "Canais" },
             { active: guildData?.LogSystem?.messages?.active || false, name: "Mensagens" },
             { active: guildData?.LogSystem?.mute?.active || false, name: "Mute" },
-            { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" },
-            { active: guildData?.LogSystem?.botAdd?.active || false, name: "BOT_ADD_LOGS_BUILDING" }
+            { active: guildData?.LogSystem?.botAdd?.active || false, name: "Bots" },
+            { active: guildData?.LogSystem?.roles?.active || false, name: "ROLES_LOGS_BUILDING" }
         ]
 
         const componentOptions = dataToArray.map(data => {
@@ -66,7 +66,8 @@ export default {
                 Expulsão: "🦶",
                 Mute: "🔇",
                 Canais: "💬",
-                Mensagens: "🗨"
+                Mensagens: "🗨",
+                Bots: "🤖"
             }[data.name] || e.Loading
 
             return {
