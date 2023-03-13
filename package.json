@@ -13,11 +13,11 @@
   "dependencies": {
     "@iamtraction/google-translate": "^2.0.1",
     "axios": "^1.3.4",
-    "better-sqlite3": "^8.1.0",
+    "better-sqlite3": "^8.2.0",
     "canvacord": "^5.4.8",
     "canvas": "^2.11.0",
     "discloud.app": "^0.6.7",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "lyrics-parse": "^1.1.1",
