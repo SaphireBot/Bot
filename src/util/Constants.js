@@ -707,6 +707,28 @@ const ErrorResponse = {
     50081: "Um sticker inválido foi enviado."
 }
 
+const PunishmentReasons = [
+    "Atividade suspeita.",
+    "Spam.",
+    "Conta comprometida/hackeada.",
+    "Comportamento desrespeitoso.",
+    "Quebrou uma ou mais regras do servidor.",
+    "Compartilhamento de links suspeitos/maliciosos.",
+    "Divulgação inapropriada.",
+    "Uso de vocabulário inaprópriado.",
+    "Preconceito de raça, genero e/ou cor.",
+    "Insubordinação para com os administradores.",
+    "Fuga de tópico com frequência.",
+    "Conteúdo inapropriado.",
+    "Perturbação da paz.",
+    "Não atende a idade mínima.",
+    "Uso inadequado de mensagens/imagens em canais de texto.",
+    "Uso inapropriado dos canais de voz.",
+    "Reações desnecessárias em mensagens de canais de texto.",
+    "Nome de usuário inadequado.",
+    "Avatar de perfil inadequado."
+]
+
 export {
     ConfigurationBase as Config,
     DiscordColors as ColorsTranslate,
@@ -721,5 +743,6 @@ export {
     ErrorsToIgnore,
     ErrorResponse,
     PermissionsBitToString,
-    ChannelsTypes
+    ChannelsTypes,
+    PunishmentReasons
 }
