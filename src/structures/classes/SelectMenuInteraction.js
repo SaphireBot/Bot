@@ -337,27 +337,27 @@ export default class SelectMenuInteraction extends Base {
             const questionTwo = embed.fields[4]?.value || embed.fields[2].value
             const edited = embed.fields[3] ? true : false
 
-            return Database.Rather.create({
+            new Database.Rather({
                 id: questionId,
                 authorId: authorId,
                 optionOne: { question: questionOne },
                 optionTwo: { question: questionTwo },
                 edited: edited
-            }, async function (error) {
-
-                if (error)
+            })
+                .save()
+                .then(async () => {
+                    await message.delete().catch(() => { })
                     return await interaction.reply({
-                        content: `${e.Deny} | Não foi possível salvar esta sugestão.`,
+                        content: `${e.Check} | Sugestão de pergunta criada com sucesso.`,
                         ephemeral: true
                     })
-
-                await message.delete().catch(() => { })
-                return await interaction.reply({
-                    content: `${e.Check} | Sujestão de pergunta criada com sucesso.`,
-                    ephemeral: true
                 })
-
-            })
+                .catch(async err => {
+                    await interaction.reply({
+                        content: `${e.Deny} | Não foi possível salvar esta sugestão.\n${e.bug} | \`${err}\``,
+                        ephemeral: true
+                    })
+                })
 
         }
 
