@@ -1,8 +1,7 @@
 import QuizManager from "./QuizManager.js";
-import { EventEmitter } from "events"
 import { Database } from "../index.js";
 
-export default class Quiz extends EventEmitter {
+export default class Quiz {
     constructor(interaction) {
         this.user = interaction.user
         this.channel = interaction.channel
@@ -16,7 +15,7 @@ export default class Quiz extends EventEmitter {
             gameRepeat: false,
             losePointAtError: false, // At button type
             shortRanking: true,
-            categories: QuizManager.categories,
+            categories: QuizManager.categories
         }
     }
 

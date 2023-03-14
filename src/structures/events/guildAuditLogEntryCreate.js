@@ -6,29 +6,90 @@ import integrationCreate from "./functions/integrationCreate.js";
 import integrationDelete from "./functions/integrationDelete.js";
 
 const guildEntriesFunctions = {
-    Guild: {},
+    Guild: {
+        // Create: Unused
+        // Delete: Unused
+        // Update: When a guild is updated
+        // All: ??
+    },
     Channel: {
         Create: channelCreate,
         Delete: channelDelete,
         // Update: channelUpdate is enable at event listener
+        // All: ??
     },
     User: {
-        // Delete: deleteUser
+        // Create: Unused
+        // Delete: Unused
+        // Update: Emit when a member changes his names
+        // All: ??
     },
-    Role: {},
-    Invite: {},
-    Webhook: {},
-    Emoji: {},
-    Message: {},
+    Role: {
+        // Create: When a role is created
+        // Delete: When a role is deleted
+        // Update: When a role is updated
+        // All: ??
+    },
+    Invite: {
+        // Create: When an invite is created
+        // Delete: When an invite is deleted
+        // Update: Unused
+        // All: ??
+    },
+    Webhook: {
+        // Create: When a webhook is created
+        // Delete: When a webhook is deleted
+        // Update: When a webhook is updated
+        // All: ??
+    },
+    Emoji: {
+        // Create: When an emoji is created
+        // Delete: When an emoji is deleted
+        // Update: When an emoji is updated
+        // All: ??
+    },
+    Message: {
+        // Create: Unused
+        // Delete: When a message is deleted from other user, different from the author
+        // Update: Unused
+        // All: ??
+    },
     Integration: {
         Create: integrationCreate,
-        Delete: integrationDelete
+        Delete: integrationDelete,
+        // Update: Unused
+        // All: ??
     },
-    StageInstance: {},
-    Sticker: {},
-    Thread: {},
-    GuildScheduledEvent: {},
-    ApplicationCommandPermission: {}
+    StageInstance: {
+        // Create: ??
+        // Delete: ??
+        // Update: ??
+        // All: ??
+    },
+    Sticker: {
+        // Create: When a sticker is created
+        // Delete: When a sticker is deleted
+        // Update: When a sticker is updated
+        // All: ??
+    },
+    Thread: {
+        // Create: When a thread is created
+        // Delete: When a thread is deleted
+        // Update: When a thread is updated
+        // All: ??
+    },
+    GuildScheduledEvent: {
+        // Create: When a guild schedule event is created
+        // Delete: When a guild schedule event is deleted
+        // Update: When a guild schedule event is updated
+        // All: ??
+    },
+    ApplicationCommandPermission: {
+        // Create: ??
+        // Delete: ??
+        // Update: ??
+        // All: ??
+    }
 }
 
 /**
