@@ -89,6 +89,12 @@ const guildEntriesFunctions = {
         // Delete: ??
         // Update: ??
         // All: ??
+    },
+    AutoModeration: { // This action type isn't documented
+        // Create: ??
+        // Delete: ??
+        // Update: When a configuration ou rule was update
+        // All: Emitted here, but why?
     }
 }
 
@@ -104,7 +110,6 @@ client.on('guildAuditLogEntryCreate', async (auditLogEntry, guild) => {
      */
 
     const { targetType, actionType } = auditLogEntry
-    if (actionType == 'All') return console.log(`${targetType} -> ${actionType}`)
     const execute = guildEntriesFunctions[targetType]?.[actionType]
     return execute?.(auditLogEntry, guild)
 })
