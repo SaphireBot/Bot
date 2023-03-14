@@ -23,7 +23,14 @@ export default async (interaction, document = false) => {
         gameRepeat: userOptions?.gameRepeat ? 'Sim' : 'Não',
         losePointAtError: userOptions?.losePointAtError ? 'Sim' : 'Não',
         shortRanking: userOptions?.shortRanking ? 'Sim' : 'Não',
-        categories: userOptions?.categories?.length ? userOptions.categories.map((category, i) => `\n${i + 1}. \`${category}\``).join('') || 'Todas' : 'Todas',
+        categories: userOptions?.categories?.length
+            ? userOptions.categories.map((category, i) => {
+                let num = i + 1
+                if (num < 10) num = `0${num}`
+                return `\n${num}. \`${category}\``
+            }).join('')
+            || 'Todas'
+            : 'Todas',
     }
 
     let fieldValue = 'Você ainda não definiu nenhuma configuração.'

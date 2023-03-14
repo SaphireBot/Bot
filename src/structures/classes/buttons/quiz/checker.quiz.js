@@ -1,4 +1,4 @@
-import Quiz from '../../../../classes/games/QuizManager.js';
+import QuizManager from '../../../../classes/games/QuizManager.js';
 import options from './options.quiz.js';
 import play from './play.quiz.js';
 import newQuizCategory from './newQuizCategory.quiz.js';
@@ -51,12 +51,12 @@ export default async (interaction, { src }) => {
         newQuizRefuse, editQuestion, newQuizCuriosity,
         newQuizEdition, questionInfo, editCategory,
         newQuizEditionAdmin, deleteQuestionRequest,
-        deleteQuestion, report: Quiz.newReport,
-        newCategory: Quiz.newCategory,
-        refuseModel: Quiz.defineRefuseReason,
+        deleteQuestion, report: QuizManager.newReport,
+        newCategory: QuizManager.newCategory,
+        refuseModel: QuizManager.defineRefuseReason,
         newQuizReport, reviewReports,
-        modalFeedback: Quiz.showModalFeedback,
-        addCuriosity: Quiz.addCuriosity,
+        modalFeedback: QuizManager.showModalFeedback,
+        addCuriosity: QuizManager.addCuriosity,
         custom, config, deleteConfig, newQuizCatEdit
     }[src]
 
@@ -69,8 +69,8 @@ export default async (interaction, { src }) => {
     if (interaction.customId == 'quizOptionsData')
         return viewCategoryConfig(interaction)
 
-    if (Quiz.categories.includes(src))
-        return Quiz.newQuestion(interaction, src)
+    if (QuizManager.categories.includes(src))
+        return QuizManager.newQuestion(interaction, src)
 
     if (interaction.customId.includes('newQuizfeedback'))
         return feedbackReport(interaction)
@@ -80,15 +80,14 @@ export default async (interaction, { src }) => {
         embeds: [], components: []
     }).catch(() => { })
 
-
     async function back() {
 
-        let userId = interaction.message?.interaction?.user?.id
-
-        if (!userId && interaction.customId.startsWith('{')) {
-            const customData = JSON.parse(interaction.customId)
-            if (customData.userId) userId = customData.userId
-        }
+        let userId = interaction.customId.startsWith('{')
+        ? (() => {
+            const customData = JSON.parse(interaction.customId || { })
+            if (customData?.userId) return customData.userId
+        })()
+        : interaction.message?.interaction?.user?.id
 
         if (userId && interaction.user.id !== userId)
             return await interaction.reply({
