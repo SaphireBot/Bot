@@ -27,6 +27,12 @@ import saveQuestion from './saveQuestion.quiz.js';
 import custom from './custom.quiz.js'
 import config from './config.quiz.js'
 import deleteConfig from './deleteConfig.quiz.js'
+import viewCategories from './viewCategories.quiz.js'
+import viewCategoryConfig from './viewCategoryConfig.quiz.js'
+import deleteCategory from './deleteCategory.quiz.js'
+import delCatAndQuestions from './delCatAndQuestions.quiz.js'
+import changeCategoryName from './changeCategoryName.quiz.js'
+import newQuizCatEdit from './newQuizCatEdit.quiz.js'
 import { Buttons, Emojis as e } from '../../../../util/util.js';
 import { SaphireClient as client } from '../../../../classes/index.js';
 
@@ -37,10 +43,10 @@ export default async (interaction, { src }) => {
         return await interaction.reply({ content: `${e.Deny} | \`src\` indefinido. #156484165`, ephemeral: true })
 
     const execute = {
-        options, play, back, editPainel,
-        newQuizCategory, reviewCategory,
-        acceptCategory, denyCategory,
-        newQuestion, newQuizQuestion,
+        options, play, back, editPainel, changeCategoryName,
+        newQuizCategory, reviewCategory, delCatAndQuestions,
+        acceptCategory, denyCategory, deleteCategory,
+        newQuestion, newQuizQuestion, viewCategories,
         reviewQuestion, acceptQuestion, saveQuestion,
         newQuizRefuse, editQuestion, newQuizCuriosity,
         newQuizEdition, questionInfo, editCategory,
@@ -51,27 +57,29 @@ export default async (interaction, { src }) => {
         newQuizReport, reviewReports,
         modalFeedback: Quiz.showModalFeedback,
         addCuriosity: Quiz.addCuriosity,
-        custom, config, deleteConfig
+        custom, config, deleteConfig, newQuizCatEdit
     }[src]
 
-    if (!execute) {
+    if (execute)
+        return await execute(interaction)
 
-        if (src.includes('editCategory'))
-            return newEditCategory(interaction)
+    if (src.includes('editCategory'))
+        return newEditCategory(interaction)
 
-        if (Quiz.categories.includes(src))
-            return Quiz.newQuestion(interaction, src)
+    if (interaction.customId == 'quizOptionsData')
+        return viewCategoryConfig(interaction)
 
-        if (interaction.customId.includes('newQuizfeedback'))
-            return feedbackReport(interaction)
+    if (Quiz.categories.includes(src))
+        return Quiz.newQuestion(interaction, src)
 
-        return await interaction.update({
-            content: `${e.DenyX} | Nenhuma função foi encontrada para esta interação. #13256987`,
-            embeds: [], components: []
-        }).catch(() => { })
-    }
+    if (interaction.customId.includes('newQuizfeedback'))
+        return feedbackReport(interaction)
 
-    return await execute(interaction)
+    return await interaction.update({
+        content: `${e.DenyX} | Nenhuma função foi encontrada para esta interação. #13256987`,
+        embeds: [], components: []
+    }).catch(() => { })
+
 
     async function back() {
 

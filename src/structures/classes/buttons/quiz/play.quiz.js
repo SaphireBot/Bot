@@ -1,6 +1,5 @@
 import { ButtonStyle } from "discord.js"
 import QuizManager from "../../../../classes/games/QuizManager.js"
-import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 export default async interaction => {

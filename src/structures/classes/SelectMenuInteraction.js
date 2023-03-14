@@ -52,6 +52,7 @@ export default class SelectMenuInteraction extends Base {
             logs: 'logsFunction',
             sign: 'chooseSign',
             quizOptions: 'quizOptions',
+            quizOptionsData: 'quizOptions',
             gender: 'chooseGender',
             signEphemeral: 'chooseSign',
             genderEphemeral: 'chooseGender',
@@ -92,7 +93,6 @@ export default class SelectMenuInteraction extends Base {
     }
 
     async quizOptions() {
-        
         if (!['reviewReports', 'reviewCategory', 'back', 'reviewQuestion', 'play'].includes(this.value)) await this.interaction.message.edit({ components: this.interaction.message.components }).catch(() => { })
         return checkerQuiz(this.interaction, { src: this.value })
     }

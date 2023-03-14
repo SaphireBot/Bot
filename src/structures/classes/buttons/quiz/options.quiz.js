@@ -48,6 +48,12 @@ export default async interaction => {
     if (client.staff.includes(interaction.user.id))
         components.components[0].options.splice(1, 0,
             {
+                label: 'Visualizar Categorias Ativas',
+                emoji: '🔎',
+                description: `${Quiz.categories.length} categorias salvas no banco de dados`,
+                value: 'viewCategories'
+            },
+            {
                 label: 'Analisar Reportes',
                 emoji: '🔎',
                 description: `${Quiz.reports.length} reportes em espera`,

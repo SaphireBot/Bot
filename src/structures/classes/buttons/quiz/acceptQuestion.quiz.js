@@ -3,6 +3,7 @@ import Quiz from "../../../../classes/games/QuizManager.js";
 import { ButtonStyle } from "discord.js";
 import { SaphireClient as client, Database } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
+import QuizManager from "../../../../classes/games/QuizManager.js";
 
 // Button Interaction
 export default async interaction => {
@@ -39,6 +40,33 @@ export default async interaction => {
         }).catch(() => { })
 
     const isAdminEdit = JSON.parse(interaction.customId)
+
+    if (!QuizManager.categories.includes(question.category)) {
+        embed.color = client.red
+        await interaction.update({
+            embeds: [embed, {
+                color: client.red,
+                title: `${e.DenyX} Categoria Inexistente`,
+                description: 'A categoria selecionada pelo usuário foi editada ou não existe.',
+                footer: { text: 'Location Code ID: #9153575887' }
+            }],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "Erro na Validação de Dados",
+                            custom_id: 'removed',
+                            style: ButtonStyle.Danger,
+                            disabled: true
+                        }
+                    ]
+                }
+            ]
+        }).catch(() => { })
+        return executeWebhook(question.webhookUrl, null, 'unknownCategory')
+    }
 
     return isAdminEdit?.type == 'admin'
         ? await Database.Quiz.findOneAndUpdate({ questionId: question.questionId }, {
@@ -111,7 +139,7 @@ export default async interaction => {
                             ]
                         }
                     ]
-                })
+                }).catch(() => { })
             })
         : new Database.Quiz({
             answers: question.answers,
@@ -163,9 +191,9 @@ export default async interaction => {
                             ]
                         }
                     ]
-                })
+                }).catch(() => { })
 
-                if (question.webhookUrl) return executeWebhook(question.webhookUrl, document._id)
+                if (question.webhookUrl) return executeWebhook(question.webhookUrl, document._id, 'success')
                 return
             })
             .catch(async reason => {
@@ -182,7 +210,8 @@ export default async interaction => {
                     Quiz.QuestionsIndications.splice(
                         Quiz.QuestionsIndications.findIndex(q => q.question == question.questionId), 1
                     )
-                }
+                    executeWebhook(question.webhookUrl, null, 'equal')
+                } else executeWebhook(question.webhookUrl, null, 'error')
 
                 embed.color = client.red
                 return await interaction.update({
@@ -220,13 +249,23 @@ export default async interaction => {
                             ]
                         }
                     ]
-                })
+                }).catch(() => { })
             })
 
-    async function executeWebhook(webhookUrl, documentId) {
-        return await axios.post(webhookUrl, {
-            content: `${e.Notification} | <@${question.suggestedBy}>, a sua pergunta para o *Quiz de Perguntas* foi **aceita**.\n${e.Info} | Pergunta: \`${question.question}\`\n🆔 | *${documentId}*`
-        })
+    async function executeWebhook(webhookUrl, documentId, type) {
+
+        if (!webhookUrl) return
+
+        const content = {
+            error: `${e.Notification} | <@${question.suggestedBy}>, a sua pergunta para o *Quiz de Perguntas* foi **perdida**.\n${e.Info} | Pergunta: \`${question.question}\`\n📝 | *Houve um erro no validador, por favor, mande sua indicação novamente.*`,
+            equal: `${e.Notification} | <@${question.suggestedBy}>, a sua pergunta para o *Quiz de Perguntas* foi **recusada**.\n${e.Info} | Pergunta: \`${question.question}\`\n📝 | *A sua pergunta já existe no banco de dados.*`,
+            unknownCategory: `${e.Notification} | <@${question.suggestedBy}>, a sua pergunta para o *Quiz de Perguntas* foi **perdida**.\n${e.Info} | Pergunta: \`${question.question}\`\n📝 | *A categoria selecionada foi editada ou não existe, por favor, manda sua indicação novamente.*`,
+            success: `${e.Notification} | <@${question.suggestedBy}>, a sua pergunta para o *Quiz de Perguntas* foi **aceita**.\n${e.Info} | Pergunta: \`${question.question}\`\n🆔 | *${documentId}*`
+        }[type]
+
+        if (!content) return
+
+        return await axios.post(webhookUrl, { content })
             .catch(() => { })
     }
 

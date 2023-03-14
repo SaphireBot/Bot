@@ -1,10 +1,10 @@
 import { REST, Routes, WebhookClient } from "discord.js"
-import fs from 'fs'
 import { Config } from "../../util/Constants.js"
+import fs from 'fs'
 const avatar = fs.readFileSync('./src/images/webhooks/anime_reporter.png', { encoding: 'base64' })
 const res = new REST().setToken(process.env.BOT_TOKEN_REQUEST)
 
-export default async (channelId) => {
+export default async channelId => {
 
     const webhook = await res.get(Routes.channelWebhooks(channelId))
         .catch(error => console.log(error.response.data))
@@ -19,7 +19,6 @@ export default async (channelId) => {
         headers: { 'Content-Type': 'image/png' }
     }).catch(error => console.log(error.response.data))
 
-    console.log(newWebhook)
     if (!newWebhook) return
     return new WebhookClient({ url: `https://discord.com/api/webhooks/${newWebhook.id}/${newWebhook.token}` })
 }

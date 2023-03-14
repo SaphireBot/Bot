@@ -43,6 +43,7 @@ client.on('guildAuditLogEntryCreate', async (auditLogEntry, guild) => {
      */
 
     const { targetType, actionType } = auditLogEntry
-    const execute = guildEntriesFunctions[targetType][actionType]
+    if (actionType == 'All') return console.log(`${targetType} -> ${actionType}`)
+    const execute = guildEntriesFunctions[targetType]?.[actionType]
     return execute?.(auditLogEntry, guild)
 })

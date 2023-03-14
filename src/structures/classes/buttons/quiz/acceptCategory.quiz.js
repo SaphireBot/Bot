@@ -81,7 +81,7 @@ export default async interaction => {
         return await axios.post(indicationData.webhookUrl, {
             username: "Saphire Global System Notification",
             avatarURL: "./src/images/webhooks/anime_reporter.png",
-            content: `${e.Notification} | <@${indicationData.userId}>, sua indicação para uma nova categoria no comando \`/quiz personagens\` foi **aceita**.\n${e.Info} | Categoria indicada: \`${indicationData.category}\``,
+            content: `${e.Notification} | <@${indicationData.userId}>, sua indicação para uma nova categoria no comando \`/quiz perguntas\` foi **aceita**.\n${e.Info} | Categoria indicada: \`${indicationData.category}\``,
             "content-type": "application/json"
         })
             .catch(() => { })

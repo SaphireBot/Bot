@@ -120,14 +120,14 @@ const Buttons = {
             components: [
                 {
                     type: 2,
-                    label: 'Segerir uma nova categoria',
+                    label: 'Sugerir uma nova categoria',
                     emoji: '📨',
                     custom_id: JSON.stringify({ c: 'quiz', src: 'newCategory' }),
                     style: ButtonStyle.Primary
                 },
                 {
                     type: 2,
-                    label: 'Segurir uma nova pergunta',
+                    label: 'Sugerir uma nova pergunta',
                     emoji: '📨',
                     custom_id: JSON.stringify({ c: 'quiz', src: 'newQuestion' }),
                     style: ButtonStyle.Primary

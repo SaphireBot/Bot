@@ -1,7 +1,8 @@
-import Database from "../database/Database.js";
 import QuizManager from "./QuizManager.js";
+import { EventEmitter } from "events"
+import { Database } from "../index.js";
 
-export default class Quiz {
+export default class Quiz extends EventEmitter {
     constructor(interaction) {
         this.user = interaction.user
         this.channel = interaction.channel

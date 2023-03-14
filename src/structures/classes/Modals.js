@@ -4,6 +4,31 @@ export default new class Modals {
         return { ...this }
     }
 
+    newCategoryName = category => {
+        return {
+            title: "Edição de Nome da Categoria",
+            custom_id: JSON.stringify({ c: "newQuizCatEdit", src: category }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "categoryName",
+                            label: "Nome da Categoria",
+                            style: 1,
+                            min_length: 3,
+                            max_length: 50,
+                            placeholder: "Digite o nome da categoria",
+                            required: true,
+                            value: category
+                        }
+                    ]
+                } // MAX: 5 Fields
+            ]
+        }
+    }
+
     addCuriosity = question => {
 
         const components = []
