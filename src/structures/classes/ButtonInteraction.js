@@ -79,6 +79,7 @@ export default class ButtonInteraction extends Base {
             cantada: [executeCantada, this, commandData],
             amongus: [executeAmongus, this, commandData],
             bet: [indexBet, this, commandData],
+            removeReaction: [this.removeReaction, this, commandData],
             chat: [this.sendGlobalChatModel, this]
         }[commandData.c]
 
@@ -100,6 +101,38 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
+    }
+
+    async removeReaction({ interaction, customId, channel }, customData) {
+
+        if (customId == 'cancel')
+            return await interaction.update({
+                content: `${e.CheckV} | Comando cancelado com sucesso.`,
+                embeds: [], components: []
+            }).catch(() => { })
+
+        const message = await channel.messages.fetch(customData.messageId || '0').catch(() => null)
+
+        if (!message)
+            return await interaction.update({
+                content: `${e.DenyX} | A mensagem selecionada não foi encontrada.`,
+                embeds: [], components: []
+            }).catch(() => { })
+
+        return message.reactions.removeAll()
+            .then(async () => {
+                return await interaction.update({
+                    content: `${e.CheckV} | Todas as reações da [mensagem](${message.url}) foram removidas.`,
+                    embeds: [], components: []
+                }).catch(() => { })
+            })
+            .catch(async err => {
+                return await interaction.update({
+                    content: `${e.DenyX} | Não foi possível remover as reações da [mensagem](${message.url})\n${e.bug} | \`${err}\``,
+                    embeds: [], components: []
+                }).catch(() => { })
+            })
+
     }
 
     async sendGlobalChatModel({ interaction, customId }) {
