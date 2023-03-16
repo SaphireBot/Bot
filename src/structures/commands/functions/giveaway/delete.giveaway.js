@@ -54,6 +54,14 @@ export default async (interaction, guildData, giveawayId) => {
             if (customId === 'cancel') return collector.stop()
 
             Database.deleteGiveaway(gwId, guild.id)
+
+            const channel = await guild.channels.fetch(sorteio?.ChannelId || '0').catch(() => null)
+
+            if (channel) {
+                const message = await channel.messages.fetch(gwId || '0').catch(() => null)
+                if (message) message.delete().catch(() => { })
+            }
+
             return await int.update({
                 content: `${e.Check} | Sorteio deletado com sucesso!`,
                 components: []
