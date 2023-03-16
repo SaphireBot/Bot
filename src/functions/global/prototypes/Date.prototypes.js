@@ -92,22 +92,51 @@ Date.prototype.constructor.thirteen = (formatBr = false) => {
 
 Date.prototype.constructor.stringDate = ms => {
 
-    if (!ms || isNaN(ms)) return '0 segundo'
+    if (!ms || isNaN(ms) || ms <= 0) return '0 segundo'
 
     const translate = {
-        days: (n) => n == 1 ? 'dia' : 'dias',
-        hours: (n) => n == 1 ? 'hora' : 'horas',
-        minutes: (n) => n == 1 ? 'minuto' : 'minutos',
-        seconds: (n) => n == 1 ? 'segundo' : 'segundos'
+        millennia: n => n == 1 ? 'milênio' : 'milênios',
+        century: n => n == 1 ? 'século' : 'séculos',
+        years: n => n == 1 ? 'ano' : 'anos',
+        months: n => n == 1 ? 'mês' : 'mêses',
+        days: n => n == 1 ? 'dia' : 'dias',
+        hours: n => n == 1 ? 'hora' : 'horas',
+        minutes: n => n == 1 ? 'minuto' : 'minutos',
+        seconds: n => n == 1 ? 'segundo' : 'segundos'
     }
 
-    const date = parsems(ms)
-    const entries = Object.entries(date)
+    const date = { millennia: 0, century: 0, years: 0, months: 0, ...parsems(ms) }
+
+    if (date.days >= 365)
+        while (date.days >= 365) {
+            date.years++
+            date.days -= 365
+        }
+
+    if (date.days >= 30)
+        while (date.days >= 30) {
+            date.months++
+            date.days -= 30
+        }
+
+    if (date.years >= 1000)
+        while (date.years >= 1000) {
+            date.millennia++
+            date.years -= 1000
+        }
+
+    if (date.years >= 100)
+        while (date.years >= 365) {
+            date.century++
+            date.years -= 100
+        }
+
+    const timeSequency = ['millennia', 'century', 'years', 'months', 'days', 'hours', 'minutes', 'seconds']
     let result = ''
 
-    for (let d of entries)
-        if (d[1] > 0 && translate[d[0]])
-            result += `${d[1]} ${translate[d[0]](d[1])} `
+    for (let time of timeSequency)
+        if (date[time] > 0)
+            result += `${date[time]} ${translate[time](date[time])} `
 
     return result?.trim()
 }

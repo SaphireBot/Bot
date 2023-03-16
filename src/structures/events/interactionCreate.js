@@ -9,6 +9,7 @@ import {
 import { Emojis as e } from '../../util/util.js'
 
 client.on('interactionCreate', async interaction => {
+    client.interactions++
 
     if (!interaction) return
 
@@ -18,7 +19,6 @@ client.on('interactionCreate', async interaction => {
             ephemeral: true
         })
 
-    client.interactions++
     if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) return new SlashCommandInteraction(interaction).CheckBeforeExecute()
     if (interaction.isButton()) return new ButtonInteraction(interaction).execute()
     if (interaction.isAnySelectMenu()) return new SelectMenuInteraction(interaction).filterAndChooseFunction()

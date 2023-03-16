@@ -1,14 +1,11 @@
 import { ChannelType } from 'discord.js';
-import {
-    SaphireClient as client,
-    Experience,
-    Database
-} from '../../classes/index.js'
+import { SaphireClient as client, Experience, Database } from '../../classes/index.js'
 import { DiscordPermissons } from '../../util/Constants.js';
 import { Emojis as e } from '../../util/util.js'
 import afkSystem from './system/afk.system.js'
 
 client.on('messageCreate', async message => {
+    client.messages++
 
     // Ideia original dada por André - 648389538703736833
     if (message.channel.type === ChannelType.GuildAnnouncement) {

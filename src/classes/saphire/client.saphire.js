@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { Client, Collection, Guild } from 'discord.js'
 import { ClientOptions } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import { Database } from '../index.js'
+import { Database, Discloud } from '../index.js'
 import * as TopGG from 'topgg-autoposter'
 import axios from 'axios'
 
@@ -103,6 +103,7 @@ export default new class SaphireClient extends Client {
          * @returns Número de interações criadas após inicialização do client
          */
         this.interactions = 0
+        this.messages = 0
 
         /**
          * @returns Heartbeat
@@ -144,6 +145,24 @@ export default new class SaphireClient extends Client {
          */
         this.animes = []
 
+        /**
+         * @returns Tempo restante em millisegundos para reinicio da aplicação
+         */
+        this.timeRemaingToRestart = 0
+
+        /**
+         * @returns Next 02:00am [new Date().valueOf()]
+         */
+        this.twoAm = 0
+
+        /**
+         * @retuns Tempo primário do uptime
+         */
+        this.uptimeAllTime = {
+            primary: 0,
+            accumulate: 0
+        }
+
     }
 
     /**
@@ -184,6 +203,18 @@ export default new class SaphireClient extends Client {
         if (this.clientData.Administradores) this.admins = [...this.clientData.Administradores]
         if (this.clientData.Moderadores) this.mods = [...this.clientData.Moderadores]
         this.staff = [...this.admins, ...this.mods]
+
+        if (!this.clientData?.uptime?.primary) {
+            await Database.Client.updateOne(
+                { id: this.user.id },
+                { $set: { 'uptime.primary': new Date() }, $inc: { 'uptime.accumulate': 10000 } },
+                { upsert: true }
+            )
+        }
+
+        this.uptimeAllTime.accumulate = this.clientData?.uptime?.accumulate || 0
+        this.uptimeAllTime.primary = this.clientData?.uptime?.primary || new Date()
+
         return
     }
 
@@ -223,5 +254,23 @@ export default new class SaphireClient extends Client {
 
         if (newGuild)
             return new Guild(this, guildData)
+    }
+
+    async calculateReload() {
+        const date = new Date()
+        if (date.getHours() >= 2) date.setDate(date.getDate() + 1)
+        date.setHours(2, 0, 0, 0)
+        const twoAm = date.valueOf()
+        const timeRemaing = twoAm - Date.now()
+        this.timeRemaingToRestart = timeRemaing
+        this.twoAm = twoAm
+        if (this.user.id == this.canaryId) return
+        return setTimeout(() => this.reload(), timeRemaing)
+    }
+
+    async reload() {
+        this.restart = `${e.Loading} | Reinicialização Automática Programada.`
+        await Discloud.apps.restart('saphire').catch(() => { })
+        return
     }
 }

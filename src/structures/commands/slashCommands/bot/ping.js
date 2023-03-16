@@ -1,4 +1,4 @@
-import { Discloud } from "../../../../classes/index.js"
+import { Discloud, SaphireClient as client } from "../../../../classes/index.js"
 import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import axios from "axios"
 import mongoose from "mongoose"
@@ -26,7 +26,7 @@ export default {
             ]
         }
     ],
-    async execute({ interaction, client, e }, commandData) {
+    async execute({ interaction, e }, commandData) {
 
         const toRefresh = commandData?.c
 
@@ -40,36 +40,43 @@ export default {
             : await interaction.reply({ content: `${e.Loading} | Pinging...`, fetchReply: true })
 
         const replayPing = Date.now() - interaction.createdAt.valueOf()
-
         let toSubtract = Date.now()
+        const calculate = () => Date.now() - toSubtract
 
-        const saphireAPI = await axios.get("https://ways.discloud.app/ping", { timeout: 10000 })
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => emojiFormat())
+        const timeResponse = await Promise.all([
+            axios.get("https://ways.discloud.app/ping", { timeout: 10000 }).then(() => calculate()).catch(() => null),
+            axios.get("https://top.gg/api/bots/912509487984812043", { headers: { authorization: process.env.TOP_GG_TOKEN }, timeout: 10000 }).then(() => calculate()).catch(() => null),
+            axios.get("https://saphire.one", { timeout: 10000 }).then(() => calculate()).catch(() => null),
+            Discloud.user.fetch().then(() => calculate()).catch(() => null),
+            mongoose.connection.db.admin().ping().then(() => calculate()).catch(() => null)
+        ])
 
-        toSubtract = Date.now()
-        const topGG = await axios.get("https://top.gg/api/bots/912509487984812043",
-            { headers: { authorization: process.env.TOP_GG_TOKEN }, timeout: 10000 })
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => emojiFormat())
+        const timeString = [
+            `${e.api} | Saphire API Latency:`,
+            `${e.topgg} | Top.gg API Latency:`,
+            `🌐 | Saphire Site Latency:`,
+            `${e.discloud} | Discloud API Latency:`,
+            `${e.Database} | Database Response Latency:`
+        ]
 
-        toSubtract = Date.now()
-        const saphireSite = await axios.get("https://saphire.one", { timeout: 10000 })
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => emojiFormat())
+        const requests = timeResponse.map((value, i) => `${timeString[i]} ${emojiFormat(value)}`).join('\n')
 
-        toSubtract = Date.now()
-        const discloudAPI = await Discloud.user.fetch()
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => emojiFormat())
+        const hourRemaingBattery = [
+            { hour: [2, 3, 4, 5, 6], emoji: e.batteryComplete },
+            { hour: [7, 8, 9, 10], emoji: e.batteryAlmostComplete },
+            { hour: [11, 12, 13, 14], emoji: e.batteryDischarging },
+            { hour: [15, 16, 17, 18], emoji: e.batteryMiddle },
+            { hour: [19, 20, 21, 22], emoji: e.batteryEnding },
+            { hour: [23, 24, 0, 1], emoji: e.batteryDying }
+        ].find(data => data.hour.includes(new Date().getHours()))
 
-        toSubtract = Date.now()
-        const databasePing = await mongoose.connection.db.admin().ping()
-            .then(() => `${emojiFormat(Date.now() - toSubtract)}`)
-            .catch(() => emojiFormat())
-
+        const { primary, accumulate } = client.uptimeAllTime
+        const timeDifference = primary.valueOf() // 100% all time online
+        let result = (timeDifference / (Date.now() - accumulate)) * 100
+        if (result > 100) result = 100
+        
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)}\n💓 | ${client.Heartbeat} WS Discord Pinging Counter\n${e.slash} | Interações: ${client.interactions || 0}\n🌐 | Saphire Site Latency: ${saphireSite}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${e.discloud} | Discloud API Latency: ${discloudAPI || 0}\n${e.topgg} | Top.gg API Latency: ${topGG}\n${e.api} | Saphire API Latency: ${saphireAPI}\n${e.Database} | Database Response Latency: ${databasePing}\n⚡ | Interaction Response: ${emojiFormat(replayPing)}`,
+            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)} - (${result.toFixed(2)}%)\n${hourRemaingBattery.emoji} | ${Date.stringDate(client.twoAm - Date.now())} para o reinício\n${e.slash} | ${client.interactions.currency() || 0} interações com ${client.messages.currency() || 0} mensagens\n⚡ | Interaction Response: ${emojiFormat(replayPing)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${requests}`,
             components: [
                 {
                     type: 1,
@@ -82,7 +89,7 @@ export default {
                     }]
                 }
             ]
-        })
+        }).catch(() => { })
 
         async function pingShard() {
             const shardPings = client.ws.shards

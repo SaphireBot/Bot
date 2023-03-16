@@ -3,6 +3,10 @@ const { Schema, model } = Mongoose
 
 export default model("Client", new Schema({
     id: { type: String, unique: true },
+    uptime: {
+        primary: Date,
+        accumulate: Number
+    },
     Timeouts: { RestoreDividas: Number },
     ComandosUsados: Number,
     CommandsCount: Object,

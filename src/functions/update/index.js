@@ -13,6 +13,13 @@ export default async () => {
         client.setMemes()
         client.setCantadas()
         Experience.set()
+
+        client.uptimeAllTime.accumulate += 1000 * 60
+        await Database.Client.updateOne(
+            { id: client.user.id },
+            { $inc: { 'uptime.accumulate': 1000 * 60 } }
+        )
+
     }, 1000 * 60)
 
     setInterval(async () => {

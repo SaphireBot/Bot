@@ -87,5 +87,5 @@ export default async () => {
         status: 'idle'
     })
 
-    return
+    return client.calculateReload()
 }
