@@ -256,7 +256,7 @@ export default new class SaphireClient extends Client {
             return new Guild(this, guildData)
     }
 
-    async calculateReload() {
+    calculateReload() {
         const date = new Date()
         if (date.getHours() >= 2) date.setDate(date.getDate() + 1)
         date.setHours(2, 0, 0, 0)
