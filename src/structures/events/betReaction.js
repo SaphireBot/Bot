@@ -6,7 +6,6 @@ import newBetUser from '../commands/slashCommands/economy/bet/functions/addPlaye
 client.on('betReaction', async ({ message, user, emojiName }) => {
 
     const betCachedData = await Database.Cache.Bet.get(message.id)
-
     if (!betCachedData) {
         message.reactions.removeAll().catch(() => { })
         return await message.edit({
