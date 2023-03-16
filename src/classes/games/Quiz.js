@@ -1,8 +1,9 @@
 import QuizManager from "./QuizManager.js";
 import custom from "../../structures/classes/buttons/quiz/custom.quiz.js";
-import { SaphireClient as client } from "../index.js";
+import { Database, SaphireClient as client } from "../index.js";
 import { ButtonStyle } from "discord.js";
 import { Emojis as e } from "../../util/util.js";
+import keyboardQuizGame from "./quiz/keyboard.quizGame.js";
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default class Quiz {
@@ -12,11 +13,7 @@ export default class Quiz {
         this.user = interaction.user
         this.guild = interaction.guild
         this.channel = interaction.channel
-        this.data = {
-            rounds: 0,
-            hits: 0,
-            misses: 0
-        }
+        this.data = { rounds: 0, hits: 0, misses: 0, timeBonus: 0 }
         this.options = {}
         this.stop = false
         this.questions = QuizManager.questions
@@ -65,7 +62,7 @@ export default class Quiz {
             embeds: [{
                 color: client.blue,
                 title: `${e.QuizLogo} ${client.user.username}'s Quiz Questions Game`,
-                description: `${e.CheckV} Tudo certo para iniciar o jogo.\n${content}\n⏱️ Você tem esse tempo para escolher: ${Date.Timestamp(21000, 'R')}`
+                description: `${e.CheckV} Tudo certo para iniciar o jogo.\n${content}\n⏱️ Tempo restante para escolha: ${Date.Timestamp(21000, 'R')}`
             }],
             components: [{
                 type: 1,
@@ -105,7 +102,7 @@ export default class Quiz {
             .then(message => this.askPreferenceCollector(message))
             .catch(async err => {
                 this.unregister()
-                return await this.message.edit({
+                return await this.updateMessage({
                     content: `${e.DenyX} | Não foi possível solicitar a inicialização do Quiz.\n${e.bug} | \`${err}\``,
                     embeds: [],
                     components: [
@@ -122,12 +119,13 @@ export default class Quiz {
                             ]
                         }
                     ]
-                }).catch(() => { })
+                })
             })
     }
 
     async askPreferenceCollector(message) {
 
+        this.message = message
         const userId = this.user.id
 
         return message.createMessageComponentCollector({
@@ -162,22 +160,18 @@ export default class Quiz {
                         embed.color = client.red
                     }
 
-                    return await message.edit({
+                    return await this.updateMessage({
                         embeds: [embed],
-                        components: [
-                            {
-                                type: 1,
-                                components: [
-                                    {
-                                        type: 2,
-                                        label: 'Voltar',
-                                        emoji: '⬅️',
-                                        custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: userId }),
-                                        style: ButtonStyle.Primary
-                                    }
-                                ]
-                            }
-                        ]
+                        components: [{
+                            type: 1,
+                            components: [{
+                                type: 2,
+                                label: 'Voltar',
+                                emoji: '⬅️',
+                                custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: userId }),
+                                style: ButtonStyle.Primary
+                            }]
+                        }]
                     })
                 }
 
@@ -193,14 +187,14 @@ export default class Quiz {
             custom: 'as suas preferências'
         }[preferenceType]
 
-        this.message = await int.update({
+        await int.update({
             content: `${e.Loading} | Carregando ${preferenceText} e juntando as perguntas espalhadas por todo o Discord...`,
-            embeds: [], components: [], fetchReply: true
-        }).catch(() => {
+            embeds: [], components: []
+        }).catch(err => {
             this.stop = true
             this.unregister()
             return this.channel.send({
-                content: `${e.cry} | Quaaal éh!! Sabe que não pode apagar uma mensagem que está carregando, não? O Quiz de Perguntas foi canceladinho.`
+                content: `${e.cry} | Quaaal éh!! Deu algum erro mistíco aqui... O Quiz de Perguntas foi canceladinho.\n${e.bug} | \`${err}\``
             }).catch(() => { })
         })
 
@@ -227,7 +221,7 @@ export default class Quiz {
 
         if (!this.questions?.length) {
             this.unregister()
-            return await this.message.edit({
+            return await this.updateMessage({
                 content: `${e.DenyX} | Por alguma razão neste universo, um total de 0 perguntas foram carregadas, acredita?`
             }).catch(() => { })
         }
@@ -238,8 +232,9 @@ export default class Quiz {
             ? 'padrão'
             : await getUser()
 
-        await this.message.edit({
-            content: `${e.CheckV} | Preferências e perguntas carregadas. PREPARE-SE!\n${e.Loading} | Embaralhando um total de **${this.questions?.length} perguntas** em **${this.options.categories.length} categorias** seguindo a **preferência ${userPreference}**.`
+        await this.updateMessage({
+            content: `${e.CheckV} | Preferências e perguntas carregadas. PREPARE-SE!\n${e.Loading} | Embaralhando um total de **${this.questions?.length} perguntas** em **${this.options.categories.length} categorias** seguindo a **preferência ${userPreference}**.`,
+            fetchReply: true
         })
             .then(async () => {
                 await this.randomizeQuestion()
@@ -255,11 +250,11 @@ export default class Quiz {
 
                 return await this.lauch(this.options.gameType, question)
             })
-            .catch(() => {
+            .catch(err => {
                 this.stop = true
                 this.unregister()
                 return this.channel.send({
-                    content: `${e.cry} | A mensagem foi deletadaaaaa. O quiz também foi...`
+                    content: `${e.cry} | Não foi possível mandar a mensageeeem.\n${e.bug} | \`${err}\``
                 }).catch(() => { })
             })
 
@@ -278,19 +273,13 @@ export default class Quiz {
     }
 
     async lauch(gameType, question) {
-        if (this.stop) return
-        this.data.rounds++
-        const embed = {
-            color: client.blue,
-            title: `${e.QuizLogo} ${client.user.username}'s Quiz Game`,
-            description: `${e.QuestionMark} **${question.question}**\n \n⏱️ ${Date.Timestamp(this.options.responseTime, 'R')}`,
-        }
 
-        await this.message.delete().catch(() => { })
-        this.message = await this.message.channel.send({
-            content: `⏱️ | ${Date.Timestamp(this.options.responseTime, 'R')}\n📝 | Categoria ${question.category}\n${e.QuestionMark} | **${question.question}**`, embeds: [],
-            fetchReply: true
-        })
+        const execute = {
+            keyboard: keyboardQuizGame,
+            // buttons: buttonQuizGame
+        }[gameType]
+
+        if (execute) await execute(question, this)
     }
 
     getQuestion() {
@@ -299,5 +288,57 @@ export default class Quiz {
 
     unregister() {
         return QuizManager.unregisterChannel(this.channel.id)
+    }
+
+    async deleteMessage() {
+        return await this.message.delete().catch(() => { })
+    }
+
+    async channelSend({ content = null, embeds = [], components = [] }) {
+        return await this.channel.send({ content, embeds, components }).catch(() => { })
+    }
+
+    async updateMessage({ content = null, embeds = [], components = [], fetchReply = false }) {
+
+        return await this.message?.edit({ content, embeds, components, fetchReply })
+            .then(message => {
+                if (fetchReply) this.message = message
+                return;
+            })
+            .catch(err => {
+                this.stop = true
+                this.unregister()
+                this.channelSend({ content: `${e.DenyX} | Não foi possível editar a mensagem do Quiz...\n${e.bug} | \`${err}\`` })
+            })
+    }
+
+    async addHitsAndMisses(questionId, hitsAmount, missesAmount) {
+        await Database.Quiz.updateOne(
+            { questionId },
+            { $inc: { hits: hitsAmount, misses: missesAmount } }
+        )
+        const index = QuizManager.questions.findIndex(q => q.questionId == questionId)
+        if (index >= 0) {
+            QuizManager.questions[index].hits += hitsAmount
+            QuizManager.questions[index].misses += missesAmount
+        }
+        return
+    }
+
+    calculateTime(correctQuestionAnswer) {
+        if (!correctQuestionAnswer) return
+        const words = correctQuestionAnswer.split(" ").length
+        for (let i = 0; i < words; i++)
+            this.data.timeBonus += 500
+        return
+    }
+
+    async finalize() {
+        console.log(this.data)
+    }
+
+    async addUsersPoint(usersId = []) {
+        if (typeof usersId == 'string') usersId = [usersId]
+        await Database.User.updateMany({ id: { $in: usersId } }, { $inc: { "GamingCount.QuizQuestions": 1 } }, { upsert: true })
     }
 }

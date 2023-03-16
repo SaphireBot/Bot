@@ -46,7 +46,5 @@ export default async interaction => {
         })
 
     QuizManager.channelsInGames.push(channel.id)
-
     return new Quiz(interaction).askPreference()
-
 }

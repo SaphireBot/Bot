@@ -90,7 +90,7 @@ Date.prototype.constructor.thirteen = (formatBr = false) => {
 
 }
 
-Date.prototype.constructor.stringDate = ms => {
+Date.prototype.constructor.stringDate = (ms, withMilliseconds = false) => {
 
     if (!ms || isNaN(ms) || ms <= 0) return '0 segundo'
 
@@ -102,10 +102,16 @@ Date.prototype.constructor.stringDate = ms => {
         days: n => n == 1 ? 'dia' : 'dias',
         hours: n => n == 1 ? 'hora' : 'horas',
         minutes: n => n == 1 ? 'minuto' : 'minutos',
-        seconds: n => n == 1 ? 'segundo' : 'segundos'
+        seconds: n => n == 1 ? 'segundo' : 'segundos',
+        milliseconds: n => n == 1 ? 'milisegundo' : 'milisegundos'
     }
 
     const date = { millennia: 0, century: 0, years: 0, months: 0, ...parsems(ms) }
+
+    if (!withMilliseconds) {
+        delete date.milliseconds
+        delete translate.milliseconds
+    }
 
     if (date.days >= 365)
         while (date.days >= 365) {
@@ -131,7 +137,7 @@ Date.prototype.constructor.stringDate = ms => {
             date.years -= 100
         }
 
-    const timeSequency = ['millennia', 'century', 'years', 'months', 'days', 'hours', 'minutes', 'seconds']
+    const timeSequency = ['millennia', 'century', 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds']
     let result = ''
 
     for (let time of timeSequency)

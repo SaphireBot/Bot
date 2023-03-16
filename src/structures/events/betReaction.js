@@ -1,7 +1,4 @@
-import {
-    Database,
-    SaphireClient as client
-} from '../../classes/index.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import realizeBet from '../commands/slashCommands/economy/bet/functions/realize.bet.js'
 import newBetUser from '../commands/slashCommands/economy/bet/functions/addPlayer.bet.js'
@@ -9,7 +6,7 @@ import newBetUser from '../commands/slashCommands/economy/bet/functions/addPlaye
 client.on('betReaction', async ({ message, user, emojiName }) => {
 
     const betCachedData = await Database.Cache.Bet.get(message.id)
-    
+
     if (!betCachedData) {
         message.reactions.removeAll().catch(() => { })
         return await message.edit({

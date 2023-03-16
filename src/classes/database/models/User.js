@@ -24,7 +24,8 @@ export default model("User", new Schema({
         FlagCount: Number,
         AnimeThemeCount: Number,
         QuizAnime: Number,
-        Logomarca: Number
+        Logomarca: Number,
+        QuizQuestions: Number
     },
     Timeouts: {
         Bug: Number,
