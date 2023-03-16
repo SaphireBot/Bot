@@ -176,8 +176,8 @@ export default new class QuizManager {
     }
 
     unregisterChannel(channelId) {
-        this.channelsInGames.splice(this.channelsInGames.findIndex(channelId), 1);
-        return
+        if (!this.channelsInGames.includes(channelId)) return
+        return this.channelsInGames.splice(this.channelsInGames.findIndex(id => id == channelId), 1)
     }
 
     async getUserTimePreference(userId) {

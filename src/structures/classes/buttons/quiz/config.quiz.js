@@ -165,17 +165,17 @@ export default async interaction => {
                             type: 2,
                             label: 'Remover',
                             emoji: '😎',
-                            custom_id: 'remove',
+                            custom_id: 'true',
                             style: ButtonStyle.Primary,
-                            disabled: customData.losePointAtError == 'remove'
+                            disabled: customData.losePointAtError == 'true'
                         },
                         {
                             type: 2,
                             label: 'Não Remover [Padrão]',
                             emoji: '🫠',
-                            custom_id: 'doNotRemove',
+                            custom_id: 'false',
                             style: ButtonStyle.Primary,
-                            disabled: customData.losePointAtError == 'doNotRemove'
+                            disabled: customData.losePointAtError == 'false'
                         }
                     ]
                 }
@@ -195,17 +195,17 @@ export default async interaction => {
                             type: 2,
                             label: 'Ativar Ranking [Padrão]',
                             emoji: '🏆',
-                            custom_id: 'enableRanking',
+                            custom_id: 'true',
                             style: ButtonStyle.Primary,
-                            disabled: customData.shortRanking == 'enableRanking'
+                            disabled: customData.shortRanking == 'true'
                         },
                         {
                             type: 2,
                             label: 'Não Mostrar Ranking',
                             emoji: '👨🏼‍🦯',
-                            custom_id: 'disableRanking',
+                            custom_id: 'false',
                             style: ButtonStyle.Primary,
-                            disabled: customData.shortRanking == 'disableRanking'
+                            disabled: customData.shortRanking == 'false'
                         }
                     ]
                 }
@@ -564,26 +564,39 @@ export default async interaction => {
             return custom(int)
         }
 
-        const values = [
-            { type: 'gameType', keys: ['buttons', 'keyboard'] },
-            { type: 'gameRepeat', keys: ['repeat', 'endQuestion', 'allRepeat', 'noRepeat'] },
-            { type: 'losePointAtError', keys: ['remove', 'doNotRemove'] },
-            { type: 'shortRanking', keys: ['enableRanking', 'disableRanking'] }
-        ]
-
         if (customId == 'times')
             return setGameTime(int)
+
+        const values = [
+            { type: 'gameType', keys: ['buttons', 'keyboard'], painelOrder: 0 },
+            { type: 'gameRepeat', keys: ['repeat', 'endQuestion', 'allRepeat', 'noRepeat'], painelOrder: 2 },
+            { type: 'losePointAtError', keys: ['true', 'false'], painelOrder: 3 },
+            { type: 'shortRanking', keys: ['true', 'false'], painelOrder: 4 }
+        ]
 
         if (customId == 'categories')
             return setCategories(int)
 
-        for (const value of values)
-            if (value.keys.includes(customId))
-                return setValue(value.type, customId, int)
+        const order = values.find(v => v.painelOrder == control)
+        if (order) return setValue(order.type, customId, int)
 
         return await int.update({
             content: `${e.KuramaFogo} Por algum motivo desconhecido, essa página não foi encontrada.`,
-            embeds: [], components: []
+            embeds: [],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: 'Voltar',
+                            emoji: '⬅️',
+                            custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: int.user.id }),
+                            style: ButtonStyle.Primary
+                        }
+                    ]
+                }
+            ]
         }).catch(() => { })
     }
 
@@ -629,7 +642,27 @@ export default async interaction => {
                         title: `${e.QuizLogo} Saphire Canary's Quiz Customization`,
                         description: '⌛ O tempo limite de resposta para o questionário chegou ao fim'
                     }],
-                components: []
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Voltar',
+                                emoji: '⬅️',
+                                custom_id: JSON.stringify({ c: 'quiz', src: 'back', userId: user.id }),
+                                style: ButtonStyle.Primary
+                            },
+                            {
+                                type: 2,
+                                label: 'Deletar Mensagem',
+                                emoji: e.Trash,
+                                custom_id: JSON.stringify({ c: 'delete' }),
+                                style: ButtonStyle.Danger
+                            }
+                        ]
+                    }
+                ]
             })
         }
 

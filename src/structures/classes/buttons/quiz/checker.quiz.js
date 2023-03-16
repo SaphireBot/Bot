@@ -83,15 +83,11 @@ export default async (interaction, { src }) => {
     async function back() {
 
         let userId = interaction.customId.startsWith('{')
-        ? (() => {
-            const customData = JSON.parse(interaction.customId || { })
-            if (customData?.userId) return customData.userId
-        })()
-        : interaction.message?.interaction?.user?.id
+            ? getUserIdFromCustomId() : interaction.message?.interaction?.user?.id
 
         if (userId && interaction.user.id !== userId)
             return await interaction.reply({
-                content: `${e.DenyX} | Epa epa, só <@${interaction.message?.interaction?.user?.id}> pode usar essa função, beleza?`,
+                content: `${e.DenyX} | Epa epa, só ${userId ? `<@${interaction.message?.interaction?.user?.id}>` : 'quem usou esse comando'} pode usar essa função, beleza?`,
                 ephemeral: true
             })
 
@@ -109,6 +105,11 @@ export default async (interaction, { src }) => {
             ],
             components: Buttons.QuizQuestionsFirstPage
         }).catch(() => { })
+
+        function getUserIdFromCustomId() {
+            const customData = JSON.parse(interaction.customId || {})
+            if (customData?.userId) return customData.userId
+        }
     }
 
 }

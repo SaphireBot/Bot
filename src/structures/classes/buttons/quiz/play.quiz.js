@@ -1,9 +1,10 @@
-import { ButtonStyle } from "discord.js"
 import QuizManager from "../../../../classes/games/QuizManager.js"
+import Quiz from "../../../../classes/games/Quiz.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 export default async interaction => {
 
+    // TODO: Remover depois que tudo estiver pronto
     return await interaction.update({
         content: `${e.Loading} | Este comando está sob-construção. Por enquanto, estamos coletando perguntas.`,
         embeds: [],
@@ -44,39 +45,7 @@ export default async interaction => {
         })
 
     QuizManager.channelsInGames.push(channel.id)
-    // TO AFK
-    return await interaction.update({
-        content: `${e.Loading} | Selecione o modo do Quiz de Perguntas.`,
-        embeds: [],
-        components: [{
-            type: 1,
-            components: [{
-                type: 3,
-                custom_id: JSON.stringify({ c: 'quiz', src: 'gameType' }),
-                placeholder: 'Escolher modo de jogo',
-                options: [
-                    {
-                        label: 'Com Botões',
-                        emoji: '🖱️',
-                        description: 'Selecione a resposta correta',
-                        value: 'buttons',
-                    },
-                    {
-                        label: 'Digitando',
-                        emoji: '⌨️',
-                        description: 'Quem digitar a resposta mais rápido ganha',
-                        value: 'keyboard'
-                    },
-                    {
-                        label: 'Cancelar',
-                        emoji: '❌',
-                        description: 'Cancele a requisição de uma nova partida',
-                        value: 'cancel'
-                    }
-                ]
-            }]
-        }]
-    })
-        .catch(() => QuizManager.unregisterChannel(channel.id))
+
+    return new Quiz(interaction).askPreference()
 
 }
