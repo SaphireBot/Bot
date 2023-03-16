@@ -90,7 +90,7 @@ const guildEntriesFunctions = {
         // Update: ??
         // All: ??
     },
-    AutoModeration: { // This action type isn't documented
+    AutoModeration: { // This action is undocumented
         // Create: ??
         // Delete: ??
         // Update: When a configuration or rule was update
