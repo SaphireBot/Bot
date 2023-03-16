@@ -98,7 +98,7 @@ Date.prototype.constructor.stringDate = ms => {
         millennia: n => n == 1 ? 'milênio' : 'milênios',
         century: n => n == 1 ? 'século' : 'séculos',
         years: n => n == 1 ? 'ano' : 'anos',
-        months: n => n == 1 ? 'mês' : 'mêses',
+        months: n => n == 1 ? 'mês' : 'meses',
         days: n => n == 1 ? 'dia' : 'dias',
         hours: n => n == 1 ? 'hora' : 'horas',
         minutes: n => n == 1 ? 'minuto' : 'minutos',

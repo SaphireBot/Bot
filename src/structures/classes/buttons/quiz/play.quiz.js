@@ -1,6 +1,7 @@
 import QuizManager from "../../../../classes/games/QuizManager.js"
 import Quiz from "../../../../classes/games/Quiz.js"
 import { Emojis as e } from "../../../../util/util.js"
+import { ButtonStyle } from "discord.js"
 
 export default async interaction => {
 

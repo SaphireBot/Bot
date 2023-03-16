@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { Client, Collection, Guild } from 'discord.js'
-import { ClientOptions } from '../../util/util.js'
+import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import { Database, Discloud } from '../index.js'
 import * as TopGG from 'topgg-autoposter'
