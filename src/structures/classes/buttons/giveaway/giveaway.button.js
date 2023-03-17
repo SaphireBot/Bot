@@ -52,17 +52,33 @@ export default async ({ interaction }, commandData) => {
                 ephemeral: true
             })
 
-        giveaway.Participants.push(user.id)
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': message.id },
-            { $push: { 'Giveaways.$.Participants': user.id, } }
+            { $addToSet: { 'Giveaways.$.Participants': user.id, } },
+            { new: true }
         )
+            .then(async document => {
+                const giveawayObject = document.Giveaways.find(gw => gw.MessageID == message.id)
 
-        refreshButton()
-        return await interaction.reply({
-            content: `${e.CheckV} | Aeee ${e.Tada}, coloquei você na lista de participantes, agora é só esperar o sorteio terminar. Boa sorte`,
-            ephemeral: true
-        })
+                if (!giveawayObject)
+                    return await interaction.reply({
+                        content: `${e.cry} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                        ephemeral: true
+                    })
+
+                giveaway.Participants = giveawayObject.Participants
+                refreshButton()
+                return await interaction.reply({
+                    content: `${e.CheckV} | Aeee ${e.Tada}, coloquei você na lista de participantes, agora é só esperar o sorteio terminar. Boa sorte`,
+                    ephemeral: true
+                })
+
+            })
+            .catch(async err => await interaction.reply({
+                content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
+                ephemeral: true
+            }))
+
     }
 
     async function askToLeave() {
@@ -109,20 +125,43 @@ export default async ({ interaction }, commandData) => {
                 components: []
             }).catch(() => { })
 
-        giveaway.Participants.splice(
-            giveaway.Participants.findIndex(id => id == user.id), 1
+        await Database.Guild.findOneAndUpdate(
+            { id: guild.id },
+            {
+                $pullAll: {
+                    'Giveaways.$[element].Participants': [user.id]
+                }
+            },
+            {
+                new: true,
+                fields: 'Giveaways',
+                arrayFilters: [
+                    {
+                        'element.MessageID': gwId,
+                        'element.Prize': giveaway.Prize
+                    }
+                ]
+            }
         )
+            .then(async document => {
+                const giveawayObject = document?.Giveaways?.find(gw => gw?.MessageID == gwId)
+                if (!giveawayObject)
+                    return await interaction.update({
+                        content: `${e.cry} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                        components: []
+                    })
 
-        await Database.Guild.updateOne(
-            { id: guild.id, 'Giveaways.MessageID': message.id },
-            { $pull: { 'Giveaways.$.Participants': user.id } }
-        )
-
-        refreshButton()
-        return await interaction.update({
-            content: `${e.cry} | Pronto pronto, você não está mais participando deste sorteio.`,
-            components: []
-        }).catch(() => { })
+                giveaway.Participants = giveawayObject.Participants
+                refreshButton()
+                return await interaction.update({
+                    content: `${e.cry} | Pronto pronto, você não está mais participando deste sorteio.`,
+                    components: []
+                }).catch(() => { })
+            })
+            .catch(async err => await interaction.update({
+                content: `${e.SaphireDesespero} | Não foi possível te retirar do sorteio.\n${e.bug} | \`${err}\``,
+                ephemeral: true
+            }))
     }
 
     async function list() {

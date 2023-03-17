@@ -179,13 +179,18 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }
 
                     if (customId == 'roles') {
+
+                        for (const roleId of int.values)
+                            if (guild.roles.cache.get(roleId)?.managed)
+                                return await int.update({ content: `${editContent()}\n${e.Deny} | Cargos de bots não podem ser selecionados para sorteios.` })
+
                         collectorData.AllowedRoles = int.values
-                        int.update({ content: editContent() })
+                        return int.update({ content: editContent() }).catch(() => { })
                     }
 
                     if (customId == 'members') {
                         collectorData.AllowedMembers = int.values
-                        int.update({ content: editContent() })
+                        return int.update({ content: editContent() }).catch(() => { })
                     }
 
                 })
@@ -202,10 +207,10 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }
 
                     if (['time', 'limit'].includes(reason)) {
-                        return channel.send({
+                        return Message.edit({
                             content: `${e.cry} | Demorou demais pra responder e eu fiquei cansada. Cancelei tudo, ok?`,
                             components: []
-                        })
+                        }).catch(() => { })
                     }
 
                 })
