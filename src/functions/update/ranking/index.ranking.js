@@ -1,8 +1,4 @@
-import {
-    Database,
-    Experience,
-    SaphireClient as client
-} from '../../../classes/index.js'
+import { Database, Experience, SaphireClient as client } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
 export default async () => {
@@ -52,8 +48,6 @@ export default async () => {
                         tag: client.users.resolve(data.id)?.tag || null,
                         [`${broke[0]}.${broke[1]}`]: data[broke[0]][broke[1]]
                     }))
-                    .filter(data => data.tag)
-                    .slice(0, 2000)
             })()
             : [...allUsersData]
                 .filter(data => data[name] && data[name] > 0)
@@ -64,8 +58,6 @@ export default async () => {
                     tag: client.users.resolve(data.id)?.tag || null,
                     [name]: data[name]
                 }))
-                .filter(data => data.tag)
-                .slice(0, 2000)
 
     }
 

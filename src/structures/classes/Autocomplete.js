@@ -424,9 +424,13 @@ export default class Autocomplete extends Base {
     }
 
     async rankingOptions() {
-        if (!this.client.staff?.includes(this.user.id)) return await this.respond()
 
-        return await this.respond([{ name: 'Atualizar rankings', value: 'refresh' }])
+        const options = [{ name: 'Script Version', value: 'script' }]
+
+        if (this.client.staff?.includes(this.user.id))
+            options.push({ name: '[ADMIN ONLY] Atualizar Rankings', value: 'refresh' })
+
+        return await this.respond(options)
     }
 
     async wallpapers(value) {
