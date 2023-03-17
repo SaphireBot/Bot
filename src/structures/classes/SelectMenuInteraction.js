@@ -62,7 +62,7 @@ export default class SelectMenuInteraction extends Base {
         if (this[result])
             return this[result](this)
 
-        if (this.value.startsWith('{')) {
+        if (this.value?.startsWith('{')) {
 
             this.customId = JSON.parse(this.value)
 

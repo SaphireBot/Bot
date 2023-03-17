@@ -57,10 +57,23 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             ephemeral: true
         })
 
-    return await interaction.reply({
-        content: `${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉`,
-        fetchReply: true
-    })
+    const embed = {
+        color: client.blue,
+        title: `${e.Tada} ${client.user.username}'s Giveaway Configuration`,
+        description: `Ok, tudo certo até aqui.`,
+        fields: [
+            {
+                name: '🧩 Emoji Customizado',
+                value: `${e.Loading} Aguardando a seleção de um emoji`
+            },
+            {
+                name: `${e.Info} Dica`,
+                value: 'Escolha um emoji **||pode ser qualquer um||** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉'
+            }
+        ]
+    }
+
+    return await interaction.reply({ content: null, embeds: [embed], fetchReply: true })
         .then(msg => msg?.react('🎉').then(() => collectors(msg)))
         .catch(() => {
             msg.delete().catch(() => { })
@@ -83,7 +96,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     if (msg?.channel)
                         return msg.channel.send({
                             content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.cry}`
-                        })
+                        }).catch(() => { })
                 }
 
                 if (reason == 'messageDelete') {
@@ -91,24 +104,31 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     msg.delete().catch(() => { })
                     return interaction.channel.send({
                         content: `${e.cry} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
-                    })
+                    }).catch(() => { })
                 }
 
                 if (['time', 'idle', 'limit'].includes(reason)) {
                     Database.deleteGiveaway(msg.id, interaction.guild.id)
                     msg.delete().catch(() => { })
                     Message.reactions.removeAll().catch(() => { })
-                    return Message.edit({
-                        content: `${e.cry} | O emoji não foi escolhido a tempo então eu cancelei o sorteio...`
-                    }).catch(() => { })
+                    embed.color = client.red
+                    embed.fields[0].value = `${e.DenyX} Emoji não escolhido`
+                    embed.description = 'Beleza, estava tudo certo até aqui'
+                    embed.fields.push({
+                        name: '⏱️ O Tempo Passou',
+                        value: `Se passou muitas eras e eu cai em um sono profundo... ${e.sleep} Cancelei o sorteio, beleza?`
+                    })
+                    return Message.edit({ content: null, embeds: [embed] }).catch(() => { })
                 }
 
                 return
             })
 
         function enableButtonCollector(Message) {
+            editContent()
             Message.edit({
-                content: editContent(),
+                content: null,
+                embeds: [embed],
                 components: [
                     {
                         type: 1,
@@ -117,7 +137,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                                 type: 6,
                                 custom_id: 'roles',
                                 placeholder: 'Selecionar cargos para o sorteio',
-                                min_values: 1,
+                                min_values: 0,
                                 max_values: 25
                             }
                         ]
@@ -129,7 +149,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                                 type: 5,
                                 custom_id: 'members',
                                 placeholder: 'Selecionar usuários para o sorteio',
-                                min_values: 1,
+                                min_values: 0,
                                 max_values: 25
                             }
                         ]
@@ -159,7 +179,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
             const buttonCollector = Message.createMessageComponentCollector({
                 filter: int => int.user.id === user.id,
-                time: 1000 * 60 * 5,
+                idle: 1000 * 60 * 5,
                 errors: ['time']
             })
                 .on('collect', async int => {
@@ -168,34 +188,40 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
                     if (customId == 'lauch') {
                         buttonCollector.stop()
-                        await int.update({ content: `${e.Loading} Criando...`, components: [] }).catch(() => { })
+                        await int.update({ content: `${e.Loading} Criando...`, embeds: [], components: [] }).catch(() => { })
                         return registerGiveaway(msg, Message)
                     }
 
                     if (customId == 'cancel') {
                         buttonCollector.stop()
                         msg.delete().catch(() => { })
-                        return int.update({ content: `${e.CheckV} Ok ok, tudo cancelado.`, components: [] }).catch(() => { })
+                        return int.update({ content: `${e.CheckV} Ok ok, tudo cancelado.`, embeds: [], components: [] }).catch(() => { })
                     }
 
                     if (customId == 'roles') {
 
                         for (const roleId of int.values)
-                            if (guild.roles.cache.get(roleId)?.managed)
-                                return await int.update({ content: `${editContent()}\n${e.Deny} | Cargos de bots não podem ser selecionados para sorteios.` })
+                            if (guild.roles.cache.get(roleId)?.managed) {
+                                editContent(true)
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
 
                         collectorData.AllowedRoles = int.values
-                        return int.update({ content: editContent() }).catch(() => { })
+                        editContent()
+                        return int.update({ content: null, embeds: [embed] }).catch(() => { })
                     }
 
                     if (customId == 'members') {
 
                         for (const memberId of int.values)
-                            if (guild.members.cache.get(memberId)?.user?.bot)
-                                return await int.update({ content: `${editContent()}\n${e.Deny} | Bots não podem ser selecionados para sorteios.` })
+                            if (guild.members.cache.get(memberId)?.user?.bot) {
+                                editContent(false, true)
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
 
                         collectorData.AllowedMembers = int.values
-                        return int.update({ content: editContent() }).catch(() => { })
+                        editContent()
+                        return int.update({ content: null, embeds: [embed] }).catch(() => { })
                     }
 
                 })
@@ -211,17 +237,35 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         })
                     }
 
-                    if (['time', 'limit'].includes(reason)) {
-                        return Message.edit({
-                            content: `${e.cry} | Demorou demais pra responder e eu fiquei cansada. Cancelei tudo, ok?`,
-                            components: []
-                        }).catch(() => { })
+                    if (['time', 'limit', 'idle'].includes(reason)) {
+                        embed.color = client.red
+                        embed.fields.push({
+                            name: '⏱️ E se passou eternidades',
+                            value: `Após 5 longas eternidades eu cai em um sono profundo ${e.sleep}. Cancelei tudo para eu dormir em paz.`
+                        })
+                        embed.footer = { text: 'Tempo Expirado' }
+                        return Message.edit({ content: null, embeds: [embed], components: [] }).catch(() => { })
                     }
 
                 })
 
-            function editContent() {
-                return `${e.Loading} | A reação já foi coletada. Quer configurar mais algo?\n🔰 | ${collectorData.AllowedRoles.length ? collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') : 'Nenhum Cargo Selecionado'}\n👥 | ${collectorData.AllowedMembers.length ? collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') : 'Nenhum Usuário Selecionado'}`
+            function editContent(roleRole, memberBot) {
+                embed.description = 'Escolher cargos e usuários? Lançar ou cancelar o sorteio?'
+                embed.fields[0].value = `${e.CheckV} O emoji foi salvo.`
+                embed.fields[1] = {
+                    name: '🔰 Cargos Obrigatórios',
+                    value: collectorData.AllowedRoles.length > 0 || roleRole
+                        ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${roleRole ? `\n${e.Deny} Cargos de bots não podem ser selecionados para sorteios.` : ''}`
+                        : 'Nenhum Cargo Selecionado'
+                }
+                embed.fields[2] = {
+                    name: '👥 Usuários Quem Podem Participar',
+                    value: collectorData.AllowedMembers.length > 0 || memberBot
+                        ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Bots não podem ser selecionados para sorteios.` : ''}`
+                        : 'Nenhum Usuário Selecionado'
+                }
+
+                return `${e.Loading} | A reação já foi coletada. Quer configurar mais algo?\n🔰 | \n | `
             }
 
             return;
@@ -332,6 +376,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 Message.reactions.removeAll().catch(() => { })
                 return await Message.edit({
                     content: `${e.Check} | ${giveawayResetedData ? 'Sorteio resetado' : 'Sorteio criado'} com sucesso!`,
+                    embeds: [],
                     components: [
                         {
                             type: 1,
@@ -380,11 +425,13 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
                 if (err.code === 50035)
                     return await Message.edit({
-                        content: Message.content += `\n⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.`,
+                        content: '⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.',
+                        embeds: [], components: []
                     }).catch(() => { })
 
                 return await Message.edit({
-                    content: Message.content += `\n⚠️ | Erro ao criar o sorteio. | \`${err}\``,
+                    content: `⚠️ | Erro ao criar o sorteio. | \`${err}\``,
+                    embeds: [], components: []
                 }).catch(() => { })
             })
 
