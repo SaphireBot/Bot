@@ -6,14 +6,16 @@ import executeStars from './system/execute.stars.js'
 client.on('messageReactionAdd', async (MessageReaction, user) => {
 
     const emojiName = MessageReaction?.emoji.name
-    if (!user || user.bot || !availableEmojis.includes(emojiName)) return
+    if (!MessageReaction || !user || user.bot || !availableEmojis.includes(emojiName)) return
 
     const message = MessageReaction.message.author === null
         ? await (async () => {
-            const reactionFetched = await MessageReaction.fetch()
-            return await reactionFetched.message
+            const reactionFetched = await MessageReaction.fetch().catch(() => null)
+            return reactionFetched?.message || null
         })()
-        : MessageReaction.message
+        : MessageReaction?.message
+
+    if (!message) return
 
     if (emojiName === '⭐' && MessageReaction.count >= 2) {
         const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
