@@ -37,7 +37,7 @@ export default async ({ interaction }, commandData) => {
         if (giveaway.Participants.includes(user.id))
             return askToLeave()
 
-        if (giveaway.AllowedRoles?.length) {
+        if (giveaway.AllowedRoles?.length > 0) {
             const memberRolesIds = member.roles.cache.map(role => role.id)
             if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
                 return await interaction.reply({
@@ -46,7 +46,7 @@ export default async ({ interaction }, commandData) => {
                 })
         }
 
-        if (!giveaway.AllowedMembers?.includes(user.id))
+        if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id))
             return await interaction.reply({
                 content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
                 ephemeral: true
@@ -151,11 +151,11 @@ Data Prevista para Disparo: ${Date.format(giveaway.DateNow + giveaway.TimeMs, fa
 Data de Disparo: ${giveaway.DischargeDate ? Date.format(giveaway.DateNow + giveaway.TimeMs, false, false) : 'Não disparado ainda'}
 Data de Criação Deste Registro: ${Date.format(Date.now(), false, false)}
 --------------------------------------------------------------
-${giveaway.AllowedMembers.length || '0'} Usuários Permitidos:\n${giveaway.AllowedMembers.length ? giveaway.AllowedMembers.map(id => `${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+${giveaway.AllowedMembers?.length > 0 ? `${giveaway.AllowedMembers?.length} ` : ''}Usuários Permitidos:\n${giveaway.AllowedMembers?.length ? giveaway.AllowedMembers?.map(id => `${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
 --------------------------------------------------------------
-${giveaway.AllowedRoles.length || '0'} Cargos Obrigatórios:\n${giveaway.AllowedRoles.length ? giveaway.AllowedRoles.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+${giveaway.AllowedRoles?.length > 0 ? `${giveaway.AllowedRoles?.length} ` : ''}Cargos Obrigatórios:\n${giveaway.AllowedRoles?.length ? giveaway.AllowedRoles?.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
 --------------------------------------------------------------
-${giveaway.Participants?.length || '0'} Participantes Por Ordem de Entrada:\n${participantsMapped}`,
+${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`,
             { encoding: 'utf8' })
         await delay(1000)
 
