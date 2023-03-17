@@ -52,7 +52,7 @@ export default async ({ interaction }, commandData) => {
                 ephemeral: true
             })
 
-        await Database.Guild.findOneAndUpdate(
+        return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': message.id },
             { $addToSet: { 'Giveaways.$.Participants': user.id, } },
             { new: true }
@@ -125,7 +125,7 @@ export default async ({ interaction }, commandData) => {
                 components: []
             }).catch(() => { })
 
-        await Database.Guild.findOneAndUpdate(
+        return Database.Guild.findOneAndUpdate(
             { id: guild.id },
             {
                 $pullAll: {
