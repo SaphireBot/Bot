@@ -1,29 +1,28 @@
-import { time } from 'discord.js'
-import {
-    SaphireClient as client,
-    Database,
-    GiveawayManager
-} from '../../../classes/index.js'
+import { time, Guild, TextChannel } from 'discord.js'
+import { SaphireClient as client, Database, GiveawayManager } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
-export default async (giveaway, guild, channel, finalForce) => {
+/**
+ * @param { Guild } guild
+ * @param { TextChannel } channel
+ */
+export default async (gw, guild, channel, finalForce) => {
 
-    const hasGiveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].some(gw => gw.MessageID == giveaway.MessageID)
+    const giveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].find(g => g.MessageID == gw?.MessageID)
 
-    if (!giveaway || !guild || !channel || !hasGiveaway)
+    if (!giveaway || !guild || !channel || !gw)
         return Database.deleteGiveaway(giveaway?.MessageID, guild?.id)
 
-    const { MessageID } = giveaway
-    const emoji = giveaway.Emoji || '🎉'
-    const message = await channel?.messages?.fetch(MessageID).catch(() => null)
-    const reaction = message?.reactions?.cache?.get(emoji)
+    const MessageID = giveaway.MessageID
+    const message = await channel?.messages?.fetch(MessageID || '0').catch(() => null)
 
-    if (!reaction || !message || !emoji)
+    if (!message) {
+        channel.send({ content: `${e.cry} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
         return Database.deleteGiveaway(giveaway.MessageID, guild.id)
+    }
 
-    const reactionUsers = await reaction.users.fetch()
     const WinnersAmount = giveaway.Winners || 1
-    const Participantes = reactionUsers.filter(u => !u.bot).map(u => u.id) || []
+    const Participantes = giveaway.Participants || []
     const Sponsor = giveaway.Sponsor
     const Prize = giveaway.Prize
     const MessageLink = giveaway.MessageLink
@@ -38,7 +37,13 @@ export default async (giveaway, guild, channel, finalForce) => {
         value: `${time(new Date(Date.now() + 172800000), "R")}`,
         inline: true
     })
-    message.edit({ embeds: [embedToEdit] }).catch(() => { })
+
+    const components = message?.components[0]?.toJSON()
+    if (components) {
+        components.components[0].disabled = true
+        components.components[1].disabled = !Participantes.length
+    }
+    message.edit({ embeds: [embedToEdit], components: components ? [components] : [] }).catch(() => { })
 
     if (!Participantes.length) {
         channel.send({
@@ -107,12 +112,16 @@ export default async (giveaway, guild, channel, finalForce) => {
         ]
     }).catch(() => Database.deleteGiveaway(MessageID, guild.id))
 
+    const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
+    const dateNow = Date.now()
+    GiveawayManager.giveaways[index].DischargeDate = dateNow
     await Database.Guild.updateOne(
         { id: guild.id, 'Giveaways.MessageID': MessageID },
         {
             $set: {
                 'Giveaways.$.Participants': [...Participantes],
-                'Giveaways.$.Actived': false
+                'Giveaways.$.Actived': false,
+                'Giveaways.$.DischargeDate': dateNow
             }
         }
     )
@@ -141,8 +150,5 @@ async function GetWinners(WinnersArray, Amount = 1, MessageId, guildId) {
 
 async function GetMember(guild, memberId) {
     const member = await guild.members.fetch(memberId).catch(() => null)
-
-    return member
-        ? `${member} *\`${member?.id || '0'}\`*`
-        : `${e.Deny} Usuário não encontrado.`
+    return member ? `${member} *\`${member?.id || '0'}\`*` : `${e.Deny} Usuário não encontrado.`
 }

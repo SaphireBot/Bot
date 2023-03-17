@@ -53,7 +53,8 @@ Global System Notification: ${indication.webhookUrl ? 'Ativado' : 'Desativado'}
 Personal Question ID: ${questionId}
 
 Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.
-            `
+            `,
+            { encoding: 'utf8' }
         )
 
         await delay(2000)
@@ -73,7 +74,7 @@ Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de
                 components: [],
                 files: [attachment]
             }).catch(() => { })
-            return 
+            return
         } catch (err) {
             return await interaction.message.edit({
                 content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,

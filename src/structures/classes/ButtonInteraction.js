@@ -26,6 +26,7 @@ import indexBet from './buttons/bet/index.bet.js'
 import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
 import { ButtonStyle } from 'discord.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
+import giveawayButton from './buttons/giveaway/giveaway.button.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -80,7 +81,8 @@ export default class ButtonInteraction extends Base {
             amongus: [executeAmongus, this, commandData],
             bet: [indexBet, this, commandData],
             removeReaction: [this.removeReaction, this, commandData],
-            chat: [this.sendGlobalChatModel, this]
+            chat: [this.sendGlobalChatModel, this],
+            giveaway: [giveawayButton, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

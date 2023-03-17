@@ -1,6 +1,7 @@
 import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
+import { ButtonStyle } from 'discord.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
 
 export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
@@ -54,44 +55,65 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             ephemeral: true
         })
 
-    await interaction.deferReply()
-
-    const Message = await intChannel.send({ content: `${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉` })
-    Message.react('🎉')
-
-    const collector = Message.createReactionCollector({
-        filter: (_, u) => u.id === user.id,
-        idle: 20000
+    return await interaction.reply({
+        content: `${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉`,
+        fetchReply: true
     })
-        .on('collect', (reaction) => {
-
-            const { emoji } = reaction
-
-            if (emoji.id && !guild.emojis.cache.get(emoji.id))
-                return Message.edit(`${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉\n \n${e.Deny} | Este emoji não pertence a este servidor. Por favor, escolha um emoji deste servidor ou do Discord.`)
-
-            const emojiData = emoji.id || emoji.name
-
-            collector.stop()
-            return msg.react(emoji)
-                .then(() => registerGiveaway(msg, emoji, emojiData, Message))
-                .catch(err => {
-                    Database.deleteGiveaway(msg.id, guild.id)
-                    return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
-                })
+        .then(msg => {
+            msg?.react('🎉')
+                .then(() => collector(msg))
         })
-        .on('end', (_, reason) => {
-            if (reason === 'user') return
-
-            return msg.react('🎉')
-                .then(() => registerGiveaway(msg, null, null, Message))
-                .catch(err => {
-                    Database.deleteGiveaway(msg.id, guild.id)
-                    return intChannel.send(`${e.Warn} | Erro ao reagir no sorteio. | \`${err}\``)
-                })
+        .catch(() => {
+            msg.delete().catch(() => { })
+            return interaction.channel.send({ content: `${e.DenyX} | Não foi possível obter a mensagem de origem.` })
         })
 
-    return
+    async function collector(Message) {
+        const collector = Message.createReactionCollector({
+            filter: (_, u) => u.id === user.id,
+            idle: 20000
+        })
+            .on('collect', (reaction) => {
+
+                const { emoji } = reaction
+
+                // if (emoji.id && !guild.emojis.cache.get(emoji.id))
+                //     return Message.edit(`${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉\n \n${e.Deny} | Este emoji não pertence a este servidor. Por favor, escolha um emoji deste servidor ou do Discord.`)
+
+                const emojiData = emoji.id || emoji.name
+                collector.stop()
+                return registerGiveaway(msg, emoji, emojiData, Message)
+            })
+            .on('end', (_, reason) => {
+                if (reason == 'user') return
+                if (reason == 'channelDelete') {
+                    Database.deleteGiveaway(msg.id, interaction.guild.id)
+                    msg.delete().catch(() => { })
+                    if (msg?.channel)
+                        return msg.channel.send({
+                            content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.cry}`
+                        })
+                }
+
+                if (reason == 'messageDelete') {
+                    Database.deleteGiveaway(msg.id, interaction.guild.id)
+                    msg.delete().catch(() => { })
+                    return interaction.channel.send({
+                        content: `${e.cry} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
+                    })
+                }
+
+                if (['time', 'idle'].includes(reason)) {
+                    Database.deleteGiveaway(msg.id, interaction.guild.id)
+                    Message.reactions.removeAll().catch(() => { })
+                    return Message.edit({
+                        content: `${e.cry} | O emoji não foi escolhido a tempo então eu cancelei o sorteio...`
+                    }).catch(() => { })
+                }
+
+                return
+            })
+    }
 
     async function registerGiveaway(msg, emoji = '🎉', emojiData = '🎉', Message) {
 
@@ -100,6 +122,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             GuildId: guild.id, // Id do Servidor
             Prize, // Prêmio do sorteio
             Winners: WinnersAmount, // Quantos vencedores
+            Participants: [],
             Emoji: emojiData, // Quantos vencedores
             TimeMs: TimeMs, // Tempo do Sorteio
             DateNow: Date.now(), // Agora
@@ -120,7 +143,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
         const embed = {
             color: color || 0x0099ff,
             title: `${e.Tada} Sorteios ${guild.name}`,
-            description: `Para entrar no sorteio, basta reagir no emoji ${emoji}`,
+            description: `Para entrar no sorteio, basta clicar em \`Participar\``,
             fields: [
                 {
                     name: `${e.Star} Prêmio`,
@@ -153,30 +176,88 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 value: Requisitos
             })
 
-        return msg.edit({ embeds: [embed] })
+        return msg.edit({
+            embeds: [embed],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: 'Participar (0)',
+                            emoji: emojiData,
+                            custom_id: JSON.stringify({ c: 'giveaway', src: 'join' }),
+                            style: ButtonStyle.Success
+                        },
+                        {
+                            type: 2,
+                            label: 'Dados & Participantes',
+                            emoji: e.Commands,
+                            custom_id: JSON.stringify({ c: 'giveaway', src: 'list' }),
+                            style: ButtonStyle.Primary
+                        }
+                    ]
+                }
+            ]
+        })
             .then(async () => {
-                Message.delete()
-                return await interaction.editReply({
-                    content: `${e.Check} | ${giveawayResetedData ? 'Sorteio resetado' : 'Sorteio criado'} com sucesso! Você pode vê-lo no canal ${msg.channel}`,
-                    ephemeral: true
+                Message.reactions.removeAll().catch(() => { })
+                return await Message.edit({
+                    content: `${e.Check} | ${giveawayResetedData ? 'Sorteio resetado' : 'Sorteio criado'} com sucesso!`,
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    label: 'Sorteio',
+                                    emoji: '🔗',
+                                    url: msg.url,
+                                    style: ButtonStyle.Link
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Ok, deletar esta mensagem',
+                                    emoji: e.Trash,
+                                    custom_id: JSON.stringify({ c: 'delete' }),
+                                    style: ButtonStyle.Danger
+                                },
+                            ]
+                        }
+                    ]
+                }).catch(() => {
+                    return interaction.channel.send({
+                        content: `${e.Check} | Não consegui editar a mensagem original, então estou vindo aqui dizer que o sorteio foi criado com sucesso, ok?`,
+                        components: [
+                            {
+                                type: 1,
+                                components: [
+                                    {
+                                        type: 2,
+                                        label: 'Sorteio',
+                                        emoji: '🔗',
+                                        url: msg.url,
+                                        style: ButtonStyle.Link
+                                    }
+                                ]
+                            }
+                        ]
+                    })
                 })
             })
             .catch(async err => {
 
                 Database.deleteGiveaway(msg.id, guild.id)
                 msg.delete().catch(() => { })
-                Message.delete().catch(() => { })
 
                 if (err.code === 50035)
-                    return await interaction.followUp({
-                        content: `⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.`,
-                        ephemeral: true
-                    })
+                    return await Message.edit({
+                        content: Message.content += `\n⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.`,
+                    }).catch(() => { })
 
-                return await interaction.followUp({
-                    content: `⚠️ | Erro ao criar o sorteio. | \`${err}\``,
-                    ephemeral: true
-                })
+                return await Message.edit({
+                    content:  Message.content += `\n⚠️ | Erro ao criar o sorteio. | \`${err}\``,
+                }).catch(() => { })
             })
 
     }

@@ -32,12 +32,8 @@ export default new class GiveawayManager {
 
         const giveawaysAvailables = this.giveaways.filter(data => data.Actived)
         const giveawaysUnavailables = this.giveaways.filter(data => !data.Actived)
-
-        if (giveawaysAvailables.length)
-            this.selectGiveaways(giveawaysAvailables)
-
-        if (giveawaysUnavailables)
-            this.managerUnavailablesGiveaways(giveawaysUnavailables)
+        if (giveawaysAvailables.length) this.selectGiveaways(giveawaysAvailables)
+        if (giveawaysUnavailables.length) this.managerUnavailablesGiveaways(giveawaysUnavailables)
 
         return
     }
@@ -48,7 +44,7 @@ export default new class GiveawayManager {
         for await (const gw of giveaways) {
 
             const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
-            
+
             if (timeMs > 2147483647) {
                 this.awaiting.push(gw)
                 continue

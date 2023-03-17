@@ -147,10 +147,7 @@ export default {
         const member = guild.members.cache.get(interaction.user.id)
 
         if (!member)
-            return await interaction.reply({
-                content: `${e.Deny} | Por favor, use o comando novamente.`,
-                ephemeral: true
-            })
+            return await interaction.reply({ content: `${e.Deny} | Por favor, use o comando novamente.`, ephemeral: true })
 
         if (!member.permissions.has(DiscordPermissons.ManageEvents, true))
             return await interaction.reply({

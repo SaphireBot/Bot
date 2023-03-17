@@ -61,7 +61,8 @@ Servidor de Origem: ${guild.name} - ${guild.id}
 Global System Notification: ${dataSave.webhookUrl ? 'Ativado' : 'Desativado'}
 
 Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.
-            `
+            `,
+            { encoding: 'utf8' }
         )
 
         await delay(2000)
