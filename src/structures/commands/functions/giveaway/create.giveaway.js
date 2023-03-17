@@ -253,13 +253,13 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 embed.description = 'Escolher cargos e usuários? Lançar ou cancelar o sorteio?'
                 embed.fields[0].value = `${e.CheckV} O emoji foi salvo.`
                 embed.fields[1] = {
-                    name: '🔰 Cargos Obrigatórios',
+                    name: '🔰 Cargos Obrigatórios (Opcional)',
                     value: collectorData.AllowedRoles.length > 0 || roleRole
                         ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${roleRole ? `\n${e.Deny} Cargos de bots não podem ser selecionados para sorteios.` : ''}`
                         : 'Nenhum Cargo Selecionado'
                 }
                 embed.fields[2] = {
-                    name: '👥 Usuários Quem Podem Participar',
+                    name: '👥 Usuários Quem Podem Participar (Opcional)',
                     value: collectorData.AllowedMembers.length > 0 || memberBot
                         ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Bots não podem ser selecionados para sorteios.` : ''}`
                         : 'Nenhum Usuário Selecionado'
