@@ -80,6 +80,7 @@ export default {
         },
         {
             name: 'list',
+            name_localizations: { "en-US": "list", 'pt-BR': 'lista' },
             description: '[moderation] Lista de todos os sorteios',
             type: 1
         },
@@ -90,6 +91,7 @@ export default {
             options: [
                 {
                     name: 'id',
+                    name_localizations: { "en-US": "id", 'pt-BR': 'id_do_sorteio' },
                     description: 'ID do sorteio (Id da mensagem do sorteio)',
                     type: ApplicationCommandOptionType.String,
                     required: true,
@@ -97,6 +99,7 @@ export default {
                 },
                 {
                     name: 'winners',
+                    name_localizations: { "en-US": "winners", 'pt-BR': 'vencedores' },
                     description: 'Quantidade de vencedores',
                     type: ApplicationCommandOptionType.Integer,
                     min_value: 1,
@@ -106,11 +109,13 @@ export default {
         },
         {
             name: 'options',
+            name_localizations: { "en-US": "options", 'pt-BR': 'opções' },
             description: '[moderation] Opções e funções adicionais',
             type: 1,
             options: [
                 {
                     name: 'method',
+                    name_localizations: { "en-US": "method", 'pt-BR': 'função' },
                     description: 'Escolha o método a ser utilizado',
                     type: 3,
                     required: true,
@@ -135,6 +140,7 @@ export default {
                 },
                 {
                     name: 'select_giveaway',
+                    name_localizations: { "en-US": "select_giveaway", 'pt-BR': 'selecionar_sorteio' },
                     description: 'Selecione o sorteio relacionado',
                     type: 3,
                     required: true,
