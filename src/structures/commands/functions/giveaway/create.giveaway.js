@@ -3,10 +3,11 @@ import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
 import { ButtonStyle } from 'discord.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
 
-    const { options, user, guild, channel: intChannel } = interaction
+    const { options, user, guild, channel } = interaction
     const Prize = bySelectMenuInteraction ? giveawayResetedData?.Prize : options.getString('prize') || giveawayResetedData?.Prize
     const Time = bySelectMenuInteraction ? giveawayResetedData?.TimeMs : options.getString('time') || giveawayResetedData?.TimeMs
     const Requisitos = bySelectMenuInteraction ? giveawayResetedData?.Requires : options.getString('requires') || giveawayResetedData?.Requires
@@ -14,6 +15,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
     const Channel = bySelectMenuInteraction ? interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId) : options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
     const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
+    const collectorData = { reaction: '🎉', AllowedMembers: [], AllowedRoles: [] }
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
     if (!TimeMs)
@@ -59,30 +61,19 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
         content: `${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉`,
         fetchReply: true
     })
-        .then(msg => {
-            msg?.react('🎉')
-                .then(() => collector(msg))
-        })
+        .then(msg => msg?.react('🎉').then(() => collectors(msg)))
         .catch(() => {
             msg.delete().catch(() => { })
             return interaction.channel.send({ content: `${e.DenyX} | Não foi possível obter a mensagem de origem.` })
         })
 
-    async function collector(Message) {
-        const collector = Message.createReactionCollector({
-            filter: (_, u) => u.id === user.id,
-            idle: 20000
-        })
+    async function collectors(Message) {
+        const reactionCollector = Message.createReactionCollector({ filter: (_, u) => u.id == user.id, time: 1000 * 60 * 5 })
             .on('collect', (reaction) => {
-
-                const { emoji } = reaction
-
-                // if (emoji.id && !guild.emojis.cache.get(emoji.id))
-                //     return Message.edit(`${e.Loading} | Tudo certo! Última parte agora. Escolha um emoji **\`do Discord ou deste servidor\`** que você quer para o sorteio e **\`reaja nesta mensagem\`**. Caso queira o padrão, basta reagir em 🎉\n \n${e.Deny} | Este emoji não pertence a este servidor. Por favor, escolha um emoji deste servidor ou do Discord.`)
-
-                const emojiData = emoji.id || emoji.name
-                collector.stop()
-                return registerGiveaway(msg, emoji, emojiData, Message)
+                Message.reactions.removeAll().catch(() => { })
+                collectorData.reaction = reaction.emoji.id || reaction.emoji.name
+                enableButtonCollector(Message)
+                return reactionCollector.stop()
             })
             .on('end', (_, reason) => {
                 if (reason == 'user') return
@@ -103,8 +94,9 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     })
                 }
 
-                if (['time', 'idle'].includes(reason)) {
+                if (['time', 'idle', 'limit'].includes(reason)) {
                     Database.deleteGiveaway(msg.id, interaction.guild.id)
+                    msg.delete().catch(() => { })
                     Message.reactions.removeAll().catch(() => { })
                     return Message.edit({
                         content: `${e.cry} | O emoji não foi escolhido a tempo então eu cancelei o sorteio...`
@@ -113,23 +105,137 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
                 return
             })
+
+        function enableButtonCollector(Message) {
+            Message.edit({
+                content: editContent(),
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 6,
+                                custom_id: 'roles',
+                                placeholder: 'Selecionar cargos para o sorteio',
+                                min_values: 1,
+                                max_values: 25
+                            }
+                        ]
+                    },
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 5,
+                                custom_id: 'members',
+                                placeholder: 'Selecionar usuários para o sorteio',
+                                min_values: 1,
+                                max_values: 25
+                            }
+                        ]
+                    },
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Lançar Sorteio',
+                                emoji: '📨',
+                                custom_id: 'lauch',
+                                style: ButtonStyle.Success
+                            },
+                            {
+                                type: 2,
+                                label: 'Cancelar Sorteio',
+                                emoji: '✖️',
+                                custom_id: 'cancel',
+                                style: ButtonStyle.Danger
+                            }
+                        ]
+                    }
+                ],
+            })
+                .catch(err => channel.send({ content: `${e.cry} | Erro ao editar a mensagem principal de configuração do sorteio.\n${e.bug} | \`${err}\`` }))
+
+            const buttonCollector = Message.createMessageComponentCollector({
+                filter: int => int.user.id === user.id,
+                time: 1000 * 60 * 5,
+                errors: ['time']
+            })
+                .on('collect', async int => {
+
+                    const { customId } = int
+
+                    if (customId == 'lauch') {
+                        buttonCollector.stop()
+                        await int.update({ content: `${e.Loading} Criando...`, components: [] }).catch(() => { })
+                        return registerGiveaway(msg, Message)
+                    }
+
+                    if (customId == 'cancel') {
+                        buttonCollector.stop()
+                        msg.delete().catch(() => { })
+                        return int.update({ content: `${e.CheckV} Ok ok, tudo cancelado.`, components: [] }).catch(() => { })
+                    }
+
+                    if (customId == 'roles') {
+                        collectorData.AllowedRoles = int.values
+                        int.update({ content: editContent() })
+                    }
+
+                    if (customId == 'members') {
+                        collectorData.AllowedMembers = int.values
+                        int.update({ content: editContent() })
+                    }
+
+                })
+                .on('end', (_, reason) => {
+                    if (['user'].includes(reason)) return
+
+                    msg.delete().catch(() => { })
+                    if (reason == 'messageDelete') {
+                        msg.delete().catch(() => { })
+                        return channel.send({
+                            content: `${e.cry} | A mensagem foi apagada no meio da configuração, que maldade cara...`,
+                            components: []
+                        })
+                    }
+
+                    if (['time', 'limit'].includes(reason)) {
+                        return channel.send({
+                            content: `${e.cry} | Demorou demais pra responder e eu fiquei cansada. Cancelei tudo, ok?`,
+                            components: []
+                        })
+                    }
+
+                })
+
+            function editContent() {
+                return `${e.Loading} | A reação já foi coletada. Quer configurar mais algo?\n🔰 | ${collectorData.AllowedRoles.length ? collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') : 'Nenhum Cargo Selecionado'}\n👥 | ${collectorData.AllowedMembers.length ? collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') : 'Nenhum Usuário Selecionado'}`
+            }
+
+            return;
+        }
+
     }
 
-    async function registerGiveaway(msg, emoji = '🎉', emojiData = '🎉', Message) {
+    async function registerGiveaway(msg, Message) {
 
-        const giveawayData = { // new Class Model
+        const giveawayData = {
             MessageID: msg.id, // Id da Mensagem
             GuildId: guild.id, // Id do Servidor
             Prize, // Prêmio do sorteio
-            Winners: WinnersAmount, // Quantos vencedores
-            Participants: [],
-            Emoji: emojiData, // Quantos vencedores
+            Winners: WinnersAmount, // Quantidade vencedores
+            Participants: [], // Lugar dos participantes
+            Emoji: collectorData.reaction, // Emoji do botão de Participar
             TimeMs: TimeMs, // Tempo do Sorteio
             DateNow: Date.now(), // Agora
             ChannelId: Channel.id, // Id do Canal
             Actived: true, // Ativado
             MessageLink: msg.url, // Link da mensagem
-            Sponsor: user.id, // Quem fez o sorteio
+            Sponsor: user.id, // Quem fez o sorteio,
+            AllowedRoles: collectorData.AllowedRoles, // Cargos que podem participar
+            AllowedMembers: collectorData.AllowedMembers // Usuários que podem participar
         }
 
         await Database.Guild.updateOne(
@@ -176,6 +282,18 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 value: Requisitos
             })
 
+        if (collectorData.AllowedMembers.length)
+            embed.fields.push({
+                name: `👥 Membros Permitidos (${collectorData.AllowedMembers.length})`,
+                value: collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || 'Ninguém? Vish...'
+            })
+
+        if (collectorData.AllowedRoles.length)
+            embed.fields.push({
+                name: `🔰 Cargos Obrigatórios (${collectorData.AllowedRoles.length})`,
+                value: collectorData.AllowedRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
+            })
+
         return msg.edit({
             embeds: [embed],
             components: [
@@ -185,7 +303,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         {
                             type: 2,
                             label: 'Participar (0)',
-                            emoji: emojiData,
+                            emoji: collectorData.reaction,
                             custom_id: JSON.stringify({ c: 'giveaway', src: 'join' }),
                             style: ButtonStyle.Success
                         },
@@ -256,7 +374,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }).catch(() => { })
 
                 return await Message.edit({
-                    content:  Message.content += `\n⚠️ | Erro ao criar o sorteio. | \`${err}\``,
+                    content: Message.content += `\n⚠️ | Erro ao criar o sorteio. | \`${err}\``,
                 }).catch(() => { })
             })
 

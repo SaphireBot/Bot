@@ -10,7 +10,7 @@ export default async ({ interaction }, commandData) => {
     const { src } = commandData
     if (src == 'ignore') return ignore()
 
-    const { guild, user, message, channel } = interaction
+    const { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
     const index = GiveawayManager.giveaways.findIndex(g => g.MessageID == gwId)
     let giveaway = GiveawayManager.giveaways[index]
@@ -36,6 +36,21 @@ export default async ({ interaction }, commandData) => {
 
         if (giveaway.Participants.includes(user.id))
             return askToLeave()
+
+        if (giveaway.AllowedRoles?.length) {
+            const memberRolesIds = member.roles.cache.map(role => role.id)
+            if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
+                return await interaction.reply({
+                    content: `${e.DenyX} | Poooxa, que pena. Você não tem todos os cargos obrigatórios para entrar neste sorteio.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
+                    ephemeral: true
+                })
+        }
+
+        if (!giveaway.AllowedMembers?.includes(user.id))
+            return await interaction.reply({
+                content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
+                ephemeral: true
+            })
 
         giveaway.Participants.push(user.id)
         await Database.Guild.updateOne(
@@ -127,7 +142,7 @@ export default async ({ interaction }, commandData) => {
 
         writeFileSync(
             fileName,
-`Dados do Sorteio ${gwId}
+            `Dados do Sorteio ${gwId}
 Servidor: ${guild.name}
 Lançado por: ${guild.members.cache.get(giveaway.Sponsor)?.user?.tag || 'User Not Found'} (${giveaway.Sponsor})
 Prêmio: ${giveaway.Prize}
@@ -135,7 +150,11 @@ Tempo de Espera: ${Date.stringDate(giveaway.TimeMs)}
 Data Prevista para Disparo: ${Date.format(giveaway.DateNow + giveaway.TimeMs, false, false)}
 Data de Disparo: ${giveaway.DischargeDate ? Date.format(giveaway.DateNow + giveaway.TimeMs, false, false) : 'Não disparado ainda'}
 Data de Criação Deste Registro: ${Date.format(Date.now(), false, false)}
-
+--------------------------------------------------------------
+${giveaway.AllowedMembers.length || '0'} Usuários Permitidos:\n${giveaway.AllowedMembers.length ? giveaway.AllowedMembers.map(id => `${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+--------------------------------------------------------------
+${giveaway.AllowedRoles.length || '0'} Cargos Obrigatórios:\n${giveaway.AllowedRoles.length ? giveaway.AllowedRoles.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+--------------------------------------------------------------
 ${giveaway.Participants?.length || '0'} Participantes Por Ordem de Entrada:\n${participantsMapped}`,
             { encoding: 'utf8' })
         await delay(1000)
