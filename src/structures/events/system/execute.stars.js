@@ -14,7 +14,7 @@ export default async ({ MessageReaction, guildData }) => {
         || author.bot
         || !channelId
         || count < limit
-        || sended.find(data => data.messageId === messageId)
+        || sended.some(data => data.messageId === messageId)
     ) return
 
     const channel = await guild.channels.fetch(channelId).catch(() => null)
