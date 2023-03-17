@@ -200,7 +200,7 @@ ${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}P
 
         try {
             const buffer = readFileSync(fileName)
-            const attachment = new AttachmentBuilder(buffer, { name: `participants.txt`, description: `Lista de participantes do sorteio ${gwId}` })
+            const attachment = new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })
             await interaction.editReply({ content: null, files: [attachment] }).catch(() => { })
             return rm(fileName, (err) => {
                 if (err) return console.log(`Não foi possível remover o arquivo.txt: \`${fileName}\``)
