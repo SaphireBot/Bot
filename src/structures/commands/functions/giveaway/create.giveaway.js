@@ -189,6 +189,11 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }
 
                     if (customId == 'members') {
+
+                        for (const memberId of int.values)
+                            if (guild.members.cache.get(memberId)?.user?.bot)
+                                return await int.update({ content: `${editContent()}\n${e.Deny} | Bots não podem ser selecionados para sorteios.` })
+
                         collectorData.AllowedMembers = int.values
                         return int.update({ content: editContent() }).catch(() => { })
                     }
