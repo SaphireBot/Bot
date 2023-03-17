@@ -103,7 +103,7 @@ Date.prototype.constructor.stringDate = (ms, withMilliseconds = false) => {
         hours: n => n == 1 ? 'hora' : 'horas',
         minutes: n => n == 1 ? 'minuto' : 'minutos',
         seconds: n => n == 1 ? 'segundo' : 'segundos',
-        milliseconds: n => n == 1 ? 'milisegundo' : 'milisegundos'
+        milliseconds: n => n == 1 ? 'milissegundo' : 'milissegundos'
     }
 
     const date = { millennia: 0, century: 0, years: 0, months: 0, ...parsems(ms) }
