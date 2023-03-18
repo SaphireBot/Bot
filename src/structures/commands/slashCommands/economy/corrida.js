@@ -317,7 +317,7 @@ export default {
 
             const data = () => usersJoined.map(d => `${d.distance.toFixed(2)} ${d.dots}${d.animal}`).join('\n')
 
-            const MessageRunning = await channel.send({
+            let MessageRunning = await channel.send({
                 content: data(),
                 fetchReply: true
             })
@@ -339,9 +339,8 @@ export default {
                 if (rank[0].distance >= limitToReach)
                     return newWinner(atualize, MessageRunning, rank[0], data())
 
-                return MessageRunning.edit({
-                    content: data()
-                }).catch(() => { })
+                return MessageRunning.edit({ content: data() })
+                    .catch(async () => MessageRunning = await MessageRunning.channel.send({ content: data() }))
 
             }, 2500)
 
