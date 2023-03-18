@@ -23,16 +23,11 @@ export default async interaction => {
             ephemeral: true
         })
 
-    if (client.animes.find(an => an.name?.toLowerCase() === name.toLowerCase()))
+    const animeFromDatabase = client.animes.filter(an => an.name?.toLowerCase() == name.toLowerCase()) || []
+    if (animeFromDatabase.length && animeFromDatabase.some(an => an.anime?.toLowerCase() == anime.toLowerCase()))
         return await interaction.reply({
-            content: `${e.Deny} | Este anime já foi registrado no banco de dados.`,
-            components: [], embeds: []
-        }).catch(() => { })
-
-    if (client.animes.filter(an => an.type === 'anime').find(an => an.name?.toLowerCase() === name.toLowerCase()))
-        return await interaction.reply({
-            content: `${e.Deny} | Este anime já foi registrado no banco de dados.`,
-            components: [], embeds: []
+            content: `${e.Deny} | Este personagem/anime já foi registrado no banco de dados.`,
+            components: [], embeds: [], ephemeral: true
         }).catch(() => { })
 
     const elementType = [
