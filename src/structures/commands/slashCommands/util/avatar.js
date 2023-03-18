@@ -11,11 +11,13 @@ export default {
     options: [
         {
             name: 'user',
+            name_localization: { 'pt-BR': 'usuário' },
             description: 'Selecione um usuário para ver o avatar',
             type: ApplicationCommandOptionType.User
         },
         {
             name: 'show',
+            name_localization: { 'pt-BR': 'mostrar_mensagem' },
             description: 'Mostrar avatar para todo mundo',
             type: ApplicationCommandOptionType.String,
             choices: [
@@ -35,14 +37,16 @@ export default {
     },
     async execute({ interaction, client, e }) {
 
-        const { options, guild, user: authorMember } = interaction
-        const user = options.getUser('user') || authorMember
-        const hide = options.getString('show') === 'não'
-        const member = await guild.members.fetch(user.id).catch(() => null)
-        const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
-        const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
-        const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
-        const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
+        const user = interaction.options.getUser('user') || interaction.user
+        const member = interaction.options.getMember('user')
+        const hide = interaction.options.getString('show') === 'não'
+
+        const userAvatarURL = user.avatarURL({ forceStatic: false, size: 1024 })
+        const memberAvatarURL = member ? member?.avatarURL({ forceStatic: false }) : null
+
+        const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
+        const memberAvatarImage = member ? member?.displayAvatarURL({ forceStatic: false, size: 1024 }) : null
+
         const banner = await getBanner()
 
         const embeds = [{

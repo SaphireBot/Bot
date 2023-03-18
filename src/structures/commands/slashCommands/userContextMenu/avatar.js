@@ -1,5 +1,3 @@
-import('dotenv/config')
-
 export default {
     name: 'Avatar',
     dm_permission: false,
@@ -8,10 +6,10 @@ export default {
     async execute({ interaction, client, e }) {
 
         const { targetUser: user, targetMember: member } = interaction
-        const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 })
-        const memberAvatarURL = member?.avatarURL({ dynamic: true, size: 1024 })
-        const userAvatarImage = user.displayAvatarURL({ dynamic: true, size: 1024 })
-        const memberAvatarImage = member?.displayAvatarURL({ dynamic: true, size: 1024 })
+        const userAvatarURL = user.avatarURL({ forceStatic: false, size: 1024 })
+        const memberAvatarURL = member?.avatarURL({ forceStatic: false, size: 1024 })
+        const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
+        const memberAvatarImage = member?.displayAvatarURL({ forceStatic: false, size: 1024 })
         const banner = await user.banner()
         const embeds = [
             {
