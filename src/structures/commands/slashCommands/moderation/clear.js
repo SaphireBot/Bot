@@ -33,7 +33,7 @@ export default {
             name_localizations: { 'pt-BR': 'canal' },
             description: 'Canal que terá as mensagens deletadas',
             type: ApplicationCommandOptionType.Channel,
-            channelTypes: [
+            channel_types: [
                 ChannelType.GuildText,
                 ChannelType.AnnouncementThread,
                 ChannelType.GuildAnnouncement,
@@ -93,6 +93,18 @@ export default {
         const bots = commandData?.b || interaction?.options?.getString('filter') == 'bots'
         const attachments = commandData?.a || interaction?.options?.getString('filter') == 'attachments'
 
+        if (!channel)
+            return await interaction.reply({
+                content: `${e.Deny} | Huuuum... Não achei canal nenhum...`,
+                ephemeral: true
+            })
+
+        if (!channel.viewable)
+            return await interaction.reply({
+                content: `${e.Deny} | Epa! Não tenho permissão para acessar esse canal.`,
+                ephemeral: true
+            })
+
         if (commandData?.m && !member)
             return await interaction.update({
                 content: `${e.SaphireDesespero} | Oshhh... Eu vi que você marcou um membro, mas eu não achei ele no servidor...`,
@@ -100,8 +112,14 @@ export default {
             })
 
         if (commandData) {
-            await interaction.message.delete().catch(() => { })
-            return deleteMessages()
+            return interaction.message.delete()
+                .then(() => deleteMessages())
+                .catch(err => {
+                    return interaction.message.edit({
+                        content: `${e.bug} | Houve um erro iniciar a execução do comando.\n${e.bug} | #${err.code} \`${err}\``,
+                        components: []
+                    }).catch(() => { })
+                })
         }
 
         const filters = [
@@ -154,6 +172,11 @@ export default {
 
             while (control.messagesCounterControl !== 0) {
 
+                if (!channel.viewable) {
+                    control.response += `${e.Deny} | Eu não tenho acesso ao canal ${channel}.`
+                    break;
+                }
+
                 if (control.messagesCounterControl > 100) {
                     control.toFetchLimit = 100
                 } else {
@@ -164,23 +187,24 @@ export default {
                 if (member) control.toFetchLimit = 100
 
                 if (control.toFetchLimit < 1 || control.toFetchLimit > 100) break;
-                let messages = await channel.messages.fetch({ limit: control.toFetchLimit }).catch(err => err)
+                let messages = await channel.messages.fetch({ limit: control.toFetchLimit })
+                    .catch(err => {
+                        control.response += {
+                            10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
+                            50013: `${e.Deny} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageMessages}\`** para executar este comando.`,
+                            50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`,
+                            50001: `${e.Warn} | Eu não tenho acesso as mensagens que foram solicitadas a exclusão.`
+                        }[err.code]
+                            || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${Config.MoonServerLink}).\n${e.bug} | (${err.code}) \`${err}\``
+                        control.response += '\n'
+                        return null
+                    })
 
-                if (messages instanceof Error) {
-                    const content = {
-                        10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
-                        50013: `${e.Deny} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageMessages}\`** para executar este comando.`,
-                        50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`,
-                        50001: `${e.Warn} | Eu não tenho acesso as mensagens que foram solicitadas a exclusão.`
-                    }[messages.code]
-                        || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${Config.MoonServerLink}).\n${e.bug} (${messages.code}) \`${messages}\``
-                    await interaction.channel.send({ content, ephemeral: true })
-                    break
-                }
-
+                if (!messages) break
                 if (!messages.size && control.looping > 0) break;
                 if (!messages.size && control.looping == 0)
-                    return await interaction.channel.send({ content: `${e.Deny} | Este canal não possui nenhuma mensagem.`, ephemeral: true })
+                    return await interaction.channel.send({ content: `${e.Deny} | Este canal não possui nenhuma mensagem.` })
+                        .catch(() => interaction.message.edit({ content: control.response, components: [] }).catch(() => { }))
 
                 let disable = 0
                 if (messages.size <= amount) disable++
@@ -230,20 +254,19 @@ export default {
                 if ((!messages?.size && !messages?.length) && control.looping > 0) continue;
 
                 const messagesDeleted = await channel.bulkDelete(messages, true)
-                    .catch(err => err.code)
+                    .catch(err => {
+                        control.response += {
+                            10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
+                            50013: `${e.Deny} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageMessages}\`** para executar este comando.`,
+                            50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`,
+                            50001: `${e.Warn} | Eu não tenho acesso as mensagens que foram solicitadas a exclusão.`
+                        }[err.code]
+                            || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${Config.MoonServerLink}).\n${e.bug} | (${err.code}) \`${err}\``
+                        control.response += '\n'
+                        return null
+                    })
 
-                if (messagesDeleted instanceof Error) {
-                    const content = {
-                        10008: `${e.Warn} | Alguma das mensagens acima é desconhecida ou o Discord está com lag.`,
-                        50013: `${e.Deny} | Eu não tenho a permissão **\`${PermissionsTranslate.ManageMessages}\`** para executar este comando.`,
-                        50034: `${e.Warn} | As mensagens acima são velhas demais para eu apagar.`,
-                        50001: `${e.Warn} | Eu não tenho acesso as mensagens que foram solicitadas a exclusão.`
-                    }[messagesDeleted.code]
-                        || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`/bug\` ou entre no [meu servidor](${Config.MoonServerLink}).\n${e.bug} (${messagesDeleted.code}) \`${messagesDeleted}\``
-                    await interaction.channel.send({ content, ephemeral: true }).catch(() => { })
-                    break
-                }
-
+                if (!messagesDeleted) break
                 counter += messagesDeleted.size
                 control.messagesCounterControl -= messagesDeleted.size
                 control.looping++
@@ -263,7 +286,8 @@ export default {
                 { key: 'ignored', text: `\n🪄 | ${control.ignored} mensagens foram ignoradas pelo filtro.` },
             ])
                 if (control[data.key] > 0) control.response += data.text
-            return await interaction.channel.send({ content: control.response }).catch(() => { })
+            return await interaction.channel.send({ content: control.response })
+                .catch(() => interaction.message.edit({ content: control.response, components: [] }).catch(() => { }))
         }
 
     }
