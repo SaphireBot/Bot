@@ -122,13 +122,13 @@ export default {
 
         async function buildScriptAndSend(rankingData) {
 
-            const data = rankingData.query || []
+            const data = rankingData?.query || []
             await interaction.reply({ content: `${e.Loading} | Construindo...`, ephemeral: true }).catch(() => { })
 
             const usersMapped = data.length > 0
                 ? data
                     .filter(d => d.id)
-                    .map((data, i) => `${(i + 1) < 10 ? `0${i + 1}` : i + 1}. ${data.tag || 'User#0000'} (${data.id}) - ${data[category]?.currency() || 0} `)
+                    .map((data, i) => formatText(data, i))
                     .join('\n')
                 : '~~ Ninguém ~~'
 
@@ -137,7 +137,7 @@ export default {
             writeFileSync(
                 fileName,
                 `${data.length} Contas Documentadas Acima de 0
-Horário Exato do Ranking: ${Date.format(new Date())}
+Data de Construção: ${Date.format(new Date())}
 Sua Colocação: ${data.findIndex(q => q.id == user.id) + 1 || '??'}
 
 ${usersMapped}
@@ -156,6 +156,15 @@ ${usersMapped}
                 return await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { })
             }
 
+        }
+
+        function formatText(data, i) {
+            let string = `${(i + 1) < 10 ? `0${i + 1}` : i + 1}. ${data.tag || 'User#0000'} (${data.id}) - ${data[category]?.currency() || 0}`
+            
+            if (data.id == user.id)
+                string += ' 🌟'
+
+            return string
         }
     }
 }
