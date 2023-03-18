@@ -243,7 +243,7 @@ export default {
 
                     return msg.edit({ content: `<@${control.playNow}>, é sua vez.`, components: control.buttons })
                 })
-                .on('end', (i, reason) => {
+                .on('end', (_, reason) => {
                     Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
                     if (reason === 'user') return
 
@@ -293,7 +293,7 @@ export default {
 
         function getButtons() {
 
-            let emojiDefault = e.Hmmm
+            let emojiDefault = e.SaphireWhat
 
             /*
                 a1 a2 a3 a4 a5

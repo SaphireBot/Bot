@@ -39,7 +39,7 @@ export default [
         JSON: 'Morder',
         name: 'Morder',
         description: 'As vezes, mordem faz bem',
-        embedTextOne: `${e.Bite} $user está mordendo $member`, embedTextTwo: `${e.Bite} $member & $user estão se mordendo`
+        embedTextOne: `😬 $user está mordendo $member`, embedTextTwo: `$😬 $member & $user estão se mordendo`
     },
     {
         JSON: 'Chupar',

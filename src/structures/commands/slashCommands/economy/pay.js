@@ -44,7 +44,7 @@ export default {
 
         if (user.id === client.user.id)
             return await interaction.reply({
-                content: `${e.HiNagatoro} | Preciso não coisa fofa, eu já sou rica.`,
+                content: `${e.Deny} | Preciso não coisa fofa, eu já sou rica.`,
                 ephemeral: true
             })
 
