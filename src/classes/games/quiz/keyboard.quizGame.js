@@ -8,7 +8,7 @@ import enableKeyboardCollectorQuizGame from "./enableKeyboardCollector.quizGame.
  */
 export default async (question, Quiz) => {
 
-    if (Quiz.stop) return
+    if (Quiz.stop) return Quiz.unregister()
     Quiz.data.rounds++
     const correctAnswer = question.answers.find(aw => aw.correct)
 
@@ -29,6 +29,6 @@ export default async (question, Quiz) => {
     }
 
     await Quiz.updateMessage({ embeds: [embed], fetchReply: true })
-    if (!Quiz.message || Quiz.stop) return
-    return await enableKeyboardCollectorQuizGame(Quiz.message, correctAnswer.answer, Quiz, question.questionId)
+    if (!Quiz.message || Quiz.stop) return Quiz.unregister()
+    return await enableKeyboardCollectorQuizGame(Quiz.message, correctAnswer.answer, Quiz, question)
 }

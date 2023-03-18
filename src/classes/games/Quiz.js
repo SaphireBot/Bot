@@ -1,8 +1,8 @@
-import QuizManager from "./QuizManager.js";
-import custom from "../../structures/classes/buttons/quiz/custom.quiz.js";
 import { Database, SaphireClient as client } from "../index.js";
 import { ButtonStyle } from "discord.js";
 import { Emojis as e } from "../../util/util.js";
+import custom from "../../structures/classes/buttons/quiz/custom.quiz.js";
+import QuizManager from "./QuizManager.js";
 import keyboardQuizGame from "./quiz/keyboard.quizGame.js";
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -13,15 +13,15 @@ export default class Quiz {
         this.user = interaction.user
         this.guild = interaction.guild
         this.channel = interaction.channel
-        this.data = { rounds: 0, hits: 0, misses: 0, timeBonus: 0 }
+        this.data = { rounds: 0, hits: 0, misses: 0, timeBonus: 0, points: {} }
         this.options = {}
         this.stop = false
         this.questions = QuizManager.questions
         this.defaultOptions = {
-            userId: client.user.id, // Users Preference --- It's client's 'cause is the default options
+            userId: client.user.id, // UserId Preference --- It's client's ID 'cause is the default options
             gameType: 'keyboard', // keyboard | buttons
             responseTime: 15000, // 5000 ~ 60000
-            gameRepeat: 'noRepeat', // repeat | endQuestion | allRepeat | noRepeat
+            gameRepeat: 'noRepeat', // endQuestion | allRepeat | noRepeat
             losePointAtError: false, // Boolean - At Game Button Type
             shortRanking: true, // Boolean - At both Game Type
             categories: QuizManager.categories // It's a [string, string] with all categories enabled
@@ -42,9 +42,7 @@ export default class Quiz {
 
         this.options = userOptions ?? this.defaultOptions
         this.options.categories = this.options.categories.length > 0 ? this.options.categories : QuizManager.categories
-        this.questions = userOptions
-            ? QuizManager.questions.filter(question => this.options.categories.includes(question?.category)) || []
-            : QuizManager.questions
+        this.shuffleQuestions()
 
         return;
     }
@@ -198,7 +196,7 @@ export default class Quiz {
             }).catch(() => { })
         })
 
-        if (this.stop) return
+        if (this.stop) return this.unregister()
 
         const collector = this.message.createMessageComponentCollector({ filter: () => false, time: 3100 })
             .on('end', (_, reason) => {
@@ -217,7 +215,7 @@ export default class Quiz {
     }
 
     async prepare(int) {
-        if (this.stop) return
+        if (this.stop) return this.unregister()
 
         if (!this.questions?.length) {
             this.unregister()
@@ -266,7 +264,7 @@ export default class Quiz {
     }
 
     async randomizeQuestion() {
-        if (this.stop) return
+        if (this.stop) return this.unregister()
         this.questions.sort(() => Math.random() - Math.random())
         await delay(4000)
         return
@@ -283,7 +281,16 @@ export default class Quiz {
     }
 
     getQuestion() {
-        return this.questions[Math.floor(Math.random() * this.questions.length)]
+        const index = Math.floor(Math.random() * this.questions.length)
+        const question = this.questions[index]
+        if (this.options.gameRepeat != 'allRepeat') this.questions.splice(index, 1)
+        return question
+    }
+
+    shuffleQuestions() {
+        this.questions = this.options.userId !== client.user.id
+            ? QuizManager.questions.filter(question => this.options.categories.includes(question?.category)) || []
+            : QuizManager.questions
     }
 
     unregister() {
@@ -294,7 +301,13 @@ export default class Quiz {
         return await this.message.delete().catch(() => { })
     }
 
-    async channelSend({ content = null, embeds = [], components = [] }) {
+    async channelSend({ content = null, embeds = [], components = [], redefineMessage = false }) {
+
+        if (redefineMessage) {
+            this.message = await this.channel.send({ content, embeds, components }).catch(() => { })
+            return
+        }
+
         return await this.channel.send({ content, embeds, components }).catch(() => { })
     }
 
@@ -340,5 +353,21 @@ export default class Quiz {
     async addUsersPoint(usersId = []) {
         if (typeof usersId == 'string') usersId = [usersId]
         await Database.User.updateMany({ id: { $in: usersId } }, { $inc: { "GamingCount.QuizQuestions": 1 } }, { upsert: true })
+    }
+
+    async next() {
+        if (this.stop) return this.unregister()
+        await delay(1000)
+        const question = this.getQuestion()
+
+        if (!question) {
+            this.stop = true
+            this.unregister()
+            return this.channel.send({
+                content: `${e.DenyX} | Ok ok ok ok ok!!!!! **NENHUMA** pergunta foi encontrada...`
+            }).catch(() => { })
+        }
+
+        return await this.lauch(this.options.gameType, question)
     }
 }

@@ -117,14 +117,6 @@ export default async interaction => {
                         },
                         {
                             type: 2,
-                            label: 'Repetição',
-                            emoji: '🔄',
-                            custom_id: 'repeat',
-                            style: ButtonStyle.Primary,
-                            disabled: customData.gameRepeat == 'repeat'
-                        },
-                        {
-                            type: 2,
                             label: 'Sem Repetir [Padrão]',
                             emoji: '📝',
                             custom_id: 'noRepeat',
@@ -288,10 +280,6 @@ export default async interaction => {
                 title: `${e.QuizLogo} ${client.user.username}'s Quiz Customization`,
                 description: `${e.amongusdance} Peguei o tempo. E agora? Qual o tipo de repetição?\n${e.Loading} Aguardando resposta - 3/6`,
                 fields: [
-                    {
-                        name: '🔄 Repetição',
-                        value: 'Por padrão serve para repetir. Legal né?\nEsse sistema de Quiz suporta alguns tipos de repetições customizadas.'
-                    },
                     {
                         name: '🫡 Sem Repetir, Porém, Repetindo',
                         value: 'Quando todas as perguntas forem respondidas, as perguntas serão embaralhadas novamente e lançadas novamente.'
@@ -607,6 +595,7 @@ export default async interaction => {
 
     /**
      * reasons from collector end
+     * channelDelete - The channel was deleted
      * messageDelete - The message was deleted
      * user - The collector was stop by the user
      * idle - When idleling time is over
