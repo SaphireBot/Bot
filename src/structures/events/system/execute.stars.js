@@ -27,7 +27,7 @@ export default async ({ MessageReaction, guildData }) => {
         color: 0xFFAC33,
         author: {
             name: author.tag,
-            icon_url: author.avatarURL({ dynamic: true }),
+            icon_url: author.avatarURL({ forceStatic: false }),
             url: message.url,
         },
         description: `${content}`.limit('MessageEmbedDescription'),

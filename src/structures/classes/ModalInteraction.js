@@ -1515,7 +1515,7 @@ export default class ModalInteraction extends Base {
 
         const embed = {
             color: client.blue,
-            author: { name: `${user.tag} enviou uma sugestão`, iconURL: user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }) },
+            author: { name: `${user.tag} enviou uma sugestão`, iconURL: user.displayAvatarURL({ forceStatic: false, format: "png", size: 1024 }) },
             description: text,
             footer: { text: '/enviar' },
             timestamp: new Date()
@@ -1556,7 +1556,7 @@ export default class ModalInteraction extends Base {
         const embed = {
             color: client.red,
             title: `${e.Report} Novo Reporte Recebido`,
-            thumbnail: { url: user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }) || null },
+            thumbnail: { url: user.displayAvatarURL({ forceStatic: false, format: "png", size: 1024 }) || null },
             description: `**Conteúdo do Reporte:**\n${text}`,
             fields: [{
                 name: '👤 Author do Reporte',

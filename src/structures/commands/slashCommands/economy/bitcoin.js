@@ -55,7 +55,7 @@ export default {
 
             const BitUserFarm = userData?.Perfil.Bits
             const BitUser = userData?.Perfil.Bitcoins || 0
-            const avatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
+            const avatar = user.displayAvatarURL({ forceStatic: false, format: "png", size: 1024 })
 
             return await interaction.reply({
                 embeds: [{

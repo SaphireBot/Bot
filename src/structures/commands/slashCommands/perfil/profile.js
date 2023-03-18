@@ -77,7 +77,7 @@ export default {
                 embeds: [{
                     color: client.blue,
                     description: `${e.VipStar} **Perfil Pessoal de ${client.user.username}**`,
-                    thumbnail: { url: user.displayAvatarURL({ dynamic: true }) },
+                    thumbnail: { url: user.displayAvatarURL({ forceStatic: false }) },
                     fields: [
                         {
                             name: `👤 Pessoal`,
@@ -271,7 +271,7 @@ export default {
 
         Embed.title = `${vip} ${user.id === author.id ? 'Seu perfil' : `Perfil de ${user.username}`}`
         Embed.description = null
-        Embed.thumbnail = { url: user.displayAvatarURL({ dynamic: true }) }
+        Embed.thumbnail = { url: user.displayAvatarURL({ forceStatic: false }) }
         Embed.image = { url: banner || data.Walls?.Set || null }
         Embed.fields = [
             {

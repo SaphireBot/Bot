@@ -45,7 +45,7 @@ client.on('guildBanAdd', async ban => {
             { name: '📝 Razão', value: `${reason || 'Sem motivo informado'}` },
             { name: '📅 Data', value: `${Date.Timestamp()}` }
         ],
-        footer: { text: guild.name, iconURL: guild.iconURL({ dynamic: true }) }
+        footer: { text: guild.name, iconURL: guild.iconURL({ forceStatic: false }) }
     }
 
     return channel.send({ embeds: [embed] }).catch(() => { })

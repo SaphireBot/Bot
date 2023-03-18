@@ -74,7 +74,7 @@ export default async (interaction, options = []) => {
         ctx.fillRect(40, 0, 240, canvas.height);
         ctx.globalAlpha = 1;
 
-        const avatar = await loadImage(user.avatarURL({ dynamic: true, format: "png" })?.replace('webp', 'png'));
+        const avatar = await loadImage(user.avatarURL({ forceStatic: false, format: "png" })?.replace('webp', 'png'));
 
         ctx.save();
         RoundedBox(ctx, 40 + 30, 30, 180, 180, Number(AvatarRoundRadius));
