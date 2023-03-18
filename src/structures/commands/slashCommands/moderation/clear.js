@@ -257,7 +257,7 @@ export default {
                 { key: 'system', text: `\n${e.Info} | ${control.system} mensagens do sistema não foram apagadas.` },
                 { key: 'older', text: `\n📆 | ${control.older} mensagens são mais velhas que 14 dias.` },
                 { key: 'pinned', text: `\n📌 | ${control.pinned} mensagens fixadas não foram apagadas.` },
-                { key: 'MemberMessages', text: `\n👤 | ${control.MemberMessages} mensagens de ${member.user.tag} foram deletadas.` },
+                { key: 'MemberMessages', text: `\n👤 | ${control.MemberMessages} mensagens de ${member?.user?.tag || 'Not Found'} foram deletadas.` },
                 { key: 'attachmentsMessages', text: `\n📃 | ${control.attachmentsMessages} mensagens com quaisquer tipo de mídia foram apagadas.` },
                 { key: 'botsMessages', text: `\n🤖 | ${control.botsMessages} mensagens de bots foram apagadas.` },
                 { key: 'ignored', text: `\n🪄 | ${control.ignored} mensagens foram ignoradas pelo filtro.` },
