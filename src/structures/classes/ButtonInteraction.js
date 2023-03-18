@@ -82,7 +82,8 @@ export default class ButtonInteraction extends Base {
             bet: [indexBet, this, commandData],
             removeReaction: [this.removeReaction, this, commandData],
             chat: [this.sendGlobalChatModel, this],
-            giveaway: [giveawayButton, this, commandData]
+            giveaway: [giveawayButton, this, commandData],
+            clear: [this.clear, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
@@ -103,6 +104,18 @@ export default class ButtonInteraction extends Base {
             return await this[byThis]()
 
         return
+    }
+
+    async clear(interaction, customData) {
+        const clearCommand = client.slashCommands.get(customData.c)
+
+        if (!clearCommand)
+            return await interaction.update({
+                content: `${e.SaphireDesespero} | Epa epa epa, eu não achei o comando clear...`,
+                components: []
+            })
+
+        return clearCommand.execute(interaction, customData)
     }
 
     async removeReaction({ interaction, customId, channel }, customData) {
