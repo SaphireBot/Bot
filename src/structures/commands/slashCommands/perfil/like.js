@@ -69,7 +69,7 @@ export default {
 
         if (Date.Timeout(1800000, data.timeout))
             return await interaction.reply({
-                content: `${e.Nagatoro} | Calminha aí Princesa! Outro like só ${Date.Timestamp(new Date(data.timeout + 1800000), 'R', true)}`,
+                content: `${e.Deny} | Calminha aí Princesa! Outro like só ${Date.Timestamp(new Date(data.timeout + 1800000), 'R', true)}`,
                 ephemeral: true
             })
 
