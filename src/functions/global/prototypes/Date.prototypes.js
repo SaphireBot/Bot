@@ -37,20 +37,15 @@ Date.prototype.constructor.complete = ms => {
 }
 
 Date.prototype.constructor.GetTimeout = function (TimeToCooldown = 0, DateNowInDatabase = 0, style) {
-
     const Time = ~~((TimeToCooldown + DateNowInDatabase) / 1000)
-
     return time(Time, TimestampStyles[style] || 't')
 }
 
 Date.prototype.constructor.Timeout = (TimeoutInMS = 0, DateNowAtDatabase = 0) => TimeoutInMS - (Date.now() - DateNowAtDatabase) > 0
 
 Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style, isDate) {
-
     if (isDate) return time(TimeInMs, TimestampStyles[style] || 't')
-
     return time(new Date((Date.now() + TimeInMs) / 1000).valueOf(), TimestampStyles[style] || 't')
-
 }
 
 Date.prototype.constructor.format = function (DateInMs = 0, Shorted = false, withDateNow = true) {
@@ -150,3 +145,4 @@ Date.prototype.constructor.stringDate = (ms, withMilliseconds = false) => {
 function FormatNumber(data) {
     return data < 10 ? `0${data}` : data
 }
+

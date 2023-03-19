@@ -1,7 +1,7 @@
-import infoSaphire from "../../functions/bot/info.saphire.js"
+import fanarts from "../../functions/bot/fanarts.saphire.js"
+import profile from "../../functions/bot/profile.saphire.js"
 import { ApplicationCommandOptionType } from "discord.js"
 import { Emojis as e } from "../../../../util/util.js"
-import fanartsSaphire from "../../functions/bot/fanarts.saphire.js"
 
 export default {
     name: 'saphire',
@@ -16,52 +16,32 @@ export default {
     options: [
         {
             name: 'info',
-            description: 'Informações gerais',
-            type: ApplicationCommandOptionType.Subcommand,
-            options: [
+            name_localizations: { "en-US": "informations", 'pt-BR': 'informações' },
+            description: 'Informações Gerais',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            choices: [
                 {
-                    name: 'options',
-                    description: 'Opções de informações',
-                    type: ApplicationCommandOptionType.String,
-                    required: true,
-                    choices: [
-                        {
-                            name: 'Fotos de Perfil',
-                            value: 'profile'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'fanarts',
-            description: 'Comando em homenagem as fanarts',
-            type: ApplicationCommandOptionType.Subcommand,
-            options: [
+                    name: 'Dados Técnico (Bot Info)',
+                    value: 'data'
+                },
                 {
-                    name: 'view',
-                    description: 'Visualize as fanarts',
-                    type: ApplicationCommandOptionType.String,
-                    autocomplete: true
+                    name: 'Ver as Fotos de Perfil',
+                    value: 'fanarts'
                 }
             ]
         }
     ],
     async execute({ interaction }) {
 
-        const { options } = interaction
-        const subCommand = options.getSubcommand()
+        const subCommand = { profile, fanarts }[interaction.options.getString('info')]
 
-        if (subCommand === "info")
-            return infoSaphire(interaction)
+        if (!subCommand)
+            return await interaction.reply({
+                content: '${e.Deny} | Comando não reconhecido... ${ReplayNonSubFunctionFound_151844}',
+                ephemeral: true
+            })
 
-        if (subCommand === "fanarts")
-            return fanartsSaphire(interaction)
-
-        return await interaction.reply({
-            content: `${e.Deny} | Comando não reconhecido... Estranho...`,
-            ephemeral: true
-        })
-
+        return subCommand(interaction)
     }
 }
