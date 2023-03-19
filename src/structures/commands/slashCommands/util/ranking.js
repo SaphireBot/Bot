@@ -107,7 +107,7 @@ export default {
             embeds: [{
                 color: client.blue,
                 title: embed.title,
-                description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 60000 * 15), 'R', true)}\n \n${`${format || 'O Ranking ainda não foi atualizado.'}`.limit('MessageEmbedDescription')}`,
+                description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 1000 * 60 * 15), 'R', true)}\n \n${`${format || 'O Ranking ainda não foi atualizado.'}`.limit('MessageEmbedDescription')}`,
                 footer: { text: `Seu ranking: ${userRanking}` }
             }]
         })
