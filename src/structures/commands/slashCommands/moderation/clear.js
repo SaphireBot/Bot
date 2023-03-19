@@ -100,9 +100,12 @@ export default {
             tempData.splice(index, 1)
         }
 
-        if (!guild.members.me.permissions.has([DiscordPermissons.ManageMessages, DiscordPermissons.ReadMessageHistory], true))
+        if (
+            !guild.members.me.permissions.has(DiscordPermissons.ManageMessages, true)
+            || !guild.members.me.permissions.has(DiscordPermissons.ReadMessageHistory, true)
+        )
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageMessages}** & **${PermissionsTranslate.ManageMessages}** para executar este comando.`,
+                content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageMessages}** & **${PermissionsTranslate.ReadMessageHistory}** para executar este comando.`,
                 ephemeral: true
             })
 
