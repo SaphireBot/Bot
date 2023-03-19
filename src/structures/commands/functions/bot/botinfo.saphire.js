@@ -10,6 +10,12 @@ const awaiting = {}
 // SlashCommand & Button Interaction
 export default async (interaction, commandData) => {
 
+    if (commandData && commandData?.userId !== interaction.user.id)
+        return await interaction.reply({
+            content: `${e.Deny} | Calma calma, só <@${commandData.userId}> pode atualizar, ok?`,
+            ephemeral: true
+        })
+
     let message = undefined
 
     if (awaiting[interaction.user.id] && Timeouts[interaction.user.id] >= 5000)
@@ -18,21 +24,36 @@ export default async (interaction, commandData) => {
     if (awaiting[interaction.user.id])
         return interaction.reply({ content: `${e.Deny} | [SYSTEM INFO COOLDOWN] | Você já tem uma solicitação em aberto, ok?`, ephemeral: true })
 
+    const button = {
+        type: 1,
+        components: [
+            {
+                type: 2,
+                label: 'Atualizando...',
+                emoji: e.Loading,
+                custom_id: 'refreshing',
+                style: ButtonStyle.Primary,
+                disabled: true
+            }
+        ]
+    }
+
     if (timeouts.some(userId => userId == interaction.user.id)) {
         Timeouts[interaction.user.id] ? Timeouts[interaction.user.id] += 700 : Timeouts[interaction.user.id] = 2500
         awaiting[interaction.user.id] = true
 
-        message = await reply({
-            content: commandData
-                ? `${e.Loading} | Esse comando tem um intervalo de uso, ok?\n${e.SaphireDesespero} | Você está clicando muito rápido. Quanto mais rápido você clica, mais vou demorar para te responder.`
-                : `${e.Loading} | Carregando informações... Você está usando esse comando muito rápido, sabia?`,
-            fetchReply: true
-        })
+        message = commandData
+            ? await interaction.update({ components: [button], fetchReply: true }).catch(() => { })
+            : await interaction.reply({ components: [button], fetchReply: true }).catch(() => { })
 
         return setTimeout(() => sendData(), Timeouts[interaction.user.id] || 0)
     } else {
         if (!Timeouts[interaction.user.id]) Timeouts[interaction.user.id] = 2500
-        message = await reply({ content: commandData ? `${e.Loading} | Atualizando...` : `${e.Loading} | Carregando informações...`, fetchReply: true })
+
+        message = commandData
+            ? await interaction.update({ components: [button], fetchReply: true }).catch(() => { })
+            : await interaction.reply({ components: [button], fetchReply: true }).catch(() => { })
+
         return sendData()
     }
 
@@ -51,7 +72,7 @@ export default async (interaction, commandData) => {
             allGuilds: (await client.shard.broadcastEval(shard => shard.guilds.cache.size)).reduce((prev, acc) => prev + acc, 0),
             allChannels: (await client.shard.broadcastEval(shard => shard.channels.cache.size)).reduce((prev, acc) => prev + acc, 0),
             allEmojis: (await client.shard.broadcastEval(shard => shard.emojis.cache.size)).reduce((prev, acc) => prev + acc, 0),
-            version: client.moonId == client.user.id ? 'Saphire' : 'Tester',
+            version: client.moonId == client.user.id ? 'Saphire' : 'Canary',
             uptime: Date.stringDate(client.uptime),
             ping: `${client.ws.ping}ms`,
             commandsSize: client.slashCommands.size || 0,
@@ -69,11 +90,25 @@ export default async (interaction, commandData) => {
         const timeDifference = primary.valueOf() // 100% all time online
         let result = (timeDifference / (Date.now() - accumulate)) * 100
         if (result > 100) result = 100
+        const userTag = interaction.user.tag
+
+        const rankingHi = [
+            `Eai ${userTag},`,
+            `Tudo bom ${userTag}?`,
+            `Alô ${userTag},`,
+            `Hey hey ${userTag},`,
+            `Eai ${userTag}, como tem passado?`,
+            `Olá ${userTag},`,
+            `Opa ${userTag},`,
+            `Oi oi ${userTag},`,
+            `Aoba ${userTag},`,
+            `Coé ${userTag},`
+        ].random()
 
         const embed = {
             color: client.blue,
             title: `🔎 Minhas Informações Técnicas`,
-            description: `${e.Check} Eai ${interaction.user}. Eu sou a ${client.user.username}, ${data.greetingTime}.`,
+            description: `${rankingHi} ${data.greetingTime}.`,
             fields: [
                 {
                     name: `🧩 Números das Shards`,
@@ -87,7 +122,7 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: '🛰️ Informações Gerais',
-                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\n\`\`\``
+                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
                 },
                 {
                     name: `${e.discloud} Máquina de Hospedagem`,
@@ -143,11 +178,5 @@ export default async (interaction, commandData) => {
             timeouts = timeouts.filter(userId => userId != interaction.user.id)
         }, Timeouts[interaction.user.id] || 0)
         return;
-    }
-
-    async function reply({ content = null, embeds = [], components = [], ephemeral = false }) {
-        return commandData
-            ? await interaction.update({ content, embeds, components, fetchReply: true, ephemeral }).catch(() => { })
-            : await interaction.reply({ content, embeds, components, fetchReply: true, ephemeral }).catch(() => { })
     }
 }

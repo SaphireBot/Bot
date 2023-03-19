@@ -26,8 +26,12 @@ export default {
                     value: 'botinfo'
                 },
                 {
-                    name: 'Ver as Fotos de Perfil',
+                    name: 'Ver Fanarts',
                     value: 'fanarts'
+                },
+                {
+                    name: 'Fotos de Perfil',
+                    value: 'profile'
                 }
             ]
         }
