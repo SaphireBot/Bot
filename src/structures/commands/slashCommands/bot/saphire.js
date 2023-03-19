@@ -1,7 +1,7 @@
 import fanarts from "../../functions/bot/fanarts.saphire.js"
 import profile from "../../functions/bot/profile.saphire.js"
+import botinfo from "../../functions/bot/botinfo.saphire.js"
 import { ApplicationCommandOptionType } from "discord.js"
-import { Emojis as e } from "../../../../util/util.js"
 
 export default {
     name: 'saphire',
@@ -23,7 +23,7 @@ export default {
             choices: [
                 {
                     name: 'Dados Técnico (Bot Info)',
-                    value: 'data'
+                    value: 'botinfo'
                 },
                 {
                     name: 'Ver as Fotos de Perfil',
@@ -34,7 +34,7 @@ export default {
     ],
     async execute({ interaction }) {
 
-        const subCommand = { profile, fanarts }[interaction.options.getString('info')]
+        const subCommand = { profile, fanarts, botinfo }[interaction.options.getString('info')]
 
         if (!subCommand)
             return await interaction.reply({

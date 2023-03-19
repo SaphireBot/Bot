@@ -145,4 +145,3 @@ Date.prototype.constructor.stringDate = (ms, withMilliseconds = false) => {
 function FormatNumber(data) {
     return data < 10 ? `0${data}` : data
 }
-

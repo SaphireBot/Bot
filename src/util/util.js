@@ -1,5 +1,6 @@
 import { ButtonStyle, GatewayIntentBits, Partials } from 'discord.js'
 import { Config as config } from './Constants.js'
+import Byte from './Bytes.js'
 import * as fs from 'fs'
 
 const SaphireClientOptions = {
@@ -142,5 +143,6 @@ export {
     SaphireClientOptions as ClientOptions,
     Flags,
     Gifs,
-    Buttons
+    Buttons,
+    Byte
 }

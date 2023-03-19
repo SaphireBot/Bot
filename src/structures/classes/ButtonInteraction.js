@@ -27,6 +27,7 @@ import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
 import { ButtonStyle } from 'discord.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import giveawayButton from './buttons/giveaway/giveaway.button.js'
+import botinfoSaphire from '../commands/functions/bot/botinfo.saphire.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -83,7 +84,8 @@ export default class ButtonInteraction extends Base {
             removeReaction: [this.removeReaction, this, commandData],
             chat: [this.sendGlobalChatModel, this],
             giveaway: [giveawayButton, this, commandData],
-            clear: [this.clear, this, commandData]
+            clear: [this.clear, this, commandData],
+            botinfo: [botinfoSaphire, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
