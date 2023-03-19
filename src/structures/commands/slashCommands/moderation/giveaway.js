@@ -35,7 +35,7 @@ export default {
                 {
                     name: 'time',
                     name_localizations: { "en-US": "time", 'pt-BR': 'tempo' },
-                    description: 'Para quando é o sorteio?',
+                    description: 'Para quando é o sorteio? (Ex: 1d 2h 3m)',
                     max_length: 100,
                     type: 3,
                     required: true
