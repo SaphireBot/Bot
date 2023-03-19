@@ -9,7 +9,7 @@ const awaiting = {}
 
 // SlashCommand & Button Interaction
 export default async (interaction, commandData) => {
-    console.log(Timeouts[interaction.user.id], timeouts, awaiting)
+
     let message = undefined
 
     if (awaiting[interaction.user.id] && Timeouts[interaction.user.id] >= 5000)
