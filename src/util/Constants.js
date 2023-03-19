@@ -456,7 +456,7 @@ const PermissionsTranslate = {
     SendTTSMessages: "Enviar mensagens em Texto-para-voz",
     Speak: "Falar",
     UseEmbeddedActivities: "Começar atividades",
-    Stream: "Vídeo",
+    Stream: "Transmitir Tela",
     UseApplicationCommands: "Usar comandos de aplicativo",
     UseExternalEmojis: "Usar emojis externos",
     UseExternalStickers: "Usar figurinhas externas",
