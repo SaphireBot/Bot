@@ -1,8 +1,9 @@
 import { AttachmentBuilder, ButtonStyle } from "discord.js"
-import { Database, GiveawayManager } from "../../../../classes/index.js"
+import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { writeFileSync, readFileSync, rm } from "fs"
 import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
+const messagesToEditButton = []
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async ({ interaction }, commandData) => {
@@ -54,7 +55,10 @@ export default async ({ interaction }, commandData) => {
 
         return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': message.id },
-            { $addToSet: { 'Giveaways.$.Participants': user.id, } },
+            {
+                $addToSet: { 'Giveaways.$.Participants': user.id },
+                $set: { 'Giveaways.$.Actived': true }
+            },
             { new: true }
         )
             .then(async document => {
@@ -67,12 +71,16 @@ export default async ({ interaction }, commandData) => {
                     })
 
                 giveaway.Participants = giveawayObject.Participants
-                refreshButton()
-                return await interaction.reply({
+
+                await interaction.reply({
                     content: `${e.CheckV} | Aeee ${e.Tada}, coloquei você na lista de participantes, agora é só esperar o sorteio terminar. Boa sorte`,
                     ephemeral: true
                 })
 
+                if (!giveaway.Actived) {
+                    client.emit('giveaway', giveaway)
+                } else refreshButton()
+                return
             })
             .catch(async err => await interaction.reply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
@@ -212,19 +220,24 @@ ${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}P
     }
 
     function refreshButton() {
-        const components = message?.components[0]?.toJSON()
-        if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
-        return message.edit({ components: [components] })
-            .catch(async err => {
-                if (err.code == 10008) {
-                    const msg = await channel.messages.fetch(gwId || '0').catch(() => null)
-                    const components = msg?.components[0]?.toJSON()
-                    if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
-                    if (msg) return msg.edit({ components: [components] })
-                    return
-                }
-                return;
-            })
+
+        if (messagesToEditButton.some(obj => obj.id == message.id)) return
+        messagesToEditButton.push({ id: message.id, timeout: setTimeout(() => edit(), 3000) })
+
+        async function edit() {
+            const components = message?.components[0]?.toJSON()
+            if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
+            messagesToEditButton.splice(messagesToEditButton.findIndex(obj => obj.id == message.id), 1)
+            return message.edit({ components: [components] }).catch(err => retry(err))
+            async function retry(err) {
+                if (err.code != 10008) return
+                const msg = await channel.messages.fetch(gwId || '0').catch(() => null)
+                const components = msg?.components[0]?.toJSON()
+                if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
+                if (msg) return msg.edit({ components: [components] })
+                return
+            }
+        }
     }
 
 }

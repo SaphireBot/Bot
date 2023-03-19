@@ -58,7 +58,7 @@ export default {
                 },
                 {
                     name: 'requires',
-                    name_localizations: { "en-US": "requires", 'pt-BR': 'requesitos' },
+                    name_localizations: { "en-US": "requires", 'pt-BR': 'requisitos' },
                     description: 'Quais os requisitos para este sorteio',
                     max_length: 1024,
                     type: 3
