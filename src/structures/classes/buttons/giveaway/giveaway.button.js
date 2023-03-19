@@ -1,10 +1,8 @@
 import { AttachmentBuilder, ButtonStyle } from "discord.js"
 import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
+import { Config } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
-import { writeFileSync, readFileSync, rm } from "fs"
-import { CodeGenerator } from "../../../../functions/plugins/plugins.js"
 const messagesToEditButton = []
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async ({ interaction }, commandData) => {
 
@@ -13,15 +11,11 @@ export default async ({ interaction }, commandData) => {
 
     const { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
-    const index = GiveawayManager.giveaways.findIndex(g => g.MessageID == gwId)
-    let giveaway = GiveawayManager.giveaways[index]
 
-    if (!giveaway) {
-        const index = GiveawayManager.awaiting.findIndex(g => g.MessageID == gwId)
-        giveaway = GiveawayManager.awaiting[index]
-    }
+    const giveaway = GiveawayManager.giveaways.find(g => g.MessageID == gwId)
+        || GiveawayManager.awaiting.find(g => g.MessageID == gwId)
 
-    if (index == -1 || !giveaway)
+    if (!giveaway)
         return await interaction.reply({
             content: `${e.SaphireWhat} | O sorteio não foi encontrado. Por favor, tente daqui alguns segundos ou fale com um administrador.`,
             ephemeral: true
@@ -77,10 +71,7 @@ export default async ({ interaction }, commandData) => {
                     ephemeral: true
                 })
 
-                if (!giveaway.Actived) {
-                    client.emit('giveaway', giveaway)
-                } else refreshButton()
-                return
+                return giveaway.Actived ? refreshButton() : client.emit('giveaway', giveaway)
             })
             .catch(async err => await interaction.reply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
@@ -185,11 +176,15 @@ export default async ({ interaction }, commandData) => {
                 .join('\n')
             : '~~ Ninguém ~~'
 
-        const fileName = `${CodeGenerator(7)}.${user.id}.txt`
+        return await interaction.editReply({
+            content: `${e.sleep} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
+            files: [new AttachmentBuilder(createBuffer(), { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
+        })
+            .catch(async err => await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { }))
 
-        writeFileSync(
-            fileName,
-            `Dados do Sorteio ${gwId}
+        function createBuffer() {
+            return Buffer.from(
+                `Dados do Sorteio ${gwId}
 Servidor: ${guild.name}
 Lançado por: ${guild.members.cache.get(giveaway.Sponsor)?.user?.tag || 'User Not Found'} (${giveaway.Sponsor})
 Prêmio: ${giveaway.Prize}
@@ -202,19 +197,8 @@ ${giveaway.AllowedMembers?.length > 0 ? `${giveaway.AllowedMembers?.length} ` : 
 --------------------------------------------------------------
 ${giveaway.AllowedRoles?.length > 0 ? `${giveaway.AllowedRoles?.length} ` : ''}Cargos Obrigatórios:\n${giveaway.AllowedRoles?.length ? giveaway.AllowedRoles?.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
 --------------------------------------------------------------
-${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`,
-            { encoding: 'utf8' })
-        await delay(1000)
-
-        try {
-            const buffer = readFileSync(fileName)
-            const attachment = new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })
-            await interaction.editReply({ content: null, files: [attachment] }).catch(() => { })
-            return rm(fileName, (err) => {
-                if (err) return console.log(`Não foi possível remover o arquivo.txt: \`${fileName}\``)
-            })
-        } catch (err) {
-            return await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.`, }).catch(() => { })
+${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`
+            )
         }
 
     }

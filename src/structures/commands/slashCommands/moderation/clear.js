@@ -347,11 +347,7 @@ export default {
                 if (control.toDelete.length + counter > amount)
                     control.toDelete.length = amount - counter
 
-                if (control.toDelete.every(id => typeof id == 'string')) {
-                    control.response += `\n${e.Deny} | Alguma mensagem não condiz com o status de mensagem do Discord.`
-                    control.toDelete = control.toDelete.filter(id => typeof id == 'string')
-                }
-
+                control.toDelete = control.toDelete.filter(i => i)
                 const messagesDeleted = await channel.bulkDelete(control.toDelete, true)
                     .catch(err => {
                         control.response += {
