@@ -1,9 +1,6 @@
 import { Database, SaphireClient as client } from '../../../../classes/index.js'
 import { ApplicationCommandOptionType, AttachmentBuilder } from 'discord.js'
-import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
-import { writeFileSync, readFileSync, rm } from 'fs'
 import refreshRanking from '../../../../functions/update/ranking/index.ranking.js'
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default {
     name: 'ranking',
@@ -132,35 +129,24 @@ export default {
                     .join('\n')
                 : '~~ Ninguém ~~'
 
-            const fileName = `${CodeGenerator(7)}.${user.id}.txt`
-
-            writeFileSync(
-                fileName,
-                `${data.length} Contas Documentadas Acima de 0
+            const attachment = new AttachmentBuilder(
+                Buffer.from(
+                    `${data.length} Contas Documentadas Acima de 0
 Data de Construção: ${Date.format(new Date())}
 Sua Colocação: ${data.findIndex(q => q.id == user.id) + 1 || '??'}
-
+    
 ${usersMapped}
-                `,
-                { encoding: 'utf8' })
-            await delay(1000)
-
-            try {
-                const buffer = readFileSync(fileName)
-                const attachment = new AttachmentBuilder(buffer, { name: 'ranking.txt', description: 'Ranking Bruto' })
-                await interaction.editReply({ content: null, files: [attachment] }).catch(() => { })
-                return rm(fileName, (err) => {
-                    if (err) return console.log(`Não foi possível remover o arquivo.txt: \`${fileName}\``)
+`),
+                {
+                    name: 'ranking.txt',
+                    description: 'Raw Ranking Data'
                 })
-            } catch (err) {
-                return await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { })
-            }
-
+            return await interaction.editReply({ content: null, files: [attachment] }).catch(() => { })
         }
 
         function formatText(data, i) {
             let string = `${(i + 1) < 10 ? `0${i + 1}` : i + 1}. ${data.tag || 'User#0000'} (${data.id}) - ${data[category]?.currency() || 0}`
-            
+
             if (data.id == user.id)
                 string += ' 🌟'
 

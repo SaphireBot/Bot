@@ -1,9 +1,7 @@
 import Quiz from "../../../../classes/games/QuizManager.js"
 import { Database, SaphireClient as client } from "../../../../classes/index.js"
-import { readFileSync, rm, writeFileSync } from 'fs'
 import { Emojis as e } from "../../../../util/util.js"
 import { AttachmentBuilder } from "discord.js"
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 // Button Interaction
 export default async interaction => {
@@ -38,8 +36,7 @@ export default async interaction => {
 
         await interaction.update({ content: `${e.Loading} | Um segundo, sua indicação já foi salva. Estou autenticando alguns dados...`, embeds: [], components: [] }).catch(() => { })
 
-        writeFileSync(
-            `${questionId}.txt`,
+        const buffer = Buffer.from(
             `--- SOLICITAÇÃO DE PERGUNTA | QUIZ QUESTION SYSTEM | FILE SECURITY REVIEW ---
 
 Status: ENVIADO PARA ANÁLISE
@@ -52,36 +49,22 @@ Servidor de Origem: ${guild.name} - ${guild.id}
 Global System Notification: ${indication.webhookUrl ? 'Ativado' : 'Desativado'}
 Personal Question ID: ${questionId}
 
-Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.
-            `,
-            { encoding: 'utf8' }
-        )
+Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.`
+)
 
-        await delay(2000)
+        const attachment = new AttachmentBuilder(buffer, { name: `${questionId}.txt`, description: 'Solicitação de Nova Pergunta para o Quiz' })
+        await Quiz.sendDocument(attachment).catch(() => { })
 
-        try {
-            const buffer = readFileSync(`${questionId}.txt`)
-            const attachment = new AttachmentBuilder(buffer, { name: `${questionId}.txt`, description: 'Solicitação de Nova Pergunta para o Quiz' })
-            await Quiz.sendDocument(attachment).catch(() => { })
-            rm(`${questionId}.txt`, err => {
-                if (err)
-                    return console.log(`Não foi possível deletar a suagestão de perguntas no Quiz: ${questionId}.txt`)
-            })
-
-            await interaction.message.edit({
-                content: `${e.Check} | A sua solicitação foi enviada com sucesso.\n${e.Info} | Sua indicação está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.`,
-                embeds: [],
-                components: [],
-                files: [attachment]
-            }).catch(() => { })
-            return
-        } catch (err) {
-            return await interaction.message.edit({
-                content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
-                embeds: [],
-                components: []
-            }).catch(() => { })
-        }
+        return await interaction.message.edit({
+            content: `${e.Check} | A sua solicitação foi enviada com sucesso.\n${e.Info} | Sua indicação está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.`,
+            embeds: [],
+            components: [],
+            files: [attachment]
+        }).catch(async err => await interaction.message.edit({
+            content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.QuestionsIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
+            embeds: [],
+            components: []
+        }).catch(() => { }))
 
     }
 }
