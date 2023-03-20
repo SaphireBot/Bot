@@ -4,6 +4,7 @@ import rescueBet from "./emojibet/rescue.bet.js"
 import viewEmoji from "./emojibet/view.emoji.js"
 import investEmoji from "./emojibet/invest.emoji.js"
 import handlerEmoji from "./emojibet/handler.emoji.js"
+import steal from "./emoji/steal.emoji.js"
 
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
@@ -99,6 +100,13 @@ export default {
                     }
                 ]
             }]
+        },
+        {
+            name: 'steal',
+            name_localizations: { 'pt-BR': 'roubar' },
+            description: '[moderation] Roube um emoji de qualquer servidor',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: []
         }
     ],
     helpData: {
@@ -111,7 +119,8 @@ export default {
         const isFunctionCommand = {
             view: viewEmoji,
             invest: investEmoji,
-            handler: handlerEmoji
+            handler: handlerEmoji,
+            steal
         }[options.getSubcommand()]
 
         if (isFunctionCommand)
