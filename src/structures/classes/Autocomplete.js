@@ -132,7 +132,7 @@ export default class Autocomplete extends Base {
     }
 
     async inSearchBuild(value, searchValue) {
-        let AnimeQuizIndication = this.client.animes
+        let AnimeQuizIndication = this.client.animes.sort(() => Math.random() - Math.random())
         if (!AnimeQuizIndication.length) return await this.respond()
 
         if (searchValue === 1)

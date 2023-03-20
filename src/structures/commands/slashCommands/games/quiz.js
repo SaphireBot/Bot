@@ -18,6 +18,7 @@ export default {
             options: [
                 {
                     name: 'view',
+                    name_localizations: { 'pt-BR': 'ver' },
                     description: '[games] Veja uma única marca',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
@@ -32,6 +33,7 @@ export default {
                 },
                 {
                     name: 'list',
+                    name_localizations: { 'pt-BR': 'lista' },
                     description: '[games] Ver a lista de logo/marcas',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
@@ -44,6 +46,7 @@ export default {
                 },
                 {
                     name: 'game',
+                    name_localizations: { 'pt-BR': 'jogar' },
                     description: '[games] Começar o quiz de logo/marcas',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
@@ -57,11 +60,13 @@ export default {
                 },
                 {
                     name: 'options',
+                    name_localizations: { 'pt-BR': 'opções' },
                     description: '[games] Opções gerais do comando',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'option',
+                            name_localizations: { 'pt-BR': 'opção' },
                             description: 'Opções gerais do comando',
                             type: 3,
                             required: true,
@@ -108,6 +113,7 @@ export default {
             options: [
                 {
                     name: 'options',
+                    name_localizations: { 'pt-BR': 'opções' },
                     description: 'Opções disponíveis do jogo bandeiras',
                     type: ApplicationCommandOptionType.String,
                     required: true,
@@ -135,17 +141,20 @@ export default {
             options: [
                 {
                     name: 'suggest',
+                    name_localizations: { 'pt-BR': 'sugerir' },
                     description: 'Sugira um novo personagem/anime para o Quiz',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'image',
+                            name_localizations: { 'pt-BR': 'imagem' },
                             description: 'Imagem do personagem/anime',
                             type: ApplicationCommandOptionType.Attachment,
                             required: true
                         },
                         {
                             name: 'name',
+                            name_localizations: { 'pt-BR': 'nome' },
                             description: 'Nome do anime/personagem',
                             type: ApplicationCommandOptionType.String,
                             required: true
@@ -158,6 +167,7 @@ export default {
                         },
                         {
                             name: 'type',
+                            name_localizations: { 'pt-BR': 'tipo' },
                             description: 'Quem/oque é?',
                             type: ApplicationCommandOptionType.String,
                             required: true,
@@ -184,23 +194,27 @@ export default {
                 },
                 {
                     name: 'options',
+                    name_localizations: { 'pt-BR': 'opções' },
                     description: 'Mais opções do comando aqui',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'method',
+                            name_localizations: { 'pt-BR': 'método' },
                             description: 'Saphire\'s Team Only - Método a ser executado',
                             type: ApplicationCommandOptionType.String,
                             autocomplete: true
                         },
                         {
                             name: 'search',
+                            name_localizations: { 'pt-BR': 'pesquisar' },
                             description: 'Pesquise por qualquer personagens/animes armazenados no banco de dados',
                             type: ApplicationCommandOptionType.String,
                             autocomplete: true
                         },
                         {
                             name: 'my_content',
+                            name_localizations: { 'pt-BR': 'meu_conteúdo' },
                             description: 'Pesquise pelos seus personagens/animes aceitos',
                             type: ApplicationCommandOptionType.String,
                             autocomplete: true
@@ -209,11 +223,13 @@ export default {
                 },
                 {
                     name: 'start',
+                    name_localizations: { 'pt-BR': 'começar' },
                     description: 'Inicie um novo jogo',
                     type: ApplicationCommandOptionType.Subcommand,
                     options: [
                         {
                             name: 'category',
+                            name_localizations: { 'pt-BR': 'categoria' },
                             description: 'Escolha a categoria do Quiz',
                             type: ApplicationCommandOptionType.String,
                             required: true,
