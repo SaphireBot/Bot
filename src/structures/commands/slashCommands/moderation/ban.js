@@ -11,7 +11,7 @@ export default {
     options: [
         {
             name: 'user',
-            description: 'O usuário a ser banido',
+            description: 'O membro ou ID do usuário a ser banido',
             type: ApplicationCommandOptionType.User,
             required: true
         },
