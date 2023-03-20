@@ -1,6 +1,6 @@
 import { Database, Modals } from "../../../../classes/index.js"
 import { ApplicationCommandOptionType, ChannelType, PermissionsBitField } from "discord.js"
-import { DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js"
+import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import categoryChannel from "../../functions/channel/category.channel.js"
 import deleteChannel from "../../functions/channel/delete.channel.js"
 import inviteChannel from "../../functions/channel/invite.channel.js"
@@ -83,9 +83,9 @@ export default {
 
         const { options, guild, channel: currentChannel, member } = interaction
 
-        if (!guild.members.me.permissions.has(DiscordPermissons.ManageChannels, true))
+        if (!guild.members.me.permissions.has(PermissionsBitField.Flags.ManageChannels, true))
             return await interaction.reply({
-                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ManageChannels}\`** para liberar este comando.`,
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.ManageChannels}\`** para executar este comando.`,
                 ephemeral: true
             })
 

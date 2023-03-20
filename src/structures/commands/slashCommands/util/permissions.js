@@ -5,7 +5,7 @@ import { Emojis as e } from '../../../../util/util.js'
 export default {
     name: 'permissions',
     name_localizations: { 'pt-BR': 'permissões' },
-    description: '[bot] Verifique as permissões de alguém no servidor',
+    description: '[util] Verifique as permissões de alguém no servidor',
     dm_permission: false,
     type: 1,
     database: false,
@@ -45,11 +45,11 @@ export default {
             },
             secondary: {
                 fieldName: '📝 Secundárias',
-                permissions: ['AttachFiles', 'ChangeNickname', 'CreatePrivateThreads', 'CreatePublicThreads', 'EmbedLinks']
+                permissions: ['UseEmbeddedActivities', 'AttachFiles', 'ChangeNickname', 'CreatePrivateThreads', 'CreatePublicThreads', 'EmbedLinks']
             },
             moderator: {
                 fieldName: `${e.ModShield} Moderação`,
-                permissions: ['ViewAuditLog', 'UseEmbeddedActivities', 'PrioritySpeaker', 'MuteMembers', 'MoveMembers', 'ModerateMembers', 'BanMembers', 'DeafenMembers', 'KickMembers', 'ManageMessages', 'ManageNicknames', 'ManageThreads']
+                permissions: ['ViewAuditLog', 'PrioritySpeaker', 'MuteMembers', 'MoveMembers', 'ModerateMembers', 'BanMembers', 'DeafenMembers', 'KickMembers', 'ManageMessages', 'ManageNicknames', 'ManageThreads']
             },
             manager: {
                 fieldName: '⚙️ Administrativo',

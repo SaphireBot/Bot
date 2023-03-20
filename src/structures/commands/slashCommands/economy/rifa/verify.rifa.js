@@ -66,7 +66,7 @@ export default async interaction => {
                 },
                 {
                     name: `🧩 Última Rifa`,
-                    value: `Número sorteado: \`${LastNumber}\`\nPrêmio: ${LastPrize}\nPrêmio acumulado: ${TempPrize} ${moeda}\nVencedor: ${LastWinner}`
+                    value: `Número sorteado: \`${LastNumber || 0}\`\nPrêmio: ${LastPrize || 0}\nPrêmio acumulado: ${TempPrize || 0} ${moeda}\nVencedor: ${LastWinner}`
                 },
                 {
                     name: '🔢 Números Disponíveis',
