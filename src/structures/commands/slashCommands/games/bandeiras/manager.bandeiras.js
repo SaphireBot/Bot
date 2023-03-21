@@ -284,12 +284,19 @@ export default class FlagGame {
 
                 return setTimeout(() => this.start(true), 2500)
             })
-            .on('end', async () => {
+            .on('end', async (_, reason) => {
 
                 if (responded) return
                 clearTimeout(() => timeout)
-
                 this.unregister()
+
+                if (reason == 'channelDelete') return
+
+                if (reason == 'messageDelete')
+                    return this.channel.send({
+                        content: `${e.Info} | A mensagem do Quiz foi deletada e o jogo interrompido. Os dados do jogo foram salvos.`
+                    })
+
                 const embed = this.message.embeds[0].data
                 embed.color = client.red
                 embed.footer = { text: `Jogo Finalizado | ${embed.footer.text}` }
@@ -344,6 +351,8 @@ export default class FlagGame {
     }
 
     async collectInteraction(flag) {
+
+        if (!this.message) return
 
         let responded = false
         const alreadyReplied = []
