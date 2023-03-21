@@ -292,6 +292,11 @@ export default class FlagGame {
 
                 if (reason == 'channelDelete') return
 
+                if (!this.message)
+                    return this.channel.send({
+                        content: `${e.Info} | A mensagem do jogo não foi encontrada. Por favor, não apague a mensagem ou tente bugar este jogo. Jogo finalizado e dados salvados.`
+                    })
+
                 if (reason == 'messageDelete')
                     return this.channel.send({
                         content: `${e.Info} | A mensagem do Quiz foi deletada e o jogo interrompido. Os dados do jogo foram salvos.`
