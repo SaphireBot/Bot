@@ -79,6 +79,19 @@ export default {
             ]
         },
         {
+            name: 'fetch_guild_members',
+            description: '[admin] Executa um fetch em membros de algum servidor',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'guild_id',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'ID do servidor',
+                    required: true
+                }
+            ]
+        },
+        {
             name: 'fanart',
             description: '[admin] Comando para gerenciar fanarts',
             type: ApplicationCommandOptionType.Subcommand,

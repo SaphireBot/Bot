@@ -7,12 +7,13 @@ import commit from './commit.admin.js'
 import invite from './invite.admin.js'
 import reboot from './reboot.admin.js'
 import backup from './backup.admin.js'
+import fetch_guild_members from './fetch_guild_members.admin.js'
 
 export default async (interaction, subCommand) => {
 
     const command = {
         register, commands, test, fanart, commit, invite, reboot,
-        delete: deleteDb, backup
+        delete: deleteDb, backup, fetch_guild_members
     }[subCommand]
 
     if (!command)
