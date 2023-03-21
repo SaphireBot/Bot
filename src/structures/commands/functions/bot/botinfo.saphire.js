@@ -63,7 +63,6 @@ export default async (interaction, commandData) => {
 
         const data = {
             developer: await client.users.fetch(Config.ownerId || '0').then(user => `${user.tag} - ${Config.ownerId}`).catch(() => `Rody#1000 - ${Config.ownerId}`),
-            shards: `${client.shardId}/${client.shard.count}`,
             usersShardInCache: client.users.cache.size || 0,
             guildsShardInCache: client.guilds.cache.size || 0,
             channelsShardInCache: client.channels.cache.size || 0,
@@ -111,14 +110,18 @@ export default async (interaction, commandData) => {
             description: `${rankingHi} ${data.greetingTime}.`,
             fields: [
                 {
-                    name: `🧩 Números das Shards`,
-                    value: `\`\`\`txt\nShards: ${data.shards}\nUsuários: ${data.usersShardInCache}/${data.allUsers}\nServidores: ${data.guildsShardInCache}/${data.allGuilds}\nCanais: ${data.channelsShardInCache}/${data.allChannels}\nEmojis: ${data.emojisShardInCache}/${data.allEmojis}\nOnline: ${result.toFixed(2)}%\n\`\`\``,
+                    name: '🧩 Números das Shards',
+                    value: `\`\`\`txt\nShards: ${client.shard.count}\nUsuários: ${data.allUsers}\nServidores: ${data.allGuilds}\nCanais: ${data.allChannels}\nEmojis: ${data.allEmojis}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
+                    inline: true
+                },
+                {
+                    name: '📜 Números do Cliente Atual',
+                    value: `\`\`\`txt\nShard: ${client.shardId + 1}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
                     inline: true
                 },
                 {
                     name: '⚙️ Desenvolvimento e Construção',
-                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nCluster: ${client.clusterName}\nClient Version: ${data.version}\nHost: discloud.app\n\`\`\``,
-                    inline: true
+                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nClient Version: ${data.version}\nHost: discloud.app\n\`\`\``
                 },
                 {
                     name: '🛰️ Informações Gerais',
