@@ -1,8 +1,4 @@
-import {
-    DiscordFlags as flags,
-    PermissionsTranslate,
-    Permissions
-} from '../../../../util/Constants.js'
+import { DiscordFlags as flags, PermissionsTranslate, Permissions } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
 

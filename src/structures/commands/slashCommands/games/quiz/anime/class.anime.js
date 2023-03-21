@@ -154,7 +154,7 @@ export default class AnimeQuizManager {
             this.message = await this.channel.send({
                 content: `${e.Loading} | Carregando sugestões e montando um novo jogo...\n${e.CheckV} | Categoria Selecionada: **${typeName}**`,
                 fetchReply: true
-            })
+            }).catch(() => { }) // Missing Permission
         }
 
         const index = [Math.floor(Math.random() * this.availableSuggests.length)]

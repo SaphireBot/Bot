@@ -2,10 +2,18 @@ import Quiz from "../../../../classes/games/QuizManager.js"
 import { SaphireClient as client, Database } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { AttachmentBuilder } from "discord.js"
+import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 
 export default async interaction => {
 
     const { fields, user, guild, channel } = interaction
+    
+    if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true))
+    return await interaction.reply({
+        content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar este recurso.`,
+        ephemeral: true
+    })
+
     const category = fields.getTextInputValue('category')
     const reason = fields.getTextInputValue('reason')
     const categories = Quiz.categories || []

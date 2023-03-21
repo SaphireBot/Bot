@@ -2,11 +2,19 @@ import Quiz from "../../../../classes/games/QuizManager.js"
 import { Database, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { AttachmentBuilder } from "discord.js"
+import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 
 // Button Interaction
 export default async interaction => {
 
     const { message, customId, guild } = interaction
+
+    if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true))
+        return await interaction.reply({
+            content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar este recurso.`,
+            ephemeral: true
+        })
+
     const customData = JSON.parse(customId)
     const questionId = customData.id
     const indication = Quiz.QuestionsIndications.find(q => q.questionId == questionId)
@@ -50,7 +58,7 @@ Global System Notification: ${indication.webhookUrl ? 'Ativado' : 'Desativado'}
 Personal Question ID: ${questionId}
 
 Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de regras morais/éticas.`
-)
+        )
 
         const attachment = new AttachmentBuilder(buffer, { name: `${questionId}.txt`, description: 'Solicitação de Nova Pergunta para o Quiz' })
         await Quiz.sendDocument(attachment).catch(() => { })

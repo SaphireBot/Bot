@@ -1,6 +1,7 @@
 import { Database, SaphireClient as client } from '../../../../classes/index.js'
 import { ApplicationCommandOptionType, AttachmentBuilder } from 'discord.js'
 import refreshRanking from '../../../../functions/update/ranking/index.ranking.js'
+import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 
 export default {
     name: 'ranking',
@@ -118,6 +119,12 @@ export default {
         }
 
         async function buildScriptAndSend(rankingData) {
+
+            if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true))
+                return await interaction.reply({
+                    content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar este recurso.`,
+                    ephemeral: true
+                })
 
             const data = rankingData?.query || []
             await interaction.reply({ content: `${e.Loading} | Construindo...`, ephemeral: true }).catch(() => { })

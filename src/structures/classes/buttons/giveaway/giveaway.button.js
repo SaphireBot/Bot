@@ -1,6 +1,6 @@
 import { AttachmentBuilder, ButtonStyle } from "discord.js"
 import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
-import { Config } from "../../../../util/Constants.js"
+import { Config, DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 const messagesToEditButton = []
 
@@ -164,6 +164,12 @@ export default async ({ interaction }, commandData) => {
     }
 
     async function list() {
+
+        if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true))
+            return await interaction.reply({
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar este recurso.`,
+                ephemeral: true
+            })
 
         const participants = giveaway.Participants || []
 

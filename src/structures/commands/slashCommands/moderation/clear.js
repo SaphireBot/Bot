@@ -154,6 +154,12 @@ export default {
         const ignoreBots = commandData?.ignoreBots || interaction?.options?.getString('filter') == 'ignoreBots'
         const ignoreMembers = commandData?.ignoreMembers || interaction?.options?.getString('filter') == 'ignoreMembers'
         const script = commandData?.script || interaction?.options?.getString('script')
+        
+        if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true) && script)
+            return await interaction.reply({
+                content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar o recurso de Script.`,
+                ephemeral: true
+            })
 
         if (!channel)
             return await interaction.reply({
