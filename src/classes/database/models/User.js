@@ -15,11 +15,6 @@ export default model("User", new Schema({
     TicTacToeCount: Number,
     CompetitiveMemoryCount: Number,
     ForcaCount: Number,
-    Letters: {
-        Blocked: Boolean,
-        Sended: Array,
-        Recieved: Array
-    },
     GamingCount: {
         FlagCount: Number,
         AnimeThemeCount: Number,
@@ -30,13 +25,7 @@ export default model("User", new Schema({
     Timeouts: {
         Bug: Number,
         Daily: Number,
-        Cu: Number,
-        Esmola: Number,
-        Work: Number,
         ImagesCooldown: Number,
-        ServerIdeia: Number,
-        Letter: Number,
-        Confess: Number,
         Loteria: Number,
         Cantada: Number,
         Bitcoin: Number,
@@ -79,18 +68,9 @@ export default model("User", new Schema({
         TimeRemaing: Number,
         Permanent: Boolean
     },
-    Slot: {
-        Cartas: Number,
-        Dogname: String,
-        Skip: Number
-    },
     Walls: {
         Bg: Array,
         Set: String
-    },
-    PrivateChannel: {
-        Channel: String,
-        Users: Array
     },
     Jokempo: {
         Wins: Number,

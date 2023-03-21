@@ -353,10 +353,8 @@ export default new class Database extends Models {
             { id: user.id },
             {
                 $unset: {
-                    PrivateChannel: 1,
                     Walls: 1,
                     Perfil: 1,
-                    Letters: 1,
                     Transactions: 1
                 }
             },

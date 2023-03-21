@@ -28,6 +28,7 @@ import { ButtonStyle } from 'discord.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import giveawayButton from './buttons/giveaway/giveaway.button.js'
 import botinfoSaphire from '../commands/functions/bot/botinfo.saphire.js'
+import mydata from '../commands/slashCommands/bot/mydata.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -85,7 +86,8 @@ export default class ButtonInteraction extends Base {
             chat: [this.sendGlobalChatModel, this],
             giveaway: [giveawayButton, this, commandData],
             clear: [this.clear, this, commandData],
-            botinfo: [botinfoSaphire, this.interaction, commandData]
+            botinfo: [botinfoSaphire, this.interaction, commandData],
+            mydata: [mydata.execute, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
