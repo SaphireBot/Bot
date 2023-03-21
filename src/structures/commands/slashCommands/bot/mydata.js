@@ -11,6 +11,23 @@ export default {
     type: 1,
     options: [
         {
+            name: 'required',
+            name_localizations: { 'pt-BR': 'requerido' },
+            description: 'Método obrigatório',
+            type: ApplicationCommandOptionType.String,
+            choices: [
+                {
+                    name: 'Deletar Dados',
+                    value: 'delete'
+                },
+                {
+                    name: 'Visualizar Dados',
+                    value: 'view'
+                }
+            ],
+            required: true
+        },
+        {
             name: 'user',
             name_localizations: { 'pt-BR': 'usuário' },
             description: '[STAFF\'s SAPHIRE ONLY] Visualizar dados de outros usuários',
@@ -50,9 +67,9 @@ export default {
                 ephemeral
             })
 
-        if (user.id !== interaction.user.id && !client.staff.includes(interaction.user.id))
+        if (user.id !== interaction.user.id && !client.admins.includes(interaction.user.id))
             return await interaction.reply({
-                content: `${e.DenyX} | Apenas a minha staff podem acessar dados de outros usuários.`,
+                content: `${e.DenyX} | Apenas os meus administradores podem acessar dados de outros usuários.`,
                 ephemeral
             })
 
@@ -144,6 +161,7 @@ export default {
 
         const file = Buffer.from(
             `---------- DATABASE INFO SYSTEM ----------
+Database: MongoDB - https://www.mongodb.com/
 User: ${user.tag} - ${user.id}
 Asked by: ${interaction.user.tag} - ${interaction.user.id}
 Build in: ${Date.format(Date.now(), false, false)}
@@ -159,11 +177,12 @@ ${dataObjectFormat}
 ${rawData}
 `)
 
-
         return interaction.editReply({
-            content: null,
+            content: interaction.options.getString('required') == 'view'
+            ? null
+            : `${e.Info} | Ao deletar seus dados, a **Saphire Team não se responsabiliza por quaisquer perca de dados**. É de total **responsabilidade sua**, o que você faz com seus dados.`,
             files: [new AttachmentBuilder(file, { name: 'saphire-database-viewer-data.txt', description: 'Object from users database' })],
-            components: [
+            components: interaction.options.getString('required') == 'view' ? [] : [
                 {
                     type: 1,
                     components: [
@@ -181,9 +200,9 @@ ${rawData}
 
         async function deleteData() {
 
-            if (commandData.userId !== interaction.user.id && !client.staff.includes(interaction.user.id))
+            if (commandData.userId !== interaction.user.id && !client.admins.includes(interaction.user.id))
                 return await interaction.reply({
-                    content: `${e.DenyX} | Apenas os autores e minha staff podem apagar os dados do banco de dados.`,
+                    content: `${e.DenyX} | Apenas os autor do documento e meus administradores podem apagar os dados do banco de dados.`,
                     ephemeral: true
                 })
 

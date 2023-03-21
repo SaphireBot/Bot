@@ -169,7 +169,7 @@ export default class AnimeQuizManager {
     async loadMessage(alternative, buttons, isNext) {
 
         if (!isNext)
-            this.message.delete().catch(() => this.unregister())
+            this.message?.delete().catch(() => this.unregister())
 
         const descriptionComplement = {
             anime: 'deste anime',
