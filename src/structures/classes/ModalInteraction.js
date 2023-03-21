@@ -39,7 +39,6 @@ export default class ModalInteraction extends Base {
             BugModalReport: [this.BugModalReport, this],
             editProfile: [this.editProfile, this],
             logomarcaReporter: [this.logomarcaReporter, this],
-            newLetter: [this.newLetter, this],
             balance: [this.balanceOptions, this],
             indicationsLogomarca: [this.indicateLogomarca, this],
             rather: [this.vocePrefere, this],
@@ -1627,113 +1626,6 @@ export default class ModalInteraction extends Base {
                     ephemeral: true
                 })
             })
-
-    }
-
-    newLetter = async ({ interaction, client, fields, user, guild } = this) => {
-
-        let usernameData = fields.getTextInputValue('username')
-        let anonymous = fields.getTextInputValue('anonymous')
-        let letterContent = fields.getTextInputValue('letterContent')
-        let userLetted = await client.users.fetch(usernameData?.id)
-
-        if (!userLetted)
-            return await interaction.reply({
-                content: `❌ | Não foi possível achar ninguém com o dado informado. \`${usernameData}\``,
-                embeds: [{
-                    color: client.blue,
-                    title: '📝 Letter\'s Content',
-                    description: `\`\`\`txt\n${letterContent}\n\`\`\``
-                }],
-                ephemeral: true
-            })
-
-        if (userLetted.id === user.id)
-            return await interaction.reply({
-                content: '❌ | Você não pode enviar cartas para você mesmo.',
-                ephemeral: true
-            })
-
-        if (userLetted.id === client.user.id)
-            return await interaction.reply({
-                content: '❌ | Eu agradeço seu gesto por me enviar uma carta, mas assim... Eu sou um bot, sabe? Fico te devendo essa.',
-                ephemeral: true
-            })
-
-        if (userLetted.bot)
-            return await interaction.reply({
-                content: '❌ | Você não pode enviar cartas para bots.',
-                ephemeral: true
-            })
-
-        let userData = await this.Database.User.findOne({ id: userLetted.id }, 'Letters.Blocked'),
-            isBlock = userData?.Letters?.Blocked
-
-        if (isBlock)
-            return await interaction.reply({
-                content: `❌ | Este usuário bloqueou o envio de cartas. Você vai precisar pedir para que ${userLetted.tag} libere o envio usando o comando '/carta block'`,
-                ephemeral: true
-            })
-
-        const isAnonymous = ['sim', 'yes'].includes(anonymous?.toLowerCase()) ? true : false
-        const ID = CodeGenerator(7).toLocaleUpperCase()
-
-        await userLetted.send({
-            content: `ℹ | Algum problema com a carta? Contacte um administrador usando o comando \`/carta report\``,
-            embeds: [{
-                color: client.blue,
-                title: `📨 ${client.user.username}'s Letters System`,
-                description: `ℹ Esta carta foi enviada por: ${isAnonymous ? '\`Usuário anônimo\`' : `${user.tag} - ${user.id}`}`,
-                fields: [{
-                    name: `📝 Conteúdo da carta`,
-                    value: `\`\`\`txt\n${letterContent}\n\`\`\``
-                }],
-                footer: { text: `A ${client.user.username} não se responsabiliza pelo conteúdo presente nesta carta.` }
-            }]
-        })
-            .then(() => sucess())
-            .catch(() => error())
-
-        async function sucess() {
-
-            this.Database.subtractItem(user.id, 'Slot.Cartas', 1)
-            this.Database.SetTimeout(user.id, 'Timeouts.Letter')
-
-            this.Database.pushUserData(user.id, 'Letters.Sended', {
-                letterId: ID,
-                to: userLetted.id,
-                guildId: guild.id,
-                anonymous: isAnonymous,
-                content: letterContent,
-                date: Date.now()
-            })
-
-            this.Database.pushUserData(userLetted.id, 'Letters.Recieved', {
-                letterId: ID,
-                from: user.id,
-                guildId: guild.id,
-                anonymous: isAnonymous,
-                content: letterContent,
-                date: Date.now()
-            })
-
-            return await interaction.reply({
-                content: `✅ | A carta foi enviada para ${userLetted.tag} com sucesso! (-1 carta)\n🕵️ | Anônimo: ${isAnonymous ? 'Sim' : 'Não'}`,
-                ephemeral: true
-            })
-        }
-
-        async function error() {
-            return await interaction.reply({
-                content: `❌ | Aparentemente a DM de ${userLetted.tag} está fechada e não posso efetuar o envio da carta.`,
-                embeds: [{
-                    color: client.blue,
-                    title: '📝 Lette\'s Content',
-                    description: `\`\`\`txt\n${letterContent}\n\`\`\``
-                }],
-                ephemeral: true
-            })
-        }
 
     }
 

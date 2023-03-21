@@ -1163,43 +1163,6 @@ export default new class Modals {
         ]
     }
 
-    reportLetter = {
-        title: "Report Letter Content",
-        custom_id: "lettersReport",
-        components: [
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "letterId",
-                        label: "Informe o ID da carta",
-                        style: 1,
-                        max_length: 7,
-                        max_length: 7,
-                        placeholder: "ABC1234",
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 1,
-                components: [
-                    {
-                        type: 4,
-                        custom_id: "reason",
-                        label: "Qual é o motivo da sua denúncia?",
-                        style: 2,
-                        min_length: 10,
-                        max_length: 1024,
-                        placeholder: "O autor da carta me xingou...",
-                        required: true
-                    }
-                ]
-            }
-        ]
-    }
-
     transactionsReport = {
         title: "Transactions Report Center",
         custom_id: "transactionsModalReport",
