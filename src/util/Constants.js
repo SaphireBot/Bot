@@ -730,6 +730,341 @@ const PunishmentReasons = [
     "Avatar de perfil inadequado."
 ]
 
+const GuildFeatures = {
+    /**
+     * Guild has access to set an animated guild banner image
+     */
+    AnimatedBanner: "ANIMATED_BANNER",
+    /**
+     * Guild has access to set an animated guild icon
+     */
+    AnimatedIcon: "ANIMATED_ICON",
+    /**
+     * Guild is using the old permissions configuration behavior
+     *
+     * See https://discord.com/developers/docs/change-log#upcoming-application-command-permission-changes
+     */
+    ApplicationCommandPermissionsV2: "APPLICATION_COMMAND_PERMISSIONS_V2",
+    /**
+     * Guild has set up auto moderation rules
+     */
+    AutoModeration: "AUTO_MODERATION",
+    /**
+     * Guild has access to set a guild banner image
+     */
+    Banner: "BANNER",
+    /**
+     * Guild can enable welcome screen, Membership Screening and discovery, and receives community updates
+     */
+    Community: "COMMUNITY",
+    /**
+     * Guild has enabled monetization
+     */
+    CreatorMonetizableProvisional: "CREATOR_MONETIZABLE_PROVISIONAL",
+    /**
+     * Guild has enabled the role subscription promo page
+     */
+    CreatorStorePage: "CREATOR_STORE_PAGE",
+    DeveloperSupportServer: "DEVELOPER_SUPPORT_SERVER",
+    /**
+     * Guild is able to be discovered in the directory
+     */
+    Discoverable: "DISCOVERABLE",
+    /**
+     * Guild is able to be featured in the directory
+     */
+    Featurable: "FEATURABLE",
+    /**
+     * Guild is listed in a directory channel
+     */
+    HasDirectoryEntry: "HAS_DIRECTORY_ENTRY",
+    /**
+     * Guild is a Student Hub
+     *
+     * See https://support.discord.com/hc/articles/4406046651927
+     *
+     * @unstable This feature is currently not documented by Discord, but has known value
+     */
+    Hub: "HUB",
+    /**
+     * Guild has disabled invite usage, preventing users from joining
+     */
+    InvitesDisabled: "INVITES_DISABLED",
+    /**
+     * Guild has access to set an invite splash background
+     */
+    InviteSplash: "INVITE_SPLASH",
+    /**
+     * Guild is in a Student Hub
+     *
+     * See https://support.discord.com/hc/articles/4406046651927
+     *
+     * @unstable This feature is currently not documented by Discord, but has known value
+     */
+    LinkedToHub: "LINKED_TO_HUB",
+    /**
+     * Guild has enabled Membership Screening
+     */
+    MemberVerificationGateEnabled: "MEMBER_VERIFICATION_GATE_ENABLED",
+    /**
+     * Guild has enabled monetization
+     *
+     * @unstable This feature is no longer documented by Discord
+     */
+    MonetizationEnabled: "MONETIZATION_ENABLED",
+    /**
+     * Guild has increased custom sticker slots
+     */
+    MoreStickers: "MORE_STICKERS",
+    /**
+     * Guild has access to create news channels
+     */
+    News: "NEWS",
+    /**
+     * Guild is partnered
+     */
+    Partnered: "PARTNERED",
+    /**
+     * Guild can be previewed before joining via Membership Screening or the directory
+     */
+    PreviewEnabled: "PREVIEW_ENABLED",
+    /**
+     * Guild has access to create private threads
+     */
+    PrivateThreads: "PRIVATE_THREADS",
+    RelayEnabled: "RELAY_ENABLED",
+    /**
+     * Guild is able to set role icons
+     */
+    RoleIcons: "ROLE_ICONS",
+    /**
+     * Guild has role subscriptions that can be purchased
+     */
+    RoleSubscriptionsAvailableForPurchase: "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
+    /**
+     * Guild has enabled role subscriptions
+     */
+    RoleSubscriptionsEnabled: "ROLE_SUBSCRIPTIONS_ENABLED",
+    /**
+     * Guild has enabled ticketed events
+     */
+    TicketedEventsEnabled: "TICKETED_EVENTS_ENABLED",
+    /**
+     * Guild has access to set a vanity URL
+     */
+    VanityURL: "VANITY_URL",
+    /**
+     * Guild is verified
+     */
+    Verified: "VERIFIED",
+    /**
+     * Guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+     */
+    VIPRegions: "VIP_REGIONS",
+    /**
+     * Guild has enabled the welcome screen
+     */
+    WelcomeScreenEnabled: "WELCOME_SCREEN_ENABLED",
+    /**
+     * Not Documented
+     */
+    ThreeDayThreadArchive: "THREE_DAY_THREAD_ARCHIVE",
+    TextInVoiceEnabled: "TEXT_IN_VOICE_ENABLED",
+    GuildWebPageVanityUrl: "GUILD_WEB_PAGE_VANITY_URL",
+    RaidAlertsEnabled: "RAID_ALERTS_ENABLED",
+    EnabledDiscoverableBefore: "ENABLED_DISCOVERABLE_BEFORE",
+    SevenDayThreadArchive: "SEVEN_DAY_THREAD_ARCHIVE",
+    GuildOndoardingEverEnabled: "GUILD_ONBOARDING_EVER_ENABLED",
+    CommunityExpLargeUngated: "COMMUNITY_EXP_LARGE_UNGATED",
+    GuildOnboardingHasPrompts: "GUILD_ONBOARDING_HAS_PROMPTS",
+    GuildOnboarding: "GUILD_ONBOARDING"
+}
+
+const GuildFeaturesTranslate = {
+    /**
+     * Guild has access to set an animated guild banner image
+     */
+    ANIMATED_BANNER: "Banner Animado",
+    /**
+     * Guild has access to set an animated guild icon
+     */
+    ANIMATED_ICON: "Icone Animado",
+    /**
+     * Guild is using the old permissions configuration behavior
+     *
+     * See https://discord.com/developers/docs/change-log#upcoming-application-command-permission-changes
+     */
+    APPLICATION_COMMAND_PERMISSIONS_V2: "Configuração Antigas em Uso",
+    /**
+     * Guild has set up auto moderation rules
+     */
+    AUTO_MODERATION: "AutoMod Ativado",
+    /**
+     * Guild has access to set a guild banner image
+     */
+    BANNER: "Banner Imagem",
+    /**
+     * Guild can enable welcome screen, Membership Screening and discovery, and receives community updates
+     */
+    COMMUNITY: "Comunidade",
+    /**
+     * Guild has enabled monetization
+     */
+    CREATOR_MONETIZABLE_PROVISIONAL: "Monetização de Criador",
+    /**
+     * Guild has enabled the role subscription promo page
+     */
+    CREATOR_STORE_PAGE: "Página de Promoção",
+    DEVELOPER_SUPPORT_SERVER: "Servidor de Suporte de Desenvolvedor",
+    /**
+     * Guild is able to be discovered in the directory
+     */
+    DISCOVERABLE: "Descobrir Habilitado",
+    /**
+     * Guild is able to be featured in the directory
+     */
+    FEATURABLE: "Pode ser Apresentado em Descobrir",
+    /**
+     * Guild is listed in a directory channel
+     */
+    HAS_DIRECTORY_ENTRY: "Possui Canal de Diretório",
+    /**
+     * Guild is a Student Hub
+     *
+     * See https://support.discord.com/hc/articles/4406046651927
+     *
+     * @unstable This feature is currently not documented by Discord, but has known value
+     */
+    HUB: "Hub de Estudantes",
+    /**
+     * Guild has disabled invite usage, preventing users from joining
+     */
+    INVITES_DISABLED: "Convites Desabilitados",
+    /**
+     * Guild has access to set an invite splash background
+     */
+    INVITE_SPLASH: "Imagem de Convite",
+    /**
+     * Guild is in a Student Hub
+     *
+     * See https://support.discord.com/hc/articles/4406046651927
+     *
+     * @unstable This feature is currently not documented by Discord, but has known value
+     */
+    LINKED_TO_HUB: "Linkado ao Hub de Estudantes",
+    /**
+     * Guild has enabled Membership Screening
+     */
+    MEMBER_VERIFICATION_GATE_ENABLED: "Painel de Boas-Vindas",
+    /**
+     * Guild has enabled monetization
+     *
+     * @unstable This feature is no longer documented by Discord
+     */
+    MONETIZATION_ENABLED: "Monetização Ativada",
+    /**
+     * Guild has increased custom sticker slots
+     */
+    MORE_STICKERS: "Limite de Stickers Melhorado",
+    /**
+     * Guild has access to create news channels
+     */
+    NEWS: "Pode Criar Canais de Notícias",
+    /**
+     * Guild is partnered
+     */
+    PARTNERED: "Parceiro do Discord",
+    /**
+     * Guild can be previewed before joining via Membership Screening or the directory
+     */
+    PREVIEW_ENABLED: "Visualizar Servidor Antes de Entrar",
+    /**
+     * Guild has access to create private threads
+     */
+    PRIVATE_THREADS: "Criação de Threads",
+    RelayEnabled: "Retransmitir Ativado",
+    /**
+     * Guild is able to set role icons
+     */
+    ROLE_ICONS: "Ícones em Cargos",
+    /**
+     * Guild has role subscriptions that can be purchased
+     */
+    ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE: "Itens a Ser Comprados",
+    /**
+     * Guild has enabled role subscriptions
+     */
+    ROLE_SUBSCRIPTIONS_ENABLED: "Itens a Ser Vendidos Ativado",
+    /**
+     * Guild has enabled ticketed events
+     */
+    TICKETED_EVENTS_ENABLED: "Eventos com Ingressos Ativados",
+    /**
+     * Guild has access to set a vanity URL
+     */
+    VANITY_URL: "URL de Vaidade",
+    /**
+     * Guild is verified
+     */
+    VERIFIED: "Servidor Verificado",
+    /**
+     * Guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+     */
+    VIP_REGIONS: "Regiões VIP",
+    /**
+     * Guild has enabled the welcome screen
+     */
+    WELCOME_SCREEN_ENABLED: "Tela de Boas Vindas",
+    /**
+     * Not Documented
+     */
+    THREE_DAY_THREAD_ARCHIVE: "Arquivos de Tópicos de 3 Dias",
+    TEXT_IN_VOICE_ENABLED: "Textos em Canais de Voz",
+    GUILD_WEB_PAGE_VANITY_URL: "Link de Servidor na WEB",
+    RAID_ALERTS_ENABLED: "Alertas de RAID Ativado",
+    ENABLED_DISCOVERABLE_BEFORE: "Descobrir Antes Ativado",
+    SEVEN_DAY_THREAD_ARCHIVE: "Arquivos de Tópicos de 7 Dias",
+    GUILD_ONBOARDING_EVER_ENABLED: "Integração de Servidor Ativada",
+    COMMUNITY_EXP_LARGE_UNGATED: "Grande Experiência Comunitária Sem Garantia",
+    GUILD_ONBOARDING_HAS_PROMPTS: "Integração de Servidor Possui Prompts",
+    GUILD_ONBOARDING: "Integração de Servidor"
+}
+
+const locales = {
+    "id": 'Indonésio',
+    "en-US": 'Inglês Americano',
+    "en-GB": 'Inglês Britânico',
+    "bg": 'Búlgaro',
+    "zh-CN": 'Chinês',
+    "zh-TW": 'Mandarim',
+    "hr": 'Croata',
+    "cs": 'Tcheco',
+    "da": 'Dinamarquês',
+    "nl": 'Holandês',
+    "fi": 'Finlandês',
+    "fr": 'Francês',
+    "de": 'Alemão',
+    "el": 'Grécia',
+    "hi": 'Hindi',
+    "hu": 'Húngaro',
+    "it": 'Italiano',
+    "ja": 'Japonês',
+    "ko": 'Coreano',
+    "lt": 'Lituano',
+    "no": 'Norueguês',
+    "pl": 'Polonês',
+    "pt-BR": 'Português Brasil',
+    "pt-PT": 'Português Portugal',
+    "ro": 'Romeno',
+    "ru": 'Russo',
+    "es-ES": 'Espanhol Espanha',
+    "sv-SE": 'Sueco',
+    "th": 'Tailandês',
+    "tr": 'Turco',
+    "uk": 'Ucraniano',
+    "vi": 'Vietnamita',
+}
+
 export {
     ConfigurationBase as Config,
     DiscordColors as ColorsTranslate,
@@ -745,5 +1080,8 @@ export {
     ErrorResponse,
     PermissionsBitToString,
     ChannelsTypes,
-    PunishmentReasons
+    PunishmentReasons,
+    GuildFeatures,
+    GuildFeaturesTranslate,
+    locales
 }

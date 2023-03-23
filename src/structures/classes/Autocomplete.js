@@ -22,6 +22,7 @@ export default class Autocomplete extends Base {
         let { name, value } = this.options.getFocused(true)
 
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
+        if (name === 'search' && this.commandName === 'serverinfo') return this.serverId(value)
         if (name === 'search' && this.options?.data[0]?.options[0]?.name == 'options') return this.quizAnime(value, true)
         if (name === 'my_content' && this.options?.data[0]?.options[0]?.name == 'options') return this.quizAnime(value, 1)
         if (name === 'search' && this.commandName === 'cantada') return this.showCantadas(value)
@@ -71,13 +72,21 @@ export default class Autocomplete extends Base {
             id: ['giveaway_id', value],
             funcao: ['memesViewer'],
             itens: ['reminders', value],
-            selecionar: ['quiz_selecionar', value]
+            selecionar: ['quiz_selecionar', value],
+            serverinfo: ['serverId', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async serverId(value) {
+        const guilds = this.client.guilds.cache.toJSON()
+        const fill = value ? guilds.filter(guild => guild.name.toLowerCase().includes(value?.toLowerCase()) || guild.id.includes(value)) : guilds
+        const guildsData = fill.map(guild => ({ name: guild.name, value: guild.id }))
+        return await this.respond(guildsData)
     }
 
     async quiz_selecionar(value) {
