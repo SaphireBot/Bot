@@ -75,7 +75,7 @@ export default async (anime, res, interaction, search) => {
             fields: [
                 {
                     name: '🗂️ Informações',
-                    value: `Nome Japonês: ${Name.original || 'Não possue'}\nNome Inglês: ${Name.en || 'Não possue'}\nNome Mundial: ${Name.en_jp || 'Não possue' || 'Não possue'}\nNome Canônico: ${Name.canonical || 'Não possue'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
+                    value: `Nome Japonês: ${Name.original || 'Não possui'}\nNome Inglês: ${Name.en || 'Não possui'}\nNome Mundial: ${Name.en_jp || 'Não possui' || 'Não possui'}\nNome Canônico: ${Name.canonical || 'Não possui'}\nNomes abreviados: ${Name.abreviated.join(', ')}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Subtype}${anime.episodeLength ? `\nTempo médio por epsódio: ${anime.episodeLength} minutos` : ''}`
                 },
                 {
                     name: `📊 Status - ${Status}`,
