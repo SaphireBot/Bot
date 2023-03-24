@@ -27,9 +27,11 @@ export default async (interaction, guild) => {
     }).catch(() => { })
 
     const sameGuild = guild.id == interaction.guild.id
+        ? true
+        : await guild.members.fetch(interaction.user.id).then(() => true).catch(() => false)
 
     const data = {
-        afkChannel: guild.afkChannel ? `${sameGuild ? `${guild.afkChannel} (${Date.stringDate(guild.afkTimeout * 1000)})\n\`${guild.afkChannelId}\`` : codeBlock('txt', `${guild.afkChannel.name}(${Date.stringDate(guild.afkTimeout * 1000)})\n${guild.afkChannelId}`)}` : codeBlock('txt', 'Nenhum Canal\n------------------'),
+        afkChannel: guild.afkChannel ? `${sameGuild ? `${guild.afkChannel} (${Date.stringDate(guild.afkTimeout * 1000)})\n\`${guild.afkChannelId}\`` : codeBlock('txt', `${guild.afkChannel.name}(${Date.stringDate(guild.afkTimeout * 1000)})\n${guild.afkChannelId}`)}` : codeBlock('txt', 'Nenhum Canal\n-----------'),
         publicUpdatesChannel: formatChannel(guild.publicUpdatesChannel, guild.publicUpdatesChannelId),
         rulesChannel: formatChannel(guild.rulesChannel, guild.rulesChannelId),
         systemChannel: formatChannel(guild.systemChannel, guild.systemChannelId),
@@ -174,7 +176,7 @@ export default async (interaction, guild) => {
     function formatChannel(channel, channelId) {
         return channel
             ? `${sameGuild ? `${channel}\n\`${channel}\`` : codeBlock('txt', `${channel.name}\n${channelId}`)}`
-            : codeBlock('txt', 'Nenhum Canal\n------------------')
+            : codeBlock('txt', 'Nenhum Canal\n-----------')
     }
 
     return interaction.message.edit({ embeds: [embed], components: [selectMenu] }).catch(() => { })

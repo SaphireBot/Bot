@@ -82,7 +82,7 @@ export default async (interaction, guild) => {
             temporary: guild.invites.cache.filter(invite => invite.expiresAt !== null).size || 0
         },
         others: {
-            bitrate: `${guild.maximumBitrate || 0}kb/s`,
+            bitrate: `${guild.maximumBitrate || 0}bits`,
             maximumMembers: guild.maximumMembers || 0,
             maxVideoChannelUsers: `${guild.maxVideoChannelUsers || 0} per/chat`
         },
@@ -126,7 +126,7 @@ export default async (interaction, guild) => {
                     inline: true
                 },
                 {
-                    name: '📋 Outros',
+                    name: '📋 Outros*',
                     value: codeBlock('txt', `Bitrate: ${data.others.bitrate}\nMembros Max: ${data.others.maximumMembers}\nVídeo Voice Max: ${data.others.maxVideoChannelUsers}\nEventos Ativos: ${data.scheduledEvents}`),
                     inline: true
                 },
@@ -137,7 +137,7 @@ export default async (interaction, guild) => {
                 },
                 {
                     name: '📋 * Observação',
-                    value: codeBlock('txt', `A contagem de membros por status ainda não é possível. Por causa da Saphire ser verificada, ela precisa de uma Intent que não tem. Já solicitei ao Discord e estou aguardando a liberação.\n~ Rody, Desenvolvedor da Saphire Moon.`),
+                    value: codeBlock('txt', `MEMBROS: A contagem de membros por status ainda não é possível. Por causa da Saphire ser verificada, ela precisa de uma Intent que não tem. Já solicitei ao Discord e estou aguardando a liberação.\n \nOUTROS: "Vídeo Voice Max" significa o número máximo de telas transmitidas simuntanamente em um canal de voz\n \n \n~ Rody, Desenvolvedor da Saphire Moon.`),
                 }
             ],
             footer: {
