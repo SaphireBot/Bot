@@ -877,7 +877,10 @@ const GuildFeatures = {
     GuildOndoardingEverEnabled: "GUILD_ONBOARDING_EVER_ENABLED",
     CommunityExpLargeUngated: "COMMUNITY_EXP_LARGE_UNGATED",
     GuildOnboardingHasPrompts: "GUILD_ONBOARDING_HAS_PROMPTS",
-    GuildOnboarding: "GUILD_ONBOARDING"
+    GuildOnboarding: "GUILD_ONBOARDING",
+    NewThreadPermissions: "NEW_THREAD_PERMISSIONS",
+    ThreadsEnabled: "THREADS_ENABLED",
+    MemberProfiles: "MEMBER_PROFILES"
 }
 
 const GuildFeaturesTranslate = {
@@ -1027,7 +1030,10 @@ const GuildFeaturesTranslate = {
     GUILD_ONBOARDING_EVER_ENABLED: "Integração de Servidor Ativada",
     COMMUNITY_EXP_LARGE_UNGATED: "Grande Experiência Comunitária Sem Garantia",
     GUILD_ONBOARDING_HAS_PROMPTS: "Integração de Servidor Possui Prompts",
-    GUILD_ONBOARDING: "Integração de Servidor"
+    GUILD_ONBOARDING: "Integração de Servidor",
+    NEW_THREAD_PERMISSIONS: "Permissão de Novas Threads",
+    THREADS_ENABLED: "Threads Ativada",
+    MEMBER_PROFILES: "Perfil de Membros"
 }
 
 const locales = {
