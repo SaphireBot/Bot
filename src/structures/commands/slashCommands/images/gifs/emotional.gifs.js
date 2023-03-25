@@ -1,4 +1,7 @@
-export default async (interaction, client, e, Gifs, gifData) => {
+import { SaphireClient as client } from "../../../../../classes/index.js"
+import { Emojis as e, Gifs } from "../../../../../util/util.js"
+
+export default async (interaction, gifData) => {
 
     const { options, user } = interaction
     const gifRequest = options.getString('reaction')
