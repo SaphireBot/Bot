@@ -35,9 +35,23 @@ export default {
         if (!toRefresh)
             if (interaction.options.getString('options') === 'shard') return pingShard()
 
+        const button = {
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Atualizando...',
+                    emoji: e.Loading,
+                    custom_id: 'refreshing',
+                    style: ButtonStyle.Primary,
+                    disabled: true
+                }
+            ]
+        }
+
         toRefresh
-            ? await interaction.update({ content: `${e.Loading} | Atualizando Pinging....`, fetchReply: true, components: [] })
-            : await interaction.reply({ content: `${e.Loading} | Pinging...`, fetchReply: true })
+            ? await interaction.update({ fetchReply: true, components: [button] })
+            : await interaction.reply({ content: `${e.Loading} | Pinging...`, fetchReply: true, embeds: [] })
 
         const replayPing = Date.now() - interaction.createdAt.valueOf()
         let toSubtract = Date.now()
@@ -74,19 +88,29 @@ export default {
         const timeDifference = primary.valueOf() // 100% all time online
         let result = (timeDifference / (Date.now() - accumulate)) * 100
         if (result > 100) result = 100
-        
+
         return await interaction.editReply({
             content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)} - (${result.toFixed(2)}%)\n${hourRemaingBattery.emoji} | ${Date.stringDate(client.twoAm - Date.now())} para o reinício\n${e.slash} | ${client.interactions.currency() || 0} interações com ${client.messages.currency() || 0} mensagens\n⚡ | Interaction Response: ${emojiFormat(replayPing)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${requests}`,
+            embeds: [],
             components: [
                 {
                     type: 1,
-                    components: [{
-                        type: 2,
-                        label: 'Atualizar',
-                        emoji: '🔄',
-                        custom_id: JSON.stringify({ c: 'ping' }),
-                        style: ButtonStyle.Primary
-                    }]
+                    components: [
+                        {
+                            type: 2,
+                            label: 'Atualizar',
+                            emoji: '🔄',
+                            custom_id: JSON.stringify({ c: 'ping' }),
+                            style: ButtonStyle.Primary
+                        },
+                        {
+                            type: 2,
+                            label: 'Bot Info',
+                            emoji: "🔎",
+                            custom_id: JSON.stringify({ c: 'botinfo', userId: interaction.user.id }),
+                            style: ButtonStyle.Primary
+                        }
+                    ]
                 }
             ]
         }).catch(() => { })

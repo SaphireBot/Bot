@@ -110,13 +110,13 @@ export default async (interaction, commandData) => {
             description: `${rankingHi} ${data.greetingTime}.`,
             fields: [
                 {
-                    name: '🧩 Números das Shards',
-                    value: `\`\`\`txt\nShards: ${client.shard.count}\nUsuários: ${data.allUsers}\nServidores: ${data.allGuilds}\nCanais: ${data.allChannels}\nEmojis: ${data.allEmojis}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
+                    name: '📜 Números do Cliente Atual',
+                    value: `\`\`\`txt\nShard: ${client.shardId + 1}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
                     inline: true
                 },
                 {
-                    name: '📜 Números do Cliente Atual',
-                    value: `\`\`\`txt\nShard: ${client.shardId + 1}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
+                    name: '🧩 Números das Shards',
+                    value: `\`\`\`txt\nShards: ${client.shard.count}\nUsuários: ${data.allUsers}\nServidores: ${data.allGuilds}\nCanais: ${data.allChannels}\nEmojis: ${data.allEmojis}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}${"".padEnd(3)}\n\`\`\``,
                     inline: true
                 },
                 {
@@ -176,6 +176,13 @@ export default async (interaction, commandData) => {
             button.components[0].disabled = false
             button.components[0].label = 'Atualizar Dados'
             button.components[0].emoji = '🔄'
+            button.components.push({
+                type: 2,
+                label: 'Ping',
+                emoji: '🏓',
+                custom_id: JSON.stringify({ c: 'ping' }),
+                style: ButtonStyle.Primary
+            })
             message.edit({ components: [button] }).catch(() => { })
             delete awaiting[interaction.user.id]
             timeouts = timeouts.filter(userId => userId != interaction.user.id)
