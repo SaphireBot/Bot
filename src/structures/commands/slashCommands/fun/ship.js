@@ -36,7 +36,7 @@ export default {
 
         if (userone.id == usertwo.id)
             return await interaction.reply({
-                content: `${e.Deny} | Nada de shippar uma pessoa a mesma pessoa, ok?`,
+                content: `${e.Deny} | Nada de shippar uma pessoa com a mesma pessoa, ok?`,
                 ephemeral: true
             })
 
