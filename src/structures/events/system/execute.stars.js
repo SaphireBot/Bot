@@ -4,6 +4,7 @@ export default async ({ MessageReaction, guildData }) => {
 
     if (!guildData) return
     const { message, count } = MessageReaction
+    if (guildData.Stars?.sended?.some(data => data.messageId == message.id)) return
     const { author, guild, channel: messageChannel, content, attachments, id: messageId } = message
     const limit = guildData.Stars.limit || 0
     const channelId = guildData.Stars.channel || "0"

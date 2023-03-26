@@ -15,11 +15,11 @@ client.on('messageReactionAdd', async (MessageReaction, user) => {
         })()
         : MessageReaction?.message
 
-    if (!message) return
+    if (!message || !message.id) return
 
     if (emojiName === '⭐' && MessageReaction.count >= 2) {
         const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
-        if (guildData?.Stars?.channel)
+        if (guildData?.Stars?.channel && !guildData.Stars?.sended?.some(data => data.messageId == message.id))
             executeStars({ MessageReaction, user, guildData, client })
     }
 
