@@ -98,7 +98,25 @@ export default async (interaction, { src }) => {
                 {
                     color: client.blue,
                     title: `${e.QuizLogo} ${client.user.username}'s Quiz`,
-                    description: `Estamos construindo esse Quiz com todo o amor, ok?\nVocê pode mandar perguntar clicando no botão \`Mais Opções\`.\n \nAgradecemos a sua ajuda.\n${e.Admin} Saphire's Team Developers & Resourcers Management`,
+                    description: `\nHey hey, tudo bem? ${e.amongusdance}\nEste é um Quiz de perguntas que você pode escolher como jogar.`,
+                    fields: [
+                        {
+                            name: '🖌️ Personalizar',
+                            value: 'Você pode escolher até 6 configurações. Ou seja,\nsão um total de **63 configurações** possíveis.'
+                        },
+                        {
+                            name: `${e.jumpStar} Créditos`,
+                            value: 'Os devidos créditos devem ser dados para aqueles que contribuem, certo?'
+                        },
+                        {
+                            name: '📨 Sugerir perguntas/categorias',
+                            value: 'Sim, sim. Aqui você pode enviar perguntas e novas categorias para a Saphire\'s Team aceitar.\nAqui, quem faz o Quiz, são os próprios usuários.'
+                        },
+                        {
+                            name: '🏷️ Categorias',
+                            value: 'Cada pergunta, tem sua categoria. Você pode escolher quais categorias você quer no seu Quiz em `Personalizar`.'
+                        }
+                    ],
                     thumbnail: {
                         url: 'https://media.discordapp.net/attachments/893361065084198954/1084184092616183898/i-have-an-idea-light-bulb-icon-motion-design-animation_49.gif?width=624&height=468'
                     },
