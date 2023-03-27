@@ -1,10 +1,13 @@
+import { ButtonStyle, ChatInputCommandInteraction, StringSelectMenuInteraction, PermissionsBitField } from 'discord.js'
 import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Colors } from '../../../../util/Constants.js'
-import { ButtonStyle } from 'discord.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+/**
+ * @param { ChatInputCommandInteraction } interaction
+ * @param { StringSelectMenuInteraction } bySelectMenuInteraction
+ */
 export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
 
     const { options, user, guild, channel } = interaction
@@ -16,7 +19,15 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
     const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
     const collectorData = { reaction: '🎉', AllowedMembers: [], AllowedRoles: [] }
+    const clientMember = guild.members.cache.get(client.user.id)
+    const channelPermissions = Channel.permissionsFor(clientMember, true)
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
+
+    if (!channelPermissions || !channelPermissions.has(PermissionsBitField.Flags.SendMessages))
+        return await interaction.reply({
+            content: `${e.DenyX} | Eu não tenho permissão para enviar mensagem no canal ${Channel}.`,
+            ephemeral: true
+        })
 
     if (!TimeMs)
         return await interaction.reply({
@@ -116,7 +127,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     embed.description = 'Beleza, estava tudo certo até aqui'
                     embed.fields.push({
                         name: '⏱️ O Tempo Passou',
-                        value: `Se passou muitas eras e eu cai em um sono profundo... ${e.sleep} Cancelei o sorteio, beleza?`
+                        value: `Se passou muitas eras e eu cai em um sono profundo...\n${e.sleep} Cancelei o sorteio, beleza?`
                     })
                     return Message.edit({ content: null, embeds: [embed] }).catch(() => { })
                 }

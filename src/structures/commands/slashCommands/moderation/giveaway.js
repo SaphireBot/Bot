@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
 import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
@@ -149,22 +149,32 @@ export default {
             ]
         }
     ],
-    async execute({ interaction, guildData, e }) {
+    async execute({ interaction, guildData, e, client }) {
 
         const { options, guild } = interaction
+        const me = await guild.members.fetch(client.user.id).catch(() => null)
 
-        if (!guild.members.me.permissions.has(DiscordPermissons.ManageMessages, true))
+        if (!me)
+            return await interaction.reply({
+                content: `${e.DenyX} | Client Not Found At Guild Priority Members Fetcher #164845`,
+                ephemeral: true
+            })
+
+        if (!me.permissions.has(PermissionsBitField.Flags.SendMessages, true))
             return await interaction.reply({
                 content: `❌ | Eu preciso da permissão **\`${PermissionsTranslate.ManageMessages}\`**. Por favor, me dê esta permissão que eu vou conseguir fazer o sorteio.`,
                 ephemeral: true
             })
 
-        const member = guild.members.cache.get(interaction.user.id)
+        const member = await guild.members.fetch(interaction.user.id).catch(() => null)
 
         if (!member)
-            return await interaction.reply({ content: `${e.Deny} | Por favor, use o comando novamente.`, ephemeral: true })
+            return await interaction.reply({
+                content: `${e.DenyX} | Command Member Not Found At Guild Priority Members Fetcher #164846`,
+                ephemeral: true
+            })
 
-        if (!member.permissions.has(DiscordPermissons.ManageEvents, true))
+        if (!member.permissions.has(PermissionsBitField.Flags.ManageEvents, true))
             return await interaction.reply({
                 content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageEvents}** para executar este comando.`,
                 ephemeral: true
