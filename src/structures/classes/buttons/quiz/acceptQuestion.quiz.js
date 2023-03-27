@@ -107,6 +107,7 @@ export default async interaction => {
                         custom_id: JSON.stringify({ c: 'quiz', src: 'reviewReports' })
                     })
 
+                addSafiras(doc.suggestedBy)
                 return await interaction.update({ embeds: [embed], components }).catch(() => { })
             })
             .catch(async reason => {
@@ -193,6 +194,7 @@ export default async interaction => {
                     ]
                 }).catch(() => { })
 
+                addSafiras(document.suggestedBy)
                 if (question.webhookUrl) return executeWebhook(question.webhookUrl, document._id, 'success')
                 return
             })
@@ -267,6 +269,27 @@ export default async interaction => {
 
         return await axios.post(webhookUrl, { content })
             .catch(() => { })
+    }
+
+    async function addSafiras(userId) {
+        await Database.User.updateOne(
+            { id: userId },
+            {
+                $inc: {
+                    Balance: 2000
+                },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.gain} Ganhou 2000 Safiras via **Quiz Question Accepted**`
+                        }],
+                        $position: 0
+                    }
+                }
+            },
+            { upsert: true }
+        )
     }
 
 }
