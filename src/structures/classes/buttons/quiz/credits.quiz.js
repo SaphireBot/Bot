@@ -10,7 +10,14 @@ import { Config } from "../../../../util/Constants.js"
 // Select Menu Interaction
 export default async interaction => {
 
-    if (interaction.message.author.id !== interaction.user.id)
+    if (typeof interaction.customId !== "string")
+        return await interaction.update({
+            content: `${e.Deny} | Unavailable Form Button Body.`,
+            components: [], embeds: []
+        }).catch(() => { })
+
+    const customId = JSON.parse(interaction.customId || "{}")
+    if (interaction.user.id !== customId.userId)
         return await interaction.reply({
             content: `${e.DenyX} | Uuuups, só <@${interaction.user.id}> pode clicar aqui, beleza?`,
             ephemeral: true
@@ -46,7 +53,7 @@ export default async interaction => {
             ? usersFormatted.length
                 ? `${usersFormatted.join('\n')}\n+ ${usersId.length - usersFormatted.length} outros usuários`
                 : `${usersId.length} usuários`
-            : usersFormatted.join('\n')
+            : usersFormatted.join('\n') || `${usersId.length} usuários`
     }
 
     return await interaction.message.edit({

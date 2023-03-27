@@ -112,7 +112,7 @@ const Buttons = {
                         type: 2,
                         label: 'Créditos',
                         emoji: Emojis.jumpStar,
-                        custom_id: JSON.stringify({ c: 'quiz', src: 'credits' }),
+                        custom_id: JSON.stringify({ c: 'quiz', src: 'credits', userId }),
                         style: ButtonStyle.Primary
                     }
                 ]
