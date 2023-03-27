@@ -38,6 +38,10 @@ export default {
                 {
                     name: 'Quiz Anime',
                     value: 'GamingCount.QuizAnime'
+                },
+                {
+                    name: 'Quiz Perguntas',
+                    value: 'GamingCount.QuizQuestions'
                 }
             ]
         },
@@ -93,7 +97,8 @@ export default {
             Xp: '',
             'GamingCount.Logomarca': 'Acertos',
             'GamingCount.FlagCount': 'Acertos',
-            'GamingCount.QuizAnime': 'Acertos'
+            'GamingCount.QuizAnime': 'Acertos',
+            'GamingCount.QuizQuestions': 'Acertos'
         }
 
         const format = query

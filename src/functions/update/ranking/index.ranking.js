@@ -11,7 +11,8 @@ export default async () => {
         { name: 'Xp', emoji: e.RedStar, title: '👑 Ranking - Global Experience' },
         { name: 'GamingCount.Logomarca', emoji: e.logomarca, title: '👑 Ranking - Logomarca Game' },
         { name: 'GamingCount.FlagCount', emoji: '🗺️', title: '👑 Ranking - Bandeiras Game' },
-        { name: 'GamingCount.QuizAnime', emoji: '🗺️', title: '👑 Ranking - Quiz Anime Game' }
+        { name: 'GamingCount.QuizAnime', emoji: '🗺️', title: '👑 Ranking - Quiz Anime Game' },
+        { name: 'GamingCount.QuizQuestions', emoji: '💭', title: '👑 Ranking - Quiz Question Game' }
     ]
 
     const allUsersData = []
