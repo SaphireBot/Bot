@@ -33,6 +33,7 @@ import deleteCategory from './deleteCategory.quiz.js'
 import delCatAndQuestions from './delCatAndQuestions.quiz.js'
 import changeCategoryName from './changeCategoryName.quiz.js'
 import newQuizCatEdit from './newQuizCatEdit.quiz.js'
+import credits from './credits.quiz.js'
 import { Buttons, Emojis as e } from '../../../../util/util.js';
 import { SaphireClient as client } from '../../../../classes/index.js';
 
@@ -54,7 +55,7 @@ export default async (interaction, { src }) => {
         deleteQuestion, report: QuizManager.newReport,
         newCategory: QuizManager.newCategory,
         refuseModel: QuizManager.defineRefuseReason,
-        newQuizReport, reviewReports,
+        newQuizReport, reviewReports, credits,
         modalFeedback: QuizManager.showModalFeedback,
         addCuriosity: QuizManager.addCuriosity,
         custom, config, deleteConfig, newQuizCatEdit
@@ -98,12 +99,15 @@ export default async (interaction, { src }) => {
                     color: client.blue,
                     title: `${e.QuizLogo} ${client.user.username}'s Quiz`,
                     description: `Estamos construindo esse Quiz com todo o amor, ok?\nVocê pode mandar perguntar clicando no botão \`Mais Opções\`.\n \nAgradecemos a sua ajuda.\n${e.Admin} Saphire's Team Developers & Resourcers Management`,
+                    thumbnail: {
+                        url: 'https://media.discordapp.net/attachments/893361065084198954/1084184092616183898/i-have-an-idea-light-bulb-icon-motion-design-animation_49.gif?width=624&height=468'
+                    },
                     footer: {
                         text: `❤️ Powered By: ${client.user.username}'s Community`
                     }
                 }
             ],
-            components: Buttons.QuizQuestionsFirstPage
+            components: Buttons.QuizQuestionsFirstPage(interaction.user.id)
         }).catch(() => { })
 
         function getUserIdFromCustomId() {

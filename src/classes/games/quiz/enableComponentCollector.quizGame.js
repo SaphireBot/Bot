@@ -11,31 +11,50 @@ export default async (message, correctAnswer, Quiz, question) => {
 
     if (Quiz.stop || !message || !correctAnswer) return Quiz.unregister()
 
-    let messagesIgnoreCounter = 0;
     let questionMisses = 0
-    message.channel.createMessageCollector({
-        filter: msg => !msg.author.bot && msg.content?.toLocaleLowerCase() == correctAnswer.trim().toLocaleLowerCase(),
-        max: 1,
+    const alreadyReplied = []
+
+    message.createMessageComponentCollector({
+        filter: () => true,
         time: Quiz.options.responseTime + Quiz.data.timeBonus,
         dispose: true
     })
-        .on('collect', msg => collect(msg))
+        .on('collect', int => collect(int))
         .on('end', (_, reason) => end(reason))
-        .on('ignore', () => refreshMessage())
 
     Quiz.data.timeBonus = 0
     return
 
-    async function collect(msg) {
+    async function collect(int) {
         Quiz.data.anwersCounter++
+
+        const { user, customId: answer } = int
+
+        if (alreadyReplied.includes(user.id))
+            return await int.reply({
+                content: `${e.sleep} | Você já errou esta pergunta, ok? Espere pela próxima, é rapidinho.`,
+                ephemeral: true
+            })
+
+        if (answer !== correctAnswer) {
+            alreadyReplied.push(user.id)
+
+            if (Quiz.options.losePointAtError && Quiz.data.points[user.id] !== undefined)
+                Quiz.data.points[user.id]--
+
+            Quiz.data.misses++
+            return await int.reply({
+                content: `${e.cry} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
+                ephemeral: true
+            })
+        }
+
         Quiz.data.hits++
         if (Quiz.stop) return Quiz.unregister()
 
-        const { author } = msg
-        msg.react('⭐').catch(() => { })
-        Quiz.addUsersPoint(author.id)
+        Quiz.addUsersPoint(user.id)
         Quiz.addHitsAndMisses(question.questionId, 1, questionMisses)
-        Quiz.data.points[author.id] ? Quiz.data.points[author.id]++ : Quiz.data.points[author.id] = 1
+        Quiz.data.points[user.id] ? Quiz.data.points[user.id]++ : Quiz.data.points[user.id] = 1
 
         const embed = message.embeds[0]?.data
 
@@ -64,7 +83,7 @@ export default async (message, correctAnswer, Quiz, question) => {
 
         embed.color = client.green
         embed.description = `${e.QuestionMark} ${question.question}\n***R:** ${question.answers.find(an => an.correct).answer}*`
-        embed.fields.push({ name: customMessage, value: `${author} acertou essa pergunta.` })
+        embed.fields.push({ name: customMessage, value: `${user} acertou essa pergunta.` })
 
         const userTag = await client.users.fetch(question.suggestedBy).then(user => `${user.tag} \`${user.id}\``).catch(() => "")
         if (userTag) embed.fields.push({ name: '👤 Sugerido Por', value: `${userTag}` })
@@ -99,7 +118,7 @@ export default async (message, correctAnswer, Quiz, question) => {
         if (Quiz.options.gameRepeat == 'noRepeat' && !Quiz.questions.length)
             return Quiz.finalize()
 
-        await Quiz.channelSend({ content: `🌟 | ${author} acertou a pergunta!\n${e.Loading} | Carregando próxima pergunta...`, redefineMessage: true })
+        await Quiz.channelSend({ content: `🌟 | ${user} acertou a pergunta!\n${e.Loading} | Carregando próxima pergunta...`, redefineMessage: true })
         return Quiz.next()
     }
 
@@ -143,27 +162,8 @@ export default async (message, correctAnswer, Quiz, question) => {
         }
 
         Quiz.unregister()
-        if (reason == 'channelDelete') return
+        if (['channelDelete'].includes(reason)) return
         return console.log(`#168415464 - ${reason}`)
-    }
-
-    async function refreshMessage() {
-        messagesIgnoreCounter++
-        questionMisses++
-        Quiz.data.anwersCounter++
-        Quiz.data.misses++
-
-        if (messagesIgnoreCounter > 10) {
-            messagesIgnoreCounter = 0
-            await Quiz.channelSend({
-                content: Quiz.message.content || null,
-                embeds: Quiz.message.embeds[0]?.data ? [Quiz.message.embeds[0]?.data] : [],
-                components: [],
-                redefineMessage: true
-            })
-            return message.delete().catch(() => { })
-        }
-        return;
     }
 
 }

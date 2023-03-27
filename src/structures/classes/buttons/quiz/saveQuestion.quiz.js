@@ -47,7 +47,6 @@ export default async interaction => {
         const buffer = Buffer.from(
             `--- SOLICITAÇÃO DE PERGUNTA | QUIZ QUESTION SYSTEM | FILE SECURITY REVIEW ---
 
-Status: ENVIADO PARA ANÁLISE
 Categoria Solicitada: ${indication.category}
 Pergunta Solicitada: ${indication.question}
 Respostas Selecionadas: \n${indication.answers.map(answer => `${answer.correct ? 'CORRETA' : 'ERRADA'} - ${answer.answer}`).join('\n')}

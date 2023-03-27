@@ -59,7 +59,6 @@ export default async interaction => {
         const buffer = Buffer.from(
             `--- SOLICITAÇÃO DE CATEGORIA | QUIZ QUESTION SYSTEM | FILE SECURITY REVIEW ---
 
-Status: ENVIADO PARA ANÁLISE
 Categoria Solicitada: ${dataSave.category}
 Solicitante: ${user.tag} - ${user.id}
 Servidor de Origem: ${guild.name} - ${guild.id}

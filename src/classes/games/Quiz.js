@@ -1,10 +1,11 @@
 import { Database, SaphireClient as client } from "../index.js";
 import { ButtonStyle } from "discord.js";
 import { Emojis as e } from "../../util/util.js";
+import { setTimeout as sleep } from 'node:timers/promises'
 import custom from "../../structures/classes/buttons/quiz/custom.quiz.js";
 import QuizManager from "./QuizManager.js";
 import keyboardQuizGame from "./quiz/keyboard.quizGame.js";
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+import buttons from "./quiz/buttons.quizGame.js";
 
 export default class Quiz {
     constructor(interaction) {
@@ -13,7 +14,7 @@ export default class Quiz {
         this.user = interaction.user
         this.guild = interaction.guild
         this.channel = interaction.channel
-        this.data = { rounds: 0, hits: 0, misses: 0, timeBonus: 0, points: {} }
+        this.data = { rounds: 0, hits: 0, misses: 0, timeBonus: 0, points: {}, anwersCounter: 0 }
         this.options = {}
         this.stop = false
         this.questions = QuizManager.questions
@@ -209,7 +210,7 @@ export default class Quiz {
             })
 
         this.setPreference(preferenceType)
-        await delay(3000)
+        await sleep(2500)
         collector.stop()
         if (!this.stop) return this.prepare(int)
     }
@@ -266,15 +267,14 @@ export default class Quiz {
     async randomizeQuestion() {
         if (this.stop) return this.unregister()
         this.questions.sort(() => Math.random() - Math.random())
-        await delay(4000)
+        await sleep(4000)
         return
     }
 
     async lauch(gameType, question) {
-
         const execute = {
             keyboard: keyboardQuizGame,
-            // buttons: buttonQuizGame
+            buttons: buttons
         }[gameType]
 
         if (execute) await execute(question, this)
@@ -314,10 +314,7 @@ export default class Quiz {
     async updateMessage({ content = null, embeds = [], components = [], fetchReply = false }) {
 
         return await this.message?.edit({ content, embeds, components, fetchReply })
-            .then(message => {
-                if (fetchReply) this.message = message
-                return;
-            })
+            .then(message => this.message = message)
             .catch(err => {
                 this.stop = true
                 this.unregister()
@@ -341,13 +338,47 @@ export default class Quiz {
     calculateTime(correctQuestionAnswer) {
         if (!correctQuestionAnswer) return
         const words = correctQuestionAnswer.split(" ").length
-        for (let i = 0; i < words; i++)
-            this.data.timeBonus += 500
+        if (words > 1)
+            for (let i = 0; i < words; i++)
+                this.data.timeBonus += 500
         return
     }
 
     async finalize() {
-        console.log(this.data)
+        QuizManager.unregisterChannel(this.channel.id)
+        const { hits, misses, points, rounds } = this.data
+
+        const ranking = Object.entries(points)
+            .sort((a, b) => b[0] - a[0])
+            .map(([userId, point], i) => `${top(i)} <@${userId}> ${point} pontos`)
+            .slice(0, 50)
+            .join('\n')
+
+        const embeds = [{
+            color: client.blue,
+            title: `🔎 ${client.user.username}'s Quiz | RESULTADO`,
+            description: `Essa partida contou com **${rounds} rounds**.\nTambém teve **${hits} acertos** e **${misses} erros**.Também teve um total de **${this.data.anwersCounter} mensagens** analisadas.`
+        }]
+
+        if (ranking.length)
+            embeds.push({
+                color: client.blue,
+                title: '🏆 Ranking da Partida',
+                description: ranking,
+                footer: {
+                    text: 'Top 50 Players'
+                }
+            })
+
+        return this.channelSend({ embeds })
+
+        function top(i) {
+            return {
+                0: e.CoroaDourada,
+                1: e.CoroaDePrata,
+                2: e.thirdcrown
+            }[i] || `${i + 1}.`
+        }
     }
 
     async addUsersPoint(usersId = []) {
@@ -357,17 +388,15 @@ export default class Quiz {
 
     async next() {
         if (this.stop) return this.unregister()
-        await delay(1000)
         const question = this.getQuestion()
 
         if (!question) {
             this.stop = true
             this.unregister()
-            return this.channel.send({
-                content: `${e.DenyX} | Ok ok ok ok ok!!!!! **NENHUMA** pergunta foi encontrada...`
-            }).catch(() => { })
+            return this.channelSend({ content: `${e.SaphireDesespero} | Ok ok ok ok ok!!!!! **NENHUMA** pergunta foi encontrada...\n${e.cry} | O jogo foi encerrado mas todos os pontos foram salvos.` })
         }
 
+        await sleep(3000)
         return await this.lauch(this.options.gameType, question)
     }
 }

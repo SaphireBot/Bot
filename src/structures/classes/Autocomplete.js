@@ -91,7 +91,7 @@ export default class Autocomplete extends Base {
 
     async quiz_selecionar(value) {
 
-        const questions = Quiz.questions || []
+        const questions = Quiz?.questions || []
         const fill = questions.filter(question => check(question))
 
         if (!fill?.length) return await this.respond()
