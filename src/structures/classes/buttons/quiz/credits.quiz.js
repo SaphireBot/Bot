@@ -10,6 +10,12 @@ import { Config } from "../../../../util/Constants.js"
 // Select Menu Interaction
 export default async interaction => {
 
+    if (interaction.message.author.id !== interaction.user.id)
+        return await interaction.reply({
+            content: `${e.DenyX} | Uuuups, só <@${interaction.user.id}> pode clicar aqui, beleza?`,
+            ephemeral: true
+        })
+
     const components = interaction.message.components
     await interaction.update({ content: `${e.Loading} | Carregando...`, components: [], embeds: [] }).catch(() => { })
 
