@@ -65,7 +65,11 @@ export default async (interaction, guild) => {
         },
         boost: {
             premiumSubscriptionCount: guild.premiumSubscriptionCount || 0,
-            premiumTier: guild.premiumTier || 0
+            premiumTier: {
+                1: "1",
+                2: "2",
+                3: "3 (Max)"
+            }[guild.premiumTier] || "0"
         },
         autoMod: {
             enables: guild.autoModerationRules?.cache?.filter(automod => automod?.enabled).size || 0,
