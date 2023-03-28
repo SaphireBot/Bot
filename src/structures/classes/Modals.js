@@ -29,6 +29,38 @@ export default new class Modals {
         }
     }
 
+    addOrEditCuriosity = question => {
+
+        const components = []
+
+        for (let i = 0; i <= 2; i++) {
+            const curiosity = question?.curiosity[i] || null
+            components.push({
+                type: 1,
+                components: [
+                    {
+                        type: 4,
+                        custom_id: `curiosity-${i}`,
+                        label: "Digite uma super curiosidade",
+                        style: 2,
+                        min_length: 5,
+                        max_length: 340,
+                        placeholder: "Você pode que colocar uma curiosidade bem curiosa",
+                        required: false,
+                        value: curiosity
+                    }
+                ]
+            })
+            continue
+        }
+
+        return {
+            title: "Editar/Adicionar Curiosidades",
+            custom_id: JSON.stringify({ c: "newQuizEditCuriosity" }),
+            components
+        }
+    }
+
     addCuriosity = question => {
 
         const components = []
@@ -55,7 +87,7 @@ export default new class Modals {
         }
 
         return {
-            title: "Adicionar Curiosidade",
+            title: "Editar/Adicionar Curiosidades",
             custom_id: JSON.stringify({ c: "newQuizCuriosity" }),
             components
         }

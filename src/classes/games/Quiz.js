@@ -351,7 +351,7 @@ export default class Quiz {
         const { hits, misses, points, rounds } = this.data
 
         const ranking = Object.entries(points)
-            .sort((a, b) => b[0] - a[0])
+            .sort((a, b) => b[1] - a[1])
             .map(([userId, point], i) => `${top(i)} <@${userId}> ${point} pontos`)
             .slice(0, 50)
             .join('\n')

@@ -1,8 +1,4 @@
-import {
-    Base,
-    SaphireClient as client,
-    Database
-} from '../../classes/index.js'
+import { Base, SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import moment from 'moment'

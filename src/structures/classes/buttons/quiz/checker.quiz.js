@@ -33,6 +33,7 @@ import deleteCategory from './deleteCategory.quiz.js'
 import delCatAndQuestions from './delCatAndQuestions.quiz.js'
 import changeCategoryName from './changeCategoryName.quiz.js'
 import newQuizCatEdit from './newQuizCatEdit.quiz.js'
+import newQuizEditCuriosity from './editCuriosity.quiz.js'
 import credits from './credits.quiz.js'
 import { Buttons, Emojis as e } from '../../../../util/util.js';
 import { SaphireClient as client } from '../../../../classes/index.js';
@@ -57,7 +58,7 @@ export default async (interaction, { src }) => {
         refuseModel: QuizManager.defineRefuseReason,
         newQuizReport, reviewReports, credits,
         modalFeedback: QuizManager.showModalFeedback,
-        addCuriosity: QuizManager.addCuriosity,
+        addCuriosity: QuizManager.addCuriosity, newQuizEditCuriosity,
         custom, config, deleteConfig, newQuizCatEdit
     }[src]
 

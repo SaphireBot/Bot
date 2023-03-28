@@ -42,6 +42,10 @@ export default async interaction => {
                 value: question.category || 'Ok, essa categoria não existe? Como assim? \`Error Code Location #215843\`'
             },
             {
+                name: '🔎 Curiosidades',
+                value: question.curiosity.join('\n \n') || 'Nenhuma curiosiade por aqui'
+            },
+            {
                 name: '📊 Contagem',
                 value: `↑ ${question.hits || 0} Acertos\n↓ ${question.misses || 0} Erros`
             },
@@ -54,9 +58,6 @@ export default async interaction => {
             text: `Question ID: ${question.questionId}`
         }
     }
-
-    if (question.curiosity?.length)
-        embed.fields.splice(3, 0, { name: `${e.Info} Curiosidades`, value: question.curiosity.join('\n') })
 
     const components = [{
         type: 1,
@@ -101,6 +102,13 @@ export default async interaction => {
                     label: 'Editar Pergunta/Resposta',
                     emoji: e.Admin,
                     custom_id: JSON.stringify({ c: 'quiz', src: 'editQuestion' }),
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    type: 2,
+                    label: 'Editar/Adicionar Curiosidades',
+                    emoji: e.Admin,
+                    custom_id: JSON.stringify({ c: 'quiz', src: 'newQuizEditCuriosity', id: question.questionId }),
                     style: ButtonStyle.Secondary
                 }
             ]
