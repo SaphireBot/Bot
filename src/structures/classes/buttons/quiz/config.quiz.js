@@ -119,7 +119,7 @@ export default async interaction => {
                             type: 2,
                             label: 'Sem Repetir [Padrão]',
                             emoji: '🫡',
-                            custom_id: 'noRepeat',
+                            custom_id: 'endQuestion',
                             style: ButtonStyle.Primary,
                             disabled: customData.gameRepeat == 'noRepeat'
                         },
@@ -135,7 +135,7 @@ export default async interaction => {
                             type: 2,
                             label: 'Fim das Perguntas',
                             emoji: '📝',
-                            custom_id: 'endQuestion',
+                            custom_id: 'noRepeat',
                             style: ButtonStyle.Primary,
                             disabled: customData.gameRepeat == 'endQuestion'
                         }
