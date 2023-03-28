@@ -24,18 +24,20 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client }) {
+    async execute({ interaction, client }, isRefresh, searchResource) {
 
         const { options } = interaction
-        const message = await interaction.reply({ content: `${e.Loading} | Carregando wallpapers...`, fetchReply: true })
-        const search = options.getString('pesquisar')
+        const message = await interaction[isRefresh ? 'update' : 'reply']({ content: `${e.Loading} | Carregando wallpapers...`, fetchReply: true, components: [] })
+        const search = isRefresh ? searchResource : options.getString('pesquisar')
         const wallpapers = await wall.getAnimeWall2(search).catch(() => null)
+        const refresh = (int, search) => this.execute({ interaction: int, client }, true, search)
 
         if (!wallpapers || !wallpapers.length)
             return message.edit({
                 content: `${e.cry} | Nenhum wallpaper de anime foi encontrado.`,
                 ephemeral: true
             }).catch(() => { })
+
 
         if (wallpapers.length > 25) wallpapers.length = 25
 
@@ -64,11 +66,16 @@ export default {
 
         function pagination() {
 
-            return message.createMessageComponentCollector({
+            const collector = message.createMessageComponentCollector({
                 filter: int => int.user.id == interaction.user.id,
                 idle: 1000 * 60 * 2
             })
                 .on('collect', int => {
+
+                    if (int.customId == 'refresh') {
+                        collector.stop()
+                        return refresh(int, search)
+                    }
 
                     if (int.values) {
                         control = Number(int.values[0])
@@ -98,7 +105,7 @@ export default {
                     return
                 })
 
-
+            return
         }
 
         function EmbedGenerator() {
@@ -148,6 +155,13 @@ export default {
                                     emoji: e.saphireRight,
                                     style: ButtonStyle.Primary,
                                     custom_id: 'right'
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Atualizar',
+                                    emoji: '🔄',
+                                    style: ButtonStyle.Primary,
+                                    custom_id: 'refresh'
                                 },
                             ]
                         }
