@@ -14,7 +14,7 @@ export default async (message, correctAnswer, Quiz, question) => {
     let questionMisses = 0
     const alreadyReplied = []
 
-    message.createMessageComponentCollector({
+    const collector = message.createMessageComponentCollector({
         filter: () => true,
         time: Quiz.options.responseTime + Quiz.data.timeBonus,
         dispose: true
@@ -52,7 +52,7 @@ export default async (message, correctAnswer, Quiz, question) => {
 
         Quiz.data.hits++
         if (Quiz.stop) return Quiz.unregister()
-
+        collector.stop()
         Quiz.addUsersPoint(user.id)
         Quiz.addHitsAndMisses(question.questionId, 1, questionMisses)
         Quiz.data.points[user.id] ? Quiz.data.points[user.id]++ : Quiz.data.points[user.id] = 1
@@ -113,9 +113,11 @@ export default async (message, correctAnswer, Quiz, question) => {
         await Quiz.channelSend({ content: null, embeds })
         message.delete().catch(() => { })
 
+        // Se tiver pra repetir no fim das perguntas, embaralha as perguntas tudo novamente
         if (Quiz.options.gameRepeat == 'endQuestion' && !Quiz.questions.length)
             Quiz.shuffleQuestions()
 
+        // Se não for para repetir, o jogo finaliza
         if (Quiz.options.gameRepeat == 'noRepeat' && !Quiz.questions.length)
             return Quiz.finalize()
 

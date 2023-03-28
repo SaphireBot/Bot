@@ -283,6 +283,8 @@ export default class Quiz {
     getQuestion() {
         const index = Math.floor(Math.random() * this.questions.length)
         const question = this.questions[index]
+
+        // Se for para repetir tudo aleatório, a pergunta não é removida da lista
         if (this.options.gameRepeat != 'allRepeat') this.questions.splice(index, 1)
         return question
     }

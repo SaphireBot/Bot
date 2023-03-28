@@ -1,7 +1,7 @@
 import QuizManager from "../../../../../../classes/games/QuizManager.js"
+import checkerQuiz from "../../../../../classes/buttons/quiz/checker.quiz.js"
 import { SaphireClient as client } from "../../../../../../classes/index.js"
 import { Buttons, Emojis as e } from "../../../../../../util/util.js"
-import checkerQuiz from "../../../../../classes/buttons/quiz/checker.quiz.js"
 
 export default async interaction => {
 

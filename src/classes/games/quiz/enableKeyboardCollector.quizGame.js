@@ -13,7 +13,7 @@ export default async (message, correctAnswer, Quiz, question) => {
 
     let messagesIgnoreCounter = 0;
     let questionMisses = 0
-    message.channel.createMessageCollector({
+    const collector = message.channel.createMessageCollector({
         filter: msg => !msg.author.bot && msg.content?.toLocaleLowerCase() == correctAnswer.trim().toLocaleLowerCase(),
         max: 1,
         time: Quiz.options.responseTime + Quiz.data.timeBonus,
@@ -91,11 +91,14 @@ export default async (message, correctAnswer, Quiz, question) => {
         }
 
         await Quiz.channelSend({ content: null, embeds })
+        collector.stop()
         message.delete().catch(() => { })
 
+        // Se tiver pra repetir no fim das perguntas, embaralha as perguntas tudo novamente
         if (Quiz.options.gameRepeat == 'endQuestion' && !Quiz.questions.length)
             Quiz.shuffleQuestions()
 
+        // Se não for para repetir, o jogo finaliza
         if (Quiz.options.gameRepeat == 'noRepeat' && !Quiz.questions.length)
             return Quiz.finalize()
 
