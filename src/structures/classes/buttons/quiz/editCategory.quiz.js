@@ -65,8 +65,5 @@ export default async interaction => {
         ]
     }
 
-    return await interaction.update({
-        content: null,
-        components: [selectMenuObject, buttons]
-    }).catch(() => { })
+    return await interaction.update({ content: null, components: [selectMenuObject, buttons] }).catch(() => { })
 }

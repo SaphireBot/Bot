@@ -35,6 +35,6 @@ export default async interaction => {
             value: `${e.Loading} Aguardando novo nome da categoria.`
         })
 
-    await interaction.message.edit({ embeds: [embed] })
+    await interaction.message.edit({ embeds: [embed] }).catch(() => { })
     return await interaction.showModal(Modals.newCategoryName(category))
 }
