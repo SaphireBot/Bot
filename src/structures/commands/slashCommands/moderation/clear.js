@@ -154,7 +154,8 @@ export default {
         const ignoreBots = commandData?.ignoreBots || interaction?.options?.getString('filter') == 'ignoreBots'
         const ignoreMembers = commandData?.ignoreMembers || interaction?.options?.getString('filter') == 'ignoreMembers'
         const script = commandData?.script || interaction?.options?.getString('script')
-        
+        const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots
+
         if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true) && script)
             return await interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar o recurso de Script.`,
@@ -179,7 +180,7 @@ export default {
                 components: []
             })
 
-        if (commandData) {
+        if (commandData)
             return interaction.message.delete()
                 .then(() => deleteMessages())
                 .catch(err => {
@@ -189,7 +190,6 @@ export default {
                         components: []
                     }).catch(() => { })
                 })
-        }
 
         const filters = [
             member ? `👤 | Apagar as mensagens do membro ${member.displayName}.` : null,
@@ -281,7 +281,7 @@ export default {
                         .catch(() => interaction.message.edit({ content: control.response, components: [] }).catch(() => { }))
 
                 let disable = 0
-                if (messages.size <= amount) disable++
+                if (messages.size <= amount && isFilter()) disable++
 
                 messages.sweep(msg => control.oldMessages.includes(msg.id))
                 control.oldMessages.push(...messages.keys())
@@ -307,8 +307,8 @@ export default {
                         return !msg?.author?.bot && !msg?.webhookId && !msg?.system
                     })
 
-                if (messages.size <= amount) disable++
-                if (amount < control.toFetchLimit) disable++
+                if (messages.size <= amount && isFilter()) disable++
+                if (amount < control.toFetchLimit && isFilter()) disable++
 
                 if (!member && !bots && !attachments && !webhooks)
                     filterAndDefine(messages)
