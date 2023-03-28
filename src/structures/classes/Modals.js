@@ -147,11 +147,11 @@ export default new class Modals {
                             custom_id: "question",
                             label: "Pergunta",
                             style: 1,
-                            min_length: 10,
+                            min_length: 4,
                             max_length: 500,
-                            placeholder: "Porquê o céu é azul?",
+                            placeholder: question.question.length < 10 ? question.question : "Porquê o céu é azul?",
                             required: true,
-                            value: question.question
+                            value: question.question.length < 10 ? null : question.question
                         }
                     ]
                 },
