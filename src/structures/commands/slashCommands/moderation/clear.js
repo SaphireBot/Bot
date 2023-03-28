@@ -69,6 +69,10 @@ export default {
                 {
                     name: 'Ignorar mensagens de membros',
                     value: 'ignoreMembers'
+                },
+                {
+                    name: 'Ignorar mensagens de webhooks',
+                    value: 'ignoreWebhooks'
                 }
             ]
         },
@@ -153,8 +157,9 @@ export default {
         const webhooks = commandData?.w || interaction?.options?.getString('filter') == 'webhooks'
         const ignoreBots = commandData?.ignoreBots || interaction?.options?.getString('filter') == 'ignoreBots'
         const ignoreMembers = commandData?.ignoreMembers || interaction?.options?.getString('filter') == 'ignoreMembers'
+        const ignoreWebhooks = commandData?.ignoreWebhooks || interaction?.options?.getString('filter') == 'ignoreWebhooks'
         const script = commandData?.script || interaction?.options?.getString('script')
-        const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots
+        const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots || ignoreWebhooks || member 
 
         if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true) && script)
             return await interaction.reply({
@@ -197,14 +202,15 @@ export default {
             attachments ? '📃 | Apagar mensagens com quaisquer tipo de mídia.' : null,
             webhooks ? '🛰️ | Apagar mensagens de webhooks.' : null,
             ignoreBots ? '🤖 | Ignorar as mensagens de bots.' : null,
-            ignoreMembers ? '👤 | Ignorar mensagens de membros.' : null
+            ignoreMembers ? '👤 | Ignorar mensagens de membros.' : null,
+            ignoreWebhooks ? '🛰️ | Ignorar mensagens de webhooks.' : null
         ].filter(i => i).join('\n')
             || '🧹 | Toma cuidado, nenhum filtro foi aplicado e eu vou passar a vassoura, viu?'
 
         const idCode = CodeGenerator(10)
         tempData.push({
             idCode, c: 'clear', u: interaction.user.id, ignoreMembers,
-            ch: channel.id || '', b: bots, am: amount, ignoreBots,
+            ch: channel.id || '', b: bots, am: amount, ignoreBots, ignoreWebhooks,
             m: member?.id || '', a: attachments, w: webhooks, script
         })
 
@@ -239,7 +245,7 @@ export default {
             const control = {
                 size: 0, pinned: 0, older: 0, system: 0, ignored: 0, ignoreBots: 0, oldMessages: [],
                 boost: 0, undeletable: 0, attachmentsMessages: 0, nonFilter: 0, Crossposted: 0,
-                toFetchLimit: 0, looping: 0, MemberMessages: 0, botsMessages: 0, hasThread: 0,
+                toFetchLimit: 0, looping: 0, MemberMessages: 0, botsMessages: 0, hasThread: 0, ignoreWebhooks: 0,
                 webhookMessages: 0, response: '', messagesCounterControl: amount, toDelete: [], script: []
             }
 
@@ -297,7 +303,7 @@ export default {
 
                 if (ignoreBots)
                     control.ignoreBots += messages.sweep(msg => {
-                        if (member?.user?.bot) msg?.author?.bot && msg?.author?.id !== member?.user?.id
+                        if (member?.user?.bot) return msg?.author?.bot && msg?.author?.id !== member?.user?.id
                         return msg?.author?.bot
                     })
 
@@ -306,6 +312,9 @@ export default {
                         if (member) return !msg?.author?.bot && !msg?.webhookId && !msg?.system && msg?.author?.id !== member?.user?.id
                         return !msg?.author?.bot && !msg?.webhookId && !msg?.system
                     })
+                    
+                if (ignoreWebhooks)
+                    control.ignoreWebhooks += messages.sweep(msg => msg?.webhookId)
 
                 if (messages.size <= amount && isFilter()) disable++
                 if (amount < control.toFetchLimit && isFilter()) disable++
@@ -428,6 +437,7 @@ export default {
                 { key: 'attachmentsMessages', text: `📃 | ${control.attachmentsMessages} mensagens com quaisquer tipo de mídia foram apagadas.` },
                 { key: 'botsMessages', text: `🤖 | ${control.botsMessages} mensagens de bots foram apagadas.` },
                 { key: 'webhookMessages', text: `🛰️ | ${control.webhookMessages} mensagens de webhooks foram apagadas.` },
+                { key: 'ignoreWebhooks', text: `🛰️ | ${control.ignoreWebhooks} mensagens de webhooks foram ignoradas.` },
                 { key: 'ignored', text: `🪄 | ${control.ignored} mensagens foram ignoradas pelo filtro.` },
             ])
                 if (control[data.key] > 0) control.response += data.text + '\n'
@@ -438,11 +448,12 @@ export default {
                 attachments ? '📃 | Apagar mensagens com quaisquer tipo de mídia.' : null,
                 webhooks ? '🛰️ | Apagar mensagens de webhooks.' : null,
                 ignoreBots ? '🤖 | Ignorar as mensagens de bots.' : null,
-                ignoreMembers ? '👤 | Ignorar mensagens de membros.' : null
+                ignoreMembers ? '👤 | Ignorar mensagens de membros.' : null,
+                ignoreWebhooks ? '🛰️ | Ignorar as mensagens de webhooks.' : null
             ].filter(i => i).join('\n') || ''
 
             if (filters.length)
-                control.response += `⬇️⬇️ Filtros Utilizados ⬇️⬇️\n${filters}`
+                control.response += `--- Filtros Utilizados ---\n${filters}`
 
             const files = await buildScript(control.script, filters) || []
 
