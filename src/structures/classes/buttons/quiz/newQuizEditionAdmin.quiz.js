@@ -58,8 +58,7 @@ export default async interaction => {
     question.question = questionEdited
     question.answers = answers
 
-    if (!Quiz.questions.find(q => q.questionId == question.questionId))
-        Quiz.QuestionsIndications.push(question)
+    Quiz.QuestionsIndications.push(question)
 
     const embed = {
         color: client.blue,
