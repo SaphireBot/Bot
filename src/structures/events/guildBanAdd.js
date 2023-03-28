@@ -18,13 +18,13 @@ client.on('guildBanAdd', async ban => {
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
     if (!guildData?.LogSystem?.ban?.active) return
 
-    const channel = guild.channels.cache.get(guildData.LogSystem?.channel)
+    const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
     if (!channel || !guildData.LogSystem?.channel) return
 
-    const logs = await guild.fetchAuditLogs().catch(() => null) // { type: 22 } - MemberBanAdd
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd, limit: 5 }).catch(() => null) // { type: 22 } - GuildBanAdd
     if (!logs) return
 
-    const kickLog = logs.entries.first()
+    const kickLog = logs?.entries.find((value) => value.targetId === ban.user.id);
     if (!kickLog || kickLog.action !== AuditLogEvent.MemberBanAdd) return
 
     const { executor, target, reason } = kickLog
