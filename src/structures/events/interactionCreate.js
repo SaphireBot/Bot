@@ -1,3 +1,4 @@
+import { PermissionsBitField } from 'discord.js'
 import {
     SlashCommandInteraction,
     Autocomplete,
@@ -16,6 +17,13 @@ client.on('interactionCreate', async interaction => {
     if (client.restart)
         return await interaction.reply({
             content: `${e.Loading} | Processo de reinicialização iniciado.\n📝 | \`${client.restart || 'Nenhum dado informado'}\``,
+            ephemeral: true
+        })
+
+    const channelPermissions = interaction.channel.permissionsFor(interaction.guild.members.me, true)
+    if (!channelPermissions || !channelPermissions.has([PermissionsBitField.Flags.ViewAuditLog, PermissionsBitField.Flags.SendMessages]))
+        return await interaction.reply({
+            content: `${e.DenyX} | Eu não tenho permissão para ver ou enviar mensagem neste canal.`,
             ephemeral: true
         })
 

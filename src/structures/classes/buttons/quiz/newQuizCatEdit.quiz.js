@@ -1,7 +1,7 @@
 import QuizManager from "../../../../classes/games/QuizManager.js";
 import { SaphireClient as client, Database } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
-const delay = async ms => new Promise(resolve => setTimeout(resolve, ms))
+import { setTimeout as sleep } from 'node:timers/promises'
 
 export default async interaction => {
 
@@ -31,6 +31,8 @@ export default async interaction => {
 
     const category = interaction.fields.getTextInputValue('categoryName')
 
+    if (!embed.fields || !Array.isArray(embed.fields)) embed.fields = []
+
     embed.fields[0] = {
         name: '📝 Solicitação de Alteração',
         value: `Nome Anterior: ${originalCategoryName}\nNome Atual: ${category}\n${e.Loading} Alterando o nome da categoria no banco de dados...`
@@ -50,40 +52,41 @@ export default async interaction => {
     const components = interaction.message.components[0].toJSON()
     await interaction.update({ embeds: [embed], components: [] }).catch(() => { })
 
-    await delay(2000)
-
     let response = ''
 
-    QuizManager.categories.slice(
-        QuizManager.categories.findIndex(cat => cat == originalCategoryName),
+    QuizManager.categories.splice(
+        QuizManager.categories.findIndex(cat => cat.toLowerCase() == originalCategoryName.toLowerCase()),
         1, category
     )
 
     let pullAndPush = 0
 
+    await sleep(1000)
     await Database.Quiz.updateOne(
         { category: 'SaveCategories' },
         { $pull: { enableCategories: originalCategoryName } }
     ).then(() => pullAndPush++).catch(console.log)
 
+    await sleep(1000)
     await Database.Quiz.updateOne(
         { category: 'SaveCategories' },
         { $push: { enableCategories: category } }
     )
         .then(() => {
             return pullAndPush == 1
-                ? response += `${e.CheckV} O nome da categoria **${originalCategoryName}** foi alterado para **${category}**.`
+                ? response += `${e.CheckV} **${originalCategoryName}** -> **${category}**.`
                 : response += `${e.DenyX} O nome da categoria principal não foi editada no banco de dados.`
-        }
-        )
+        })
         .catch(err => response += `${e.DenyX} Não foi possível alterar o nome da categoria **${originalCategoryName}**.\n${e.bug} \`${err}\``)
 
     for (const i in QuizManager.questions)
         if (QuizManager.questions[i]?.category == originalCategoryName)
             QuizManager.questions[i].category = category
+        else continue
 
+    await sleep(1000)
     await Database.Quiz.updateMany(
-        { category },
+        { category: originalCategoryName },
         { $set: { category } }
     )
         .then(value => response += `\n${e.CheckV} **${value.modifiedCount} perguntas** tiveram o nome da categoria alteradas.`)
@@ -93,5 +96,5 @@ export default async interaction => {
     embed.fields[0].value = response
     embed.description = embed.description.replace(`${originalCategoryName}`, `${category}`)
 
-    return await interaction.message.edit({ embeds: [embed], components: [components] }).catch(() => { })
+    return await interaction.message.edit({ embeds: [embed], components: [components] }).catch(console.log)
 }

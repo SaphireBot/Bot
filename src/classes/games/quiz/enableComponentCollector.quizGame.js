@@ -43,6 +43,7 @@ export default async (message, correctAnswer, Quiz, question) => {
                 Quiz.data.points[user.id]--
 
             Quiz.data.misses++
+            questionMisses++
             return await int.reply({
                 content: `${e.cry} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
                 ephemeral: true
@@ -124,7 +125,16 @@ export default async (message, correctAnswer, Quiz, question) => {
 
     async function end(reason) {
 
-        if (['user', 'limit'].includes(reason)) return Quiz.addHitsAndMisses(question.questionId, 1, questionMisses)
+        if (['user', 'limit'].includes(reason)) return Quiz.addHitsAndMisses(question.questionId, 0, questionMisses)
+
+        if (reason == 'messageDelete') {
+            Quiz.addHitsAndMisses(question.questionId, 0, questionMisses)
+            Quiz.stop = true
+            Quiz.unregister()
+            return Quiz.channelSend({
+                content: `${e.SaphireDesespero} | APAGARAAAAAM a mensagem. OMG!\n${e.Check} | Mas ta de boa, eu salvei os pontos, beleza?`
+            })
+        }
 
         if (reason == 'time') {
             const embed = message.embeds[0]?.data
