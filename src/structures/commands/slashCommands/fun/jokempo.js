@@ -27,8 +27,8 @@ export default {
      * @param { SlashCommandInteraction } SlashCommand 
      */
     async execute(SlashCommand) {
+
         const { interaction, client, e } = SlashCommand
-        // return await interaction.reply({ content: `${e.Loading} | Em breve` })
         const { options, user, guild } = interaction
         const opponent = options.getMember('adversário')
         const value = options.getInteger('apostar') || 0
