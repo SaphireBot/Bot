@@ -107,7 +107,7 @@ export default class Autocomplete extends Base {
         return await this.respond(mapped)
 
         function check(q) {
-            if (!value) return true
+            if (!value || !q || !q.answers) return true
             return [
                 q.questionId,
                 q.question,

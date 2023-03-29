@@ -82,9 +82,10 @@ export default async interaction => {
         }, { new: true, upsert: true })
             .then(async doc => {
 
-                Quiz.questions.splice(
-                    Quiz.questions.findIndex(q => q.questionId == doc.questionId), 1, doc
-                )
+                if (Quiz.questions.findIndex(q => q.questionId == doc.questionId) !== -1)
+                    Quiz.questions.splice(
+                        Quiz.questions.findIndex(q => q.questionId == doc.questionId), 1, doc
+                    )
                 embed.color = client.green
 
                 const components = [{
