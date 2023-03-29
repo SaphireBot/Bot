@@ -293,7 +293,7 @@ export default {
 
         function getButtons() {
 
-            let emojiDefault = e.SaphireWhat
+            const emojiDefault = '❔'
 
             /*
                 a1 a2 a3 a4 a5

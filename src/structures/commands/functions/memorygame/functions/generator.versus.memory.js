@@ -8,7 +8,7 @@ export default (emojis, e, memberId) => {
         .randomize()
         .map((emoji, i) => ({
             type: 2,
-            emoji: e.SaphireWhat,
+            emoji: '❔',
             custom_id: JSON.stringify({
                 c: 'mg',
                 src: {

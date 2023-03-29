@@ -121,6 +121,7 @@ export default {
                     name: 'emojis',
                     description: 'Emojis para o jogo',
                     type: ApplicationCommandOptionType.Integer,
+                    choices
                 }
             ]
         },

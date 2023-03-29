@@ -50,7 +50,7 @@ export default async (interaction, customIdData) => {
         setTimeout(() => {
             for (let button of availableButtons) {
                 button.style = ButtonStyle.Secondary
-                button.emoji = Emojis.duvida
+                button.emoji = '❔'
                 button.disabled = false
             }
             return edit()
@@ -60,7 +60,7 @@ export default async (interaction, customIdData) => {
     function resetDefault() {
         for (let button of availableButtons) {
             button.style = ButtonStyle.Secondary
-            button.emoji = Emojis.duvida
+            button.emoji = '❔'
             button.disabled = false
         }
         return edit()

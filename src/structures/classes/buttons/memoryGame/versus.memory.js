@@ -57,7 +57,7 @@ export default async (interaction, customIdData) => {
 
         for (let button of availableButtons) {
             button.style = ButtonStyle.Secondary
-            button.emoji = Emojis.duvida
+            button.emoji = '❔'
             button.disabled = false
         }
 
@@ -97,7 +97,7 @@ export default async (interaction, customIdData) => {
         await interaction.deferUpdate().catch(() => { })
 
         return await message.edit({
-            content: `${Emojis.Deny} | Ocorreu um erro nesse jogo.`,
+            content: `${Emojis.Deny} | Ocorreu um erro nesse jogo.\n${Emojis.bug} | \`${err}\``,
             components: []
         }).catch(() => message.delete().catch(() => { }))
     }
