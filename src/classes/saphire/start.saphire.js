@@ -3,7 +3,7 @@ import automaticSystems from '../../functions/update/index.js'
 import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
-import Socket from './websocket.saphire.js'
+// import Socket from './websocket.saphire.js'
 import QuizManager from '../games/QuizManager.js'
 import webhook from './webhooks.saphire.js'
 import { Database, Discloud, SaphireClient as client } from '../index.js'
@@ -29,7 +29,7 @@ export default async () => {
 
     console.log('1/14 - Process Handler Readed')
 
-    import('../../structures/events/index.js')
+    import('../../structures/handler/events.handler.js')
     import('../../functions/global/prototypes.js')
     console.log('2/14 - Prototypes & Events Connected')
 
@@ -42,8 +42,8 @@ export default async () => {
 
     client.shardId = client.shard.ids.at(-1) || 0
 
-    console.log('4/14 - Tentiva de Websocket Connection')
-    client.socket = new Socket(client.shardId || 0).enableListeners()
+    // console.log('4/14 - Tentiva de Websocket Connection')
+    // client.socket = new Socket(client.shardId || 0).enableListeners()
 
     const databaseResponse = await Database.MongoConnect()
     console.log('5/14 - ' + databaseResponse)

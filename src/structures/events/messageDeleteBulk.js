@@ -1,8 +1,5 @@
 import { Emojis as e } from '../../util/util.js'
-import {
-    Database,
-    SaphireClient as client
-} from '../../classes/index.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 
 client.on('messageDeleteBulk', async (messages) => {
 
@@ -11,7 +8,9 @@ client.on('messageDeleteBulk', async (messages) => {
 
     function check() {
         refundBet()
+        refundJokempo()
         refundBlackjack()
+        deleteSingleData()
         return
     }
 
@@ -21,9 +20,18 @@ client.on('messageDeleteBulk', async (messages) => {
 
         if (!gamesToDelete || !gamesToDelete.length) return
 
-        for (let game of gamesToDelete) {
+        for (let game of gamesToDelete)
             client.emit('betRefund', game.value)
-        }
+    }
+
+    async function refundJokempo() {
+        const allGamesId = await Database.Cache.Jokempo.all() || []
+        const gamesToDelete = allGamesId.filter(data => messagesId.includes(data.id)) || []
+
+        if (!gamesToDelete || !gamesToDelete.length) return
+
+        for (let gameData of gamesToDelete)
+            client.emit('jokempoRefund', gameData)
     }
 
     async function refundBlackjack() {
@@ -50,6 +58,22 @@ client.on('messageDeleteBulk', async (messages) => {
             client.emit(game, true)
             await Database.Cache.Blackjack.delete(game.id)
         }
+    }
+
+    async function deleteSingleData() {
+
+        for (const messageId of messagesId) {
+            Database.Cache.Connect.delete(messageId)
+            Database.Cache.WordleGame.delete(messageId)
+        }
+
+        const topGGData = await Database.Cache.General.get('TopGG')
+
+        if (topGGData)
+            for (const data of Object.values(topGGData))
+                if (messagesId.includes(data.messageId))
+                    Database.Cache.General.delete(`TopGG.${data.userId}`)
+
     }
 
 })

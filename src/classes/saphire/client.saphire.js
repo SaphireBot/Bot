@@ -193,7 +193,7 @@ export default new class SaphireClient extends Client {
 
     topGGAutoPoster() {
         if (this.user.id !== this.moonId) return
-        return AutoPoster(process.env.TOP_GG_TOKEN, this)
+        return AutoPoster(process.env.TOP_GG_TOKEN, this, { interval: 1000 * 60 * 15 })
     }
 
     async refreshStaff() {

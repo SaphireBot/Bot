@@ -1,4 +1,4 @@
-import { ButtonStyle } from 'discord.js'
+import { ButtonStyle, ButtonInteraction as DiscordButtonInteraction } from 'discord.js'
 import { Modals, SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import Base from './Base.js'
@@ -31,8 +31,12 @@ import botinfoSaphire from '../commands/functions/bot/botinfo.saphire.js'
 import mydata from '../commands/slashCommands/bot/mydata.js'
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js'
 import connect from './buttons/connect/redirect.connect.js'
+import checkJokempo from './buttons/jokempo/redirect.jokempo.js'
 
 export default class ButtonInteraction extends Base {
+    /**
+     * @param { DiscordButtonInteraction } interaction 
+     */
     constructor(interaction) {
         super()
         this.interaction = interaction
@@ -44,7 +48,7 @@ export default class ButtonInteraction extends Base {
         this.guild = interaction.guild
         this.commandName = this.message.interaction?.commandName
         this.command = this.message.interaction
-        this.e = e
+        this.e = this.emojis
     }
 
     async execute() {
@@ -91,7 +95,8 @@ export default class ButtonInteraction extends Base {
             botinfo: [botinfoSaphire, this.interaction, commandData],
             mydata: [mydata.execute, this, commandData],
             sinfo: [pagesServerinfo, { interaction: this.interaction, customId: commandData, value: false }],
-            connect: [connect, this, commandData]
+            connect: [connect, this, commandData],
+            jkp: [checkJokempo, this, commandData] /* Jokempo */
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

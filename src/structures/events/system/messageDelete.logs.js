@@ -1,9 +1,6 @@
 import { AuditLogEvent } from "discord.js"
 import { Emojis as e } from "../../../util/util.js"
-import {
-    Database,
-    SaphireClient as client
-} from "../../../classes/index.js"
+import { Database, SaphireClient as client } from "../../../classes/index.js"
 
 export default async message => {
     if (message.partial) return

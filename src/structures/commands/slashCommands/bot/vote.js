@@ -82,7 +82,10 @@ export default {
             embeds: [{
                 color: client.blue,
                 title: `${e.topgg} | Top.gg Bot List`,
-                description: `${e.Loading} | Vote no site da Top.GG e sua recompensa aparecerá aqui.`
+                description: `${e.Loading} | Vote no site da Top.GG e sua recompensa aparecerá aqui.`,
+                image: {
+                    url: 'https://top.gg/api/widget/912509487984812043.png'
+                }
             }],
             components: [{
                 type: 1,

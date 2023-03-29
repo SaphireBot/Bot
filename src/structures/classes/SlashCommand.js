@@ -1,10 +1,13 @@
 import Base from './Base.js'
 import error from '../../classes/modules/errors/errors.js'
 import * as Statcord from 'statcord.js'
-import { Emojis } from '../../util/util.js'
 import { Experience } from '../../classes/index.js'
+import { ChatInputCommandInteraction } from 'discord.js'
 
 export default class SlashCommandInteraction extends Base {
+    /**
+     * @param { ChatInputCommandInteraction } interaction 
+     */
     constructor(interaction) {
         super()
         this.interaction = interaction
@@ -13,7 +16,7 @@ export default class SlashCommandInteraction extends Base {
         this.guild = interaction.guild
         this.channel = interaction.channel
         this.commandName = interaction.commandName
-        this.e = Emojis
+        this.e = this.emojis
     }
 
     async execute(guildData, clientData, command) {

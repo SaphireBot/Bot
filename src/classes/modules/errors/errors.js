@@ -88,7 +88,7 @@ export default
                         }]
                     }]
                     : []
-            }).catch(console.log)
+            }).catch(() => { })
 
         client.sendWebhook(
             process.env.WEBHOOK_DATABASE_LOGS,

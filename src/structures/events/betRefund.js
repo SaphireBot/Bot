@@ -1,7 +1,4 @@
-import {
-    Database,
-    SaphireClient as client
-} from '../../classes/index.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
 client.on('betRefund', async (data, noDelete = false) => {

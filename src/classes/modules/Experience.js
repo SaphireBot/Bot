@@ -58,7 +58,7 @@ export default new class Experience {
             continue
         }
 
-        Database.User.collection.bulkWrite(dataToUpdate, { ordered: true }, () => { })
+        await Database.User.collection.bulkWrite(dataToUpdate, { ordered: true }, () => { })
 
         return this.users = []
     }
