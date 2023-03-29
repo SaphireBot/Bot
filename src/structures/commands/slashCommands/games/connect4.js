@@ -1,5 +1,6 @@
 import { Emojis as e } from '../../../../util/util.js'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
+import { SaphireClient as client } from '../../../../classes/index.js'
 
 export default {
     name: 'connect4',
@@ -16,7 +17,7 @@ export default {
     ],
     helpData: {},
     async execute({ interaction }) {
-        // return interaction.reply({ content: `${e.Loading} | Em Breve.`, ephemeral: true })
+
         const member = interaction.options.getMember('adversário')
 
         if (!member)
@@ -45,17 +46,24 @@ export default {
                     {
                         type: 2,
                         label: 'Aceitar',
-                        emoji: '🟡',
+                        emoji: e.amongusdance,
                         custom_id: JSON.stringify({ c: 'connect', src: 'init', userId: member.id }),
                         style: ButtonStyle.Success
                     },
                     {
                         type: 2,
                         label: 'Recusar',
-                        emoji: '🔴',
+                        emoji: '<a:a_hello:937498373727080480>',
                         custom_id: JSON.stringify({ c: 'connect', src: 'cancel', userId: member.id }),
                         style: ButtonStyle.Danger
                     },
+                    {
+                        type: 2,
+                        label: 'Como Jogar',
+                        emoji: '❔',
+                        custom_id: JSON.stringify({ c: 'connect', src: 'info' }),
+                        style: ButtonStyle.Primary
+                    }
                 ]
             }]
         })

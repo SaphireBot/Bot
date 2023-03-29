@@ -8,7 +8,7 @@ export default ({ interaction, user, message }, commandData) => {
 
     const { src, userId } = commandData
 
-    const execute = { cancel, init, play }[src]
+    const execute = { cancel, init, play, info }[src]
 
     if (!execute)
         return interaction.reply({
@@ -111,6 +111,33 @@ export default ({ interaction, user, message }, commandData) => {
                 message.delete().catch(() => { })
                 return interaction.channel.send({ content: `${e.cry} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
             })
+    }
+
+    function info() {
+        return interaction.reply({
+            embeds: [{
+                color: client.blue,
+                title: '🟡 Connect4 🔴',
+                image: {
+                    url: 'https://media.discordapp.net/attachments/893361065084198954/1090442596251357204/connect4.png?width=421&height=468'
+                },
+                fields: [
+                    {
+                        name: '🏳️ Objetivo',
+                        value: 'O objetivo do jogo Connect4 é colocar 4 pedras em linha (quer horizontal, vertical ou diagonalmente). O primeiro jogador, que atingir este objetivo, ganha o jogo. '
+                    },
+                    {
+                        name: '🕳️ Tabuleiro',
+                        value: 'Connect4 é jogado num tabuleiro quadrado de 6x6, 6x7, 7x7 ou 8x8. A Saphire segue o padrão 7x7 . A cada jogador é atribuída uma cor, Amarelo e Vermelho.'
+                    },
+                    {
+                        name: `${e.QuestionMark} Como Jogar`,
+                        value: 'O Jogo começa com o tabuleiro vazio.\nOs jogadores jogam alternadamente, começando a partida a partir do jogador com as pedras amarelas.\n Em cada turno, o jogador deixa cair uma pedra da sua cor ao longo de uma das colunas do tabuleiro. A pedra colocada cai até chegar ao fundo do tabuleiro ou ficar sobre uma outra pedra, independentemente da cor'
+                    }
+                ]
+            }],
+            ephemeral: true
+        })
     }
 
 }
