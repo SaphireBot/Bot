@@ -13,6 +13,7 @@ export default async (interaction, gameData) => {
     const { message, guild } = interaction
     const winner = check(clicks)
     const MoedaCustom = await guild.getCoin()
+    Database.Cache.Jokempo.delete(message.id)
 
     if (winner == 'draw') return draw()
 
@@ -28,7 +29,6 @@ export default async (interaction, gameData) => {
             : `${e.amongusdeath} <@${players[1]}> perdeu jogando ${clicks[players[1]]}`,
     ].join('\n')
 
-    Database.Cache.Jokempo.delete(message.id)
     return await interaction.update({
         embeds: [{
             color: client.blue,
