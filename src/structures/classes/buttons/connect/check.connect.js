@@ -1,6 +1,6 @@
 import { Emojis as e } from "../../../../util/util.js";
 
-// Obrigado Clyde ❤️
+// Clyde ❤️
 export default (board) => {
 
     // Verifica horizontalmente
@@ -13,7 +13,7 @@ export default (board) => {
                 board[row][col] === board[row][col + 3]
             )
                 if (board[row][col] !== e.white)
-                    return board[row][col]; // O jogador vencedor é retornado
+                    return board[row][col];
 
 
     // Verifica verticalmente
@@ -26,7 +26,7 @@ export default (board) => {
                 board[row][col] === board[row + 3][col]
             )
                 if (board[row][col] !== e.white)
-                    return board[row][col]; // O jogador vencedor é retornado
+                    return board[row][col];
 
 
     // Verifica diagonalmente (ascendente)
@@ -39,7 +39,7 @@ export default (board) => {
                 board[row][col] === board[row - 3][col + 3]
             )
                 if (board[row][col] !== e.white)
-                    return board[row][col]; // O jogador vencedor é retornado
+                    return board[row][col];
 
 
     // Verifica diagonalmente (descendente)
@@ -52,7 +52,7 @@ export default (board) => {
                 board[row][col] === board[row + 3][col + 3]
             )
                 if (board[row][col] !== e.white)
-                    return board[row][col]; // O jogador vencedor é retornado
+                    return board[row][col];
 
 
     return null
