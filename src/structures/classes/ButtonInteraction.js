@@ -1,3 +1,4 @@
+import { ButtonStyle } from 'discord.js'
 import { Modals, SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import Base from './Base.js'
@@ -24,12 +25,12 @@ import executeCantada from './buttons/cantadas/execute.cantada.js'
 import executeAmongus from './buttons/amongus/execute.amongus.js'
 import indexBet from './buttons/bet/index.bet.js'
 import validadeAnimeQuiz from './buttons/anime/validate.quiz.js'
-import { ButtonStyle } from 'discord.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import giveawayButton from './buttons/giveaway/giveaway.button.js'
 import botinfoSaphire from '../commands/functions/bot/botinfo.saphire.js'
 import mydata from '../commands/slashCommands/bot/mydata.js'
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js'
+import connect from './buttons/connect/redirect.connect.js'
 
 export default class ButtonInteraction extends Base {
     constructor(interaction) {
@@ -89,7 +90,8 @@ export default class ButtonInteraction extends Base {
             clear: [this.clear, this, commandData],
             botinfo: [botinfoSaphire, this.interaction, commandData],
             mydata: [mydata.execute, this, commandData],
-            sinfo: [pagesServerinfo, { interaction: this.interaction, customId: commandData, value: false }]
+            sinfo: [pagesServerinfo, { interaction: this.interaction, customId: commandData, value: false }],
+            connect: [connect, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

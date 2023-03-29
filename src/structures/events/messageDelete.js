@@ -10,6 +10,7 @@ client.on('messageDelete', async message => {
     if (!message || !message.id) return
 
     Database.deleteGiveaway(message.id, message.guildId)
+    Database.Cache.Connect.delete(message.id)
 
     const isWordleGame = await Database.Cache.WordleGame.get(message.id)
     if (isWordleGame) await Database.Cache.WordleGame.delete(message.id)
