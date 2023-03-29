@@ -41,7 +41,7 @@ export default async (interaction, commandData) => {
 
     lines = lines.reverse()
 
-    gameData.history[userId].push(i + 1)
+    gameData.history[userId].push(emojiNumbers[i])
     const emojiWinner = check(lines)
     if (emojiWinner) return newWinner()
 
@@ -49,6 +49,9 @@ export default async (interaction, commandData) => {
     async function buildEmbedAndUpdate() {
 
         const components = buildComponents()
+
+        if ([...components[0].components, ...components[1].components].every(button => button.disabled))
+            return draw()
 
         const playNow = gameData.playNow == gameData.players[0]
             ? gameData.players[1]
@@ -74,7 +77,7 @@ export default async (interaction, commandData) => {
                     },
                     {
                         name: '📝 Histórico de Jogadas',
-                        value: Object.entries(gameData.history).map(([id, array]) => `<@${id}> ${array.join(', ')}`).join('\n') || 'Nada por aqui'
+                        value: Object.entries(gameData.history).map(([id, array]) => `<@${id}> ${array.join(' ')}`).join('\n') || 'Nada por aqui'
                     }
                 ]
             }],
@@ -88,12 +91,11 @@ export default async (interaction, commandData) => {
     }
 
     function isComplete(index) {
-        let i = 0
-        for (let line of lines)
-            if (line[index] != e.white) i++
-            else continue
 
-        return i == 7
+        for (let i = 0; i <= 6; i++)
+            if (lines[i][index] == e.white) return false
+
+        return true
     }
 
     function buildComponents() {
@@ -117,10 +119,13 @@ export default async (interaction, commandData) => {
                 style: ButtonStyle.Secondary,
                 disabled: isComplete(i)
             })
+
+        return components
     }
 
     function newWinner() {
 
+        Database.Cache.Connect.delete(message.id)
         const emojiData = Object.entries(emojiPlayer)
         const winnerId = emojiData.find(data => data[1] == emojiWinner)[0]
         const embed = interaction.message.embeds[0]?.data
@@ -135,8 +140,30 @@ export default async (interaction, commandData) => {
         if (!embed.fields || !Array.isArray(embed.fields)) embed.fields = []
 
         embed.fields[0].value = lines.map(line => line.join('|')).join('\n') + `\n${emojiNumbers.join('|')}`
-        embed.fields[1].value = Object.entries(gameData.history).map(([id, array]) => `<@${id}> ${array.join(', ')}`).join('\n') || 'Nada por aqui'
+        embed.fields[1].value = Object.entries(gameData.history).map(([id, array]) => `<@${id}> ${array.join(' ')}`).join('\n') || 'Nada por aqui'
         embed.description = `👑 <@${winnerId}> ganhou com as peças ${emojiWinner}`
+
+        return interaction.update({ content: null, embeds: [embed], components: [] }).catch(() => { })
+
+    }
+
+    function draw() {
+
+        Database.Cache.Connect.delete(message.id)
+        const embed = interaction.message.embeds[0]?.data
+
+        if (!embed)
+            return interaction.update({
+                content: `${e.Deny} | Embed não encontrada.`,
+                components: []
+            }).catch(() => { })
+
+        embed.color = 0xe6e7e8
+        if (!embed.fields || !Array.isArray(embed.fields)) embed.fields = []
+
+        embed.fields[0].value = lines.map(line => line.join('|')).join('\n') + `\n${emojiNumbers.join('|')}`
+        embed.fields[1].value = Object.entries(gameData.history).map(([id, array]) => `<@${id}> ${array.join(' ')}`).join('\n') || 'Nada por aqui'
+        embed.description = `🏳️🏳️ Empate 🏳️🏳️`
 
         return interaction.update({ content: null, embeds: [embed], components: [] }).catch(() => { })
 
