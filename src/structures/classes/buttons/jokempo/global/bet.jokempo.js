@@ -11,6 +11,13 @@ export default async interaction => {
     await interaction.update({ content: `${e.Loading} | Carregando informações globais...`, embeds: [], components: [] }).catch(() => { })
 
     const { user, guild } = interaction
+
+    if (user.id != message.interaction.user.id)
+        return interaction.reply({
+            content: `${e.DenyX} | Você não pode usar ele comando, sabia? Que tal você mesmo usar o \`/jokempo global\`?`,
+            ephemeral: true
+        })
+
     const selectMenu = { type: 1, components: [{ type: 3, custom_id: 'jkp', placeholder: 'Escolher Uma Aposta Global', options: [] }] }
     const MoedaCustom = await guild.getCoin()
     const jokempos = await Database.Jokempo.find() || []

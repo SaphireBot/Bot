@@ -30,17 +30,18 @@ export default async (interaction, commandData) => {
         }).catch(() => { })
 
     const { user } = interaction
-    const { play } = commandData
-    const userData = await client.getUser(gameData.creatorId)
-    const emojis = { stone: '👊', paper: '🤚', scissors: '✌️' }
-    gameData.userPlay = play
-    gameData.creatorData = userData
 
     if (user.id !== gameData.userId)
         return interaction.reply({
             content: `${e.Deny} | Hey, você não pode jogar nesta aposta, sabia?`,
             ephemeral: true
         })
+
+    const { play } = commandData
+    const userData = await client.getUser(gameData.creatorId)
+    const emojis = { stone: '👊', paper: '🤚', scissors: '✌️' }
+    gameData.userPlay = play
+    gameData.creatorData = userData
 
     const winner = checkJokempo({ [user.id]: emojis[play], [gameData.creatorId]: emojis[gameData.creatorOption] })
 

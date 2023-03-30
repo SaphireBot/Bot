@@ -10,6 +10,13 @@ import { setTimeout as sleep } from 'node:timers/promises'
 export default async (interaction, commandData) => {
 
     let { message, user, guild } = interaction
+
+    if (user.id != message.interaction.user.id)
+        return interaction.reply({
+            content: `${e.DenyX} | Você não pode usar ele comando, sabia? Que tal você mesmo usar o \`/jokempo global\`?`,
+            ephemeral: true
+        })
+
     const { value } = commandData
 
     await interaction.update({ content: `${e.Loading} | Validando e buscando dados globais...`, components: [], embeds: [] }).catch(() => { })

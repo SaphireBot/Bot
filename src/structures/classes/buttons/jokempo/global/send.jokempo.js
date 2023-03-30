@@ -8,7 +8,14 @@ import { Emojis as e } from "../../../../../util/util.js"
  */
 export default async interaction => {
 
-    const { user, guild } = interaction
+    const { user, guild, message } = interaction
+
+    if (user.id != message.interaction.user.id)
+        return interaction.reply({
+            content: `${e.DenyX} | Você não pode usar ele comando, sabia? Que tal você mesmo usar o \`/jokempo global\`?`,
+            ephemeral: true
+        })
+
     const MoedaCustom = await guild.getCoin()
     const selectMenu = { type: 1, components: [{ type: 3, custom_id: 'jkp', placeholder: 'Escolher Valor', options: [] }] }
     const jokempos = await Database.Jokempo.find({ creatorId: user.id }) || []
