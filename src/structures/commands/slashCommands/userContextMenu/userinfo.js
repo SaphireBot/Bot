@@ -1,4 +1,4 @@
-import { DiscordFlags as flags, PermissionsTranslate, Permissions } from '../../../../util/Constants.js'
+import { DiscordFlags as flags, PermissionsTranslate, Permissions, DiscordPermissons } from '../../../../util/Constants.js'
 import { ButtonStyle } from 'discord.js'
 
 export default {
@@ -32,7 +32,7 @@ export default {
             memberData.joinedAt = Date.Timestamp(member.joinedAt, 'F', true)
             memberData.joinedTimestamp = Date.Timestamp(member.joinedAt, 'R', true)
             memberData.onwer = (guild.ownerId === user.id) ? '\`Sim\`' : '\`Não\`'
-            memberData.adm = member.permissions.toArray().includes('ADMINISTRATOR') ? '\`Sim\`' : '\`Não\`'
+            memberData.adm = member.permissions.toArray().includes(DiscordPermissons.Administrator) ? '\`Sim\`' : '\`Não\`'
             memberData.associado = member.pending ? '\`Não\`' : '\`Sim\`'
             memberData.premiumSince = member.premiumSinceTimestamp ? `\n${e.Boost} Booster ${Date.Timestamp(member.premiumSince, 'R', true)}` : ''
             memberData.roles = member.roles.cache.filter(r => r.name !== '@everyone').map(r => `\`${r.name}\``).join(', ') || '\`Nenhum cargo\`'
