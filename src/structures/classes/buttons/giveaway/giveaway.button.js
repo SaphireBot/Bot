@@ -48,7 +48,7 @@ export default async ({ interaction }, commandData) => {
             })
 
         return Database.Guild.findOneAndUpdate(
-            { id: guild.id, 'Giveaways.MessageID': message.id },
+            { id: guild.id, 'Giveaways.MessageID': gwId },
             {
                 $addToSet: { 'Giveaways.$.Participants': user.id },
                 $set: { 'Giveaways.$.Actived': true }
@@ -56,7 +56,7 @@ export default async ({ interaction }, commandData) => {
             { new: true }
         )
             .then(async document => {
-                const giveawayObject = document.Giveaways.find(gw => gw.MessageID == message.id)
+                const giveawayObject = document.Giveaways.find(gw => gw.MessageID == gwId)
 
                 if (!giveawayObject)
                     return await interaction.reply({
@@ -91,7 +91,7 @@ export default async ({ interaction }, commandData) => {
                             type: 2,
                             label: 'Sim, quero sair',
                             emoji: e.Leave,
-                            custom_id: JSON.stringify({ c: 'giveaway', src: 'leave', gwId: message.id }),
+                            custom_id: JSON.stringify({ c: 'giveaway', src: 'leave', gwId: gwId }),
                             style: ButtonStyle.Danger
                         },
                         {
@@ -211,13 +211,13 @@ ${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}P
 
     function refreshButton() {
 
-        if (messagesToEditButton.some(obj => obj.id == message.id)) return
-        messagesToEditButton.push({ id: message.id, timeout: setTimeout(() => edit(), 3000) })
+        if (messagesToEditButton.some(obj => obj.id == gwId)) return
+        messagesToEditButton.push({ id: gwId, timeout: setTimeout(() => edit(), 3000) })
 
         async function edit() {
             const components = message?.components[0]?.toJSON()
             if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
-            messagesToEditButton.splice(messagesToEditButton.findIndex(obj => obj.id == message.id), 1)
+            messagesToEditButton.splice(messagesToEditButton.findIndex(obj => obj.id == gwId), 1)
             return message.edit({ components: [components] }).catch(err => retry(err))
             async function retry(err) {
                 if (err.code != 10008) return

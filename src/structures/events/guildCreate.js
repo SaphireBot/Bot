@@ -24,6 +24,6 @@ client.on("guildCreate", async guild => {
 
     const FirstMessageChannel = guild.channels.cache.find(channel => channel.isTextBased() && channel.permissionsFor(guild.members.me).has('SendMessages'))
     if (!FirstMessageChannel) return
-    return FirstMessageChannel.send(`${e.NezukoDance} | Oooie, eu sou a ${client.user.username}.\n${e.Stonks} | Meu prefiro padrão é \`/\`, todos os meus são em Slash Commands.`).catch(() => { })
+    return FirstMessageChannel.send(`${e.NezukoDance} | Oooie, eu sou a ${client.user.username}.\n${e.Stonks} | Meu prefixo padrão é \`/\`, todos os meus são em Slash Commands.`).catch(() => { })
 
 })

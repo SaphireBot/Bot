@@ -14,9 +14,9 @@ client.on('interactionCreate', async interaction => {
 
     if (!interaction) return
 
-    if (client.restart)
+    if (client.resttart)
         return await interaction.reply({
-            content: `${e.Loading} | Processo de reinicialização iniciado.\n📝 | \`${client.restart || 'Nenhum dado informado'}\``,
+            content: `${e.Loading} | Processo de reinicialização iniciado.\n📝 | \`${client.resttart || 'Nenhum dado informado'}\``,
             ephemeral: true
         })
 

@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
-import { Database, SlashCommandInteraction } from '../../../../classes/index.js'
+import { Database, SlashCommandInteraction, SaphireClient as client } from '../../../../classes/index.js'
+import { JokempoValues } from '../../../../util/Constants.js'
 import { Emojis as e } from '../../../../util/util.js'
 import clientPlay from './jokempo/client.jokempo.js'
 
@@ -33,24 +34,7 @@ export default {
             name: 'global',
             description: '[fun] Jogue um jokempo com qualquer outro usuário',
             type: ApplicationCommandOptionType.Subcommand,
-            options: [
-                {
-                    name: 'opções',
-                    description: 'Escolha a opção que deseja',
-                    type: ApplicationCommandOptionType.String,
-                    choices: [
-                        {
-                            name: 'Registrar um Jogo',
-                            value: 'register'
-                        },
-                        {
-                            name: 'Jogar Contra Alguém',
-                            value: 'versus'
-                        }
-                    ],
-                    required: true
-                }
-            ]
+            options: []
         }
     ],
     helpData: {},
@@ -68,7 +52,7 @@ export default {
  */
 async function local(SlashCommand) {
 
-    const { interaction, client } = SlashCommand
+    const { interaction } = SlashCommand
     const { options, user, guild } = interaction
     const opponent = options.getMember('adversário')
     const value = options.getInteger('apostar') || 0
@@ -166,15 +150,56 @@ async function local(SlashCommand) {
 
         })
 
-
 }
 
 /**
- * @param { SlashCommandInteraction } SlashCommand 
+ * @param { SlashCommandInteraction } SlashCommand
  */
 async function global(SlashCommand) {
-    return SlashCommand.interaction.reply({
-        content: `${e.Loading} | Este super e incrível sistema esta sendo construído e estará disponível dentro de alguns dias.`,
-        ephemeral: true
+    const { interaction } = SlashCommand
+    // return interaction.reply({ content: `${e.Loading} | Recurso em construção.`, ephemeral: true })
+    return interaction.reply({
+        embeds: [{
+            color: client.blue,
+            title: `${e.Planet} ${client.user.username}'s Jokempo Global`,
+            description: 'Este é um sistema inteligente onde permite que você jogue contra qualquer pessoa que um em qualquer servidor que tenha a Saphire.',
+            fields: [
+                {
+                    name: '📨 Lançar',
+                    value: 'Você pode lançar um Jokempo, para que outra pessoa aposte contra você em algum lugar do mundo.'
+                },
+                {
+                    name: `${e.Taxa} Apostar`,
+                    value: 'Aposte contra alguém. Esse alguém está em algum lugar do Discord.'
+                },
+                {
+                    name: '📝 Preços das Apostas',
+                    value: JokempoValues.map(number => `\`${number.currency()}\``).join(', ')
+                },
+                {
+                    name: '🛰️ Global System Notification',
+                    value: 'Este sistema irá te manter notificado sobre as suas apostas. Independente do tempo e local. Para que isso funcione bem, eu preciso da permissão **Gerenciar Webhooks**.'
+                }
+            ]
+        }],
+        components: [{
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    label: 'Lançar',
+                    emoji: '📨',
+                    custom_id: JSON.stringify({ c: 'jkp', type: 'send' }),
+                    style: ButtonStyle.Primary
+                },
+                {
+                    type: 2,
+                    label: 'Apostar',
+                    emoji: e.Taxa,
+                    custom_id: JSON.stringify({ c: 'jkp', type: 'bet' }),
+                    style: ButtonStyle.Primary
+                }
+            ]
+        }]
     })
 }

@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { Client, Collection, Guild } from 'discord.js'
+import { Client, Collection, Guild, Routes, messageLink } from 'discord.js'
 import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import { Database, Discloud } from '../index.js'
@@ -272,5 +272,27 @@ export default new class SaphireClient extends Client {
         this.restart = `${e.Loading} | Reinicialização Automática Programada.`
         await Discloud.apps.restart('saphire').catch(() => { })
         return
+    }
+
+    async getUser(userId) {
+        return await this.rest.get(Routes.user(userId))
+            .then(value => {
+                if (!value) return null
+                if (value.id == this.user.id) return null
+                return {
+                    id: value?.id,
+                    username: value?.username,
+                    discriminator: value?.discriminator,
+                    tag: `${value?.username}#${value?.discriminator}`,
+                    avatar: value?.avatar
+                }
+            })
+            .catch(() => null)
+    }
+
+    async getMessageUrl(channelId, messageId) {
+        return await this.rest.get(Routes.channelMessage(channelId, messageId))
+            .then(() => messageLink(channelId, messageId))
+            .catch(() => null)
     }
 }

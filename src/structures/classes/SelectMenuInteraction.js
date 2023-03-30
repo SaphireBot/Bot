@@ -1,4 +1,5 @@
 import { Database, SaphireClient as client } from '../../classes/index.js'
+import { StringSelectMenuInteraction } from 'discord.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
@@ -19,8 +20,12 @@ import refundRifa from './selectmenu/rifa/refund.rifa.js'
 import translateSearch from './selectmenu/search/translate.search.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js'
+import redirectJokempo from './buttons/jokempo/redirect.jokempo.js'
 
 export default class SelectMenuInteraction extends Base {
+    /**
+     * @param { StringSelectMenuInteraction } interaction 
+     */
     constructor(interaction) {
         super()
         this.interaction = interaction
@@ -56,7 +61,9 @@ export default class SelectMenuInteraction extends Base {
             gender: 'chooseGender',
             signEphemeral: 'chooseSign',
             genderEphemeral: 'chooseGender',
-            reminder: 'reminder'
+            reminder: 'reminder',
+            jkp: 'jokempo',
+            selectRoles: 'selectRoles'
         }[this.customId]
 
         if (this[result])
@@ -91,6 +98,19 @@ export default class SelectMenuInteraction extends Base {
 
         if (result2)
             return result2(this)
+    }
+
+    jokempo() {
+        return redirectJokempo(this, JSON.parse(this.value))
+    }
+
+    async selectRoles() {
+        const { member } = this.interaction
+        const toRemove = this.values.filter(roleId => member.roles.cache.has(roleId)) || []
+        const toAdd = this.values.filter(roleId => !member.roles.cache.has(roleId)) || []
+        if (toRemove.length) await member.roles.remove(toRemove).catch(() => { })
+        if (toAdd.length) await member.roles.add(toAdd).catch(() => { })
+        return this.interaction.reply({ content: `${e.Check} | Prontinho, cargos configurados com sucesso.`, ephemeral: true })
     }
 
     async quizOptions() {

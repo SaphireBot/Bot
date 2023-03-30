@@ -19,6 +19,7 @@ const ConfigurationBase = {
     ErrorWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1007839310772449400/Saphire_Panic.png",
     PackageLogsWebhookProfileIcon: "https://media.discordapp.net/attachments/893361065084198954/1018699630998986752/data-management.png?width=484&height=484",
     RefundSystemIcon: "https://media.discordapp.net/attachments/893361065084198954/1028707418789642300/refund.png?width=473&height=473",
+    WebhookJokempoIcon: 'https://media.discordapp.net/attachments/893361065084198954/1090834486461210686/pedra.png?width=468&height=468',
     webhookAnimeReporter: undefined,
     webhookQuizReporter: undefined,
     vocePrefereChannel: "1018945013016690708",
@@ -1071,6 +1072,8 @@ const locales = {
     "vi": 'Vietnamita',
 }
 
+const JokempoValues = [100, 500, 700, 1000, 1500, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 50000, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 1000000]
+
 export {
     ConfigurationBase as Config,
     DiscordColors as ColorsTranslate,
@@ -1089,5 +1092,5 @@ export {
     PunishmentReasons,
     GuildFeatures,
     GuildFeaturesTranslate,
-    locales
+    locales, JokempoValues
 }

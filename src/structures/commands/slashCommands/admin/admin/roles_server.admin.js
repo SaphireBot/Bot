@@ -33,6 +33,7 @@ export default async interaction => {
                 custom_id: 'selectRoles',
                 placeholder: 'Selecionar Cargos',
                 max_values: 4,
+                min_values: 0,
                 options: [
                     {
                         label: 'Anúncios',

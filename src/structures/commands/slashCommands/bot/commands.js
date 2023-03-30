@@ -77,7 +77,7 @@ export default {
 
         let index = 0
         const collector = msg.createMessageComponentCollector({
-            filter: int => int.user.id === user.id,
+            filter: int => int.user.id === interaction.user.id,
             idle: 60000,
             errors: ['idle']
         })

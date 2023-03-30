@@ -10,6 +10,7 @@ import Cantadas from './models/Cantadas.js'
 import Memes from './models/Memes.js'
 import Anime from './models/Anime.js'
 import Quiz from './models/Quiz.js'
+import Jokempo from './models/Jokempo.js'
 
 /**
  * Unificação de todos os Models para extensão da Classe Database
@@ -29,6 +30,7 @@ class Models {
         this.Memes = Memes
         this.Anime = Anime
         this.Quiz = Quiz
+        this.Jokempo = Jokempo
     }
 }
 
@@ -45,5 +47,6 @@ export {
     Cantadas,
     Memes,
     Anime,
-    Quiz
+    Quiz,
+    Jokempo
 }

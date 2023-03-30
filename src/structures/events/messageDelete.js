@@ -84,6 +84,43 @@ client.on('messageDelete', async message => {
         await Database.Cache.Jokempo.delete(message.id)
     }
 
+    const jokempoGameGlobal = await Database.Cache.Jokempo.get(`Global.${message.id}`)
+    if (jokempoGameGlobal) {
+
+        new Database.Jokempo({
+            creatorId: jokempoGameGlobal.creatorId,
+            creatorOption: jokempoGameGlobal.creatorOption,
+            id: jokempoGameGlobal.id,
+            value: jokempoGameGlobal.value,
+            webhookUrl: jokempoGameGlobal.webhookUrl
+        }).save()
+        Database.Cache.Jokempo.delete(`Global.${message.id}`)
+        await Database.User.updateOne(
+            { id: jokempoGameGlobal.userId },
+            {
+                $inc: { Balance: jokempoGameGlobal.value },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.gain} Recebeu ${jokempoGameGlobal.value || 0} Safiras atráves do *Bet Delete System (Jokempo)*`
+                        }],
+                        $position: 0
+                    }
+                }
+            }
+        )
+            .then(() => {
+                if (!message.channel) return
+                return message.channel.send({
+                    content: `${e.Trash} | A mensagem do jokempo global \`${message.id}\` foi deletada.\n${e.Check} | Eu cancelei esta aposta e devolvi **${jokempoGameGlobal.value} Safiras** para o desafiante.`
+                }).catch(() => { })
+
+            })
+            .catch(() => { })
+        await Database.Cache.Jokempo.delete(message.id)
+    }
+
     messageDeleteLogs(message)
 
     return

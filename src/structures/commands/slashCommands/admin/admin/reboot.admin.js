@@ -13,7 +13,7 @@ export default async interaction => {
         })
 
     const message = options.getString('message') || 'Nenhum dado informado.'
-    client.restart = message
+    client.resttart = message
 
     const msg = await interaction.reply({ content: `${e.Loading} | Reboot inicializado.`, fetchReply: true })
 

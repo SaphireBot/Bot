@@ -22,19 +22,19 @@ export default async interaction => {
                     {
                         type: 2,
                         emoji: e.pedra,
-                        custom_id: JSON.stringify({ c: 'jkp', play: 'stone' }),
+                        custom_id: JSON.stringify({ c: 'jkp', play: 'stone', type: 'bot' }),
                         style: ButtonStyle.Primary
                     },
                     {
                         type: 2,
                         emoji: e.tesoura,
-                        custom_id: JSON.stringify({ c: 'jkp', play: 'scissors' }),
+                        custom_id: JSON.stringify({ c: 'jkp', play: 'scissors', type: 'bot' }),
                         style: ButtonStyle.Primary
                     },
                     {
                         type: 2,
                         emoji: e.papel,
-                        custom_id: JSON.stringify({ c: 'jkp', play: 'paper' }),
+                        custom_id: JSON.stringify({ c: 'jkp', play: 'paper', type: 'bot' }),
                         style: ButtonStyle.Primary
                     }
                 ]

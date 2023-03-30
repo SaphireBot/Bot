@@ -1,6 +1,6 @@
 import { ButtonInteraction } from "discord.js"
-import { Database } from "../../../../classes/index.js"
-import { Emojis as e } from "../../../../util/util.js"
+import { Database } from "../../../../../classes/index.js"
+import { Emojis as e } from "../../../../../util/util.js"
 
 /**
  * @param { ButtonInteraction } interaction
