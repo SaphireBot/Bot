@@ -25,7 +25,7 @@ export default {
                 },
                 {
                     name: 'Experiência',
-                    value: 'Xp'
+                    value: 'Level'
                 },
                 {
                     name: 'Logomarca Game',
@@ -94,7 +94,7 @@ export default {
         const emojis = {
             Balance: moeda,
             Likes: '',
-            Xp: '',
+            Level: '',
             'GamingCount.Logomarca': 'Acertos',
             'GamingCount.FlagCount': 'Acertos',
             'GamingCount.QuizAnime': 'Acertos',
@@ -110,7 +110,7 @@ export default {
             embeds: [{
                 color: client.blue,
                 title: embed.title,
-                description: `⏱ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 1000 * 60 * 15), 'R', true)}\n \n${`${format || 'O Ranking ainda não foi atualizado.'}`.limit('MessageEmbedDescription')}`,
+                description: `⏱️ Próxima atualização ${Date.Timestamp(new Date(nextUpdate || Date.now() + 1000 * 60 * 15), 'R', true)}\n \n${`${format || 'O Ranking ainda não foi atualizado.'}`.limit('MessageEmbedDescription')}`,
                 footer: { text: `Seu ranking: ${userRanking}` }
             }]
         })
