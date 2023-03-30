@@ -8,12 +8,13 @@ import invite from './invite.admin.js'
 import reboot from './reboot.admin.js'
 import backup from './backup.admin.js'
 import fetch_guild_members from './fetch_guild_members.admin.js'
+import roles_server from './roles_server.admin.js'
 
 export default async (interaction, subCommand) => {
 
     const command = {
         register, commands, test, fanart, commit, invite, reboot,
-        delete: deleteDb, backup, fetch_guild_members
+        delete: deleteDb, backup, fetch_guild_members, roles_server
     }[subCommand]
 
     if (!command)

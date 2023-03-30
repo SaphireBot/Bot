@@ -10,7 +10,7 @@ import resultPoll from "./result.poll.js"
 export default async ({ interaction, guild, message, user, member }, commandData) => {
 
     const guildPolls = await Database.Cache.Polls.get(`${client.shardId}.${guild.id}`) || []
-    const poll = guildPolls.find(p => p.MessageID === message.id || p.MessageID === commandData.messageId)
+    const poll = guildPolls.find(p => p?.MessageID === message.id || p?.MessageID === commandData.messageId)
     const voteType = commandData.type
 
     if (!poll) {
@@ -147,7 +147,7 @@ export default async ({ interaction, guild, message, user, member }, commandData
     }
 
     votes = voteData.Polls.find(v => v.MessageID === message.id).votes
-    guildPolls.find(p => p.MessageID === message.id).votes = votes
+    guildPolls.find(p => p?.MessageID === message.id).votes = votes
     await Database.Cache.Polls.set(`${client.shardId}.${guild.id}`, guildPolls)
     const pollVotes = pollManager.Polls.find(v => v.MessageID === message.id)
     if (pollVotes?.votes) pollVotes.votes = votes

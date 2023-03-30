@@ -8,7 +8,7 @@ import { Emojis as e } from '../../../../util/util.js'
 export default async ({ message }) => {
 
     const guildPolls = await Database.Cache.Polls.get(`${client.shardId}.${message.guild.id}`) || []
-    const poll = guildPolls.find(p => p.MessageID === message.id)
+    const poll = guildPolls.find(p => p?.MessageID === message.id)
 
     const keyNames = ['upvote', 'QuestionMark', 'downvote']
     const reactions = message.reactions.cache

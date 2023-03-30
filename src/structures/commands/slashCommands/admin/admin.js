@@ -158,6 +158,12 @@ export default {
                     type: ApplicationCommandOptionType.String
                 }
             ]
+        },
+        {
+            name: 'roles_server',
+            description: '[admin] Select Menu de Roles',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: []
         }
     ],
     helpData: {

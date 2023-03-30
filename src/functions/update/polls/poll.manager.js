@@ -67,7 +67,7 @@ export default new class PollManager {
 
     async showResults(message, poll) {
 
-        poll = poll ? poll : this.Polls.find(p => p.MessageID === message.id)
+        poll = poll ? poll : this.Polls.find(p => p?.MessageID === message.id)
         if (!poll) return this.pull(message.id)
 
         const { votes, MessageID } = poll
@@ -159,7 +159,7 @@ export default new class PollManager {
             { $pull: { Polls: { MessageID: messageId } } }
         )
 
-        await Database.Cache.Polls.pull(`${client.shardId}.${guildId}`, p => p.MessageID === messageId)
+        await Database.Cache.Polls.pull(`${client.shardId}.${guildId}`, p => p?.MessageID === messageId)
         return
 
     }

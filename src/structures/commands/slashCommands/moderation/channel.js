@@ -11,7 +11,8 @@ import unlockChannel from "../../functions/channel/unlock.channel.js"
 
 export default {
     name: 'channel',
-    description: '[moderation] Gerencie os canais do servidor atraves deste comando',
+    name_localizations: { 'pt-BR': 'canal' },
+    description: '[moderation] Gerencie os canais do servidor através deste comando',
     category: "moderation",
     dm_permission: false,
     name_localizations: { "en-US": "channel", 'pt-BR': 'canal' },
@@ -19,7 +20,7 @@ export default {
     type: 1,
     options: [
         {
-            name: 'method',
+            name: 'método',
             description: 'Escolha uma função a ser executada',
             type: ApplicationCommandOptionType.String,
             choices: [
@@ -96,7 +97,7 @@ export default {
             })
 
         const channel = options.getChannel('channel') || currentChannel
-        const method = options.getString('method')
+        const method = options.getString('método')
 
         if (method === 'crosspost') return crosspost()
 

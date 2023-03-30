@@ -65,7 +65,7 @@ export default {
             embeds: [{
                 title: helpData.title || `Comando: ${command.name}`,
                 color: Colors[helpData.color] || Colors.Blue,
-                description: helpData.description.replace(/\$moeda/g, moeda),
+                description: helpData.description?.replace(/\$moeda/g, moeda),
                 fields: [...helpData.fields],
                 footer: helpData.footer || null
             }],
