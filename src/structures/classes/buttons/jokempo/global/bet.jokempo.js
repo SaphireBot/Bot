@@ -10,7 +10,7 @@ export default async interaction => {
 
     await interaction.update({ content: `${e.Loading} | Carregando informações globais...`, embeds: [], components: [] }).catch(() => { })
 
-    const { user, guild } = interaction
+    const { user, guild, message } = interaction
 
     if (user.id != message.interaction.user.id)
         return interaction.reply({
