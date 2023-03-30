@@ -17,10 +17,17 @@ export default async interaction => {
         })
 
     const MoedaCustom = await guild.getCoin()
-    const selectMenu = { type: 1, components: [{ type: 3, custom_id: 'jkp', placeholder: 'Escolher Valor', options: [] }] }
-    const jokempos = await Database.Jokempo.find({ creatorId: user.id }) || []
     const userBalance = await Database.User.findOne({ id: user.id }, 'Balance')
     const balance = userBalance?.Balance || 0
+
+    if (balance < 100)
+        return interaction.update({
+            content: `${e.DenyX} | Você tem que ter mais de **100 ${MoedaCustom}** para entrar aqui, tudo bem?`,
+            components: [], embeds: []
+        }).catch(() => { })
+
+    const selectMenu = { type: 1, components: [{ type: 3, custom_id: 'jkp', placeholder: 'Escolher Valor', options: [] }] }
+    const jokempos = await Database.Jokempo.find({ creatorId: user.id }) || []
     const emojis = [e.pedra, e.tesoura, e.papel]
 
     for (const value of JokempoValues)
@@ -28,7 +35,7 @@ export default async interaction => {
             label: `${value.currency()} Safiras`,
             emoji: balance - value >= 0 ? emojis.random() : e.DenyX,
             description: balance - value >= 0 ? 'Você tem dinheiro para esta aposta' : 'Dinheiro Insuficiente',
-        value: JSON.stringify({ c: 'jkp', type: 'select', value: value })
+            value: JSON.stringify({ c: 'jkp', type: 'select', value: value })
         })
 
     const totalValue = jokempos.reduce((acc, cur) => acc += (cur.value || 0), 0) || 0

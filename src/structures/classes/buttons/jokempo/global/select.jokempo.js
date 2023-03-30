@@ -28,6 +28,11 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
 
+    await Database.User.updateOne(
+        { id: user.id },
+        { $inc: { Balance: -value } }
+    )
+
     await interaction.update({
         content: `${e.Loading} | Beleza, qual é a sua jogada para a aposta global?\n⏱️ | ${time(new Date(Date.now() + 1000 * 30), 'R')}`,
         embeds: [],
@@ -63,12 +68,20 @@ export default async (interaction, commandData) => {
         time: 1000 * 30, max: 1
     })
         .on('collect', int => save(int, { option: int.customId, value }))
-        .on('end', (_, reason) => {
+        .on('end', async (_, reason) => {
             if (reason == 'time')
                 return interaction.message.edit({
                     content: '⏱️ | Tempo de escolha excedido.',
                     components: []
                 }).catch(() => { })
+
+            if (['messageDelete', 'channelDelete'].includes(reason)) {
+                await Database.User.updateOne(
+                    { id: user.id },
+                    { $inc: { Balance: value } }
+                )
+            }
+
             return
         })
 }

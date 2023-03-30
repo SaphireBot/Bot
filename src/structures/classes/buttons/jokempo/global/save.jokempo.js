@@ -70,7 +70,6 @@ export default async (interaction, commandData) => {
         await Database.User.updateOne(
             { id: user.id },
             {
-                $inc: { Balance: -value },
                 $push: {
                     Transactions: {
                         $each: [{
