@@ -108,7 +108,7 @@ export default new class Database extends Models {
         if (!userId || isNaN(amount)) return
 
         if (message)
-            await this.User.updateOne(
+            return await this.User.updateOne(
                 { id: userId },
                 {
                     $inc: { Balance: -amount },

@@ -8,10 +8,33 @@ client.on('messageDelete', async message => {
 
     if (GiveawayManager.getGiveaway(message.id))
         Database.deleteGiveaway(message.id, message.guildId)
-        
+
     Database.Cache.Connect.delete(message.id)
     Database.Cache.WordleGame.delete(message.id)
     Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
+
+    const pay = await Database.Cache.Pay.get(`${message.interaction?.user?.id}.${message.id}`)
+    if (pay?.value) {
+        Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
+        await Database.User.updateOne(
+            { id: message.interaction?.user?.id },
+            {
+                $inc: {
+                    Balance: pay.total || 0
+                },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.gain} Reembolso de ${pay.value} Safiras por *Pay Message Delete*`
+                        }],
+                        $position: 0
+                    }
+                }
+            },
+            { upsert: true }
+        )
+    }
 
     const betDataFound = await Database.Cache.Bet.get(message.id)
     if (betDataFound) client.emit('betRefund', betDataFound)

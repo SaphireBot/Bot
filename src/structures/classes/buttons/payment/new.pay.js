@@ -5,10 +5,7 @@ import validatePayment from './validate.pay.js'
 export default async (interaction, customId) => {
 
     const { message, user } = interaction
-    const rawComponents = message.components
-    const userMention = message.mentions.users.first()
     const author = message.interaction.user
-    const components = rawComponents[0].toJSON()
     const paymentData = await Database.Cache.Pay.get(`${author.id}.${message.id}`) || []
 
     if (!paymentData)
@@ -17,6 +14,9 @@ export default async (interaction, customId) => {
             components: []
         }).catch(() => { })
 
+    const rawComponents = message.components
+    const userMention = message.mentions.users.first()
+    const components = rawComponents[0].toJSON()
     const { confirmated, value } = paymentData
     if (![author.id, userMention.id].includes(user.id)) return
 
