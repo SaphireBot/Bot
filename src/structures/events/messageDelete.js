@@ -1,12 +1,14 @@
 import { Emojis as e } from '../../util/util.js'
-import { Database, SaphireClient as client } from '../../classes/index.js'
+import { Database, GiveawayManager, SaphireClient as client } from '../../classes/index.js'
 import messageDeleteLogs from './system/messageDelete.logs.js'
 
 client.on('messageDelete', async message => {
 
     if (!message || !message.id) return
 
-    Database.deleteGiveaway(message.id, message.guildId)
+    if (GiveawayManager.getGiveaway(message.id))
+        Database.deleteGiveaway(message.id, message.guildId)
+        
     Database.Cache.Connect.delete(message.id)
     Database.Cache.WordleGame.delete(message.id)
     Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)

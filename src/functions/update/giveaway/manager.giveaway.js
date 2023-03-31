@@ -111,23 +111,23 @@ export default new class GiveawayManager {
         const linkBreak = giveaway?.MessageLink?.split('/') || []
 
         if (!linkBreak || !linkBreak?.length)
-            Database.deleteGiveaway(giveaway?.MessageID, giveaway?.GuildId)
+            return Database.deleteGiveaway(giveaway?.MessageID, giveaway?.GuildId)
 
         const channelId = linkBreak.at(-2)
         const message = await client.rest.get(Routes.channelMessage(channelId, giveaway.MessageID)).catch(() => null)
         const components = message?.components
 
         if (!message?.id || !components || !components.length)
-            Database.deleteGiveaway(giveaway.MessageID, giveaway.GuildId)
+            return Database.deleteGiveaway(giveaway.MessageID, giveaway.GuildId)
 
         if (components && components[0]?.components[0]) {
             components[0].components[0].disabled = true
             components[0].components[1].disabled = true
         }
 
-        const embed = message.embeds[0]
+        const embed = message?.embeds[0]
         if (!embed || !embed.length || !components[0]?.components[0])
-            Database.deleteGiveaway(giveaway.MessageID, giveaway.GuildId)
+            return Database.deleteGiveaway(giveaway.MessageID, giveaway.GuildId)
 
         const field = embed.fields?.find(fild => fild?.name?.includes('Exclusão'))
         if (field) field.value = 'Tempo expirado (+20d)'
@@ -156,7 +156,7 @@ export default new class GiveawayManager {
     }
 
     getGiveaway(gwId) {
-        const gws = [...this.giveaways, ...this.awaiting]
+        const gws = [...this.giveaways, ...this.awaiting, ...this.toDelete]
         const gw = gws.find(g => g?.MessageID == gwId)
         return gw
     }

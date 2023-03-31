@@ -1,5 +1,5 @@
 import { Emojis as e } from '../../util/util.js'
-import { Database, SaphireClient as client } from '../../classes/index.js'
+import { Database, GiveawayManager, SaphireClient as client } from '../../classes/index.js'
 
 client.on('messageDeleteBulk', async (messages) => {
 
@@ -12,6 +12,7 @@ client.on('messageDeleteBulk', async (messages) => {
         refundBlackjack()
         deleteSingleData()
         refundGlobalJokempo()
+        analiseGiveaway()
         return
     }
 
@@ -100,6 +101,22 @@ client.on('messageDeleteBulk', async (messages) => {
             for (const data of Object.values(topGGData))
                 if (messagesId.includes(data.messageId))
                     Database.Cache.General.delete(`TopGG.${data.userId}`)
+        return
+    }
+
+    async function analiseGiveaway() {
+        const toDeleteGiveaways = []
+
+        for (const messageId of messagesId)
+            if (GiveawayManager.getGiveaway(messageId)) // Verifica se o sorteio existe
+                toDeleteGiveaways.push(messageId)
+
+        if (!toDeleteGiveaways.length) return
+
+        const guildId = messages.first().guildId // Pega o ID da Guild direto da collection
+        for (const messageId of toDeleteGiveaways)
+            Database.deleteGiveaway(messageId, guildId) // Delete o sorteio
+
         return
     }
 

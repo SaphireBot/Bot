@@ -6,14 +6,12 @@ const messagesToEditButton = {}
 
 export default async ({ interaction }, commandData) => {
 
-    const { src } = commandData
-    if (src == 'ignore') return ignore()
+    if (commandData?.src == 'ignore') return ignore()
 
     let { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
 
     const giveaway = await GiveawayManager.getGiveaway(gwId)
-    // console.log(!giveaway)
 
     if (!giveaway)
         return await interaction.reply({
@@ -21,7 +19,7 @@ export default async ({ interaction }, commandData) => {
             ephemeral: true
         })
 
-    const execute = { join, list, leave }[src]
+    const execute = { join, list, leave }[commandData?.src]
 
     if (execute) return execute()
 

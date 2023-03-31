@@ -216,20 +216,27 @@ export default new class Database extends Models {
 
     deleteGiveaway = async (MessageID, GuildId, All = false) => {
 
-        GiveawayManager.giveaways.splice(
-            GiveawayManager.giveaways.findIndex(gw => gw?.MessageID == MessageID), 1
-        )
+        if (!GuildId) return
 
-        GiveawayManager.awaiting.splice(
-            GiveawayManager.awaiting.findIndex(gw => gw?.MessageID == MessageID), 1
-        )
+        if (All) {
+            GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.GuildId != GuildId)
+            GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.GuildId != GuildId)
+            GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.GuildId != GuildId)
+            return await this.Guild.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
+        }
 
-        GiveawayManager.toDelete.splice(
-            GiveawayManager.toDelete.findIndex(gw => gw?.MessageID == MessageID), 1
-        )
+        if (!MessageID) return
 
-        if (All) return await this.Guild.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
-        if (!MessageID || !GuildId) return
+        const index = {
+            giveaways: GiveawayManager.giveaways.findIndex(gw => gw?.MessageID == MessageID),
+            awaiting: GiveawayManager.awaiting.findIndex(gw => gw?.MessageID == MessageID),
+            toDelete: GiveawayManager.toDelete.findIndex(gw => gw?.MessageID == MessageID),
+        }
+
+        if (index.giveaways >= 0) GiveawayManager.giveaways.splice(index.giveaways, 1)
+        if (index.awaiting >= 0) GiveawayManager.awaiting.splice(index.awaiting, 1)
+        if (index.toDelete >= 0) GiveawayManager.toDelete.splice(index.toDelete, 1)
+
         return await this.Guild.updateOne({ id: GuildId }, { $pull: { Giveaways: { MessageID } } })
     }
 
