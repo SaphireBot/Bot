@@ -435,8 +435,8 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     inline: true
                 },
                 {
-                    name: '⏳ Término',
-                    value: Date.GetTimeout(TimeMs, Date.now(), 'R'),
+                    name: `⏳ Término ${Date.GetTimeout(TimeMs, Date.now(), 'R')}`,
+                    value: `${Date.GetTimeout(TimeMs, Date.now(), 'f')}`,
                     inline: true
                 }
             ],
