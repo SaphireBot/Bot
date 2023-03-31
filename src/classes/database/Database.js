@@ -214,16 +214,10 @@ export default new class Database extends Models {
         )
     }
 
-    deleteGiveaway = async (MessageID, GuildId, All = false) => {
-
+    deleteGiveaway = async (MessageID, GuildId, All = false, byChannelId) => {
         if (!GuildId) return
-
-        if (All) {
-            GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.GuildId != GuildId)
-            GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.GuildId != GuildId)
-            GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.GuildId != GuildId)
-            return await this.Guild.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
-        }
+        if (byChannelId) return deleteAllGiveawaysIntoThisChannel(this.Guild)
+        if (All) deleteAll(this.Guild)
 
         if (!MessageID) return
 
@@ -238,6 +232,20 @@ export default new class Database extends Models {
         if (index.toDelete >= 0) GiveawayManager.toDelete.splice(index.toDelete, 1)
 
         return await this.Guild.updateOne({ id: GuildId }, { $pull: { Giveaways: { MessageID } } })
+
+        async function deleteAll(GuildModel) {
+            GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.GuildId != GuildId)
+            GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.GuildId != GuildId)
+            GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.GuildId != GuildId)
+            return await GuildModel.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
+        }
+
+        async function deleteAllGiveawaysIntoThisChannel(GuildModel) {
+            GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.channelId != byChannelId)
+            GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.channelId != byChannelId)
+            GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.channelId != byChannelId)
+            return await GuildModel.updateOne({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } })
+        }
     }
 
     /**

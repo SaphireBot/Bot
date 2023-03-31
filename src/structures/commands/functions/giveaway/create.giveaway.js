@@ -11,6 +11,7 @@ import timeMs from '../../../../functions/plugins/timeMs.js'
 export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
 
     const { options, user, guild, channel } = interaction
+    await guild.fetch()
 
     const Prize = bySelectMenuInteraction ? giveawayResetedData?.Prize : options.getString('prize') || giveawayResetedData?.Prize
     const Time = bySelectMenuInteraction ? giveawayResetedData?.TimeMs : options.getString('time') || giveawayResetedData?.TimeMs
@@ -19,11 +20,12 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
     const Channel = bySelectMenuInteraction ? interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId) : options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
 
     // WE NEED THE BASIC PERMISSIONS!!!
+    const basicPermissions = [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions]
     const channelPermissions = await Channel.permissionsFor(client.user)
     const greenCard = Array.from(
         new Set([
-            guild.members.me.permissions.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions]),
-            channelPermissions?.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions])
+            guild.members.me.permissions.missing(basicPermissions),
+            channelPermissions?.missing(basicPermissions)
         ].flat())
     )
     if (greenCard.length)
@@ -34,7 +36,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
     const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color || client.blue
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
-    const collectorData = { reaction: '🎉', AllowedMembers: [], AllowedRoles: [] }
+    const collectorData = { reaction: '🎉', AllowedRoles: [], LockedRoles: [], AllowedMembers: [], LockedMembers: [] }
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
     if (!TimeMs)
@@ -155,7 +157,19 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                             {
                                 type: 6,
                                 custom_id: 'roles',
-                                placeholder: 'Selecionar cargos para o sorteio',
+                                placeholder: 'Cargos Obrigatórios (Opcional)',
+                                min_values: 0,
+                                max_values: 25
+                            }
+                        ]
+                    },
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 6,
+                                custom_id: 'locked_roles',
+                                placeholder: 'Cargos Bloqueados (Opcional)',
                                 min_values: 0,
                                 max_values: 25
                             }
@@ -167,7 +181,19 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                             {
                                 type: 5,
                                 custom_id: 'members',
-                                placeholder: 'Selecionar usuários para o sorteio',
+                                placeholder: 'Usuários Permitidos (Opcional)',
+                                min_values: 0,
+                                max_values: 25
+                            }
+                        ]
+                    },
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 5,
+                                custom_id: 'locked_members',
+                                placeholder: 'Usuários Bloqueados (Opcional)',
                                 min_values: 0,
                                 max_values: 25
                             }
@@ -219,30 +245,81 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
                     if (customId == 'roles') {
 
-                        for (const roleId of int.values)
+                        for (const roleId of int.values) {
                             if (guild.roles.cache.get(roleId)?.managed) {
                                 editContent(true)
                                 return await int.update({ content: null, embeds: [embed] }).catch(() => { })
                             }
+
+                            if (collectorData.LockedRoles.includes(roleId)) {
+                                editContent(false, false, 'RoleAlreadySelected')
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+                        }
 
                         collectorData.AllowedRoles = int.values
                         editContent()
                         return int.update({ content: null, embeds: [embed] }).catch(() => { })
                     }
 
+                    if (customId == 'locked_roles') {
+
+                        for (const roleId of int.values) {
+                            if (guild.roles.cache.get(roleId)?.managed) {
+                                editContent(true)
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+
+                            if (collectorData.AllowedRoles.includes(roleId)) {
+                                editContent(false, false, 'RoleAlreadySelected')
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+                        }
+
+                        collectorData.LockedRoles = int.values
+                        editContent()
+                        return int.update({ content: null, embeds: [embed] }).catch(() => { })
+                    }
+
                     if (customId == 'members') {
 
-                        for (const memberId of int.values)
+                        for (const memberId of int.values) {
                             if (guild.members.cache.get(memberId)?.user?.bot) {
                                 editContent(false, true)
                                 return await int.update({ content: null, embeds: [embed] }).catch(() => { })
                             }
+
+                            if (collectorData.LockedMembers.includes(memberId)) {
+                                editContent(false, false, 'UserAlreadySelected')
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+                        }
 
                         collectorData.AllowedMembers = int.values
                         editContent()
                         return int.update({ content: null, embeds: [embed] }).catch(() => { })
                     }
 
+                    if (customId == 'locked_members') {
+
+                        for (const memberId of int.values) {
+                            if (guild.members.cache.get(memberId)?.user?.bot) {
+                                editContent(false, true)
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+
+                            if (collectorData.AllowedMembers.includes(memberId)) {
+                                editContent(false, false, 'UserAlreadySelected')
+                                return await int.update({ content: null, embeds: [embed] }).catch(() => { })
+                            }
+                        }
+
+                        collectorData.LockedMembers = int.values
+                        editContent()
+                        return int.update({ content: null, embeds: [embed] }).catch(() => { })
+                    }
+
+                    return
                 })
                 .on('end', (_, reason) => {
                     if (['user'].includes(reason)) return
@@ -268,20 +345,36 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
                 })
 
-            function editContent(roleRole, memberBot) {
+            function editContent(botRole, memberBot = false, extra = false) {
                 embed.description = 'Escolher cargos e usuários? Lançar ou cancelar o sorteio?'
                 embed.fields[0].value = `${e.CheckV} O emoji foi salvo.`
+
                 embed.fields[1] = {
-                    name: '🔰 Cargos Obrigatórios (Opcional)',
-                    value: collectorData.AllowedRoles.length > 0 || roleRole
-                        ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${roleRole ? `\n${e.Deny} Cargos de bots não podem ser selecionados para sorteios.` : ''}`
-                        : 'Nenhum Cargo Selecionado'
+                    name: '🔰 Cargos Obrigatórios',
+                    value: collectorData.AllowedRoles.length > 0 || botRole || extra
+                        ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
+                        : 'Só participa quem tiver TODOS os cargos'
                 }
+
                 embed.fields[2] = {
-                    name: '👥 Usuários Quem Podem Participar (Opcional)',
-                    value: collectorData.AllowedMembers.length > 0 || memberBot
-                        ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Bots não podem ser selecionados para sorteios.` : ''}`
-                        : 'Nenhum Usuário Selecionado'
+                    name: '🚫 Cargos Bloqueados',
+                    value: collectorData.LockedRoles.length > 0 || botRole || extra
+                        ? `${collectorData.LockedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
+                        : 'Quem tiver um desses cargos, está de fora.'
+                }
+
+                embed.fields[3] = {
+                    name: '👥 Usuários Permitidos',
+                    value: collectorData.AllowedMembers.length > 0 || memberBot || extra
+                        ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
+                        : 'Somente os usuários selecionados aqui poderão participar do sorteio'
+                }
+
+                embed.fields[4] = {
+                    name: '🚫 Usuários Bloqueados',
+                    value: collectorData.LockedMembers.length > 0 || memberBot || extra
+                        ? `${collectorData.LockedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
+                        : 'Os usuários selecionados aqui, **NÃO** poderão participar do sorteio'
                 }
 
                 return `${e.Loading} | A reação já foi coletada. Quer configurar mais algo?\n🔰 | \n | `
@@ -308,7 +401,9 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             MessageLink: msg.url, // Link da mensagem
             Sponsor: user.id, // Quem fez o sorteio,
             AllowedRoles: collectorData.AllowedRoles, // Cargos que podem participar
-            AllowedMembers: collectorData.AllowedMembers // Usuários que podem participar
+            LockedRoles: collectorData.LockedRoles, // Cargos que não podem participar
+            AllowedMembers: collectorData.AllowedMembers, // Usuários que podem participar
+            LockedMembers: collectorData.LockedMembers // Usuários que não podem participar
         }
 
         await Database.Guild.updateOne(
@@ -361,13 +456,26 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 value: collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || 'Ninguém? Vish...'
             })
 
+        if (collectorData.LockedMembers.length)
+            embed.fields.push({
+                name: `🚫 Membros Bloqueados (${collectorData.LockedMembers.length})`,
+                value: collectorData.LockedMembers.map(userId => `<@${userId}>`).join(', ') || 'Ninguém? Vish...'
+            })
+
         if (collectorData.AllowedRoles.length)
             embed.fields.push({
                 name: `🔰 Cargos Obrigatórios (${collectorData.AllowedRoles.length})`,
                 value: collectorData.AllowedRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
             })
 
+        if (collectorData.LockedRoles.length)
+            embed.fields.push({
+                name: `🚫 Cargos Bloqueados (${collectorData.LockedRoles.length})`,
+                value: collectorData.LockedRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
+            })
+
         return msg.edit({
+            content: null,
             embeds: [embed],
             components: [
                 {
@@ -417,41 +525,33 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                             ]
                         }
                     ]
-                }).catch(() => {
-                    return interaction.channel.send({
-                        content: `${e.Check} | Não consegui editar a mensagem original, então estou vindo aqui dizer que o sorteio foi criado com sucesso, ok?`,
-                        components: [
-                            {
-                                type: 1,
-                                components: [
-                                    {
-                                        type: 2,
-                                        label: 'Sorteio',
-                                        emoji: '🔗',
-                                        url: msg.url,
-                                        style: ButtonStyle.Link
-                                    }
-                                ]
-                            }
-                        ]
-                    })
                 })
+                    .catch(async err => {
+                        return await interaction.channel.send({
+                            content: `${e.Check} | Não consegui editar a mensagem original, então estou vindo aqui dizer que o sorteio foi criado com sucesso, ok?\n${e.bug} | \`${err}\``,
+                            components: [{
+                                type: 1,
+                                components: [{
+                                    type: 2,
+                                    label: 'Sorteio',
+                                    emoji: '🔗',
+                                    url: msg.url,
+                                    style: ButtonStyle.Link
+                                }]
+                            }]
+                        }).catch(() => { })
+                    })
             })
             .catch(async err => {
-
                 Database.deleteGiveaway(msg.id, guild.id)
                 msg.delete().catch(() => { })
+                const content = {
+                    10008: "⚠️ | A mensagem de origem foi deletada ou tomou uma origem desconhecida. Por favor, tente novamente.",
+                    50035: "⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.",
+                    10003: "⚠️ | O canal é desconhecido... Isso é estranho...",
+                }[err.code] || `⚠️ | Erro ao criar o sorteio. | \`${err}\``
 
-                if (err.code === 50035)
-                    return await Message.edit({
-                        content: '⚠️ | Erro ao criar o sorteio.\nℹ | O link de imagem fornecido não é compátivel com as embeds do Discord.',
-                        embeds: [], components: []
-                    }).catch(() => { })
-
-                return await Message.edit({
-                    content: `⚠️ | Erro ao criar o sorteio. | \`${err}\``,
-                    embeds: [], components: []
-                }).catch(() => { })
+                return await Message.edit({ content, embeds: [], components: [] }).catch(() => { })
             })
 
     }

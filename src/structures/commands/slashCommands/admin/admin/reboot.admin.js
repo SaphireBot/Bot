@@ -13,15 +13,10 @@ export default async interaction => {
         })
 
     const message = options.getString('message') || 'Nenhum dado informado.'
-    client.resttart = message
+    client.restart = message
 
     const msg = await interaction.reply({ content: `${e.Loading} | Reboot inicializado.`, fetchReply: true })
 
-    await Database.Cache.Client.set('Restart', {
-        channelId: channel.id,
-        message,
-        messageId: msg.id
-    })
-
+    await Database.Cache.Client.set('Restart', { channelId: channel.id, message, messageId: msg.id })
     return
 }

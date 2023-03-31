@@ -11,7 +11,7 @@ export default new class GiveawayManager {
     }
 
     async setGiveaways() {
-
+        await client.guilds.fetch()
         const giveawaysFromGuilds = await Database.Guild.find({
             id: { $in: [...client.guilds.cache.keys()] }
         }, 'id Giveaways')
@@ -85,6 +85,7 @@ export default new class GiveawayManager {
 
     async managerUnavailablesGiveaways(giveaways = []) {
         if (!giveaways.length) return
+        const deleteGiveaway = this.deleteGiveaway
 
         for await (const gw of giveaways) {
 
@@ -96,13 +97,19 @@ export default new class GiveawayManager {
 
             if (!this.toDelete.some(giveaway => giveaway?.MessageID == gw.MessageID)) this.toDelete.push(gw)
 
-            const timeMs = (gw.DateNow + gw.TimeMs) - Date.now()
-            if (timeMs <= -(1000 * 60 * 60 * 24 * 20)) // 20 Dias
-                this.deleteGiveaway(gw)
-            else setTimeout(() => this.deleteGiveaway(gw), (1000 * 60 * 60 * 24 * 20) - (timeMs - timeMs - timeMs))
-
+            setUnavailable(gw)
             continue
         }
+
+        async function setUnavailable(giveaway) {
+            const twentyDays = 1000 * 60 * 60 * 24 * 20
+            const timeMs = (giveaway.DateNow + giveaway.TimeMs) - Date.now()
+            const theMessageStillExist = await client.rest.get(Routes.channelMessage(giveaway.ChannelId, giveaway.MessageID)).catch(() => null)
+            if (!theMessageStillExist?.id) return Database.deleteGiveaway(giveaway.MessageID, giveaway.GuildId)
+            if (timeMs <= -twentyDays) return deleteGiveaway(giveaway) // 20 Dias
+            return setTimeout(() => deleteGiveaway(giveaway), twentyDays - (timeMs - timeMs - timeMs))
+        }
+
         return
     }
 
@@ -155,8 +162,14 @@ export default new class GiveawayManager {
         gw.Participants = gw.Participants.filter(id => id !== userId)
     }
 
-    getGiveaway(gwId) {
+    getGiveaway(gwId, channelId) {
         const gws = [...this.giveaways, ...this.awaiting, ...this.toDelete]
+
+        if (channelId) {
+            const exist = gws.some(g => g?.ChannelId == channelId)
+            return exist
+        }
+
         const gw = gws.find(g => g?.MessageID == gwId)
         return gw
     }

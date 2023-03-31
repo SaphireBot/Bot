@@ -35,7 +35,7 @@ export default {
                 {
                     name: 'time',
                     name_localizations: { "en-US": "time", 'pt-BR': 'tempo' },
-                    description: 'Para quando é o sorteio? (Ex: 1d 2h 3m)',
+                    description: 'Para quando é o sorteio? (Ex: 1d 2h 3m) (Limite: 5 segundos a 2 anos)',
                     max_length: 100,
                     type: 3,
                     required: true
@@ -51,10 +51,11 @@ export default {
                 {
                     name: 'winners',
                     name_localizations: { "en-US": "winners", 'pt-BR': 'vencedores' },
-                    description: 'Quantidade de vencedores',
+                    description: 'Quantidade de vencedores (1~~90)',
                     type: 4,
-                    max_value: 20,
-                    min_value: 1
+                    max_value: 90,
+                    min_value: 1,
+                    required: true
                 },
                 {
                     name: 'requires',
@@ -103,7 +104,8 @@ export default {
                     description: 'Quantidade de vencedores',
                     type: ApplicationCommandOptionType.Integer,
                     min_value: 1,
-                    max_value: 20
+                    max_value: 90,
+                    required: true
                 }
             ]
         },

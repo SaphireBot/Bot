@@ -1,5 +1,5 @@
 import { AttachmentBuilder, ButtonStyle } from "discord.js"
-import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
+import { Database, GiveawayManager } from "../../../../classes/index.js"
 import { Config, DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
 const messagesToEditButton = {}
@@ -10,28 +10,44 @@ export default async ({ interaction }, commandData) => {
 
     let { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
+    let giveaway = await GiveawayManager.getGiveaway(gwId)
 
-    const giveaway = await GiveawayManager.getGiveaway(gwId)
+    if (!giveaway) {
 
-    if (!giveaway)
-        return await interaction.reply({
-            content: `${e.SaphireWhat} | O sorteio não foi encontrado. Por favor, tente daqui alguns segundos ou fale com um administrador.`,
-            ephemeral: true
-        })
+        const gw = await Database.Guild.findOne({ id: guild.id }, 'Giveaways')
+        giveaway = gw?.Giveaways.find(g => g.MessageID == gwId)
 
+        if (!giveaway) {
+            disableButton(true)
+            return await interaction.reply({
+                content: `${e.cry} | Por razões mistícas do universo, esse sorteio não existe mais.`,
+                ephemeral: true
+            })
+        }
+    }
+
+    const hasEnded = (giveaway.TimeMS - (Date.now() - giveaway.DateNow) > 0) || !giveaway.Actived
     const execute = { join, list, leave }[commandData?.src]
-
     if (execute) return execute()
 
     return await interaction.reply({ content: `${e.bug} | Nenhuma sub-função encontrada. #18564846`, ephemeral: true })
 
+    async function disableButton(both) {
+        message = await channel.messages.fetch(gwId).catch(() => null)
+        if (!message) return
+        const components = message?.components[0]?.toJSON()
+        if (!components) return
+        components.components[0].disabled = true
+        if (both) components.components[1].disabled = true
+        return message.edit({ components: [components] }).catch(() => { })
+    }
+
     async function join() {
 
-        if (!giveaway.Actived)
-            return interaction.reply({
-                content: `${e.cry} | O Sorteio já foi finalizado.`,
-                ephemeral: true
-            })
+        if (hasEnded) {
+            disableButton()
+            return interaction.reply({ content: `${e.cry} | Poooxa, o sorteio já foi acabou.`, ephemeral: true })
+        }
 
         if (giveaway.Participants.includes(user.id))
             return askToLeave()
@@ -45,9 +61,24 @@ export default async ({ interaction }, commandData) => {
                 })
         }
 
+        if (giveaway.LockedRoles?.length > 0) {
+            const memberRolesIds = [...member.roles.cache.keys()]
+            if (giveaway.LockedRoles.some(id => memberRolesIds.includes(id)))
+                return await interaction.reply({
+                    content: `${e.saphirePolicial} | Ora ora ora... Parece que você tem um dos cargos que estão bloqueados neste sorteio.\n${e.Info} | Esses são os cargos que você tem, mas estão bloqueados: ${giveaway.LockedRoles.filter(roleId => memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ') || "??"}`,
+                    ephemeral: true
+                })
+        }
+
         if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id))
             return await interaction.reply({
                 content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
+                ephemeral: true
+            })
+
+        if (giveaway.LockedMembers?.includes(user.id))
+            return await interaction.reply({
+                content: `${e.SaphireDesespero} | HOO MY GOOSH! Você está na lista de pessoas que não podem participar deste sorteio.`,
                 ephemeral: true
             })
 
@@ -71,13 +102,11 @@ export default async ({ interaction }, commandData) => {
                 GiveawayManager.pushParticipants(gwId, giveawayObject.Participants)
                 refreshButton()
                 await interaction.reply({
-                    content: `${e.CheckV} | Aeee ${e.Tada}, coloquei você na lista de participantes, agora é só esperar o sorteio terminar. Boa sorte`,
+                    content: `${e.Tada} | Boooa! Coloquei você na lista de participantes.\n${e.sleep} | Agora é só esperar o sorteio terminar, boa sorte ${e.amongusdance}`,
                     ephemeral: true
                 })
 
-                if (!giveaway.Actived)
-                    return client.emit('giveaway', giveaway)
-
+                if (hasEnded) return disableButton()
                 return
             })
             .catch(async err => await interaction.reply({
@@ -113,21 +142,20 @@ export default async ({ interaction }, commandData) => {
             ],
             ephemeral: true
         })
-
     }
 
     async function ignore() {
         return await interaction.update({
-            content: `${e.Check} | Ok, vamos fingir que nada aconteceu por aqui.`,
+            content: `${e.sleep} | Ok, vamos fingir que nada aconteceu por aqui.`,
             components: []
         }).catch(() => { })
     }
 
     async function leave() {
 
-        if (!giveaway.Actived)
+        if (hasEnded)
             return await interaction.update({
-                content: `${e.cry} | O sorteio já acabooou.`,
+                content: `${e.cry} | O sorteio já acabooou. Não da mais pra sair.`,
                 components: []
             }).catch(() => { })
 
@@ -175,19 +203,27 @@ export default async ({ interaction }, commandData) => {
             })
 
         const participants = giveaway.Participants || []
+        const winners = giveaway.WinnersGiveaway || []
 
         await interaction.reply({ content: `${e.Loading} | Ok, só um segundo...`, ephemeral: true }).catch(() => { })
 
         await guild.members.fetch()
         const participantsMapped = participants.length > 0
             ? participants
-                .map((id, i) => `${i + 1}. ${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`)
+                .map((id, i) => `${i + 1}. ${guild.members.cache.get(id)?.user?.tag || 'user#0000'} (${id})`)
                 .join('\n')
             : '~~ Ninguém ~~'
 
+        const winnersMapped = winners.length > 0
+            ? winners
+                .map((id, i) => `${i + 1}. ${guild.members.cache.get(id)?.user?.tag || 'user#0000'} (${id})`)
+                .join('\n')
+            : '~~ Ninguém ~~'
+
+        const buffer = createBuffer()
         return await interaction.editReply({
             content: `${e.sleep} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
-            files: [new AttachmentBuilder(createBuffer(), { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
+            files: [new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
         })
             .catch(async err => await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { }))
 
@@ -204,29 +240,38 @@ Data de Criação Deste Registro: ${Date.format(Date.now(), false, false)}
 --------------------------------------------------------------
 ${giveaway.AllowedMembers?.length > 0 ? `${giveaway.AllowedMembers?.length} ` : ''}Usuários Permitidos:\n${giveaway.AllowedMembers?.length ? giveaway.AllowedMembers?.map(id => `${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
 --------------------------------------------------------------
+${giveaway.LockedMembers?.length > 0 ? `${giveaway.LockedMembers?.length} ` : ''}Usuários Bloqueados:\n${giveaway.LockedMembers?.length ? giveaway.LockedMembers?.map(id => `${guild.members.cache.get(id)?.user?.tag || 'User Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+--------------------------------------------------------------
 ${giveaway.AllowedRoles?.length > 0 ? `${giveaway.AllowedRoles?.length} ` : ''}Cargos Obrigatórios:\n${giveaway.AllowedRoles?.length ? giveaway.AllowedRoles?.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
 --------------------------------------------------------------
-${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`
+${giveaway.LockedRoles?.length > 0 ? `${giveaway.LockedRoles?.length} ` : ''}Cargos Bloqueados:\n${giveaway.LockedRoles?.length ? giveaway.LockedRoles?.map(id => `${guild.roles.cache.get(id)?.name || 'Role Name Not Found'} (${id})`).join('\n') : '~~ Nenhum ~~'}
+--------------------------------------------------------------
+${winners?.length > 0 ? `${winners.length} ` : ''}Vencedores do Sorteio:\n${winnersMapped}
+--------------------------------------------------------------
+${participants.length > 0 ? `${participants.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`
             )
         }
 
     }
 
     function refreshButton() {
-        if (messagesToEditButton[gwId]) return
+        if (messagesToEditButton[gwId] || hasEnded) return
         messagesToEditButton[gwId] = true
         const giveaway = GiveawayManager.getGiveaway(gwId)
-        return setTimeout(() => edit(), 3000)
+        return setTimeout(() => edit(), 2500)
 
         async function edit() {
-            messagesToEditButton[gwId] = false
+            delete messagesToEditButton[gwId]
+            if (!giveaway?.Actived) return
             message = await channel.messages.fetch(gwId).catch(() => null)
             if (!message) return
             const components = message?.components[0]?.toJSON()
-            if (components) components.components[0].label = `Participar (${giveaway.Participants.length || '0'})`
+            if (components) {
+                components.components[0].label = `Participar (${giveaway.Participants.length || '0'})`
+                components.components[0].disabled = (giveaway.TimeMS - (Date.now() - giveaway.DateNow) > 0)
+            }
             return message.edit({ components: [components] }).catch(() => { })
         }
     }
-
 
 }

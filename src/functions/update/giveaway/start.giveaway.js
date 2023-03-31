@@ -32,14 +32,14 @@ export default async (gw, guild, channel, messageFetched) => {
     const Sponsor = giveaway.Sponsor
     const Prize = giveaway.Prize
     const MessageLink = giveaway.MessageLink
-    const embedToEdit = message.embeds[0]?.data || { footer: { text: '' } }
-    const fields = embedToEdit.fields || []
+    const embedToEdit = message.embeds[0]?.data || {}
+    const embedFields = embedToEdit.fields || []
 
     const embed = {
         color: client.red,
         title: `${e.Tada} Sorteios ${guild.name} | Sorteio Encerrado`,
         fields: [
-            ...fields,
+            ...embedFields,
             {
                 name: `${e.Trash} Exclusão`,
                 value: time(new Date(Date.now() + 1000 * 60 * 60 * 24 * 20), "R"),
@@ -47,7 +47,7 @@ export default async (gw, guild, channel, messageFetched) => {
             }
         ],
         footer: {
-            text: `Giveaway ID: ${MessageID} | ${Participantes.length} Participantes`
+            text: `Giveaway ID: ${MessageID}`
         }
     }
 
@@ -55,22 +55,17 @@ export default async (gw, guild, channel, messageFetched) => {
     if (components) {
         components.components[0].disabled = true
         components.components[0].label = `Participar (${giveaway.Participants.length})`
+        components.components[1].disabled = Participantes.length == 0
+        message.edit({ embeds: [embed], components: components ? [components] : [] }).catch(() => { })
     }
-
-    message.edit({ embeds: [embed], components: components ? [components] : [] }).catch(() => { })
 
     if (!Participantes.length) {
 
-        const embed = message?.embeds[0]
-
-        if (embed) {
-            embed.fields.push({
-                name: '📝 Sorteio Cancelado',
-                value: 'Nenhum usuário entrou neste sorteio',
-                inline: true
-            })
-            message.edit({ embeds: [embed] }).catch(() => { })
-        }
+        embed.fields.push({
+            name: '📝 Sorteio Cancelado',
+            value: 'Nenhum usuário entrou neste sorteio',
+            inline: true
+        })
 
         channel.send({
             embeds: [{
@@ -83,55 +78,64 @@ export default async (gw, guild, channel, messageFetched) => {
         return GiveawayManager.deleteGiveaway(giveaway)
     }
 
-    const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
-    const dateNow = Date.now()
-    GiveawayManager.giveaways[index].DischargeDate = dateNow
-    GiveawayManager.giveaways[index].Actived = true
-    delete GiveawayManager.retryCooldown[giveaway.MessageID]
-    GiveawayManager.managerUnavailablesGiveaways([giveaway])
     const vencedores = Participantes.random(WinnersAmount)
     const vencedoresMapped = vencedores.map(memberId => `<@${memberId}> \`${memberId}\``)
+
+    const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
+    const dateNow = Date.now()
+    if (GiveawayManager.giveaways[index]) {
+        GiveawayManager.giveaways[index].DischargeDate = dateNow
+        GiveawayManager.giveaways[index].Actived = false
+        GiveawayManager.giveaways[index].WinnersGiveaway = vencedores
+    }
+    delete GiveawayManager.retryCooldown[giveaway.MessageID]
+    GiveawayManager.managerUnavailablesGiveaways([giveaway])
 
     const sponsor = await guild.members.fetch(Sponsor)
         .then(member => member.user)
         .catch(() => `<@${Sponsor}>`)
 
+    const fields = [
+        {
+            name: `${e.ModShield} Patrocinador`,
+            value: `${sponsor?.tag || `<@${Sponsor}>`} \`${Sponsor}\``,
+            inline: true
+        },
+        {
+            name: `${e.Star} Prêmio`,
+            value: `${Prize}`,
+            inline: true
+        },
+        {
+            name: `${e.Reference} Giveaway Reference`,
+            value: `${MessageLink ? `🔗 [Link do Sorteio](${MessageLink})` : 'Ok, a referência sumiu'}` + ` | 🆔 *\`${MessageID}\`*`
+        }
+    ]
+
+    let description = null
+    vencedoresMapped.length > 20
+        ? description = `${vencedoresMapped.join('\n') || 'Ninguém'}`.limit('MessageEmbedDescription')
+        : fields.unshift({
+            name: `${e.CoroaDourada} Vencedores - ${vencedoresMapped.length}/${WinnersAmount}`,
+            value: `${vencedoresMapped.join('\n') || 'Ninguém'}`,
+            inline: true
+        })
+
+    const toMention = Array.from(new Set([Sponsor, ...vencedores]))
     return channel.send({
-        content: `${e.Notification} | ${[sponsor, ...vencedoresMapped].join(', ').slice(0, 4000)}`,
-        embeds: [
-            {
-                color: client.green,
-                title: `${e.Tada} Sorteio Finalizado`,
-                url: MessageLink || null,
-                fields: [
-                    {
-                        name: `${e.CoroaDourada} Vencedores - ${vencedoresMapped.length}/${WinnersAmount}`,
-                        value: `${vencedoresMapped.join('\n') || 'Ninguém'}`,
-                        inline: true
-                    },
-                    {
-                        name: `${e.ModShield} Patrocinador`,
-                        value: sponsor?.tag || `${e.Deny} Patrocinador não encontrado`,
-                        inline: true
-                    },
-                    {
-                        name: `${e.Star} Prêmio`,
-                        value: `${Prize}`,
-                        inline: true
-                    },
-                    {
-                        name: `${e.Reference} Giveaway Reference`,
-                        value: `🔗 [Link do Sorteio](${MessageLink}) | 🆔 *\`${MessageID}\`*`
-                    }
-                ]
-            }
-        ]
+        content: `${e.Notification} | ${toMention.map(userId => `<@${userId}>`).join(', ').slice(0, 4000)}`,
+        embeds: [{
+            color: client.green,
+            title: `${e.Tada} Sorteio Finalizado`,
+            url: MessageLink || null,
+            description,
+            fields
+        }]
     })
         .then(() => finish())
         .catch(() => GiveawayManager.deleteGiveaway(giveaway))
 
     async function finish() {
-
 
         await Database.Guild.updateOne(
             { id: guild.id, 'Giveaways.MessageID': MessageID },

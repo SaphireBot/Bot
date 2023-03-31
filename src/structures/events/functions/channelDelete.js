@@ -1,4 +1,4 @@
-import { SaphireClient as client, Database } from '../../../classes/index.js'
+import { SaphireClient as client, Database, GiveawayManager } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 
 export default async (log, guild) => {
@@ -6,6 +6,9 @@ export default async (log, guild) => {
     const channel = log?.target
 
     if (!log || !channel || !guild) return
+
+    if (GiveawayManager.getGiveaway(null, channel.id))
+        Database.deleteGiveaway(null, guild.id, null, channel.id)
 
     const inLogomarcaGameChannel = await Database.Cache.Logomarca.get(`${client.shardId}.Channels`, channel.id) || []
     if (inLogomarcaGameChannel.includes(channel.id)) await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)

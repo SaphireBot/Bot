@@ -7,7 +7,7 @@ import {
     SelectMenuInteraction,
     SaphireClient as client
 } from '../../classes/index.js'
-import { DiscordPermissons, PermissionsTranslate } from '../../util/Constants.js'
+import { PermissionsTranslate } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 
 client.on('interactionCreate', async interaction => {
@@ -17,7 +17,7 @@ client.on('interactionCreate', async interaction => {
 
     if (client.restart)
         return await interaction.reply({
-            content: `${e.Loading} | Processo de reinicialização iniciado.\n📝 | \`${client.resttart || 'Nenhum dado informado'}\``,
+            content: `${e.Loading} | Processo de reinicialização iniciado.\n📝 | \`${client.restart || 'Nenhum dado informado'}\``,
             ephemeral: true
         })
 
