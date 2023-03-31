@@ -156,6 +156,8 @@ export default new class GiveawayManager {
     }
 
     getGiveaway(gwId) {
-        return [...this.giveaways, ...this.awaiting].find(g => g?.MessageID == gwId)
+        const gws = [...this.giveaways, ...this.awaiting]
+        const gw = gws.find(g => g?.MessageID == gwId)
+        return gw
     }
 }

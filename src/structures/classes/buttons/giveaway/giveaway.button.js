@@ -12,7 +12,8 @@ export default async ({ interaction }, commandData) => {
     let { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
 
-    const giveaway = GiveawayManager.getGiveaway(gwId)
+    const giveaway = await GiveawayManager.getGiveaway(gwId)
+    // console.log(!giveaway)
 
     if (!giveaway)
         return await interaction.reply({
