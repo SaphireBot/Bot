@@ -99,7 +99,7 @@ export default {
 
         await Database.Cache.Pay.set(`${author.id}.${msg.id}`, {
             confirmated: [],
-            total: 1000,
+            total: quantia,
             value: quantia > 1000
                 ? parseInt(quantia - parseInt((quantia * 0.05).toFixed(0)))
                 : quantia

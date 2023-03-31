@@ -26,7 +26,7 @@ client.on('messageDelete', async message => {
                     Transactions: {
                         $each: [{
                             time: `${Date.format(0, true)}`,
-                            data: `${e.gain} Reembolso de ${pay.value} Safiras por *Pay Message Delete*`
+                            data: `${e.gain} Reembolso de ${pay.total} Safiras por *Pay Message Delete*`
                         }],
                         $position: 0
                     }
