@@ -257,10 +257,10 @@ ${participants.length > 0 ? `${participants.length} ` : ''}Participantes Por Ord
     function refreshButton() {
         if (messagesToEditButton[gwId] || hasEnded) return
         messagesToEditButton[gwId] = true
-        const giveaway = GiveawayManager.getGiveaway(gwId)
         return setTimeout(() => edit(), 2500)
 
         async function edit() {
+            const giveaway = GiveawayManager.getGiveaway(gwId)
             delete messagesToEditButton[gwId]
             if (!giveaway?.Actived) return
             message = await channel.messages.fetch(gwId).catch(() => null)
@@ -269,8 +269,9 @@ ${participants.length > 0 ? `${participants.length} ` : ''}Participantes Por Ord
             if (components) {
                 components.components[0].label = `Participar (${giveaway.Participants.length || '0'})`
                 components.components[0].disabled = (giveaway.TimeMS - (Date.now() - giveaway.DateNow) > 0)
+                return message.edit({ components: [components] }).catch(() => { })
             }
-            return message.edit({ components: [components] }).catch(() => { })
+            return
         }
     }
 
