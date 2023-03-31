@@ -12,24 +12,9 @@ import getWebhookURL from "./webhook.jokempo.js"
  */
 export default async (interaction, commandData) => {
 
-    const { user, message, guild, channel } = interaction
+    const { user, guild, channel } = interaction
     const MoedaCustom = await guild.getCoin()
-
-    if (user.id !== message.interaction.user.id)
-        return interaction.reply({
-            content: `${e.DenyX} | Apenas quem usou o comando pode selecionar o valor. Por favor, use o comando \`/jokempo global\`.`,
-            ephemeral: true
-        })
-
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
-    const balance = userData?.Balance || 0
     const { value, option } = commandData
-
-    if (balance < value)
-        return interaction.update({
-            content: `${e.DenyX} | Valor insuficiente. Você não tem o valor de **${value.currency()} ${MoedaCustom}** para efetuar essa aposta.`,
-            components: []
-        }).catch(() => { })
 
     await interaction.update({
         content: `${e.Loading} | Autenticando validadores...`,

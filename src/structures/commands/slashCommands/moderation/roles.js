@@ -1,0 +1,48 @@
+import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
+import autorole from './functions/autorole/index.autorole.js'
+
+export default {
+    name: 'roles',
+    name_localizations: { 'pt-BR': 'cargos' },
+    description: '[moderation] Gerencie o sistema de autorole por aqui',
+    dm_permission: false,
+    default_member_permissions: `${PermissionsBitField.Flags.ManageRoles}`,
+    type: 1,
+    options: [
+        {
+            name: 'autorole',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[moderation] Adicione cargos ao autorole',
+            options: [
+                {
+                    name: 'add',
+                    type: ApplicationCommandOptionType.Role,
+                    description: 'Cargo a ser adicionado ao autorole'
+                },
+                {
+                    name: 'remove',
+                    type: ApplicationCommandOptionType.Role,
+                    description: 'Cargo a ser removido do autorole'
+                }
+            ]
+        },
+        {
+            name: 'painel',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: '[moderation] (AUTOROLE) Veja como está o estado do autorole'
+        }
+    ],
+    helpData: {
+        description: 'Sistema de autorole',
+    },
+    async execute(slashCommand) {
+
+        const command = {
+            autorole, painel: autorole,
+        }[slashCommand.interaction.options.getSubcommand()]
+
+        if (command) return command(slashCommand)
+
+        return slashCommand.interaction.reply({ content: '${e.DenyX} ${subCommandNotFound} #5444816' })
+    }
+}
