@@ -1,7 +1,7 @@
-import { ButtonStyle, ChatInputCommandInteraction, StringSelectMenuInteraction, PermissionsBitField } from 'discord.js'
+import { ButtonStyle, ChatInputCommandInteraction, StringSelectMenuInteraction, PermissionFlagsBits } from 'discord.js'
 import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
-import { Colors } from '../../../../util/Constants.js'
+import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
 
 /**
@@ -11,23 +11,31 @@ import timeMs from '../../../../functions/plugins/timeMs.js'
 export default async (interaction, giveawayResetedData, bySelectMenuInteraction) => {
 
     const { options, user, guild, channel } = interaction
+
     const Prize = bySelectMenuInteraction ? giveawayResetedData?.Prize : options.getString('prize') || giveawayResetedData?.Prize
     const Time = bySelectMenuInteraction ? giveawayResetedData?.TimeMs : options.getString('time') || giveawayResetedData?.TimeMs
     const Requisitos = bySelectMenuInteraction ? giveawayResetedData?.Requires : options.getString('requires') || giveawayResetedData?.Requires
     const imageURL = bySelectMenuInteraction ? giveawayResetedData?.imageUrl : options.getString('imageurl') || giveawayResetedData?.imageUrl
     const Channel = bySelectMenuInteraction ? interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId) : options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
-    const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color
+
+    // WE NEED THE BASIC PERMISSIONS!!!
+    const channelPermissions = await Channel.permissionsFor(client.user)
+    const greenCard = Array.from(
+        new Set([
+            guild.members.me.permissions.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions]),
+            channelPermissions?.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions])
+        ].flat())
+    )
+    if (greenCard.length)
+        return await interaction.reply({
+            content: `${e.DenyX} | Eu não tenho permissão o suficiente para criar sorteio no canal ${Channel}.\n${e.Info} | Me falta ${greenCard.length} permiss${greenCard.length > 1 ? 'ões' : 'ão'}: ${greenCard.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ')}`,
+            ephemeral: true
+        }).catch(() => { })
+
+    const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color || client.blue
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
     const collectorData = { reaction: '🎉', AllowedMembers: [], AllowedRoles: [] }
-    const clientMember = guild.members.cache.get(client.user.id)
-    const channelPermissions = Channel.permissionsFor(clientMember, true)
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
-
-    if (!channelPermissions || !channelPermissions.has(PermissionsBitField.Flags.SendMessages))
-        return await interaction.reply({
-            content: `${e.DenyX} | Eu não tenho permissão para enviar mensagem no canal ${Channel}.`,
-            ephemeral: true
-        })
 
     if (!TimeMs)
         return await interaction.reply({

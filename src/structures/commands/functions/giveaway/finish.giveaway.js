@@ -1,17 +1,20 @@
-import { GiveawayManager } from "../../../../classes/index.js"
+import { GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
-import startGiveaway from "../../../../functions/update/giveaway/start.giveaway.js"
 import { ButtonStyle } from "discord.js"
 
-export default async (interaction, guildData, giveawayId) => {
+export default async (interaction, giveawayId) => {
 
-    const { options, guild } = interaction
+    const { options } = interaction
     const gwId = giveawayId || options.getString('select_giveaway')
-    const giveaway = guildData?.Giveaways?.find(gw => gw?.MessageID === gwId)
+
+    const giveaway = [
+        ...GiveawayManager.giveaways,
+        ...GiveawayManager.awaiting
+    ].find(gw => gw?.MessageID == gwId)
 
     if (!giveaway)
         return await interaction.reply({
-            content: `${e.Deny} | Nenhum sorteio foi encontrado.`,
+            content: `${e.DenyX} | Sorteio não encontrado no processo de ativação.`,
             ephemeral: true
         })
 
@@ -21,25 +24,7 @@ export default async (interaction, guildData, giveawayId) => {
             ephemeral: true
         })
 
-    const cachedGiveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].find(gw => gw?.MessageID == gwId)
-
-    if (!cachedGiveaway)
-        return await interaction.reply({
-            content: `${e.Deny} | Sorteio não encontrado no processo de ativação.`,
-            ephemeral: true
-        })
-
-    const channel = await guild.channels.fetch(cachedGiveaway.ChannelId).catch(() => null)
-
-    if (!channel)
-        return await interaction.reply({
-            content: `${e.Deny} | O canal deste sorteio não foi encontrado.`,
-            ephemeral: true
-        })
-
-    clearTimeout(cachedGiveaway.timeout)
-    startGiveaway(cachedGiveaway, guild, channel, true)
-
+    client.emit('giveaway', giveaway)
     return await interaction.reply({
         content: `${e.Check} | Sorteio finalizado com sucesso!`,
         ephemeral: true,
@@ -50,7 +35,7 @@ export default async (interaction, guildData, giveawayId) => {
                     type: 2,
                     label: 'Sorteio Original',
                     emoji: '🔗',
-                    url: cachedGiveaway.MessageLink,
+                    url: giveaway.MessageLink,
                     style: ButtonStyle.Link
                 }
             ]

@@ -113,7 +113,7 @@ client.on('messageDelete', async message => {
             .then(() => {
                 if (!message.channel) return
                 return message.channel.send({
-                    content: `${e.Trash} | A mensagem do jokempo global \`${message.id}\` foi deletada.\n${e.Check} | Eu cancelei esta aposta e devolvi **${jokempoGameGlobal.value} Safiras** para o desafiante.`
+                    content: `${e.Trash} | A mensagem do jokempo global \`${message.id}\` foi deletada.\n${e.Check} | Eu cancelei esta aposta e devolvi **${jokempoGameGlobal.value.currency()} Safiras** para o desafiante.`
                 }).catch(() => { })
 
             })

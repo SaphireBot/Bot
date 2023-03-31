@@ -24,9 +24,8 @@ export default async (interaction, commandData) => {
     const gameData = await Database.Cache.Jokempo.get(`Global.${commandData.id}`)
 
     if (!gameData)
-        return interaction.update({
-            content: `${e.DenyX} | Jogo já apostado ou não encontrado no cache.`,
-            components: []
+        return interaction.reply({
+            content: `${e.DenyX} | Jogo já apostado ou não encontrado no cache.`
         }).catch(() => { })
 
     const { user } = interaction

@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import Mongoose from 'mongoose'
 import Cache from './CacheManager.js'
 import 'dotenv/config'
-import { Models, SaphireClient as client } from '../index.js'
+import { GiveawayManager, Models, SaphireClient as client } from '../index.js'
 const { connect } = Mongoose
 
 /**
@@ -214,15 +214,23 @@ export default new class Database extends Models {
         )
     }
 
-    deleteGiveaway = async (DataId, GuildId, All = false) => {
+    deleteGiveaway = async (MessageID, GuildId, All = false) => {
 
-        if (!DataId || !GuildId) return
+        GiveawayManager.giveaways.splice(
+            GiveawayManager.giveaways.findIndex(gw => gw?.MessageID == MessageID), 1
+        )
 
-        const data = All
-            ? { $unset: { Giveaways: 1 } }
-            : { $pull: { Giveaways: { MessageID: DataId } } }
+        GiveawayManager.awaiting.splice(
+            GiveawayManager.awaiting.findIndex(gw => gw?.MessageID == MessageID), 1
+        )
 
-        return await this.Guild.updateOne({ id: GuildId }, data)
+        GiveawayManager.toDelete.splice(
+            GiveawayManager.toDelete.findIndex(gw => gw?.MessageID == MessageID), 1
+        )
+
+        if (All) return await this.Guild.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
+        if (!MessageID || !GuildId) return
+        return await this.Guild.updateOne({ id: GuildId }, { $pull: { Giveaways: { MessageID } } })
     }
 
     /**

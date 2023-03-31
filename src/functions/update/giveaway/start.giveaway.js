@@ -6,20 +6,26 @@ import { Emojis as e } from '../../../util/util.js'
  * @param { Guild } guild
  * @param { TextChannel } channel
  */
-export default async (gw, guild, channel, finalForce) => {
+export default async (gw, guild, channel, messageFetched) => {
 
-    const giveaway = [...GiveawayManager.giveaways, ...GiveawayManager.awaiting].find(g => g.MessageID == gw?.MessageID)
+    const giveaway = [
+        ...GiveawayManager.giveaways,
+        ...GiveawayManager.awaiting,
+        ...GiveawayManager.toDelete
+    ].find(g => g.MessageID == gw?.MessageID)
 
-    if (!giveaway || !guild || !channel || !gw)
-        return Database.deleteGiveaway(giveaway?.MessageID, guild?.id)
+    if (!giveaway || !guild || !channel || !gw) return
 
     const MessageID = giveaway.MessageID
-    const message = await channel?.messages?.fetch(MessageID || '0').catch(() => null)
+    let message = messageFetched || await channel?.messages?.fetch(MessageID || '0').catch(() => null)
 
     if (!message) {
         channel.send({ content: `${e.cry} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
-        return Database.deleteGiveaway(giveaway.MessageID, guild.id)
+        return GiveawayManager.deleteGiveaway(giveaway)
     }
+
+    if (giveaway.timeout)
+        clearTimeout(giveaway.timeout)
 
     const WinnersAmount = giveaway.Winners || 1
     const Participantes = giveaway.Participants || []
@@ -27,25 +33,45 @@ export default async (gw, guild, channel, finalForce) => {
     const Prize = giveaway.Prize
     const MessageLink = giveaway.MessageLink
     const embedToEdit = message.embeds[0]?.data || { footer: { text: '' } }
+    const fields = embedToEdit.fields || []
 
-    embedToEdit.color = client.red
-    embedToEdit.description = null
-    embedToEdit.title += ` | Sorteio ${finalForce ? 'Finalizado' : 'Encerrado'}`
-    embedToEdit.footer.text = `Giveaway ID: ${MessageID} | ${Participantes.length} Participantes`
-    embedToEdit.fields.push({
-        name: `${e.Trash} Exclusão`,
-        value: `${time(new Date(Date.now() + 172800000), "R")}`,
-        inline: true
-    })
+    const embed = {
+        color: client.red,
+        title: `${e.Tada} Sorteios ${guild.name} | Sorteio Encerrado`,
+        fields: [
+            ...fields,
+            {
+                name: `${e.Trash} Exclusão`,
+                value: time(new Date(Date.now() + 1000 * 60 * 60 * 24 * 20), "R"),
+                inline: true
+            }
+        ],
+        footer: {
+            text: `Giveaway ID: ${MessageID} | ${Participantes.length} Participantes`
+        }
+    }
 
     const components = message?.components[0]?.toJSON()
     if (components) {
         components.components[0].disabled = true
-        components.components[1].disabled = !Participantes.length
+        components.components[0].label = `Participar (${giveaway.Participants.length})`
     }
-    message.edit({ embeds: [embedToEdit], components: components ? [components] : [] }).catch(() => { })
+
+    message.edit({ embeds: [embed], components: components ? [components] : [] }).catch(() => { })
 
     if (!Participantes.length) {
+
+        const embed = message?.embeds[0]
+
+        if (embed) {
+            embed.fields.push({
+                name: '📝 Sorteio Cancelado',
+                value: 'Nenhum usuário entrou neste sorteio',
+                inline: true
+            })
+            message.edit({ embeds: [embed] }).catch(() => { })
+        }
+
         channel.send({
             embeds: [{
                 color: client.red,
@@ -54,32 +80,23 @@ export default async (gw, guild, channel, finalForce) => {
             }]
         }).catch(() => { })
 
-        return Database.deleteGiveaway(MessageID, guild.id)
+        return GiveawayManager.deleteGiveaway(giveaway)
     }
 
-    const vencedores = await GetWinners(Participantes, WinnersAmount, MessageID, guild.id)
-
-    if (!vencedores || vencedores.length === 0) {
-        channel.send({
-            embeds: [{
-                color: client.red,
-                title: `${e.Deny} | Sorteio cancelado`,
-                description: `${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | ${MessageLink ? `[Giveaway Reference](${MessageLink})` : 'Link indisponível'}`
-            }]
-        })
-        return Database.deleteGiveaway(MessageID, guild.id)
-    }
-
-    const vencedoresMapped = []
-
-    for await (let memberId of vencedores)
-        vencedoresMapped.push(`${await GetMember(guild, memberId)}`)
+    const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
+    const dateNow = Date.now()
+    GiveawayManager.giveaways[index].DischargeDate = dateNow
+    GiveawayManager.giveaways[index].Actived = true
+    delete GiveawayManager.retryCooldown[giveaway.MessageID]
+    GiveawayManager.managerUnavailablesGiveaways([giveaway])
+    const vencedores = Participantes.random(WinnersAmount)
+    const vencedoresMapped = vencedores.map(memberId => `<@${memberId}> \`${memberId}\``)
 
     const sponsor = await guild.members.fetch(Sponsor)
         .then(member => member.user)
-        .catch(() => `${e.Deny} Patrocinador não encontrado`)
+        .catch(() => `<@${Sponsor}>`)
 
-    channel.send({
+    return channel.send({
         content: `${e.Notification} | ${[sponsor, ...vencedoresMapped].join(', ').slice(0, 4000)}`,
         embeds: [
             {
@@ -106,49 +123,34 @@ export default async (gw, guild, channel, finalForce) => {
                         name: `${e.Reference} Giveaway Reference`,
                         value: `🔗 [Link do Sorteio](${MessageLink}) | 🆔 *\`${MessageID}\`*`
                     }
-                ],
-                footer: { text: 'Este sorteio será deletado do banco de dados em 48 horas' }
+                ]
             }
         ]
-    }).catch(() => Database.deleteGiveaway(MessageID, guild.id))
+    })
+        .then(() => finish())
+        .catch(() => GiveawayManager.deleteGiveaway(giveaway))
 
-    const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
-    const dateNow = Date.now()
-    GiveawayManager.giveaways[index].DischargeDate = dateNow
-    await Database.Guild.updateOne(
-        { id: guild.id, 'Giveaways.MessageID': MessageID },
-        {
-            $set: {
-                'Giveaways.$.Participants': [...Participantes],
-                'Giveaways.$.Actived': false,
-                'Giveaways.$.DischargeDate': dateNow
+    async function finish() {
+
+
+        await Database.Guild.updateOne(
+            { id: guild.id, 'Giveaways.MessageID': MessageID },
+            {
+                $set: {
+                    'Giveaways.$.Participants': Participantes,
+                    'Giveaways.$.Actived': false,
+                    'Giveaways.$.DischargeDate': dateNow,
+                    'Giveaways.$.WinnersGiveaway': vencedores
+                }
             }
+        )
+
+        message = await message.fetch().catch(() => null)
+        const components = message?.components[0]?.toJSON()
+        if (components) {
+            components.components[0].disabled = true
+            components.components[0].label = `Participar (${Participantes.length})`
         }
-    )
-
-    return
-}
-
-async function GetWinners(WinnersArray, Amount = 1, MessageId, guildId) {
-
-    if (!WinnersArray || !Amount || !WinnersArray.length) return []
-
-    const Winners = WinnersArray.random(Amount)
-
-    await Database.Guild.updateOne(
-        { id: guildId, 'Giveaways.MessageID': MessageId },
-        {
-            $set: {
-                'Giveaways.$.WinnersGiveaway': [...Winners],
-                'Giveaways.$.Actived': false
-            }
-        }
-    )
-
-    return Winners
-}
-
-async function GetMember(guild, memberId) {
-    const member = await guild.members.fetch(memberId).catch(() => null)
-    return member ? `${member} *\`${member?.id || '0'}\`*` : `${e.Deny} Usuário não encontrado.`
+        return setTimeout(() => message?.edit({ components: components ? [components] : [] }).catch(() => { }), 1000)
+    }
 }

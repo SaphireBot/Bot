@@ -1,6 +1,4 @@
-import {
-    Database
-} from '../../../../classes/index.js'
+import { Database, GiveawayManager } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { ButtonStyle } from 'discord.js'
 
@@ -53,7 +51,7 @@ export default async (interaction, guildData, giveawayId) => {
 
             if (customId === 'cancel') return collector.stop()
 
-            Database.deleteGiveaway(gwId, guild.id)
+            GiveawayManager.deleteGiveaway(sorteio)
 
             const channel = await guild.channels.fetch(sorteio?.ChannelId || '0').catch(() => null)
 
@@ -75,7 +73,7 @@ export default async (interaction, guildData, giveawayId) => {
         })
 
     async function deleteAll() {
-        Database.deleteGiveaway(gwId, guild.id, true)
+        Database.deleteGiveaway(null, guild.id, true)
         return await interaction.reply({
             content: `${e.Check} | Todos os sorteios foram deletados com sucesso.`
         })

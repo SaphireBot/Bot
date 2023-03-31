@@ -2,18 +2,17 @@ import { AttachmentBuilder, ButtonStyle } from "discord.js"
 import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Config, DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
-const messagesToEditButton = []
+const messagesToEditButton = {}
 
 export default async ({ interaction }, commandData) => {
 
     const { src } = commandData
     if (src == 'ignore') return ignore()
 
-    const { guild, user, message, channel, member } = interaction
+    let { guild, user, message, channel, member } = interaction
     const gwId = commandData?.gwId || message.id
 
-    const giveaway = GiveawayManager.giveaways.find(g => g.MessageID == gwId)
-        || GiveawayManager.awaiting.find(g => g.MessageID == gwId)
+    const giveaway = GiveawayManager.getGiveaway(gwId)
 
     if (!giveaway)
         return await interaction.reply({
@@ -28,6 +27,12 @@ export default async ({ interaction }, commandData) => {
     return await interaction.reply({ content: `${e.bug} | Nenhuma sub-função encontrada. #18564846`, ephemeral: true })
 
     async function join() {
+
+        if (!giveaway.Actived)
+            return interaction.reply({
+                content: `${e.cry} | O Sorteio já foi finalizado.`,
+                ephemeral: true
+            })
 
         if (giveaway.Participants.includes(user.id))
             return askToLeave()
@@ -47,11 +52,11 @@ export default async ({ interaction }, commandData) => {
                 ephemeral: true
             })
 
+        GiveawayManager.pushParticipants(gwId, [user.id])
         return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': gwId },
             {
-                $addToSet: { 'Giveaways.$.Participants': user.id },
-                $set: { 'Giveaways.$.Actived': true }
+                $addToSet: { 'Giveaways.$.Participants': user.id }
             },
             { new: true }
         )
@@ -64,14 +69,17 @@ export default async ({ interaction }, commandData) => {
                         ephemeral: true
                     })
 
-                giveaway.Participants = giveawayObject.Participants
-
+                GiveawayManager.pushParticipants(gwId, giveawayObject.Participants)
+                refreshButton()
                 await interaction.reply({
                     content: `${e.CheckV} | Aeee ${e.Tada}, coloquei você na lista de participantes, agora é só esperar o sorteio terminar. Boa sorte`,
                     ephemeral: true
                 })
 
-                return giveaway.Actived ? refreshButton() : client.emit('giveaway', giveaway)
+                if (!giveaway.Actived)
+                    return client.emit('giveaway', giveaway)
+
+                return
             })
             .catch(async err => await interaction.reply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
@@ -118,6 +126,12 @@ export default async ({ interaction }, commandData) => {
 
     async function leave() {
 
+        if (!giveaway.Actived)
+            return await interaction.update({
+                content: `${e.cry} | O sorteio já acabooou.`,
+                components: []
+            }).catch(() => { })
+
         if (!giveaway.Participants.includes(user.id))
             return await interaction.update({
                 content: `${e.cry} | Você não está participando deste sorteio.`,
@@ -125,32 +139,22 @@ export default async ({ interaction }, commandData) => {
             }).catch(() => { })
 
         return Database.Guild.findOneAndUpdate(
-            { id: guild.id },
+            { id: guild.id, 'Giveaways.MessageID': gwId },
             {
-                $pullAll: {
-                    'Giveaways.$[element].Participants': [user.id]
-                }
+                $pull: { 'Giveaways.$.Participants': user.id }
             },
-            {
-                new: true,
-                fields: 'Giveaways',
-                arrayFilters: [
-                    {
-                        'element.MessageID': gwId,
-                        'element.Prize': giveaway.Prize
-                    }
-                ]
-            }
+            { new: true }
         )
             .then(async document => {
+                GiveawayManager.removeParticipants(gwId, user.id)
                 const giveawayObject = document?.Giveaways?.find(gw => gw?.MessageID == gwId)
+
                 if (!giveawayObject)
                     return await interaction.update({
                         content: `${e.cry} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         components: []
                     })
 
-                giveaway.Participants = giveawayObject.Participants
                 refreshButton()
                 return await interaction.update({
                     content: `${e.cry} | Pronto pronto, você não está mais participando deste sorteio.`,
@@ -210,24 +214,20 @@ ${giveaway.Participants?.length > 0 ? `${giveaway.Participants?.length} ` : ''}P
     }
 
     function refreshButton() {
-
-        if (messagesToEditButton.some(obj => obj.id == gwId)) return
-        messagesToEditButton.push({ id: gwId, timeout: setTimeout(() => edit(), 3000) })
+        if (messagesToEditButton[gwId]) return
+        messagesToEditButton[gwId] = true
+        const giveaway = GiveawayManager.getGiveaway(gwId)
+        return setTimeout(() => edit(), 3000)
 
         async function edit() {
+            messagesToEditButton[gwId] = false
+            message = await channel.messages.fetch(gwId).catch(() => null)
+            if (!message) return
             const components = message?.components[0]?.toJSON()
-            if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
-            messagesToEditButton.splice(messagesToEditButton.findIndex(obj => obj.id == gwId), 1)
-            return message.edit({ components: [components] }).catch(err => retry(err))
-            async function retry(err) {
-                if (err.code != 10008) return
-                const msg = await channel.messages.fetch(gwId || '0').catch(() => null)
-                const components = msg?.components[0]?.toJSON()
-                if (components) components.components[0].label = `Participar (${giveaway.Participants.length})`
-                if (msg) return msg.edit({ components: [components] })
-                return
-            }
+            if (components) components.components[0].label = `Participar (${giveaway.Participants.length || '0'})`
+            return message.edit({ components: [components] }).catch(() => { })
         }
     }
+
 
 }

@@ -136,10 +136,11 @@ export default class SelectMenuInteraction extends Base {
                 components: [], embeds: []
             }).catch(() => { })
 
+        if (src == 'finish') return finishGiveaway(interaction, data.gwId)
+
         const execute = {
             'delete': deleteGiveaway,
             reset: resetGiveaway,
-            finish: finishGiveaway,
             reroll: rerollGiveaway
         }[src]
 

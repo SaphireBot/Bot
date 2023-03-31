@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, PermissionsBitField } from 'discord.js'
-import { DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js'
+import { PermissionsTranslate } from '../../../../util/Constants.js'
 import createGiveaway from '../../functions/giveaway/create.giveaway.js'
 import deleteGiveaway from '../../functions/giveaway/delete.giveaway.js'
 import finishGiveaway from '../../functions/giveaway/finish.giveaway.js'
@@ -196,7 +196,7 @@ export default {
             switch (options.getString('method')) {
                 case 'delete': deleteGiveaway(interaction, guildData); break;
                 case 'reset': resetGiveaway(interaction, guildData); break;
-                case 'finish': finishGiveaway(interaction, guildData); break;
+                case 'finish': finishGiveaway(interaction); break;
                 case 'info': infoGiveaway(interaction, guildData); break;
             }
             return

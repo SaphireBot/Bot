@@ -3,6 +3,7 @@ import managerReminder from '../../functions/update/reminder/manager.reminder.js
 import { formatString } from '../../functions/plugins/plugins.js'
 import { Colors, ColorsTranslate, Languages } from '../../util/Constants.js'
 import Quiz from '../../classes/games/QuizManager.js'
+import { GiveawayManager } from '../../classes/index.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -520,8 +521,11 @@ export default class Autocomplete extends Base {
 
     async select_giveaway(value) {
 
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
-        const giveaways = guildData?.Giveaways || null
+        const giveaways = [
+            ...GiveawayManager.giveaways,
+            ...GiveawayManager.awaiting,
+            ...GiveawayManager.toDelete
+        ].filter(gw => gw?.GuildId == this.guild.id)
 
         if (!giveaways) return this.respond()
 
