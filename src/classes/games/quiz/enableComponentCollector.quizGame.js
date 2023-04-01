@@ -156,7 +156,7 @@ export default async (message, correctAnswer, Quiz, question) => {
                 ].random()
                 const userTag = await client.users.fetch(question.suggestedBy).then(user => `${user.tag} \`${user.id}\``).catch(() => "")
                 embed.color = client.red
-                embed.description = `${replyAnswer}\n${e.QuestionMark} **${question.question}**\n***R:** ||${correctAnswer}||*`
+                embed.description = `${replyAnswer}\n${e.QuestionMark} **${question.question}**\n***R:** ${correctAnswer}*`
                 embed.footer = { text: `Essa pergunta tem ${question.hits || 0} acertos e ${question.misses + questionMisses} erros` }
                 if (!embed.fields || !Array.isArray(embed.fields)) embed.fields = []
                 if (question.curiosity?.length) {
