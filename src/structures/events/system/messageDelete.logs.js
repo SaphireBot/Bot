@@ -43,7 +43,7 @@ export default async message => {
         ]
     }]
 
-    if (message.content) {
+    if (message.content)
         if (message.content?.length <= 1018)
             embeds[0].fields.push({
                 name: '📝 Conteúdo',
@@ -54,7 +54,18 @@ export default async message => {
             title: '📝 Conteúdo',
             description: `\`\`\`${message.content?.slice(0, 4090)?.limit('MessageEmbedDescription')}\`\`\``
         })
-    }
+
+    if (message.attachments.size)
+        embeds[0].fields.push({
+            name: '🖼️ Mídias/Arquivos',
+            value: `${message.attachments.size} mídias nesta mensagem`
+        })
+
+    if (message.pinned)
+        embeds[0].fields.push({
+            name: '📌 Mensagem Fixada',
+            value: 'Esta era uma mensagem fixada'
+        })
 
     return channel?.send({ content: `🛰️ | **Global System Notification** | Message Delete`, embeds }).catch(() => { })
 }
