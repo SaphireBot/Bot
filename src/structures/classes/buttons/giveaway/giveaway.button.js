@@ -55,7 +55,7 @@ export default async ({ interaction }, commandData) => {
         if (giveaway.AllowedRoles?.length > 0) {
             const memberRolesIds = member.roles.cache.map(role => role.id)
             if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
-                return await interaction.reply({
+                return interaction.reply({
                     content: `${e.DenyX} | Poooxa, que pena. Você não tem todos os cargos obrigatórios para entrar neste sorteio.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
                     ephemeral: true
                 })
@@ -64,20 +64,20 @@ export default async ({ interaction }, commandData) => {
         if (giveaway.LockedRoles?.length > 0) {
             const memberRolesIds = [...member.roles.cache.keys()]
             if (giveaway.LockedRoles.some(id => memberRolesIds.includes(id)))
-                return await interaction.reply({
+                return interaction.reply({
                     content: `${e.saphirePolicial} | Ora ora ora... Parece que você tem um dos cargos que estão bloqueados neste sorteio.\n${e.Info} | Esses são os cargos que você tem, mas estão bloqueados: ${giveaway.LockedRoles.filter(roleId => memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ') || "??"}`,
                     ephemeral: true
                 })
         }
 
         if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id))
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
                 ephemeral: true
             })
 
         if (giveaway.LockedMembers?.includes(user.id))
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.SaphireDesespero} | HOO MY GOOSH! Você está na lista de pessoas que não podem participar deste sorteio.`,
                 ephemeral: true
             })

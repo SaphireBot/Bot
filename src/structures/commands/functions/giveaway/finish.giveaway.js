@@ -5,12 +5,7 @@ import { ButtonStyle } from "discord.js"
 export default async (interaction, giveawayId) => {
 
     const { options } = interaction
-    const gwId = giveawayId || options.getString('select_giveaway')
-
-    const giveaway = [
-        ...GiveawayManager.giveaways,
-        ...GiveawayManager.awaiting
-    ].find(gw => gw?.MessageID == gwId)
+    const giveaway = GiveawayManager.getGiveaway(giveawayId || options.getString('select_giveaway'))
 
     if (!giveaway)
         return await interaction.reply({
