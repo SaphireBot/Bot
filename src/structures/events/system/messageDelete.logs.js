@@ -1,14 +1,18 @@
-import { AuditLogEvent } from "discord.js"
+import { AuditLogEvent, Message } from "discord.js"
 import { Emojis as e } from "../../../util/util.js"
 import { Database, SaphireClient as client } from "../../../classes/index.js"
 
+/**
+ * @param { Message } message
+ */
 export default async message => {
+
     if (message.partial) return
+
     const { guild, author, type } = message
     if (type !== 0 || author?.bot) return
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
-    const auditIds = await Database.Cache.General.get(`${client.shardId}.AudityLogsId`) || []
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
     const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
@@ -17,11 +21,11 @@ export default async message => {
     const auditory = await guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete }).catch(() => null)
     if (!auditory) return
 
-    const firstEntry = auditory?.entries?.first()
-    let { executor, id: auditId } = firstEntry
-
-    if (auditIds.includes(auditId))
-        executor = author
+    const entry = auditory?.entries?.first()
+    const lastId = await Database.Cache.General.get(`${guild.id}.LastEntriesID`)
+    let { executor } = entry
+    if (lastId == entry?.id) executor = author
+    await Database.Cache.General.set(`${guild.id}.LastEntriesID`, entry.id)
 
     const embeds = [{
         color: client.blue,
@@ -51,9 +55,6 @@ export default async message => {
             description: `\`\`\`${message.content?.slice(0, 4090)?.limit('MessageEmbedDescription')}\`\`\``
         })
     }
-
-    if (!embeds[0].fields[2] && !embeds[1]) return
-    await Database.Cache.General.push(`${client.shardId}.AudityLogsId`, auditId)
 
     return channel?.send({ content: `🛰️ | **Global System Notification** | Message Delete`, embeds }).catch(() => { })
 }

@@ -1,7 +1,11 @@
-import { AuditLogEvent } from 'discord.js'
+import { AuditLogEvent, GuildMember } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
+/**
+ * @param { GuildMember } oldMember
+ * @param { GuildMember } newMember
+ */
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
     if (!oldMember.guild) return
@@ -23,28 +27,17 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
     let auditory = {}
 
-    const logs = await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate }).catch(() => null) // { type: 11 } - ChannelUpdate
-    if (!logs) return
+    const logs = await newMember.guild.fetchAuditLogs()
+        .then(audit => audit?.entries?.filter(audit => [AuditLogEvent.AutoModerationUserCommunicationDisabled, AuditLogEvent.MemberUpdate].includes(audit?.action)))
+        .catch(() => null)
 
-    const Log = logs.entries.first()
-    if (!Log || Log.action !== AuditLogEvent.MemberUpdate) return
+    if (!logs || !logs?.size) return
+    const Log = logs.first()
+    const { executor, target, reason } = Log
 
-    // const key = 'communication_disabled_until'
+    auditory.executor = executor.id == target.id ? 'AutoMod' : `${executor.username}#${executor.discriminator} - \`${executor.id}\``
 
-    // const changes = [
-    //     {
-    //         key: 'communication_disabled_until',
-    //         old: '2022-12-17T01:36:09.079000+00:00',
-    //         new: undefined
-    //     }
-    // ]
-
-    const { executor, reason } = Log
-    if (executor.bot) return
-
-    auditory.executor = `${executor.username}#${executor.discriminator} - \`${executor.id}\``
-
-    if (mute.new && !mute.old)
+    if ((mute.new && !mute.old) || auditory.executor == 'AutoMod')
         return muteAdded()
 
     if (!mute.new && mute.old)
