@@ -11,7 +11,7 @@ export default {
         permissions: [],
         fields: [{
             name: 'Linguagens suportadas',
-            value: 'Quase todas. Vou detectar a língua da mensagem automáticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
+            value: 'Quase todas. Vou detectar a língua da mensagem automaticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
         }]
     },
     type: 3,

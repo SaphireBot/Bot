@@ -1,11 +1,12 @@
-import { SaphireClient as client, Database, GiveawayManager } from '../../../classes/index.js'
-import { Emojis as e } from '../../../util/util.js'
+import { AuditLogEvent } from 'discord.js'
+import { SaphireClient as client, Database, GiveawayManager, TwitchManager } from '../../classes/index.js'
+import { Emojis as e } from '../../util/util.js'
 
-export default async (log, guild) => {
+client.on('channelDelete', async channel => {
 
-    const channel = log?.target
+    const { guild } = channel
 
-    if (!log || !channel || !guild) return
+    if (!channel || !guild) return
 
     if (GiveawayManager.getGiveaway(null, channel.id))
         Database.deleteGiveaway(null, guild.id, null, channel.id)
@@ -13,9 +14,27 @@ export default async (log, guild) => {
     const inLogomarcaGameChannel = await Database.Cache.Logomarca.get(`${client.shardId}.Channels`, channel.id) || []
     if (inLogomarcaGameChannel.includes(channel.id)) await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars")
-    if (!guildData || !guildData?.LogSystem?.channel) return
+    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars TwitchNotifications")
+    if (!guildData) return
 
+    if (guildData.TwitchNotifications?.length) {
+
+        const rawData = guildData.TwitchNotifications
+        const streamers = rawData.map(data => `${data?.streamer}`) || []
+
+        for (const streamer of streamers)
+            TwitchManager.removeChannel(streamer, channel.id)
+
+        await Database.Guild.updateOne(
+            { id: channel.guild.id },
+            {
+                $pull: { TwitchNotifications: { channelId: channel.id } }
+            }
+        )
+
+    }
+
+    if (!guildData || !guildData?.LogSystem?.channel) return
     if (channel.id === guildData?.LogSystem?.channel)
         return await Database.Guild.updateOne({ id: guild.id }, { $unset: { LogChannel: 1 } })
 
@@ -25,7 +44,14 @@ export default async (log, guild) => {
 
     if (!logChannel) return
 
-    let { executor, target, executorId } = log
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelDelete }).catch(() => null) // { type: 11 } - ChannelUpdate
+    if (!logs) return
+
+    const Log = logs.entries.first()
+    if (!Log || Log.action !== AuditLogEvent.ChannelDelete) return
+
+
+    let { executor, target, executorId } = Log
 
     if (!executor || !target || client.user.id === executorId) return
 
@@ -40,4 +66,4 @@ export default async (log, guild) => {
     return logChannel?.send({
         content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`
     }).catch(() => { })
-}
+})

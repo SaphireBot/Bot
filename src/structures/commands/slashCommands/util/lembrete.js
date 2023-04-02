@@ -3,7 +3,6 @@ import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../../../util/util.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
 import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
-import reminderStart from '../../../../functions/update/reminder/src/start.reminder.js'
 
 export default {
     name: 'reminder',

@@ -1,7 +1,7 @@
 import { ButtonStyle, GatewayIntentBits, Partials } from 'discord.js'
 import { SaphireClient as client } from '../classes/index.js'
 import Byte from './Bytes.js'
-import * as fs from 'fs'
+import { readFileSync } from 'fs'
 
 const SaphireClientOptions = {
     shards: 'auto',
@@ -84,9 +84,9 @@ const SaphireClientOptions = {
     waitGuildTimeout: 20000
 }
 
-const Emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
-const Gifs = JSON.parse(fs.readFileSync('./JSON/gifs.json'))
-const Flags = JSON.parse(fs.readFileSync('./JSON/flags.json'))
+const Emojis = JSON.parse(readFileSync('./JSON/emojis.json'))
+const Gifs = JSON.parse(readFileSync('./JSON/gifs.json'))
+const Flags = JSON.parse(readFileSync('./JSON/flags.json'))
 
 const Buttons = {
     QuizQuestionsFirstPage: (userId) => {

@@ -29,7 +29,7 @@ export default async message => {
         Database.Cache.AfkSystem.delete(`Global.${author.id}`).catch(() => { })
 
         const msg = await message.reply({
-            content: inServerAuthorAFK ? `${e.Afk} | O sistema de AFK foi desativado automáticamente.` : `${e.Afk} | O sistema de AFK Global foi desativado automáticamente.`
+            content: inServerAuthorAFK ? `${e.Afk} | O sistema de AFK foi desativado automaticamente.` : `${e.Afk} | O sistema de AFK Global foi desativado automaticamente.`
         }).catch(() => null)
 
         if (msg === null) return

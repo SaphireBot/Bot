@@ -9,6 +9,7 @@ export default model("Guild", new Schema({
     FirstSystem: Boolean,
     Autorole: Array,
     CommandBlocks: Array,
+    TwitchNotifications: Array, // { channelId: channelId, streamer: streamerName }
     announce: {
         channel: String,
         allowedRole: String,

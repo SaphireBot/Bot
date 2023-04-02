@@ -3,6 +3,8 @@ import { Emojis as e, Byte } from "../../../../util/util.js"
 import { ButtonStyle, version as DiscordJsVersion } from 'discord.js'
 import { Config } from "../../../../util/Constants.js"
 import os from 'os'
+import { readFileSync } from 'fs'
+const packageData = JSON.parse(readFileSync('./package.json'))
 let timeouts = []
 const Timeouts = {}
 const awaiting = {}
@@ -121,11 +123,11 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: '⚙️ Desenvolvimento e Construção',
-                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nClient Version: ${data.version}\nHost: discloud.app\n\`\`\``
+                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nClient Version: ${data.version} (${packageData.version || 'Primary'})\nHost: discloud.app\n\`\`\``
                 },
                 {
                     name: '🛰️ Informações Gerais',
-                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
+                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nTwitch: ${client.twitchNotifications} Notificações Enviadas\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
                 },
                 {
                     name: `${e.discloud} Máquina de Hospedagem`,

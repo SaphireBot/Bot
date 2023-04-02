@@ -104,6 +104,7 @@ export default new class SaphireClient extends Client {
          */
         this.interactions = 0
         this.messages = 0
+        this.twitchNotifications = 0
 
         /**
          * @returns Heartbeat

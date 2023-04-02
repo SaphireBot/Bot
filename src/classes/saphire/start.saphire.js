@@ -6,7 +6,7 @@ import managerReminder from '../../functions/update/reminder/manager.reminder.js
 // import Socket from './websocket.saphire.js'
 import QuizManager from '../games/QuizManager.js'
 import webhook from './webhooks.saphire.js'
-import { Database, Discloud, SaphireClient as client } from '../index.js'
+import { Database, Discloud, SaphireClient as client, TwitchManager } from '../index.js'
 import { Config } from '../../util/Constants.js'
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -70,10 +70,11 @@ export default async () => {
     await QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
+    await TwitchManager.load()
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
     Config.webhookAnimeReporter = await webhook(Config.quizAnimeAttachmentChannel)
     Config.webhookQuizReporter = await webhook(Config.questionSuggestionsSave)
-    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks/Quiz Loaded')
+    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks/Quiz/Twitch Loaded')
 
     console.log(`12/14 - Connected at Shard ${client.shardId}`)
     import('../../api/app.js')

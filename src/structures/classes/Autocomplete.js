@@ -74,13 +74,31 @@ export default class Autocomplete extends Base {
             funcao: ['memesViewer'],
             itens: ['reminders', value],
             selecionar: ['quiz_selecionar', value],
-            serverinfo: ['serverId', value]
+            serverinfo: ['serverId', value],
+            streamer: ['disableTwitch', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async disableTwitch(value) {
+        const data = await this.Database.Guild.findOne({ id: this.guild.id })
+        const twitchData = data?.TwitchNotifications || []
+        if (!twitchData?.length) return this.respond()
+
+        const fill = twitchData
+            .filter(obj => obj?.channelId?.includes(value) || obj?.streamer?.includes(value))
+
+        if (!fill?.length) return this.respond()
+
+        const map = fill
+            .map(obj => ({ name: obj?.streamer, value: obj?.streamer }))
+            .filter(obj => obj?.value)
+
+        return this.respond(map)
     }
 
     async serverId(value) {

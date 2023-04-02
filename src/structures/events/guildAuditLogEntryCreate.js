@@ -1,7 +1,6 @@
 import { Guild, GuildAuditLogsEntry } from 'discord.js';
 import { SaphireClient as client } from "../../classes/index.js";
 import channelCreate from './functions/channelCreate.js';
-import channelDelete from "./functions/channelDelete.js";
 import integrationCreate from "./functions/integrationCreate.js";
 import integrationDelete from "./functions/integrationDelete.js";
 
@@ -14,7 +13,7 @@ const guildEntriesFunctions = {
     },
     Channel: {
         Create: channelCreate,
-        Delete: channelDelete,
+        // Delete: channelDelete,
         // Update: channelUpdate is enable at event listener
         // All: ??
     },

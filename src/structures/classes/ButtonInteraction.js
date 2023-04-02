@@ -32,6 +32,7 @@ import mydata from '../commands/slashCommands/bot/mydata.js'
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js'
 import connect from './buttons/connect/redirect.connect.js'
 import checkJokempo from './buttons/jokempo/redirect.jokempo.js'
+import twitch from './buttons/twitch/redirect.twitch.js'
 
 export default class ButtonInteraction extends Base {
     /**
@@ -96,7 +97,8 @@ export default class ButtonInteraction extends Base {
             mydata: [mydata.execute, this, commandData],
             sinfo: [pagesServerinfo, { interaction: this.interaction, customId: commandData, value: false }],
             connect: [connect, this, commandData],
-            jkp: [checkJokempo, this, commandData] /* Jokempo */
+            jkp: [checkJokempo, this, commandData] /* Jokempo */,
+            twitch: [twitch, this, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

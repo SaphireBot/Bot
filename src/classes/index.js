@@ -13,6 +13,7 @@ import SelectMenuInteraction from '../structures/classes/SelectMenuInteraction.j
 import GiveawayManager from '../functions/update/giveaway/manager.giveaway.js'
 import Experience from './modules/Experience.js'
 import Logomarca from './games/Logomarca.js'
+import TwitchManager from '../functions/update/twitch/twitch.manager.js'
 
 export {
     Models,
@@ -29,5 +30,6 @@ export {
     SelectMenuInteraction,
     GiveawayManager,
     Experience,
-    Logomarca
+    Logomarca,
+    TwitchManager
 }
