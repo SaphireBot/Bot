@@ -2,6 +2,7 @@ import { SaphireClient as client, Database } from '../../classes/index.js'
 import votePoll from '../classes/buttons/poll/vote.poll.js'
 import availableEmojis from './system/emojis.reactions.js'
 import executeStars from './system/execute.stars.js'
+const onCooldown = {}
 
 client.on('messageReactionAdd', async (MessageReaction, user) => {
 
@@ -19,8 +20,17 @@ client.on('messageReactionAdd', async (MessageReaction, user) => {
 
     if (emojiName === '⭐' && MessageReaction.count >= 2) {
         const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
-        if (guildData?.Stars?.channel && !guildData.Stars?.sended?.some(data => data.messageId == message.id))
-            executeStars({ MessageReaction, user, guildData, client })
+        if (guildData?.Stars?.channel && !guildData.Stars?.sended?.some(data => data.messageId == message.id)) {
+            if (onCooldown[message.channelId]) {
+                setTimeout(() => {
+                    executeStars({ MessageReaction, user, guildData, client })
+                    delete onCooldown[message.channelId]
+                }, 2000)
+            } else {
+                onCooldown[message.channelId] = true
+                executeStars({ MessageReaction, user, guildData, client })
+            }
+        }
     }
 
     if (message.author.id !== client.user.id || !message.interaction) return

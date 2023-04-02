@@ -15,12 +15,7 @@ export default {
             autocomplete: true
         }
     ],
-    helpData: {
-        color: '',
-        description: '',
-        permissions: [],
-        fields: []
-    },
+    helpData: {},
     async execute({ interaction, client }, commandData, isBack = false) {
 
         const { options } = interaction
@@ -38,8 +33,8 @@ export default {
 
         if (!guild)
             return isBack
-            ? await interaction.update({ content: `${e.DenyX} | Nenhum servidor foi encontrado.`, embeds: [], components: [], fetchReply: true }).catch(() => { })
-            : await interaction.reply({ content: `${e.DenyX} | Nenhum servidor foi encontrado.`, fetchReply: true })
+                ? await interaction.update({ content: `${e.DenyX} | Nenhum servidor foi encontrado. Talvez eu não esteja nele.`, embeds: [], components: [], fetchReply: true }).catch(() => { })
+                : await interaction.editReply({ content: `${e.DenyX} | Nenhum servidor foi encontrado. Talvez eu não esteja nele.`, fetchReply: true }).catch(() => { })
 
         await guild.fetch()
 
