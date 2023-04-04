@@ -25,6 +25,12 @@ Object.defineProperty(String.prototype, 'isUrl', {
     }
 })
 
+Object.defineProperty(String.prototype, 'isAlphanumeric', {
+    get: function () {
+        return /^\w+$/.test(this);
+    }
+})
+
 String.prototype.random = function (times = 0, repeat = false) {
 
     if (times > 0) {

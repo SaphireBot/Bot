@@ -1,4 +1,4 @@
-import { SaphireClient as client } from "../../../../classes/index.js"
+import { Database, TwitchManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e, Byte } from "../../../../util/util.js"
 import { ButtonStyle, version as DiscordJsVersion } from 'discord.js'
 import { Config } from "../../../../util/Constants.js"
@@ -106,6 +106,9 @@ export default async (interaction, commandData) => {
             `Coé ${userTag},`
         ].random()
 
+        const clientData = await Database.Client.findOne({ id: client.user.id }, 'TwitchNotifications')
+        const TwitchNotifications = (clientData?.TwitchNotifications || 0) + TwitchManager.notifications
+        
         const embed = {
             color: client.blue,
             title: `🔎 Minhas Informações Técnicas`,
@@ -127,7 +130,11 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: '🛰️ Informações Gerais',
-                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nTwitch: ${client.twitchNotifications} Notificações Enviadas\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
+                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
+                },
+                {
+                    name: `${e.twitch} Gerenciador da Twitch Notification System`,
+                    value: `\`\`\`txt\nStreamers: ${TwitchManager.streamers.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${TwitchManager.streamersOnline.length}\nStreamers Offline: ${TwitchManager.streamersOffline.length}\nServidores Registrados: ${TwitchManager.allGuildsID.length}\nRequisições em Espera: ${TwitchManager.awaitingRequests}\n\`\`\``
                 },
                 {
                     name: `${e.discloud} Máquina de Hospedagem`,

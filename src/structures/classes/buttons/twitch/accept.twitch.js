@@ -73,7 +73,7 @@ export default async (interaction, commandData) => {
             }
         )
 
-        TwitchManager.removeChannel(streamer, channelId)
+        TwitchManager.removeChannel(streamer, hasConfig?.channelId)
         Database.Cache.General.push(`channelsNotified.${streamer}`, cId => cId == channelId)
 
         if (TwitchManager.channelsNotified[streamer]?.length)
@@ -90,7 +90,7 @@ export default async (interaction, commandData) => {
             }
         }
     )
-        .then(() => {
+        .then(async () => {
             interaction.update({
                 content: `${e.Check} | YEEES! Tudo certo. De agora em diante, eu vou avisar no canal ${channel} sempre que o streamer **${streamer}** entrar em live${roleId ? ` e marcar o cargo <@&${roleId}>` : ''}, ok?\n${e.Warn} | Não se esqueça, posso demorar de 5 segundos a 10 minutos para enviar a notificação. Tudo depende de como a Twitch acordou hoje.`,
                 components: []
@@ -99,6 +99,13 @@ export default async (interaction, commandData) => {
             if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
             if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
             TwitchManager.data[streamer].push(channelId)
+
+            if (TwitchManager.channelsNotified[streamer]?.includes(channelId))
+                TwitchManager.channelsNotified[streamer].splice(
+                    TwitchManager.channelsNotified[streamer].findIndex(cId => cId == channelId), 1
+                )
+
+            await Database.Cache.General.pull(`channelsNotified.${streamer}`, channelId)
 
             if (roleId)
                 TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId

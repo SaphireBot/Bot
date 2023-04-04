@@ -21,7 +21,7 @@ export default async interaction => {
             {
                 color: 0x9c44fb,
                 title: `${e.Notification} Informações do Comando/Sistema Twitch`,
-                description: `Este sistema permite que você receba notificações aqui no servidor toda vez que o seu streamer favorito entrar em live na Twitch.\nDesde a última vez que eu reiniciei, eu já enviei ${client.twitchNotifications} notificações.`,
+                description: `Este sistema permite que você receba notificações aqui no servidor toda vez que o seu streamer favorito entrar em live na Twitch.`,
                 fields: [
                     {
                         name: '📝 Campo Streamer (Obrigatório)',

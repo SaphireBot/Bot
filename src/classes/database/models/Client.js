@@ -9,6 +9,7 @@ export default model("Client", new Schema({
     },
     Timeouts: { RestoreDividas: Number },
     ComandosUsados: Number,
+    TwitchNotifications: Number,
     CommandsCount: Object,
     TwitchStreamers: Object,
     Cache: Object,

@@ -70,11 +70,10 @@ export default async () => {
     await QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
-    await TwitchManager.load()
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
     Config.webhookAnimeReporter = await webhook(Config.quizAnimeAttachmentChannel)
     Config.webhookQuizReporter = await webhook(Config.questionSuggestionsSave)
-    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks/Quiz/Twitch Loaded')
+    console.log('11/14 - Cantadas/Memes/Lembretes/Fanarts/Webhooks/Quiz Loaded')
 
     console.log(`12/14 - Connected at Shard ${client.shardId}`)
     import('../../api/app.js')
@@ -88,5 +87,6 @@ export default async () => {
         status: 'idle'
     })
 
+    TwitchManager.load()
     return client.calculateReload()
 }
