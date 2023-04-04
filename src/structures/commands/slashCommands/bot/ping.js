@@ -1,5 +1,5 @@
 import { Discloud, SaphireClient as client } from "../../../../classes/index.js"
-import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
+import { ApplicationCommandOptionType, ButtonStyle, codeBlock } from "discord.js"
 import axios from "axios"
 import mongoose from "mongoose"
 
@@ -116,18 +116,17 @@ export default {
         }).catch(() => { })
 
         async function pingShard() {
-            const shardPings = client.ws.shards
-                .map((shard, i) => `\`${i + 1}\` ${emojiFormat(shard.ping)}`)
-                .join('\n')
 
-            const data = {
+            const shards = []
+
+            for (const shard of client.ws.shards.values())
+                shards.push(`${shard.id == client.shardId ? `${shard.id}⭐` : shard.id} | ${shard.ping}ms | Guilds: ${shard.manager.client.guilds.cache.size} | Users: ${shard.manager.client.users.cache.size} | Cluster: ${shard.manager.client.clusterName}`)
+
+                const data = {
                 embeds: [{
                     color: client.blue,
                     title: `🧩 ${client.user.username}'s Shards`,
-                    description: `${shardPings || 'Nenhum resultado encontrado'}`,
-                    footer: {
-                        text: `${client.shard.count} Shards at Cluster ${client.clusterName}`
-                    }
+                    description: codeBlock('txt', shards.join('\n'))
                 }],
                 components: [
                     {
