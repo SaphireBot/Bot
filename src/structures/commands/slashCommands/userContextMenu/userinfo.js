@@ -31,7 +31,7 @@ export default {
         if (member) {
             memberData.joinedAt = Date.Timestamp(member.joinedAt, 'F', true)
             memberData.joinedTimestamp = Date.Timestamp(member.joinedAt, 'R', true)
-            memberData.onwer = (guild.ownerId === user.id) ? '\`Sim\`' : '\`Não\`'
+            memberData.onwer = guild.ownerId === user.id ? '\`Sim\`' : '\`Não\`'
             memberData.adm = member.permissions.toArray().includes(DiscordPermissons.Administrator) ? '\`Sim\`' : '\`Não\`'
             memberData.associado = member.pending ? '\`Não\`' : '\`Sim\`'
             memberData.premiumSince = member.premiumSinceTimestamp ? `\n${e.Boost} Booster ${Date.Timestamp(member.premiumSince, 'R', true)}` : ''
@@ -64,7 +64,7 @@ export default {
                 fields: [
                     {
                         name: '🔰 Servidor',
-                        value: `✏️ Nome no servidor: ${member?.displayName}\n${e.OwnerCrow} Dono: ${memberData?.onwer}\n${e.ModShield} Administrador: ${memberData?.adm}\n🎨 Cor: \`${member?.displayHexColor}\`\n🤝 Associado: ${memberData?.associado}${memberData?.premiumSince}\n📅 Entrada: ${memberData?.joinedAt}\n⏱️ Membro ${memberData?.joinedTimestamp}`
+                        value: `✏️ Nome no servidor: ${member?.displayName || user.username}\n${e.OwnerCrow} Dono: ${memberData?.onwer || 'Não'}\n${e.ModShield} Administrador: ${memberData?.adm || 'Não'}\n🎨 Cor: \`${member?.displayHexColor || "#000000"}\`\n🤝 Associado: ${memberData?.associado || "Não"}${memberData?.premiumSince || ''}\n📅 Entrada: ${memberData?.joinedAt || 'Dia 0'}\n⏱️ Membro ${memberData?.joinedTimestamp || '0 Segundos'}`
                     },
                     {
                         name: '@ Cargos',
