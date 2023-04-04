@@ -1,6 +1,6 @@
 {
   "name": "saphire",
-  "version": "3.5.5",
+  "version": "3.5.6",
   "description": "a little giant bot",
   "main": "shard.js",
   "type": "module",
