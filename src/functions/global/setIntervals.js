@@ -1,4 +1,5 @@
-import { Database } from '../../classes/index.js'
+import { Routes } from 'discord.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 import PollManager from '../update/polls/poll.manager.js'
 
 const pollInterval = () => setInterval(async () => {
@@ -11,6 +12,23 @@ const pollInterval = () => setInterval(async () => {
             return await PollManager.cancel(poll)
 
 }, 5000)
+
+setInterval(() => {
+    const toSendData = client.messagesToSend.slice(0, 40)
+
+    if (toSendData.length) {
+        for (const { content, embeds, components, channelId } of toSendData) {
+            client.rest.post(Routes.channelMessages(channelId), {
+                body: { content, embeds, components }
+            }).catch(() => { })
+            continue;
+        }
+
+        client.messagesToSend.splice(0, toSendData.length)
+    }
+
+    return
+}, 2000)
 
 setInterval(async () => await Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
 

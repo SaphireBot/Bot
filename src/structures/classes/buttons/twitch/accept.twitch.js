@@ -62,25 +62,14 @@ export default async (interaction, commandData) => {
             components: []
         }).catch(() => { })
 
-    if (hasConfig) {
-
-        await Database.Guild.updateOne(
-            { id: guild.id },
-            {
-                $pull: {
-                    TwitchNotifications: { streamer: streamer }
-                }
+    await Database.Guild.updateOne(
+        { id: guild.id },
+        {
+            $pull: {
+                TwitchNotifications: { streamer: streamer }
             }
-        )
-
-        TwitchManager.removeChannel(streamer, hasConfig?.channelId)
-        Database.Cache.General.push(`channelsNotified.${streamer}`, cId => cId == channelId)
-
-        if (TwitchManager.channelsNotified[streamer]?.length)
-            TwitchManager.channelsNotified[streamer].splice(
-                TwitchManager.channelsNotified[streamer].findIndex(cId => cId == channelId), 1
-            )
-    }
+        }
+    )
 
     return Database.Guild.updateOne(
         { id: guild.id },
@@ -96,16 +85,13 @@ export default async (interaction, commandData) => {
                 components: []
             }).catch(() => { })
 
+            TwitchManager.removeChannel(streamer, hasConfig?.channelId)
             if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
             if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
+           
             TwitchManager.data[streamer].push(channelId)
-
-            if (TwitchManager.channelsNotified[streamer]?.includes(channelId))
-                TwitchManager.channelsNotified[streamer].splice(
-                    TwitchManager.channelsNotified[streamer].findIndex(cId => cId == channelId), 1
-                )
-
-            await Database.Cache.General.pull(`channelsNotified.${streamer}`, channelId)
+            TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, hasConfig?.channelId, null].includes(cId)) || []
+            await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
 
             if (roleId)
                 TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId

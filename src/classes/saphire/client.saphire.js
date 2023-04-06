@@ -163,6 +163,11 @@ export default new class SaphireClient extends Client {
             accumulate: 0
         }
 
+        /**
+         * @returns Messages to send
+         */
+        this.messagesToSend = []
+
     }
 
     /**
@@ -294,5 +299,11 @@ export default new class SaphireClient extends Client {
         return await this.rest.get(Routes.channelMessage(channelId, messageId))
             .then(() => messageLink(channelId, messageId))
             .catch(() => null)
+    }
+
+    async postMessage({ content = null, embeds = [], components = [], channelId = null }) {
+        if (!content && !embeds.length && !components.length && !channelId) return
+        this.messagesToSend.push({ content, embeds, components, channelId })
+        return
     }
 }

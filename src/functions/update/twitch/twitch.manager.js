@@ -1,6 +1,5 @@
-import { Routes, time } from "discord.js"
+import { time } from "discord.js"
 import { Database, SaphireClient as client } from "../../../classes/index.js"
-import { setTimeout as sleep } from 'node:timers/promises'
 import { Emojis as e } from "../../../util/util.js"
 import timeMs from "../../plugins/timeMs.js"
 
@@ -14,7 +13,6 @@ export default new class TwitchManager {
         this.streamersOffline = [] // ['cellbit']
         this.streamersOnline = [] // ['alanzoka']
         this.allGuildsID = [] // [..., '123', ...]
-        this.toSendNotifications = [] // [..., { channelId: '123', content: 'adc', embeds: [...] }, ...]
         this.streamersOnChecking = 0
         this.requests = 0
         this.sendMessagesRequests = 0
@@ -26,7 +24,6 @@ export default new class TwitchManager {
     async load() {
 
         await this.refreshStreamersCache()
-
         this.notifications = Array.from(new Set(Object.values(this.channelsNotified).flat())).length
 
         const allData = await Database.Guild.find(
@@ -46,6 +43,7 @@ export default new class TwitchManager {
             if (!this.streamers.includes(data.streamer))
                 this.streamers.push(data.streamer)
 
+            this.data[data.streamer] = this.data[data.streamer].filter(channelId => !this.channelsNotified[data.streamer]?.includes(channelId))
             await client.channels.fetch(data.channelId)
                 .then(() => {
                     if (!this.data[data.streamer].includes(data.channelId))
@@ -57,18 +55,17 @@ export default new class TwitchManager {
                     this.customMessage[`${data.streamer}_${data.channelId}`] = data.message
                 })
                 .catch(err => {
-                    // Unknown Channel
-                    if (err.code == 10003) return this.deleteChannelFromTwitchNotification(data.channelId)
+                    // Unknown Channel - Missing Permissions
+                    if ([50001, 100003].includes(err.code)) return this.deleteChannelFromTwitchNotification(data.channelId)
                     return null
                 })
 
             continue
         }
 
-        this.streamer = Array.from(new Set(this.streamer))
+        this.streamers = Array.from(new Set(this.streamers)).filter(i => i)
         this.checkStreamersStatus()
         this.intervals()
-        this.sendNotification()
         return
     }
 
@@ -95,22 +92,9 @@ export default new class TwitchManager {
         return
     }
 
-    async switchStatus(streamer, status) {
-
-        if (!isNaN(status) || status > 0)
-            if (this.data[streamer]?.length) {
-                this.notifyAllChannels(streamer, status)
-                return
-            }
-
-        this.streamersOnChecking--
-        return
-    }
-
     async isOnline(streamer) {
 
         const status = await this.checkIfStreamerIsOnline(streamer) // 'delete' | 'offline' | 'online'
-
         if (!status) {
             this.streamersOnChecking--
             return
@@ -138,8 +122,13 @@ export default new class TwitchManager {
             const channelsToNotifier = this.channelsNotified[streamer] || []
             this.channelsNotified[streamer] = []
 
-            for (const channelId of channelsToNotifier)
-                this.toSendNotifications.push({ streamer, channelId, embeds: [], content: `${e.Notification} | **${streamer}** não está mais online.`, isAfkNotification: true })
+            for (const channelId of channelsToNotifier) {
+                client.postMessage({
+                    channelId,
+                    content: `${e.Notification} | **${streamer}** não está mais online.`
+                })
+                this.notificationSended()
+            }
         }
 
         if (!this.streamersOffline.includes(streamer)) {
@@ -153,22 +142,19 @@ export default new class TwitchManager {
 
     async streamerIsOnline(streamer, status) {
 
-        if (this.streamersOnline.includes(streamer))
-            return this.switchStatus(streamer, status)
-        else this.streamersOnline.push(streamer)
-
         if (this.streamersOffline.includes(streamer))
             this.streamersOffline = this.streamersOffline.filter(str => str != streamer)
 
         await Database.Cache.General.push('StreamersOnline', streamer)
         await Database.Cache.General.pull('StreamersOffline', str => [streamer, null].includes(str))
 
-        if (!this.data[streamer]?.length) {
-            this.streamersOnChecking--
-            return
-        }
+        if (!this.streamersOnline.includes(streamer))
+            this.streamersOnline.push(streamer)
 
-        await this.notifyAllChannels(streamer, status)
+        if (this.data[streamer]?.length)
+            return await this.notifyAllChannels(streamer, status)
+
+        this.streamersOnChecking--
         return
     }
 
@@ -178,21 +164,20 @@ export default new class TwitchManager {
             return
         }
 
-        const channelsId = this.data[streamer]
+        const channelsId = this.data[streamer] || []
         if (!channelsId.length) {
             this.streamersOnChecking--
             return
         }
 
         const embed = await this.getEmbedData(streamer, status)
+        let alreadySended = []
+        this.data[streamer] = this.data[streamer].filter(cId => !this.channelsNotified[streamer]?.includes(cId))
 
         for (const channelId of this.data[streamer]) {
 
-            if (
-                this.toSendNotifications
-                    .some(data => data.streamer == streamer && data.channelId == channelId)
-            )
-                continue
+            if (alreadySended.includes(channelId)) continue
+            alreadySended.push(channelId)
 
             let content = undefined
             let role = undefined
@@ -203,13 +188,12 @@ export default new class TwitchManager {
             if (this.customMessage[`${streamer}_${channelId}`]?.length)
                 content = this.customMessage[`${streamer}_${channelId}`]
 
-            this.data[streamer].splice(
-                this.data[streamer].findIndex(cId => cId == channelId), 1
-            )
-
-            this.toSendNotifications.push({
-                channelId,
-                streamer,
+            this.notifications++
+            this.notificationInThisSeason++
+            this.notificationSended(streamer, channelId)
+            this.removeChannel(streamer, channelId)
+            client.postMessage({
+                channelId: channelId,
                 content: content || role || `${e.Notification} | ${embed.onlineText}`,
                 embeds: [embed]
             })
@@ -220,46 +204,12 @@ export default new class TwitchManager {
         return
     }
 
-    async sendNotification() {
-
-        const toSendData = this.toSendNotifications.slice(0, 30)
-
-        if (toSendData.length) {
-            for (const data of toSendData) {
-
-                if (this.channelsNotified[data.streamer]?.includes(data.channelId))
-                    continue
-
-                client.rest.post(Routes.channelMessages(data.channelId), {
-                    body: { content: data.content, embeds: data.embeds }
-                })
-                    .then(() => {
-                        this.notifications++
-                        this.notificationInThisSeason++
-                        if (!data.isAfkNotification) this.notificationSended(data.streamer, data.channelId)
-                        return
-                    })
-                    .catch(err => {
-                        this.sendMessagesRequests++
-                        // Unknown Channel - Missing Access
-                        if ([50001, 100003].includes(err.code)) return this.deleteChannelFromTwitchNotification(data.channelId)
-                        return
-                    })
-                continue;
-            }
-
-            this.toSendNotifications.splice(0, toSendData.length)
-        }
-
-        setTimeout(() => this.sendNotification(), 1000 * 2)
-        return
-    }
-
     async notificationSended(streamer, channelId) {
+
         this.sendMessagesRequests++
-        if (!streamer) return
+        if (!streamer || !channelId) return
         if (!this.channelsNotified[streamer]) this.channelsNotified[streamer] = []
-        if (!this.channelsNotified[streamer].includes(channelId)) this.channelsNotified[streamer].push(channelId)
+        this.channelsNotified[streamer].push(channelId)
         await Database.Cache.General.push('StreamersOnline', streamer)
         await Database.Cache.General.push(`channelsNotified.${streamer}`, channelId)
         return
@@ -277,7 +227,6 @@ export default new class TwitchManager {
 
         return await fetch(url)
             .then(res => {
-
                 if (res.status == 429) {
                     this.requests = 100
                     return this.awaiting(url)
@@ -424,20 +373,18 @@ export default new class TwitchManager {
     async refreshStreamersCache() {
         const StreamersOnline = await Database.Cache.General.get('StreamersOnline') || []
         const StreamersOffline = await Database.Cache.General.get('StreamersOffline') || []
+        const channelsNotified = await Database.Cache.General.get('channelsNotified') || {}
         this.streamersOnline = Array.from(new Set(StreamersOnline)).filter(i => i)
         this.streamersOffline = Array.from(new Set(StreamersOffline)).filter(i => i)
-        await Database.Cache.General.set('StreamersOnline', this.streamersOnline) || []
-        await Database.Cache.General.set('StreamersOffline', this.streamersOffline) || []
+        for (let streamer of this.streamers) {
+            if (!channelsNotified[streamer]) channelsNotified[streamer] = []
+            channelsNotified[streamer] = Array.from(new Set(channelsNotified[streamer])).filter(i => i)
+        }
+        this.channelsNotified = channelsNotified
 
-        if (this.streamers.length)
-            for (const streamer of this.streamers) {
-                if (this.data[streamer]?.length) {
-                    await Database.Cache.General.set(`channelsNotified.${streamer}`, Array.from(new Set(this.data[streamer])).filter(i => i))
-                    this.data[streamer] = Array.from(new Set(this.data[streamer])).filter(i => i)
-                }
-            }
-
-        this.channelsNotified = await Database.Cache.General.get('channelsNotified') || {}
+        await Database.Cache.General.set('channelsNotified', this.channelsNotified)
+        await Database.Cache.General.set('StreamersOnline', this.streamersOnline)
+        await Database.Cache.General.set('StreamersOffline', this.streamersOffline)
         return
     }
 
@@ -447,6 +394,7 @@ export default new class TwitchManager {
 
         setInterval(() => this.sendMessagesRequests = 0, 1000 * 5)
         setInterval(() => this.requests = 0, 1000 * 60)
+
         return
     }
 
