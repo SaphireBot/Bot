@@ -1,5 +1,4 @@
 import express from 'express'
-import axios from 'axios'
 import { SaphireClient as client } from '../classes/index.js'
 import { Emojis as e } from '../util/util.js'
 import os from 'os'
@@ -106,7 +105,7 @@ async function alertLogin(host) {
     return process.exit(10)
   }
 
-  console.log('13/14 - Saphire\'s Local API Connected')
+  console.log('Local API Connected')
 
   return await client.sendWebhook(
     process.env.WEBHOOK_STATUS,
@@ -115,6 +114,7 @@ async function alertLogin(host) {
       content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
     }
   )
-    .then(() => console.log('14/14 - Saphire\'s API Connected'))
+    .then(() => console.log('Saphire\'s API Connected'))
+    .catch(err => console.log('Failed to Connected With Saphire\'s API - ' + err))
 
 }

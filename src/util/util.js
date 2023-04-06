@@ -4,7 +4,6 @@ import Byte from './Bytes.js'
 import { readFileSync } from 'fs'
 
 const SaphireClientOptions = {
-    shards: 'auto',
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,

@@ -1,10 +1,9 @@
 import { Database, Experience, SaphireClient as client } from '../../classes/index.js'
 import Ranking from './ranking/index.ranking.js'
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async () => {
 
-    await Ranking()
+    Ranking()
     client.refreshStaff()
 
     setInterval(async () => {
@@ -23,12 +22,16 @@ export default async () => {
     }, 1000 * 60)
 
     setInterval(async () => {
-        await client.guilds.all(false, true)
-        delay(5000)
+
+        const guilds = await client.shard.broadcastEval(Client => Client.guilds.cache.size).catch(() => null)
+        if (!guilds || !guilds?.length || !Array.isArray(guilds)) return
+        const size = guilds.reduce((prev, cur) => prev += cur, 0)
+
         client.user.setPresence({
             activities: [
-                { name: `${client.slashCommands.size} comandos em ${client.allGuilds?.length || 0} servidores\n[Shard ${client.shardId + 1}/${client.ws.shards.size} in Cluster ${client.clusterName}]` }],
-            status: 'idle'
+                { name: `${client.slashCommands.size} comandos em ${size} servidores\n[Shard ${client.shardId + 1}/${client.shard.count} in Cluster ${client.clusterName}]` }],
+            status: 'idle',
+            shardId: client.shardId
         })
     }, 1000 * 60 * 5)
 

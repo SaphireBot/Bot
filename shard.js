@@ -1,20 +1,21 @@
 import 'dotenv/config'
-import { ShardManager as Shard } from './src/classes/index.js'
+import ShardManager from './src/classes/saphire/manager.shard.js'
 import Statcord from 'statcord.js'
+import { execArgv } from 'process'
 // TODO: ATUALIZAR O STATCORD NO SISTEMA PRINCIPAL
 const { ShardingClient } = Statcord
 
-const ShardManager = new Shard('./index.js')
+const Shard = new ShardManager('./index.js', { execArgv, totalShards: 2, respawn: true })
 
 new ShardingClient({
     key: process.env.STATCORD_TOKEN,
-    manager: ShardManager,
+    manager: Shard,
     postCpuStatistics: true,
     postMemStatistics: true,
     postNetworkStatistics: true,
     autopost: true
 })
 
-ShardManager.spawn({ amount: 'auto' })
+Shard.spawn({ timeout: 1000 * 60 })
 
-export default ShardManager
+export default Shard

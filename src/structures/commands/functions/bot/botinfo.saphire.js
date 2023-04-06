@@ -63,16 +63,42 @@ export default async (interaction, commandData) => {
         timeouts.push(interaction.user.id)
         awaiting[interaction.user.id] = true
 
+        const shard = await client.shard.broadcastEval(shard => ({
+            allUsers: shard.users.cache.size,
+            allGuilds: shard.guilds.cache.size,
+            allChannels: shard.channels.cache.size,
+            allEmojis: shard.emojis.cache.size
+        }))
+            .catch(() => ([{
+                allUsers: client.users.cache.size,
+                allGuilds: client.guilds.cache.size,
+                allChannels: client.channels.cache.size,
+                allEmojis: client.emojis.cache.size
+            }]))
+
+        const shardData = shard.reduce((prev, cur) => {
+            prev.allUsers += cur.allUsers
+            prev.allGuilds += cur.allGuilds
+            prev.allChannels += cur.allChannels
+            prev.allEmojis += cur.allEmojis
+            return prev
+        }, {
+            allUsers: 0,
+            allGuilds: 0,
+            allChannels: 0,
+            allEmojis: 0,
+        })
+
         const data = {
             developer: await client.users.fetch(Config.ownerId || '0').then(user => `${user.tag} - ${Config.ownerId}`).catch(() => `Rody#1000 - ${Config.ownerId}`),
             usersShardInCache: client.users.cache.size || 0,
             guildsShardInCache: client.guilds.cache.size || 0,
             channelsShardInCache: client.channels.cache.size || 0,
             emojisShardInCache: client.emojis.cache.size || 0,
-            allUsers: (await client.shard.broadcastEval(shard => shard.users.cache.size)).reduce((prev, acc) => prev + acc, 0),
-            allGuilds: (await client.shard.broadcastEval(shard => shard.guilds.cache.size)).reduce((prev, acc) => prev + acc, 0),
-            allChannels: (await client.shard.broadcastEval(shard => shard.channels.cache.size)).reduce((prev, acc) => prev + acc, 0),
-            allEmojis: (await client.shard.broadcastEval(shard => shard.emojis.cache.size)).reduce((prev, acc) => prev + acc, 0),
+            allUsers: shardData.allUsers,
+            allGuilds: shardData.allGuilds,
+            allChannels: shardData.allChannels,
+            allEmojis: shardData.allEmojis,
             version: client.moonId == client.user.id ? 'Saphire' : 'Canary',
             uptime: Date.stringDate(client.uptime),
             ping: `${client.ws.ping}ms`,
@@ -108,7 +134,7 @@ export default async (interaction, commandData) => {
 
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'TwitchNotifications')
         const TwitchNotifications = (clientData?.TwitchNotifications || 0) + TwitchManager.notifications
-        
+
         const embed = {
             color: client.blue,
             title: `🔎 Minhas Informações Técnicas`,
@@ -116,7 +142,7 @@ export default async (interaction, commandData) => {
             fields: [
                 {
                     name: '📜 Números do Cliente Atual',
-                    value: `\`\`\`txt\nShard: ${client.shardId + 1}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
+                    value: `\`\`\`txt\nShard: ${client.shardId}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
                     inline: true
                 },
                 {

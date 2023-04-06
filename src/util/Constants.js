@@ -3,6 +3,7 @@ const ConfigurationBase = {
     designerId: "830226550116057149",
     clientId: "837147659898191902",
     saphireApiId: "1035037311907405834",
+    statusChannelNotification: "1036298713691328614",
     quizAnimeAttachmentChannel: "1076890989395984454",
     guildId: "952214872584749056",
     guildPackageId: "882475447387054081",

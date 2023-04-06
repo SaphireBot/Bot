@@ -2,7 +2,6 @@ import { Models } from './database/Models.js'
 import Database from './database/Database.js'
 import SaphireClient from './saphire/client.saphire.js'
 import Discloud from './discloud/discloud.js'
-import ShardManager from './saphire/manager.shard.js'
 import Autocomplete from '../structures/classes/Autocomplete.js'
 import Base from '../structures/classes/Base.js'
 import Modals from '../structures/classes/Modals.js'
@@ -20,7 +19,6 @@ export {
     Database,
     SaphireClient,
     Discloud,
-    ShardManager,
     Autocomplete,
     Base,
     Modals,

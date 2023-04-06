@@ -28,7 +28,6 @@ export default new class CacheManager extends Cache {
         await this.Polls.delete(shardId)
         await this.Logomarca.delete(shardId)
         await this.Running.delete(shardId)
-        await this.Ranking.deleteAll()
         await this.General.delete('Looped')
         await this.General.set(`${shardId}.AudityLogsId`, [])
         await this.General.set(`${shardId}.lastClick`, [])

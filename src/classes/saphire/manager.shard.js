@@ -1,12 +1,8 @@
 import { ShardingManager } from 'discord.js'
 
-/**
- * @type {ShardingManager.ShardingManagerOptions}
- */
-
 export default class ShardManager extends ShardingManager {
-    constructor(filePath) {
-        super(filePath, { respawn: false, execArgv: process.execArgv })
+    constructor(filePath, options) {
+        super(filePath, options)
     }
 
     /**

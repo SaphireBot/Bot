@@ -1,5 +1,5 @@
 import { Discloud, SaphireClient as client } from "../../../../classes/index.js"
-import { ApplicationCommandOptionType, ButtonStyle, codeBlock } from "discord.js"
+import { ApplicationCommandOptionType, ButtonStyle, codeBlock, Status } from "discord.js"
 import axios from "axios"
 import mongoose from "mongoose"
 
@@ -29,7 +29,6 @@ export default {
     async execute({ interaction, e }, commandData) {
 
         const toRefresh = commandData?.c
-
         if (commandData?.src === 'shard') return pingShard()
 
         if (!toRefresh)
@@ -90,7 +89,7 @@ export default {
         if (result > 100) result = 100
 
         return await interaction.editReply({
-            content: `🧩 | **Shard ${client.shard.ids[0] + 1}/${client.shard.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)} - (${result.toFixed(2)}%)\n${hourRemaingBattery.emoji} | ${Date.stringDate(client.twoAm - Date.now())} para o reinício\n${e.slash} | ${client.interactions.currency() || 0} interações com ${client.messages.currency() || 0} mensagens\n⚡ | Interaction Response: ${emojiFormat(replayPing)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${requests}`,
+            content: `🧩 | **Shard ${client.shardId + 1}/${client.shard?.count || 0} at Cluster ${client.clusterName}**\n⏱️ | ${Date.stringDate(client.uptime)} - (${result.toFixed(2)}%)\n${hourRemaingBattery.emoji} | ${Date.stringDate(client.twoAm - Date.now())} para o reinício\n${e.slash} | ${client.interactions.currency() || 0} interações com ${client.messages.currency() || 0} mensagens\n⚡ | Interaction Response: ${emojiFormat(replayPing)}\n${e.discordLogo} | Discord API Latency: ${emojiFormat(client.ws.ping)}\n${requests}`,
             embeds: [],
             components: [
                 {
@@ -109,6 +108,13 @@ export default {
                             emoji: "🔎",
                             custom_id: JSON.stringify({ c: 'botinfo', userId: interaction.user.id }),
                             style: ButtonStyle.Primary
+                        },
+                        {
+                            type: 2,
+                            label: 'Shards',
+                            emoji: '🧩',
+                            custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
+                            style: ButtonStyle.Primary
                         }
                     ]
                 }
@@ -119,25 +125,68 @@ export default {
 
             const shards = []
 
-            for (const shard of client.ws.shards.values())
-                shards.push(`${shard.id == client.shardId ? `${shard.id}⭐` : shard.id} | ${shard.ping}ms | Guilds: ${shard.manager.client.guilds.cache.size} | Users: ${shard.manager.client.users.cache.size} | Cluster: ${shard.manager.client.clusterName}`)
+            const shardsData = await client.shard.broadcastEval(shard => ({
+                id: shard.shardId,
+                ping: shard.ws.ping,
+                guilds: shard.guilds.cache.size,
+                users: shard.users.cache.size,
+                clusterName: shard.clusterName,
+                status: shard.ws.status
+            }))
+                .catch(() => ([{
+                    id: client.shardId,
+                    ping: client.ws.ping,
+                    guilds: client.guilds.cache.size,
+                    users: client.users.cache.size,
+                    clusterName: client.clusterName,
+                    status: client.ws.status
+                }]))
+
+            shardsData.length = client.shard.count
+            for (let i = 0; i < shardsData.length; i++) {
+                const shard = shardsData[i]
 
                 const data = {
-                embeds: [{
-                    color: client.blue,
-                    title: `🧩 ${client.user.username}'s Shards`,
-                    description: codeBlock('txt', shards.join('\n'))
-                }],
+                    id: (shard?.id ?? i) + 1,
+                    status: Status[shard?.status] ?? 'Not Connected',
+                    ping: (shard?.ping ?? '0') + 'ms',
+                    guilds: shard?.guilds ?? 0,
+                    users: shard?.users ?? 0,
+                    clusterName: shard?.clusterName ?? 'Not Loaded'
+                }
+
+                shards.push(`${data?.id ?? '?'} | ${data.status} | ${data?.ping || 0} | Guilds: ${data?.guilds || 0} | Users: ${data?.users || 0} | Cluster: ${data?.clusterName || 'Desligado'}`)
+            }
+
+            const data = {
+                content: `Shard ID: ${client.shardId + 1}\n${codeBlock('txt', shards.join('\n') + `\n${shardsData.length !== client.shard.count ? 'Todas as Shards ainda não foram inicializadas' : ''}`)}`,
                 components: [
                     {
                         type: 1,
-                        components: [{
-                            type: 2,
-                            label: 'Atualizar',
-                            emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
-                            style: ButtonStyle.Primary
-                        }]
+                        components: [
+
+                            {
+                                type: 2,
+                                label: 'Atualizar',
+                                emoji: '🔄',
+                                custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
+                                style: ButtonStyle.Primary
+                            },
+                            {
+                                type: 2,
+                                label: 'Bot Info',
+                                emoji: "🔎",
+                                custom_id: JSON.stringify({ c: 'botinfo', userId: interaction.user.id }),
+                                style: ButtonStyle.Primary
+                            },
+                            {
+                                type: 2,
+                                label: 'Ping',
+                                emoji: '🏓',
+                                custom_id: JSON.stringify({ c: 'ping' }),
+                                style: ButtonStyle.Primary
+                            }
+                        ]
                     }
                 ]
             }
