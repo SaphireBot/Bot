@@ -105,7 +105,10 @@ export default {
             }],
             fetchReply: true
         }).catch(() => { })
-
+        return interaction.reply({
+            content: `${e.Warn} | Este serviço está fora por ar por um tempo. As shards estão se comunicando entre sí e para não haver conflitos, o TopGG está desativado. Dentro de 1 ou 2 dias este comando está de volta, ok?`,
+            ephemeral: true
+        })
         return await Database.Cache.General.set(`TopGG.${user.id}`, {
             userId: user.id,
             channelId: channel.id,

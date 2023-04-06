@@ -41,5 +41,5 @@ client.on('shardDisconnect', async (CloseEvent, shardId) => {
         //         content: `${e.Notification} | <@${Config.ownerId}>, a Shard ${shardId} conectou com sucesso.`
         //     }
         // }).catch(err => console.log(err))
-
+        return
     })
