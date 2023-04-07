@@ -159,7 +159,7 @@ export default new class ReminderManager {
     }
 
     async save(user, data) {
-        return new Database
+        new Database
             .Reminder(data)
             .save()
             .then(async doc => {
@@ -196,6 +196,7 @@ export default new class ReminderManager {
                 return doc
             })
             .catch(() => null)
+        return
     }
 
     async show(interaction, reminderId, toEdit) {
