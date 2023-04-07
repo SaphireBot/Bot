@@ -47,7 +47,7 @@ export default async () => {
     await client.setCantadas()
     await client.setMemes()
     await client.refreshStaff()
-    await managerReminder.define()
+    await managerReminder.load()
     await QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []

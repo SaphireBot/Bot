@@ -1,8 +1,8 @@
+import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import { formatString } from '../../functions/plugins/plugins.js'
 import { Colors, ColorsTranslate, Languages } from '../../util/Constants.js'
-import Quiz from '../../classes/games/QuizManager.js'
 import { GiveawayManager } from '../../classes/index.js'
 
 export default class Autocomplete extends Base {

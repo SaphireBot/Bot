@@ -11,9 +11,10 @@ export default new class ReminderManager {
         this.checking = false
     }
 
-    async define() {
+    async load() {
 
-        const AllRemindersData = await Database.Reminder.find({}) || []
+        const remindersFromDatabase = await Database.Reminder.find({}) || []
+        const AllRemindersData = remindersFromDatabase.filter(reminder => client.guilds.cache.has(reminder.guildId)) || []
         if (!AllRemindersData || !AllRemindersData.length) return
 
         for (const data of AllRemindersData) {
