@@ -65,7 +65,6 @@ export default new class Database extends Models {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
-            .then(() => 'Database Connected')
             .catch(err => {
                 console.log('Mongoose Database | FAIL!\n--> ' + err)
                 return process.exit(12)

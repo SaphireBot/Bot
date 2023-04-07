@@ -29,26 +29,24 @@ export default async () => {
     import('../../functions/global/prototypes.js')
 
     await client.login()
-    await Discloud.login()
+    Discloud.login()
 
     // console.log('4/14 - Tentiva de Websocket Connection')
     // client.socket = new Socket(client.shardId || 0).enableListeners()
 
-    await Database.MongoConnect()
-    await slashCommand(client)
-    await Database.Cache.clearTables(`${client.shardId}`)
-
-    await GiveawayManager.setGiveaways()
-
-    await PollManager.set()
+    Database.MongoConnect()
+    slashCommand(client)
+    Database.Cache.clearTables(`${client.shardId}`)
+    GiveawayManager.setGiveaways()
+    PollManager.set()
 
     automaticSystems()
 
-    await client.setCantadas()
-    await client.setMemes()
-    await client.refreshStaff()
-    await managerReminder.load()
-    await QuizManager.load()
+    client.setCantadas()
+    client.setMemes()
+    client.refreshStaff()
+    managerReminder.load()
+    QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
