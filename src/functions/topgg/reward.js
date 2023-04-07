@@ -41,8 +41,7 @@ export default async userId => {
         Routes.channelMessage(data.channelId, data.messageId),
         { body: { embeds: [embed], components: [] } }
     )
-        .then(value => console.log('passou'))
-        .catch(err => console.log(err))
+        .catch(() => { })
 
     async function giveRewards() {
         Experience.add(userId, 1000)
