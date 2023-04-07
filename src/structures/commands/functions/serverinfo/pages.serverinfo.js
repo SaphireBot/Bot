@@ -21,7 +21,7 @@ export default async ({ interaction, customId: commandData, value }) => {
     if (value == 'firstPage')
         return serverinfo.execute({ interaction, client }, commandData, true)
 
-    const guild = await client.guilds.fetch(commandData.id || '0').catch(() => null)
+    const guild = await client.guilds.fetch(commandData.id).catch(async () => await client.getGuild(commandData.id))
 
     if (!guild)
         return interaction.update({

@@ -168,7 +168,7 @@ export default async (interaction, commandData) => {
                 }
             ],
             footer: {
-                text: Timeouts[interaction.user.id] ? `Cooldown: ${Date.stringDate(Timeouts[interaction.user.id])}` : null
+                text: Timeouts[interaction.user.id] ? `Cooldown: ${Date.stringDate(Timeouts[interaction.user.id])} | From Cluster ${client.clusterName}` : null
             }
         }
 

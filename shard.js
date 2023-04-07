@@ -5,7 +5,7 @@ import { execArgv } from 'process'
 // TODO: ATUALIZAR O STATCORD NO SISTEMA PRINCIPAL
 const { ShardingClient } = Statcord
 
-const Shard = new ShardManager('./index.js', { execArgv, totalShards: 2, respawn: true })
+const Shard = new ShardManager('./index.js', { execArgv, totalShards: 3, respawn: true, shardList: [0, 1, 2] })
 
 new ShardingClient({
     key: process.env.STATCORD_TOKEN,

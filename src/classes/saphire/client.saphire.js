@@ -168,6 +168,11 @@ export default new class SaphireClient extends Client {
          */
         this.messagesToSend = []
 
+        /**
+         * @returns All Client Data
+         */
+        // this.shardGuilds = []
+        // this.shardUsers = []
     }
 
     /**
@@ -241,24 +246,11 @@ export default new class SaphireClient extends Client {
             .catch(err => err)
     }
 
-    async getGuild(guildId, newGuild) {
-
-        const guildData = await axios.get(
-            `https://discord.com/api/v10/guilds/${guildId}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bot ${process.env.DISCORD_TOKEN}`
-                }
-            }
-        )
-            .then(g => g.data)
+    async getGuild(guildId) {
+        if (!guildId) return null
+        return await this.rest.get(Routes.guild(guildId))
+            .then(guild => new Guild(this, guild))
             .catch(() => null)
-
-        if (!guildData) return null
-
-        if (newGuild)
-            return new Guild(this, guildData)
     }
 
     calculateReload() {

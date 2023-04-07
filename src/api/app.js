@@ -16,6 +16,7 @@ import rathersFromDB from './functions/rathers.get.js'
 import remindersFromDB from './functions/reminders.get.js'
 import usersFromDB from './functions/users.get.js'
 import quizFromDB from './functions/quiz.get.js'
+import { Config } from '../util/Constants.js'
 
 const hostName = os.hostname()
 const system = {
@@ -107,14 +108,9 @@ async function alertLogin(host) {
 
   console.log('Local API Connected')
 
-  return await client.sendWebhook(
-    process.env.WEBHOOK_STATUS,
-    {
-      username: `[${client.canaryId === client.user.id ? 'Saphire Canary' : 'Saphire'}] Connection Status`,
-      content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
-    }
-  )
-    .then(() => console.log('Saphire\'s API Connected'))
-    .catch(err => console.log('Failed to Connected With Saphire\'s API - ' + err))
+  return client.postMessage({
+    content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`,
+    channelId: Config.statusChannelNotification
+  })
 
 }

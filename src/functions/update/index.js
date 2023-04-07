@@ -23,7 +23,7 @@ export default async () => {
 
     setInterval(async () => {
 
-        const guilds = await client.shard.broadcastEval(Client => Client.guilds.cache.size).catch(() => null)
+        const guilds = await client.shard.broadcastEval(Client => Client.guilds.cache.size).catch(() => [client.guilds.cache.size])
         if (!guilds || !guilds?.length || !Array.isArray(guilds)) return
         const size = guilds.reduce((prev, cur) => prev += cur, 0)
 

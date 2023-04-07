@@ -24,8 +24,7 @@ import { Config } from '../../util/Constants.js'
 export default async () => {
 
     process.env.TZ = "America/Sao_Paulo"
-    await import('./process.saphire.js')
-
+    import('./process.saphire.js')
     import('../../structures/handler/events.handler.js')
     import('../../functions/global/prototypes.js')
 
@@ -55,7 +54,10 @@ export default async () => {
     import('./webhooks.saphire.js').then(file => file.default()).catch(() => { })
     Config.webhookAnimeReporter = await webhook(Config.quizAnimeAttachmentChannel)
     Config.webhookQuizReporter = await webhook(Config.questionSuggestionsSave)
-    console.log(`Connected at Shard ${client.shardId}`)
+
+    // client.shardUsers = await client.shard.fetchClientValues('users.cache')?.then(data => data.flat()).catch(() => client.users.cache)
+    // client.shardGuilds = await client.shard.fetchClientValues('guilds.cache')?.then(data => data.flat()).catch(() => client.guilds.cache)
+    console.log(`Shard ${client.shardId} is ready and was started.`)
 
     if (client.shardId == 0)
         import('../../api/app.js')

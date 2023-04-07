@@ -11,7 +11,7 @@ process.on('uncaughtException', (error, origin) => {
     return uncaughtException(error, origin)
 })
 
-process.on('exit', async code => {
+process.on('exit', code => {
     const reason = {
         1: "Host Disabled Application",
         10: "No host name provided #6815",

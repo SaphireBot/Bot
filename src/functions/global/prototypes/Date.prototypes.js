@@ -50,6 +50,8 @@ Date.prototype.constructor.Timestamp = function (TimeInMs = 0, style, isDate) {
 
 Date.prototype.constructor.format = function (DateInMs = 0, Shorted = false, withDateNow = true) {
 
+    if (isNaN(DateInMs)) return
+
     if (Shorted)
         return new Date(DateInMs + Date.now()).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
 

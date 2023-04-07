@@ -19,7 +19,7 @@ export default {
     async execute({ interaction, client }, commandData, isBack = false) {
 
         const { options } = interaction
-        const guildId = commandData?.id || options.getString('search')
+        const guildId = commandData?.id || options.getString('search') || interaction.guild.id
 
         if (commandData && !isBack) return pagesServerinfo(interaction, commandData)
 
@@ -27,9 +27,7 @@ export default {
             ? await interaction.update({ content: `${e.Loading} | Voltando para o início...`, embeds: [], components: [], fetchReply: true }).catch(() => { })
             : await interaction.reply({ content: `${e.Loading} | Beleza! Carregando...`, fetchReply: true })
 
-        const guild = guildId
-            ? await client.guilds.fetch(guildId || '0').catch(() => null)
-            : interaction.guild
+        const guild = await client.guilds.fetch(guildId).catch(async () => await client.getGuild(guildId))
 
         if (!guild)
             return isBack
@@ -42,6 +40,10 @@ export default {
             bannerURL: guild.discoverySplashURL({ size: 512 }) || guild.bannerURL({ size: 512 }) || null,
             memberCount: guild.memberCount || 0,
             iconURL: guild.iconURL() || null,
+            joinedAt: {
+                first: Date.format(guild.joinedAt?.valueOf(), false, false),
+                second: Date.stringDate(Date.now() - guild.joinedAt?.valueOf(), false)
+            },
             guildOwner: await guild.fetchOwner()
                 .then(member => member.user.tag)
                 .catch(() => guild.members.fetch(guild.ownerId || '0')
@@ -57,12 +59,14 @@ export default {
             {
                 name: '🌟 A Fundação',
                 value: `Nasceu em **\`${Date.format(guild.createdAt.valueOf(), false, false)}\`**\nExiste há **\`${Date.stringDate(Date.now() - guild.createdAt.valueOf())}\`**`
-            },
-            {
-                name: `${e.sleep} Minha Relação Com o Servidor`,
-                value: `Eu não lembro que me chamou para cá, mas eu sei que cheguei em **\`${Date.format(guild.joinedAt.valueOf(), false, false)}\`** e estou aqui a tudo isso de tempo, olha -> **\`${Date.stringDate(Date.now() - guild.joinedAt.valueOf())}\`**`
             }
         ]
+
+        if (guildData.joinedAt.first)
+            fields.push({
+                name: `${e.sleep} Minha Relação Com o Servidor`,
+                value: `Eu não lembro que me chamou para cá, mas eu sei que cheguei em **\`${guildData.joinedAt.first}\`** e estou aqui a tudo isso de tempo, olha -> **\`${guildData.joinedAt.second}\`**`
+            })
 
         if (guild.description)
             fields.push({
@@ -132,6 +136,6 @@ export default {
             }]
         }
 
-        return message.edit(replyContent).catch(() => { })
+        return message?.edit(replyContent).catch(() => { })
     }
 }

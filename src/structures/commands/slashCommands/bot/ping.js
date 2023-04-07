@@ -52,8 +52,8 @@ export default {
             ? await interaction.update({ fetchReply: true, components: [button] })
             : await interaction.reply({ content: `${e.Loading} | Pinging...`, fetchReply: true, embeds: [] })
 
-        const replayPing = Date.now() - interaction.createdAt.valueOf()
         let toSubtract = Date.now()
+        const replayPing = toSubtract - interaction.createdTimestamp
         const calculate = () => Date.now() - toSubtract
 
         const timeResponse = await Promise.all([
@@ -148,11 +148,11 @@ export default {
 
                 const data = {
                     id: (shard?.id ?? i) + 1,
-                    status: Status[shard?.status] ?? 'Not Connected',
+                    status: Status[shard?.status] ?? 'Offline',
                     ping: (shard?.ping ?? '0') + 'ms',
                     guilds: shard?.guilds ?? 0,
                     users: shard?.users ?? 0,
-                    clusterName: shard?.clusterName ?? 'Not Loaded'
+                    clusterName: shard?.clusterName ?? 'Offline'
                 }
 
                 shards.push(`${data?.id ?? '?'} | ${data.status} | ${data?.ping || 0} | Guilds: ${data?.guilds || 0} | Users: ${data?.users || 0} | Cluster: ${data?.clusterName || 'Desligado'}`)

@@ -12,13 +12,6 @@ client.on('shardDisconnect', async (CloseEvent, shardId) => {
     }).catch(() => { })
 
 })
-    .on('shardReconnecting', shardId => {
-        client.rest.post(Routes.channelMessages(Config.statusChannelNotification), {
-            body: {
-                content: `<@${Config.ownerId}>, a Shard ${shardId} está reconectando.`
-            }
-        }).catch(() => { })
-    })
     .on('shardError', (error, shardId) => {
         client.rest.post(Routes.channelMessages(Config.statusChannelNotification), {
             body: {
@@ -27,7 +20,12 @@ client.on('shardDisconnect', async (CloseEvent, shardId) => {
         }).catch(() => { })
     })
     .on('shardReady', (shardId) => {
-        console.log('shardReady - ' + shardId)
+        console.log(`Shard ${shardId} was spawned.`)
+
+        client.postMessage({
+            content: `${e.Check} | **Shard ${shardId} in Cluster ${client.clusterName} was been spawned.**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`,
+            channelId: Config.statusChannelNotification
+        })
 
         client.shardId = shardId
 
@@ -36,10 +34,5 @@ client.on('shardDisconnect', async (CloseEvent, shardId) => {
             content: `${e.Notification} | <@${Config.ownerId}>, a Shard ${shardId} conectou com sucesso.`
         })
 
-        // client.rest.post(Routes.channelMessages(Config.statusChannelNotification), {
-        //     body: {
-        //         content: `${e.Notification} | <@${Config.ownerId}>, a Shard ${shardId} conectou com sucesso.`
-        //     }
-        // }).catch(err => console.log(err))
         return
     })
