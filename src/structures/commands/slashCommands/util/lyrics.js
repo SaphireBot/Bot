@@ -26,7 +26,10 @@ export default {
         description: 'Pesquise por letras de música',
     },
     async execute({ interaction, client, e }) {
-
+        return interaction.reply({
+            content: `${e.Warn} | Comando em manutenção.`,
+            ephemeral: true
+        })
         const { options, user } = interaction
         const title = options.getString('title')
         const author = options.getString('author')
