@@ -140,7 +140,7 @@ export default {
                     isAutomatic: true,
                     ChannelId: interaction.channel.id
                 })
-                returnContent += '\n⏰ | Lembrete automático ativado.'
+                returnContent += '\n⏰ | Lembrete Automático Ativado.'
             }
 
             return await interaction.reply({ content: returnContent })

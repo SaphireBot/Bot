@@ -57,8 +57,10 @@ export default async () => {
     // client.shardGuilds = await client.shard.fetchClientValues('guilds.cache')?.then(data => data.flat()).catch(() => client.guilds.cache)
     console.log(`Shard ${client.shardId} is ready and was started.`)
 
-    if (client.shardId == 0)
+    if (client.shardId == 0) {
         import('../../api/app.js')
+        TwitchManager.load()
+    }
 
     client.user.setPresence({
         activities: [
@@ -68,6 +70,5 @@ export default async () => {
         shardId: client.shardId
     })
 
-    TwitchManager.load()
     return client.calculateReload()
 }

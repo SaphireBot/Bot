@@ -261,7 +261,7 @@ export default new class SaphireClient extends Client {
         const timeRemaing = twoAm - Date.now()
         this.timeRemaingToRestart = timeRemaing
         this.twoAm = twoAm
-        if (this.user.id == this.canaryId) return
+        if (this.user.id == this.canaryId || this.shardId !== 0) return
         return setTimeout(() => this.reload(), timeRemaing)
     }
 

@@ -101,7 +101,7 @@ export default class Daily extends Base {
         }
 
         if (isReminder)
-            data.fields.push({ name: '⏰ Lembrete automático', value: 'Como ativou essa funçao, então eu vou te ajudar. Quando o próximo daily estiver disponível, eu vou te avisar.' })
+            data.fields.push({ name: '⏰ Lembrete Automático', value: 'Como ativou essa funçao, então eu vou te ajudar. Quando o próximo daily estiver disponível, eu vou te avisar.' })
 
         let days = Daily.dailyPrizes.map(data => data.day)
         let daysCountFormat = prize.day <= 31 ? days.map((num, i) => this.formatCalendar(prize, num, i)).join('') : 'Um calendário comum não cabe a você.'

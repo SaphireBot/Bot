@@ -18,7 +18,7 @@ export default {
                 {
                     name: 'streamer',
                     type: ApplicationCommandOptionType.String,
-                    description: 'O nome do streamer ou a URL do canal da Twitch',
+                    description: 'NomeDoStreamer, OutroStreamer, https://twitch.tv/streamer, MaisOutroStreamer (Max: 100 Streamers)',
                     min_length: 4,
                     required: true
                 },

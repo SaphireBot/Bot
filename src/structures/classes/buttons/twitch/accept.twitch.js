@@ -10,7 +10,8 @@ import ButtonInteraction from "../../ButtonInteraction.js"
  */
 export default async (interaction, commandData) => {
 
-    const { streamer, channelId, roleId, message: customMessage } = commandData
+    const channelId = commandData[0].channelId
+    const roleId = commandData[0].roleId
     const { user, message, member, guild } = interaction
 
     if (user.id !== message.interaction.user.id)
@@ -32,7 +33,7 @@ export default async (interaction, commandData) => {
             components: []
         })
 
-    const channelPermissions = await channel.permissionsFor(client.user)
+    const channelPermissions = channel.permissionsFor(client.user)
     const permissions = [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks]
     const greenCard = Array.from(
         new Set([
@@ -47,57 +48,63 @@ export default async (interaction, commandData) => {
             ephemeral: true
         }).catch(() => { })
 
-    const data = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications')
-    const notifications = data?.TwitchNotifications || []
-    const hasConfig = notifications.find(tw => tw?.streamer == streamer)
-
-    if (
-        hasConfig?.channelId == channel.id
-        && hasConfig?.streamer == streamer
-        && hasConfig?.roleId == roleId
-        && hasConfig?.message == customMessage
-    )
-        return await interaction.update({
-            content: `${e.DenyX} | Ueeepa. Eu vi aqui que o streamer **${streamer}** já está configurado neste servidor, acredita?\n${e.Notification} | Adivinha! Todas as configurações passadas são idênticas!`,
-            components: []
-        }).catch(() => { })
+    const streamers = commandData.map(data => ({ streamer: data.streamer }))
+    const toPushData = commandData.map(data => ({ channelId, streamer: data.streamer, roleId, message: data.message }))
 
     await Database.Guild.updateOne(
         { id: guild.id },
         {
-            $pull: {
-                TwitchNotifications: { streamer: streamer }
+            $pullAll: {
+                TwitchNotifications: [streamers]
             }
         }
     )
 
     return Database.Guild.updateOne(
         { id: guild.id },
-        {
-            $addToSet: {
-                TwitchNotifications: { channelId, streamer, roleId, message: customMessage }
-            }
-        }
+        { $push: { TwitchNotifications: { $each: toPushData } } }
     )
         .then(async () => {
             interaction.update({
-                content: `${e.Check} | YEEES! Tudo certo. De agora em diante, eu vou avisar no canal ${channel} sempre que o streamer **${streamer}** entrar em live${roleId ? ` e marcar o cargo <@&${roleId}>` : ''}, ok?\n${e.Warn} | Não se esqueça, posso demorar de 5 segundos a 10 minutos para enviar a notificação. Tudo depende de como a Twitch acordou hoje.`,
-                components: []
+                components: [],
+                embeds: [{
+                    color: client.blue,
+                    title: `${e.twitch} ${client.user.username}'s Twitch System Notification`,
+                    description: commandData.map(s => `${e.CheckV} [${s.username}](${`https://www.twitch.tv/${s.streamer}`})`).join('\n'),
+                    fields: [
+                        {
+                            name: `${e.Info} Informações`,
+                            value: `Canal de Notificação: ${channel} \`${channel.id}\`\nCargo: ${roleId ? `<@&${roleId}> \`${roleId}\`` : 'Nenhum'}\nMensagem Customizada: ${commandData[0].message ? commandData[0].message : `${e.Notification} **${commandData[0].streamer}** está em live na Twitch.`}`
+                        },
+                        {
+                            name: `${e.Warn} Atenção`,
+                            value: `*Não se esqueça! Posso demorar de 5 segundos a 10 minutos para enviar a notificação. Tudo depende de como a Twitch acordou hoje.*`
+                        }
+                    ],
+                    footer: {
+                        text: `${commandData.length} Streamers Autorizados`
+                    }
+                }]
             }).catch(() => { })
 
-            TwitchManager.removeChannel(streamer, hasConfig?.channelId)
-            if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
-            if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
-           
-            TwitchManager.data[streamer].push(channelId)
-            TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, hasConfig?.channelId, null].includes(cId)) || []
-            await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
+            for (const { streamer, oldChannelId, message, channelId } of commandData) {
 
-            if (roleId)
-                TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId
+                if (TwitchManager.data[streamer]?.includes(channelId))
+                    TwitchManager.data[streamer] = TwitchManager.data[streamer]?.filter(id => id != oldChannelId)
 
-            if (customMessage)
-                TwitchManager.customMessage[`${streamer}_${channelId}`] = customMessage
+                if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
+                if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
+
+                TwitchManager.data[streamer].push(channelId)
+                TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, oldChannelId, null].includes(cId)) || []
+                await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
+
+                if (roleId)
+                    TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId
+
+                if (message)
+                    TwitchManager.customMessage[`${streamer}_${channelId}`] = message
+            }
 
             return
         })

@@ -29,40 +29,68 @@ export default async interaction => {
             content: `${e.cry} | Eu não tenho todas as permissões necessárias.\n${e.Info} | Permissões faltando: ${greenCard.map(perm => `\`${PermissionsTranslate[perm || perm]}\``).join(', ') || 'Nenhuma? WTF'}`
         }).catch(() => { })
 
-    if (streamer.includes('twitch.tv/'))
-        streamer = streamer.split('/').at(-1)
+    let streamers = Array.from(
+        new Set(
+            streamer
+                .toLowerCase()
+                .split(/(?:(?:https?:\/\/(?:www\.)?(?:m\.)?twitch\.tv\/)|\W+)/)
+                .filter(NoEmptyStrings => NoEmptyStrings)
+        )
+    )   
+        .slice(0, 100)
 
-    streamer = streamer.toLowerCase()
+    const result = await fetch(`https://api.twitch.tv/helix/users?${streamers.map(str => `login=${str}`).join('&')}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN}`,
+            "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
+        }
+    })
+        .then(async res => await res.json().then(r => r.data))
+        .catch(console.log)
 
-    if (!streamer.isAlphanumeric)
-        return interaction.reply({
-            content: `${e.DenyX} | O nome de um/a Streamer deve conter apenas caracteres alfanuméricos.\n${e.Info} | Apenas o \`abc\`, \`123\` e \`_\` são permitidos. Caracteres especiais, espaços e acentos não são permitidos.`,
-            ephemeral: true
+    if (!result || !result.length)
+        return await interaction.reply({
+            content: `${e.DenyX} | Nenhum dos ${streamers.length} streamers que você passou existe na Twitch.`
         })
 
-    const data = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications')
-    const notifications = data?.TwitchNotifications || []
-    const hasConfig = notifications.find(tw => tw?.streamer == streamer)
+    const dataFromDatabase = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications') // [{ streamer: 'alanzoka', channelId: '123' }]
+    const notifications = dataFromDatabase?.TwitchNotifications || []
 
-    const commandData = {
-        streamer,
-        channelId: channel.id,
-        roleId: role?.id,
-        message: customMessage ? customMessage.replace(/\$streamer/g, streamer).replace(/\$role/g, role ? `<@&${role.id}>` : '') : undefined
+    const data = result.map(str => {
+        str.channelId = notifications.find(d => d.streamer == str.login)?.channelId || null
+        return str
+    })
+
+    const commandData = []
+
+    for (const s of data)
+        commandData.push({
+            streamer: s.login,
+            username: s.display_name,
+            channelId: channel.id,
+            roleId: role?.id,
+            oldChannelId: s.channelId,
+            message: customMessage ? customMessage.replace(/\$streamer/g, s.login).replace(/\$role/g, role ? `<@&${role.id}>` : '') : undefined
+        })
+
+    const embed = {
+        color: client.blue,
+        title: `${e.twitch} ${client.user.username}'s Twitch System Notification`,
+        description: data.map(s => `👤 [${s.display_name}](${`https://www.twitch.tv/${s.login}`}) \`${(s.view_count || 0).currency()} Views\`${s.channelId ? ` -> <#${s.channelId}>` : ''}`).join('\n'),
+        fields: [
+            {
+                name: `${e.Info} Informações`,
+                value: `Canal de Notificação: ${channel} \`${channel.id}\`\nCargo: ${role ? `${role} \`${role.id}\`` : 'Nenhum'}\nMensagem Customizada: ${commandData[0].message ? commandData[0].message : `${e.Notification} **${commandData[0].streamer}** está em live na Twitch.`}`
+            }
+        ],
+        footer: {
+            text: `${result.length}/${streamers.length} Streamers Válidos`
+        }
     }
 
-    if (
-        hasConfig?.channelId == channel.id
-        && hasConfig?.streamer == streamer
-        && hasConfig?.roleId == commandData.roleId
-        && hasConfig?.message == commandData.message
-    )
-        return await interaction.reply({
-            content: `${e.DenyX} | Ueeepa. Eu vi aqui que o streamer **${streamer}** já está configurado neste servidor, acredita?\n${e.Notification} | Adivinha! Todas as configurações passadas são idênticas!`
-        }).catch(() => { })
-
     return interaction.reply({
-        content: `${e.Info} | Toda vez que o/a streamer **${streamer}** estiver em live, eu vou enviar uma notificação no canal ${channel}.\n💬 | A mensagem personalizada é essa aqui: "${commandData.message || `${e.Notification} | **${streamer}** está em live na Twitch.`}".\n${e.Warn} | *Lembrado que por segurança, o delay da notificação pode demorar de 5 segundos a 10 minutos.*${hasConfig?.channelId ? `\n${e.Info} | **${streamer}** está configurado no canal <#${hasConfig?.channelId}>${hasConfig?.roleId ? ` com menção ao cargo <@&${hasConfig?.roleId}>` : ''}.` : ''}`,
+        embeds: [embed],
         components: [
             {
                 type: 1,
@@ -80,13 +108,6 @@ export default async interaction => {
                         emoji: e.DenyX,
                         custom_id: JSON.stringify({ c: 'delete' }),
                         style: ButtonStyle.Danger
-                    },
-                    {
-                        type: 2,
-                        label: 'Conferir Canal na Twitch',
-                        emoji: '🔗',
-                        url: `https://www.twitch.tv/${streamer}`,
-                        style: ButtonStyle.Link
                     }
                 ]
             }
@@ -95,7 +116,6 @@ export default async interaction => {
     })
         .then(msg => collector(msg))
         .catch(() => { })
-
 
     function collector(msg) {
         return msg.createMessageComponentCollector({
@@ -111,7 +131,5 @@ export default async interaction => {
                 return msg.edit({ content: '⏱️ | Tempo esgotado.', components: [] })
             })
     }
-
-
 
 }

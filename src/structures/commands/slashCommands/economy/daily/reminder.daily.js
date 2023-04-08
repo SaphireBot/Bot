@@ -84,7 +84,7 @@ export default async (interaction, dateNow, oneDayMiliseconds) => {
         })
 
         return await interaction.editReply({
-            content: `${e.Check} | Lembrete automático configurado com sucesso. Eu vou te lembrar ${Date.Timestamp(new Date(dateNow + oneDayMiliseconds), 'R', true)} para você resgatar o </daily:${commandId}> novamente.`,
+            content: `${e.Check} | Lembrete Automático configurado com sucesso. Eu vou te lembrar ${Date.Timestamp(new Date(dateNow + oneDayMiliseconds), 'R', true)} para você resgatar o </daily:${commandId}> novamente.`,
             components: []
         })
     }
