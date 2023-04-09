@@ -75,7 +75,7 @@ export default class Autocomplete extends Base {
             itens: ['reminders', value],
             selecionar: ['quiz_selecionar', value],
             serverinfo: ['serverId', value],
-            streamers: ['disableTwitch', value]
+            streamer: ['disableTwitch', value]
         }[name]
 
         if (autocompleteFunctions)
@@ -85,7 +85,7 @@ export default class Autocomplete extends Base {
     }
 
     async disableTwitch(value) {
-        const data = await this.Database.Guild.findOne({ id: this.guild.id })
+        const data = await this.Database.Guild.findOne({ id: this.guild.id }, "TwitchNotifications")
         const twitchData = data?.TwitchNotifications || []
         if (!twitchData?.length) return this.respond()
 

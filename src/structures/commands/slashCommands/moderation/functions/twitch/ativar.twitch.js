@@ -1,6 +1,6 @@
 import { ButtonStyle, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js"
 import { Emojis as e } from '../../../../../../util/util.js'
-import { Database, SaphireClient as client } from "../../../../../../classes/index.js"
+import { Database, SaphireClient as client, TwitchManager } from "../../../../../../classes/index.js"
 import { PermissionsTranslate } from "../../../../../../util/Constants.js"
 import accept from '../../../../../classes/buttons/twitch/accept.twitch.js'
 
@@ -39,15 +39,7 @@ export default async interaction => {
     )   
         .slice(0, 100)
 
-    const result = await fetch(`https://api.twitch.tv/helix/users?${streamers.map(str => `login=${str}`).join('&')}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN}`,
-            "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
-        }
-    })
-        .then(async res => await res.json().then(r => r.data))
-        .catch(console.log)
+    const result = await TwitchManager.fetcher(`https://api.twitch.tv/helix/users?${streamers.map(str => `login=${str}`).join('&')}`)
 
     if (!result || !result.length)
         return await interaction.reply({

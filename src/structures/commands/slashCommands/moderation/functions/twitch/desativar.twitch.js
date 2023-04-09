@@ -8,7 +8,7 @@ import { Database } from "../../../../../../classes/index.js"
 export default async interaction => {
 
     const { options, guild } = interaction
-    let twitchChannelName = options.getString('streamers')
+    let twitchChannelName = options.getString('streamer')
 
     if (twitchChannelName.includes('www.twitch.tv/')) {
         const url = twitchChannelName.split('/').at(-1)

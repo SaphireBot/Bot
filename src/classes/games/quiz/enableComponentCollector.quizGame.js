@@ -175,7 +175,6 @@ export default async (message, correctAnswer, Quiz, question) => {
 
         Quiz.unregister()
         if (['channelDelete'].includes(reason)) return
-        return console.log(`#168415464 - ${reason}`)
     }
 
 }

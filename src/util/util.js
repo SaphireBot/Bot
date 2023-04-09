@@ -1,7 +1,8 @@
 import { ButtonStyle, GatewayIntentBits, Partials } from 'discord.js'
 import { SaphireClient as client } from '../classes/index.js'
+import { createRequire } from 'node:module'
 import Byte from './Bytes.js'
-import { readFileSync } from 'fs'
+const require = createRequire(import.meta.url)
 
 const SaphireClientOptions = {
     intents: [
@@ -18,56 +19,6 @@ const SaphireClientOptions = {
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent
     ],
-    // sweepers: {
-    //     users: {
-    //         filter: () => user => !user.bot || user.id !== config.ownerId,
-    //         interval: 14400
-    //     },
-    //     bans: {
-    //         filter: () => () => true,
-    //         interval: 3600 // 1H
-    //     },
-    //     invites: {
-    //         lifetime: 0,
-    //         interval: 14400
-    //     },
-    //     guildMembers: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     presences: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     messages: {
-    //         lifetime: 3600,
-    //         interval: 3600
-    //     },
-    //     reactions: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     stageInstances: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     stickers: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     threadMembers: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     },
-    //     threads: {
-    //         lifetime: 3600,
-    //         interval: 14400
-    //     },
-    //     voiceStates: {
-    //         filter: () => () => true,
-    //         interval: 14400
-    //     }
-    // },
     partials: [
         Partials.Channel,
         Partials.GuildMember,
@@ -83,9 +34,9 @@ const SaphireClientOptions = {
     waitGuildTimeout: 20000
 }
 
-const Emojis = JSON.parse(readFileSync('./JSON/emojis.json'))
-const Gifs = JSON.parse(readFileSync('./JSON/gifs.json'))
-const Flags = JSON.parse(readFileSync('./JSON/flags.json'))
+const Emojis = require('../../JSON/emojis.json')
+const Gifs = require('../../JSON/gifs.json')
+const Flags = require('../../JSON/flags.json')
 
 const Buttons = {
     QuizQuestionsFirstPage: (userId) => {

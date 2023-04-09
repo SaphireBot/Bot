@@ -147,7 +147,6 @@ export default async (message, correctAnswer, Quiz, question) => {
 
         Quiz.unregister()
         if (reason == 'channelDelete') return
-        return console.log(`#168415464 - ${reason}`)
     }
 
     async function refreshMessage() {
