@@ -65,7 +65,35 @@ export default async (interaction, commandData) => {
         { $push: { TwitchNotifications: { $each: toPushData } } }
     )
         .then(async () => {
-            interaction.update({
+
+            await interaction.update({
+                content: `${e.Loading} | Salvando streamers...`, components: [], embeds: []
+            }).catch(() => { })
+
+            for (const { streamer, oldChannelId, message, channelId } of commandData) {
+
+                if (!TwitchManager.toCheckStreamers.includes(streamer)) TwitchManager.toCheckStreamers.push(streamer)
+                if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
+                if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
+
+                const index = TwitchManager.data[streamer].findIndex(cId => cId == oldChannelId)
+
+                channelId
+                    ? TwitchManager.data[streamer].splice(index, 1, channelId)
+                    : TwitchManager.data[streamer].push(channelId)
+
+                TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, oldChannelId, null].includes(cId)) || []
+                await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
+
+                if (roleId)
+                    TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId
+
+                if (message)
+                    TwitchManager.customMessage[`${streamer}_${channelId}`] = message
+            }
+
+            interaction.message.edit({
+                content: null,
                 components: [],
                 embeds: [{
                     color: client.blue,
@@ -86,25 +114,6 @@ export default async (interaction, commandData) => {
                     }
                 }]
             }).catch(() => { })
-
-            for (const { streamer, oldChannelId, message, channelId } of commandData) {
-
-                if (TwitchManager.data[streamer]?.includes(channelId))
-                    TwitchManager.data[streamer] = TwitchManager.data[streamer]?.filter(id => id != oldChannelId)
-
-                if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
-                if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
-
-                TwitchManager.data[streamer].push(channelId)
-                TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, oldChannelId, null].includes(cId)) || []
-                await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
-
-                if (roleId)
-                    TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId
-
-                if (message)
-                    TwitchManager.customMessage[`${streamer}_${channelId}`] = message
-            }
 
             return
         })

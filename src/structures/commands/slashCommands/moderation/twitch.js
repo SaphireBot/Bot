@@ -16,7 +16,7 @@ export default {
             type: ApplicationCommandOptionType.Subcommand,
             options: [
                 {
-                    name: 'streamer',
+                    name: 'streamers',
                     type: ApplicationCommandOptionType.String,
                     description: 'NomeDoStreamer, OutroStreamer, https://twitch.tv/streamer, MaisOutroStreamer (Max: 100 Streamers)',
                     min_length: 4,

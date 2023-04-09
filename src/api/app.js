@@ -95,7 +95,7 @@ app.get("/", async (_, res) => res.status(200).send({ status: "Online" }))
 
 app.use((_, res) => res.status(404).send({ status: 404, message: "Route Not Found" }))
 
-app.listen(system?.port || process.env.SERVER_PORT, "0.0.0.0", () => alertLogin(system?.name))
+app.listen(system.port || process.env.SERVER_PORT, "0.0.0.0", () => alertLogin(system?.name))
 
 export default app
 

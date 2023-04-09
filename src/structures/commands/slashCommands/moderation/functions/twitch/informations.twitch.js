@@ -25,7 +25,7 @@ export default async interaction => {
                 fields: [
                     {
                         name: '📝 Campo Streamer (Obrigatório)',
-                        value: `Nome ou URL do canal do streamer na Twitch.\nex: *\`alanzoka\` ou \`https://www.twitch.tv/alanzoka\`*`
+                        value: `Nomes ou URLs dos canais dos streamers na Twitch.\nex: *\`alanzoka, cellbit, gaules\` ou \`https://www.twitch.tv/alanzoka cellbit gaules\`*`
                     },
                     {
                         name: '📝 Campo canal_do_servidor (Obrigatório)',

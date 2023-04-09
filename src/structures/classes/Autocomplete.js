@@ -75,7 +75,7 @@ export default class Autocomplete extends Base {
             itens: ['reminders', value],
             selecionar: ['quiz_selecionar', value],
             serverinfo: ['serverId', value],
-            streamer: ['disableTwitch', value]
+            streamers: ['disableTwitch', value]
         }[name]
 
         if (autocompleteFunctions)

@@ -10,7 +10,7 @@ import accept from '../../../../../classes/buttons/twitch/accept.twitch.js'
 export default async interaction => {
 
     const { options, guild, user } = interaction
-    let streamer = options.getString('streamer')
+    let streamer = options.getString('streamers')
     const channel = options.getChannel('canal_do_servidor')
     const role = options.getRole('cargo_a_ser_mencionado')
     const customMessage = options.getString('mensagem_de_notificação')
