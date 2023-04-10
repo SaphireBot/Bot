@@ -12,12 +12,6 @@ import active from './active.twitch.js'
  */
 export default async ({ interaction, message, user }, commandData) => {
 
-    if (user.id !== message.author.id)
-        return interaction.reply({
-            content: `${e.SaphireDesespero} | HEEY, você não pode clicar aqui, ok?`,
-            ephemeral: true
-        })
-
     if (commandData.src == 'active')
         return active(interaction, commandData)
 

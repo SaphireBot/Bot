@@ -8,7 +8,13 @@ import { Emojis as e } from "../../../../util/util.js"
  */
 export default async (interaction, commandData) => {
 
-    const { member, channelId, guildId } = interaction
+    const { member, channelId, guildId, user, message } = interaction
+
+    if (user.id !== message.interaction.user.id)
+        return interaction.reply({
+            content: `${e.SaphireDesespero} | HEEY, você não pode clicar aqui, ok?`,
+            ephemeral: true
+        })
 
     if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
         return interaction.reply({
