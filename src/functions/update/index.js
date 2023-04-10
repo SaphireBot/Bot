@@ -35,6 +35,6 @@ export default async () => {
         })
     }, 1000 * 60 * 5)
 
-    setInterval(async () => await Ranking(), 60000 * 15)
+    setInterval(() => Ranking(), 1000 * 60 * 15)
     return
 }

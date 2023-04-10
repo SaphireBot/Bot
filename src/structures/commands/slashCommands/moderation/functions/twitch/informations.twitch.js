@@ -11,7 +11,6 @@ export default async interaction => {
 
     const data = await Database.Guild.findOne({ id: guild.id })
     const twitchData = data?.TwitchNotifications || []
-
     const description = twitchData.length
         ? twitchData.map(tw => `\`${tw.streamer}\` -> <#${tw.channelId}>${tw.roleId ? ` -> <@&${tw.roleId}>` : ''}`).join('\n').limit('MessageEmbedDescription')
         : 'Nenhum streamer cadastrado ainda.'

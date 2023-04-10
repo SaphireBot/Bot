@@ -8,15 +8,14 @@ export default new class TwitchManager {
         this.streamers = [] // ['alanzoka', 'cellbit', ...]
         this.toCheckStreamers = [] // ['alanzoka', 'cellbit', ...]
         this.data = {} // { 'alanzoka': [...channelsId], 'cellbit': [...channelsId], ... }
+        this.tempCache = {} // { 'alanzoka': [...channelsId], 'cellbit': [...channelsId], ... }
         this.channelsNotified = {} // { 'alanzoka': [...channelsId], 'cellbit': [...channelsId], ... }
         this.rolesIdMentions = {} // { 'alanzoka_channelId': roleId, 'cellbit_channelId': roleId, ... }
         this.customMessage = {} // { 'alanzoka_channelId': 'text...', 'cellbit_channelId': 'text...', ... }
         this.streamersOffline = [] // ['cellbit']
         this.streamersOnline = [] // ['alanzoka']
-        this.allGuildsID = [] // [..., '123', ...]
-        this.requests = 0
-        this.sendMessagesRequests = 0
         this.notifications = 0
+        this.allGuildsID = 0
         this.awaitingRequests = 0
         this.notificationInThisSeason = 0
     }
@@ -24,10 +23,9 @@ export default new class TwitchManager {
     async load() {
 
         await this.refreshStreamersCache()
-        this.notifications = Array.from(new Set(Object.values(this.channelsNotified).flat())).length
+        this.notifications = Array.from(new Set(Object.values(this.channelsNotified).flat())).flat().length
 
-        const allData = await Database.Guild.find({}, 'id TwitchNotifications')
-
+        const allData = await Database.Guild.find({ TwitchNotifications: { $exists: true } }, 'id TwitchNotifications')
         this.allGuildsID = allData.filter(g => g.TwitchNotifications?.length).map(g => g.id).filter(i => i)
 
         const formated = allData
@@ -35,65 +33,86 @@ export default new class TwitchManager {
             .map(g => g.TwitchNotifications)
             .flat()
 
+        let channels = Array.from(client.channels.cache.keys())
+        let uncachedChannels = []
+
         for (const data of formated) { // [..., { channelId: '123', streamer: 'alanzoka', roleId: '123' }, ...]
             if (!this.data[data.streamer]) this.data[data.streamer] = []
+            if (!this.channelsNotified[data.streamer]) this.channelsNotified[data.streamer] = []
             if (!this.streamers.includes(data.streamer)) {
                 this.streamers.push(data.streamer)
                 this.toCheckStreamers.push(data.streamer)
             }
 
-            if (
-                !this.streamersOffline.includes(data.streamer)
-                && !this.streamersOnline.includes(data.streamer)
-            ) this.streamersOffline.push(data.streamer)
+            if (channels.includes(data.channelId)) {
+                if (![
+                    ...this.data[data.streamer],
+                    ...this.channelsNotified[data.streamer]
+                ].includes(data.channelId))
+                    this.data[data.streamer].push(data.channelId)
 
-            this.data[data.streamer] = this.data[data.streamer].filter(channelId => !this.channelsNotified[data.streamer]?.includes(channelId))
-            await client.channels.fetch(data.channelId)
-                .then(() => {
-                    if (!this.data[data.streamer].includes(data.channelId))
-                        this.data[data.streamer].push(data.channelId)
+                if (data.roleId)
+                    this.rolesIdMentions[`${data.streamer}_${data.channelId}`] = data.roleId
 
-                    if (data.roleId)
-                        this.rolesIdMentions[`${data.streamer}_${data.channelId}`] = data.roleId
-
-                    this.customMessage[`${data.streamer}_${data.channelId}`] = data.message
-                })
-                .catch(err => {
-                    // Unknown Channel - Missing Permissions
-                    if ([50001, 100003].includes(err.code)) return this.deleteChannelFromTwitchNotification(data.channelId)
-                    return null
-                })
+                this.customMessage[`${data.streamer}_${data.channelId}`] = data.message
+            } else uncachedChannels.push(data.channelId)
 
             continue
         }
 
-        this.streamers = Array.from(new Set(this.streamers)).map(streamer => streamer.toLowerCase()).filter(i => i)
+        const remainingData = formated.filter(d => !channels.includes(d.channelId))
+
+        if (remainingData.length)
+            for await (const data of formated)
+                await client.channels.fetch(data.channelId)
+                    .then(() => {
+                        if (!this.data[data.streamer].includes(data.channelId))
+                            this.data[data.streamer].push(data.channelId)
+
+                        if (data.roleId)
+                            this.rolesIdMentions[`${data.streamer}_${data.channelId}`] = data.roleId
+
+                        this.customMessage[`${data.streamer}_${data.channelId}`] = data.message
+                    })
+                    .catch(err => {
+                        // Unknown Channel - Missing Permissions
+                        if ([50001, 100003].includes(err.code)) return this.deleteChannelFromTwitchNotification(data.channelId)
+                        return null
+                    })
+
+        this.streamers = Array.from(new Set(this.streamers)).flat().filter(i => i).map(streamer => streamer.toLowerCase())
+        channels = []
+        uncachedChannels = []
+        const offlinesCached = this.streamers.filter(streamer => !this.streamersOnline.includes(streamer))
+        if (offlinesCached.length) this.streamersOffline.push(...offlinesCached)
+        if (this.streamersOffline.length)
+            await Database.Cache.General.set('StreamersOffline', this.streamersOffline)
         this.checkStreamersStatus()
-        this.intervals()
+        this.saveChannelsNotified()
         return
     }
 
     async checkStreamersStatus() {
 
-        const streamers = this.toCheckStreamers.slice(0, 100)
+        let streamers = this.toCheckStreamers.slice(0, 100)
 
         if (!streamers.length) {
             this.toCheckStreamers = this.streamers
-            return setTimeout(() => this.checkStreamersStatus(), 1000 * 2)
+            streamers = this.toCheckStreamers.slice(0, 100)
         }
 
-        const streamersStatus = await this.fetcher(`https://api.twitch.tv/helix/streams?${streamers.map(str => `user_login=${str}`).join('&')}`)
+        if (streamers?.length) {
 
-        if (streamersStatus.length) {
-
-            const streamersOffline = this.streamers
-                .filter(
-                    streamer => !streamersStatus.some(data => data?.user_login == streamer)
+            const streamersStatus = await this.fetcher(`https://api.twitch.tv/helix/streams?${streamers.map(str => `user_login=${str}`).join('&')}`)
+            if (streamersStatus.length) {
+                this.offlineStreamers(
+                    this.streamers
+                        .filter(streamer => !streamersStatus.some(data => data?.user_login == streamer))
                 )
-            this.offlineStreamers(streamersOffline)
 
-            const streamersOnline = streamersStatus.filter(data => this.data[data?.user_login]?.length)
-            if (streamersOnline.length) this.onlineStreamers(streamersOnline)
+                this.onlineStreamers(streamersStatus.filter(data => this.data[data?.user_login]?.length))
+            }
+
         }
 
         streamers.splice(0, streamers.length)
@@ -101,132 +120,208 @@ export default new class TwitchManager {
         return
     }
 
-    async offlineStreamers(streamers = []) {
-        if (!streamers.length) return
+    async updateStreamer({ streamer, guildId, channelId }) {
+        if (!streamer || !guildId || !channelId) return
+        const dataFromDatabase = await Database.Guild.findOne({ id: guildId }) // [{ streamer: 'alanzoka', channelId: '123' }]
+        let notifications = dataFromDatabase?.TwitchNotifications || []
+        const oldChannelId = notifications.find(d => d.channelId == channelId)?.channelId
+        const data = notifications
+            .filter(d => d.streamer != streamer || (d.channelId == oldChannelId && d.streamer == streamer))
 
-        for (const streamer of streamers) {
+        data.push({ streamer, channelId })
 
-            if (this.streamersOnline.includes(streamer) || this.channelsNotified[streamer]?.length > 0)
-                this.notifyAndSetOfflineStreamer(streamer)
+        await Database.Guild.updateOne(
+            { id: guildId },
+            { $set: { TwitchNotifications: data } }
+        )
 
-            if (!this.streamersOffline.includes(streamer)) {
-                await Database.Cache.General.push('StreamersOffline', streamer)
-                this.streamersOffline.push(streamer)
-            }
+        this.toCheckStreamers.push(streamer)
+        if (!this.streamers.includes(streamer)) this.streamers.push(streamer)
+        if (!this.data[streamer]) this.data[streamer] = []
+        if (!this.channelsNotified[streamer]) this.channelsNotified[streamer] = []
 
-            continue
-        }
+        const indexData = this.data[streamer].findIndex(cId => cId == oldChannelId)
+        if (indexData < 0) this.data[streamer].push(channelId)
+        else this.data[streamer].splice(indexData, 1, channelId)
+
+        const indexNotified = this.channelsNotified[streamer].findIndex(cId => cId == oldChannelId)
+        if (indexNotified >= 0) this.channelsNotified[streamer].splice(indexNotified, 1)
+        await Database.Cache.General.set(`channelsNotified.${streamer}`, this.channelsNotified[streamer])
 
         return
     }
 
-    async notifyAndSetOfflineStreamer(streamer) {
-        const index = this.streamersOnline.findIndex(str => str == streamer)
-        if (index >= 0) this.streamersOnline.splice(index, 1)
-        await Database.Cache.General.pull('StreamersOnline', str => str == streamer)
-        await Database.Cache.General.set(`channelsNotified.${streamer}`, [])
-        const channelsToNotifier = this.channelsNotified[streamer] || []
-        this.channelsNotified[streamer] = []
-        if (channelsToNotifier.length) this.notifyOfflineStreamersChannels(streamer, channelsToNotifier)
+    async offlineStreamers(streamers = []) {
+        if (!streamers.length) return
+
+        const cached = await Database.Cache.General.get('StreamersOffline')
+
+        const offlines = Array.from(
+            new Set([...cached, ...streamers].flat())
+        ).filter(i => i)
+
+        this.streamersOffline = offlines
+        await Database.Cache.General.set('StreamersOffline', this.streamersOffline)
+
+        if (
+            streamers.some(
+                streamer => this.streamersOnline.includes(streamer)
+                    || this.channelsNotified[streamer]?.length > 0
+            )
+        ) this.notifyAndSetOfflineStreamer(streamers)
+
+        return
+    }
+
+    async notifyAndSetOfflineStreamer(streamers = []) {
+
+        this.streamersOnline = Array.from(
+            new Set(
+                await Database.Cache.General.pull('StreamersOnline', str => [...streamers, null].includes(str))
+            )
+        ).flat().filter(i => i)
+
+        await Database.Cache.General.push('StreamersOnline', ...streamers)
+        const notifiedChannels = await Database.Cache.General.get('channelsNotified') || {}
+        const streamersToNotifier = []
+
+        for (const streamer of streamers)
+            if (this.channelsNotified[streamer]?.length) {
+                this.data[streamer].push(...this.channelsNotified[streamer])
+                notifiedChannels[streamer] = []
+                streamersToNotifier.push({ streamer, channels: Array.from(new Set(this.channelsNotified[streamer])).filter(i => i) })
+                this.channelsNotified[streamer] = []
+                continue
+            }
+
+        if (streamersToNotifier.length) this.notifyOfflineStreamersChannels(streamersToNotifier)
+        await Database.Cache.General.set('channelsNotified', notifiedChannels)
         return
     }
 
     async fetcher(url) {
-        const data = await fetch(url, {
+        const data = new Promise((resolve) => {
+
+            const timeout = setTimeout(() => resolve([]), 2000)
+
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN}`,
+                    "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
+                }
+            })
+                .then(res => {
+                    clearTimeout(timeout)
+                    return res.json()
+                })
+                .then(res => resolve(res.data || []))
+                .catch(err => {
+                    clearTimeout(timeout)
+                    console.log(err)
+                    return resolve([])
+                })
+        })
+
+        return data
+    }
+
+    async getFollowers(broadcaster_id) {
+        if (!broadcaster_id) return
+        const data = await fetch(`https://api.twitch.tv/helix/channels/followers?broadcaster_id=${broadcaster_id}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN}`,
                 "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
             }
         })
-            .then(async res => await res.json().then(r => r.data))
-            .catch(console.log)
-
+            .then(res => res.json())
+            .then(r => r.total || 0)
+            .catch(err => {
+                console.log(err)
+                return
+            })
         return data
     }
 
-    async notifyOfflineStreamersChannels(streamer, channels) {
+    async notifyOfflineStreamersChannels(offlineStreamers) {
 
-        const request = await this.fetcher(`https://api.twitch.tv/helix/users?login=${streamer}`) || []
-        const data = request[0]
-        const twitchUrl = `https://www.twitch.tv/${streamer}`
+        const request = await this.fetcher(`https://api.twitch.tv/helix/users?${offlineStreamers.map(d => `login=${d.streamer}`).join('&')}`)
 
-        const offlineImage = data?.offline_image_url || null
-        for (const channelId of channels) {
-            client.postMessage({
-                channelId,
-                content: offlineImage ? null : `${e.Notification} | **${streamer}** não está mais online.`,
-                embeds: offlineImage
-                    ? [{
-                        color: 0x9c44fb, /* Twitch's Logo Purple */
-                        author: {
-                            name: data.display_name || streamer,
-                            icon_url: data.profile_image_url || null,
-                            url: twitchUrl
-                        },
-                        description: `[**${data.display_name}**](${twitchUrl}) não está mais online.`,
-                        image: { url: offlineImage },
-                        footer: {
-                            text: `${client.user.username}'s Twitch Notification System`,
-                            icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
-                        }
-                    }]
-                    : []
-            })
-            this.sendMessagesRequests++
-        }
+        if (request.length)
+            for (const { streamer, channels } of offlineStreamers) {
+
+                const data = request.find(res => res.login == streamer)
+                const offlineImage = data?.offline_image_url || null
+
+                for (const channelId of channels)
+                    client.postMessage({
+                        channelId,
+                        content: offlineImage ? null : `${e.Notification} | **${streamer}** não está mais online.`,
+                        embeds: offlineImage
+                            ? [{
+                                color: 0x9c44fb, /* Twitch's Logo Purple */
+                                author: {
+                                    name: `${data.display_name || streamer} não está mais online.`,
+                                    icon_url: data.profile_image_url || null,
+                                    url: `https://www.twitch.tv/${streamer}`
+                                },
+                                image: { url: offlineImage },
+                                footer: {
+                                    text: `${client.user.username}'s Twitch Notification System`,
+                                    icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
+                                }
+                            }]
+                            : []
+                    })
+
+            }
+        return
     }
 
-    async onlineStreamers(streamers) {
-        const streamersData = await this.fetcher(`https://api.twitch.tv/helix/users?${streamers.map(data => `login=${data.user_login}`).join('&')}`) || []
+    async onlineStreamers(streamersStatus) {
+        const streamersData = await this.fetcher(`https://api.twitch.tv/helix/users?${streamersStatus.map(data => `login=${data.user_login}`).join('&')}`)
         if (!streamersData.length) return
 
-        for (const streamerData of streamers) {
+        const oldOfflineMembers = await Database.Cache.General.pull('StreamersOffline', str => streamersStatus.some(d => d.user_login == str))
+        this.streamersOffline = oldOfflineMembers
+        const onlineMembers = Array.from(new Set([...this.streamersOnline, ...streamersStatus.map(d => d.user_login)].flat())).filter(i => i)
+        await Database.Cache.General.set('StreamersOnline', onlineMembers)
+        this.streamersOnline = onlineMembers
 
-            const streamer = streamerData?.user_login
-
-            this.streamersOffline = this.streamersOffline.filter(str => str != streamer)
-            Database.Cache.General.push('StreamersOnline', streamer)
-            Database.Cache.General.set('StreamersOffline', this.streamersOffline)
-
-            if (!this.streamersOnline.includes(streamer))
-                this.streamersOnline.push(streamer)
-
-            if (this.data[streamer]?.length)
-                return this.notifyAllChannels(streamerData, streamersData)
-
+        for (const data of streamersStatus) {
+            const streamerData = streamersData?.find(d => d?.login == data.user_login)
+            data.avatar = streamerData?.profile_image_url || null
+            data.display_name = streamerData?.display_name || null
+            this.notifyAllChannels(data)
+            continue
         }
         return
     }
 
-    notifyAllChannels(data, streamersData) {
+    notifyAllChannels(data) {
 
         const streamer = data?.user_login
-        const streamerData = streamersData?.find(data => data?.login == streamer)
-
-        if (!streamer || !data) return
-
         const channelsId = this.data[streamer] || []
-        if (!channelsId.length) return
+        if (!data || !streamer || !channelsId.length) return
 
-        const messageDefault = `**${streamer}** está em live na Twitch.`
-        let alreadySended = []
         if (!this.channelsNotified[streamer]) this.channelsNotified[streamer] = []
         this.data[streamer] = this.data[streamer].filter(cId => !this.channelsNotified[streamer]?.includes(cId))
+        this.channelsNotified[streamer]?.push(...this.data[streamer])
 
         const game = data.game_name ? `${data.game_name} \`${data.game_id}\`` : 'Nenhum jogo foi definido'
-        const avatar = streamerData?.profile_image_url || null
+        const avatar = data.avatar || null
         const viewers = `\`${data.viewer_count?.currency() || 0}\``
         const imageUrl = data.thumbnail_url?.replace('{width}x{height}', '620x378') || null
         const url = `https://www.twitch.tv/${streamer}`
+        const messageDefault = `**${data.display_name}** está em live na Twitch.`
         const date = new Date(data.started_at)
+        let alreadySended = []
+        if (!this.tempCache[streamer]) this.tempCache[streamer] = []
 
         for (const channelId of this.data[streamer]) {
 
-            if (
-                alreadySended.includes(channelId)
-                || this.channelsNotified[streamer].includes(channelId)
-            ) continue
+            if (alreadySended.includes(channelId)) continue
             alreadySended.push(channelId)
 
             let content = undefined
@@ -240,15 +335,9 @@ export default new class TwitchManager {
 
             this.notifications++
             this.notificationInThisSeason++
-            this.sendMessagesRequests++
-            this.cacheSave(streamer, channelId)
-            this.channelsNotified[streamer].push(channelId)
-
-            const channelIndex = this.data[streamer]?.findIndex(str => str == channelId)
-            if (channelIndex >= 0) this.data[streamer]?.splice(channelIndex, 1)
 
             client.postMessage({
-                channelId: channelId,
+                channelId,
                 content: content || role || `${e.Notification} | ${messageDefault}`,
                 embeds: [{
                     color: 0x9c44fb, // Twitch's Logo Purple
@@ -277,13 +366,24 @@ export default new class TwitchManager {
             continue
         }
 
+        this.data[streamer] = this.data[streamer].filter(cId => !alreadySended.includes(cId)) || []
+        this.tempCache[streamer] = Array.from(new Set([...alreadySended, ...this.channelsNotified[streamer]]))
         return
     }
 
-    async cacheSave(streamer, channelId) {
-        if (!streamer || !channelId) return
-        Database.Cache.General.push('StreamersOnline', streamer)
-        Database.Cache.General.push(`channelsNotified.${streamer}`, channelId)
+    async saveChannelsNotified(initial = false) {
+
+        if (initial)
+            for await (const streamer of this.streamers) {
+                const data = this.tempCache[streamer] || []
+                if (data.length) {
+                    delete this.tempCache[streamer]
+                    await Database.Cache.General.set(`channelsNotified.${streamer}`, data)
+                    continue
+                }
+            }
+
+        setInterval(() => this.saveChannelsNotified(true), 1000 * 10)
         return
     }
 
@@ -293,48 +393,44 @@ export default new class TwitchManager {
         if (this.data[streamer]?.includes(channelId))
             this.data[streamer] = this.data[streamer]?.filter(id => id != channelId)
 
+        if (this.channelsNotified[streamer]?.includes(channelId))
+            this.channelsNotified[streamer] = this.channelsNotified[streamer]?.filter(id => id != channelId)
+
         return
     }
 
-    addChannelToStreamer(streamer, channelId) {
-        if (!streamer) return
-        if (!this.data[streamer]) this.data[streamer] = []
-        this.data[streamer].push(channelId)
-        return
-    }
+    async refreshStreamersCache(inital = true) {
+        const StreamersOnline = this.streamersOnline.length
+            ? await Database.Cache.General.push('StreamersOnline', ...this.streamersOnline) || []
+            : await Database.Cache.General.get('StreamersOnline') || []
 
-    async refreshStreamersCache() {
-        const StreamersOnline = await Database.Cache.General.get('StreamersOnline') || []
-        const StreamersOffline = await Database.Cache.General.get('StreamersOffline') || []
-        const channelsNotified = await Database.Cache.General.get('channelsNotified') || {}
-        this.streamersOnline = Array.from(new Set(StreamersOnline)).filter(i => i)
-        this.streamersOffline = Array.from(new Set(StreamersOffline)).filter(i => i)
-        for (let streamer of this.streamers) {
-            if (!channelsNotified[streamer]) channelsNotified[streamer] = []
-            channelsNotified[streamer] = Array.from(new Set(channelsNotified[streamer])).filter(i => i)
+        const StreamersOffline = this.streamersOffline.length
+            ? await Database.Cache.General.push('StreamersOffline', ...this.streamersOffline) || []
+            : await Database.Cache.General.get('StreamersOffline') || []
+
+        this.streamersOnline = Array.from(new Set(StreamersOnline)).filter(i => i).flat()
+        this.streamersOffline = Array.from(new Set(StreamersOffline)).filter(i => i).flat()
+
+        if (inital) {
+            const channelsNotified = await Database.Cache.General.get('channelsNotified') || {}
+            for (let streamer of this.streamers) {
+                if (!channelsNotified[streamer]) channelsNotified[streamer] = []
+                if (channelsNotified[streamer].length)
+                    channelsNotified[streamer] = Array.from(new Set(channelsNotified[streamer])).flat().filter(i => i)
+            }
+            this.channelsNotified = channelsNotified
+            await Database.Cache.General.set('channelsNotified', this.channelsNotified)
         }
-        this.channelsNotified = channelsNotified
 
-        await Database.Cache.General.set('channelsNotified', this.channelsNotified)
         await Database.Cache.General.set('StreamersOnline', this.streamersOnline)
         await Database.Cache.General.set('StreamersOffline', this.streamersOffline)
-        return
-    }
-
-    intervals() {
-        setInterval(() => this.refreshStreamersCache(), 1000 * 10)
-        setInterval(() => this.setCounter(), 1000 * 30)
-
-        setInterval(() => this.sendMessagesRequests = 0, 1000 * 5)
-        setInterval(() => this.requests = 0, 1000 * 60)
-
-        return
+        return setTimeout(() => this.refreshStreamersCache(false), 1000 * 5)
     }
 
     async setCounter() {
 
         if (this.notificationInThisSeason > 0)
-            Database.Client.updateOne(
+            await Database.Client.updateOne(
                 { id: client.user.id },
                 {
                     $inc: {
@@ -344,25 +440,20 @@ export default new class TwitchManager {
             )
 
         this.notificationInThisSeason = 0
+        setTimeout(() => this.setCounter(), 1000 * 30)
         return
     }
 
-    deleteChannelFromTwitchNotification(channelId) {
+    async deleteChannelFromTwitchNotification(channelId) {
 
         for (const streamer of this.streamers) {
             this.data[streamer] = this.data[streamer]?.filter(id => id != channelId)
-            this.channelsNotified[streamer] = this.channelsNotified[streamer]?.filter(id => id != channelId)
-            Database.Cache.General.pull(`channelsNotified.${streamer}`, cId => cId == channelId)
-
-            Database.Client.updateOne(
-                { id: client.user.id },
-                { $pull: { [`TwitchStreamers.${this.streamers}`]: channelId } }
-            )
+            this.channelsNotified[streamer] = await Database.Cache.General.pull(`channelsNotified.${streamer}`, cId => [channelId, null].includes(cId))
         }
 
-        Database.Guild.updateMany(
+        await Database.Guild.updateMany(
             {},
-            { $pull: { TwitchNotifications: { channelId: channelId } } }
+            { $pull: { TwitchNotifications: { channelId } } }
         )
 
         return

@@ -48,42 +48,37 @@ export default async (interaction, commandData) => {
             ephemeral: true
         }).catch(() => { })
 
-    const streamers = commandData.map(data => ({ streamer: data.streamer }))
-    const toPushData = commandData.map(data => ({ channelId, streamer: data.streamer, roleId, message: data.message }))
+    const toPushData = commandData.map(d => ({ channelId, streamer: d.streamer, roleId, message: d.message }))
+    const guildData = await Database.Guild.findOne({ id: guild.id }, "TwitchNotifications")
+    const streamersToSet = guildData.TwitchNotifications?.filter(d => !commandData.some(c => c.streamer == d.streamer)) || []
+    streamersToSet.push(...toPushData)
 
     await Database.Guild.updateOne(
         { id: guild.id },
-        {
-            $pullAll: {
-                TwitchNotifications: [streamers]
-            }
-        }
-    )
-
-    return Database.Guild.updateOne(
-        { id: guild.id },
-        { $push: { TwitchNotifications: { $each: toPushData } } }
+        { $set: { TwitchNotifications: streamersToSet } },
     )
         .then(async () => {
 
             await interaction.update({
-                content: `${e.Loading} | Salvando streamers...`, components: [], embeds: []
+                content: `${e.Loading} | Salvando ${commandData.length == 1 ? 'streamer' : `${commandData.length} streamers`}...`, components: [], embeds: []
             }).catch(() => { })
+            TwitchManager.streamersOffline.push(...commandData.map(d => d.streamer))
 
-            for (const { streamer, oldChannelId, message, channelId } of commandData) {
+            for await (const { streamer, oldChannelId, message, channelId } of commandData) {
 
                 if (!TwitchManager.toCheckStreamers.includes(streamer)) TwitchManager.toCheckStreamers.push(streamer)
                 if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
                 if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
 
                 const index = TwitchManager.data[streamer].findIndex(cId => cId == oldChannelId)
+                if (index >= 0) TwitchManager.data[streamer].splice(index, 1)
+                TwitchManager.data[streamer].push(channelId)
 
-                channelId
-                    ? TwitchManager.data[streamer].splice(index, 1, channelId)
-                    : TwitchManager.data[streamer].push(channelId)
+                if (!TwitchManager.channelsNotified[streamer]) TwitchManager.channelsNotified[streamer] = []
+                const indexNotified = TwitchManager.channelsNotified[streamer].findIndex(cId => cId == oldChannelId)
+                if (indexNotified >= 0) TwitchManager.channelsNotified[streamer].splice(index, 1)
 
-                TwitchManager.channelsNotified[streamer] = TwitchManager.channelsNotified[streamer]?.filter(cId => ![channelId, oldChannelId, null].includes(cId)) || []
-                await Database.Cache.General.set(`channelsNotified.${streamer}`, TwitchManager.channelsNotified[streamer])
+                await Database.Cache.General.pull(`channelsNotified.${streamer}`, cId => cId == oldChannelId)
 
                 if (roleId)
                     TwitchManager.rolesIdMentions[`${streamer}_${channelId}`] = roleId
@@ -117,10 +112,13 @@ export default async (interaction, commandData) => {
 
             return
         })
-        .catch(err => interaction.update({
-            content: `${e.cry} | Não foi possível salvar esta configuração.\n${e.bug} | \`${err}\``,
-            components: [],
-            ephemeral: true
-        }).catch(() => { }))
+        .catch(err => {
+            interaction.update({
+                content: `${e.cry} | Não foi possível salvar esta configuração.\n${e.bug} | \`${err}\``,
+                components: [],
+                ephemeral: true
+            }).catch(() => { })
+            console.log(err)
+        })
 
 }

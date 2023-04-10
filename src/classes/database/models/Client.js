@@ -11,7 +11,6 @@ export default model("Client", new Schema({
     ComandosUsados: Number,
     TwitchNotifications: Number,
     CommandsCount: Object,
-    TwitchStreamers: Object,
     Cache: Object,
     Moderadores: Array,
     Administradores: Array,

@@ -2,12 +2,12 @@ import { ApplicationCommandOptionType, ChannelType, PermissionsBitField } from '
 import ativar from './functions/twitch/ativar.twitch.js'
 import desativar from './functions/twitch/desativar.twitch.js'
 import informations from './functions/twitch/informations.twitch.js'
+import search from './functions/twitch/search.twitch.js'
 
 export default {
     name: 'twitch',
     description: '[moderation] Configure as notificações da Twitch no seu servidor',
     dm_permission: false,
-    default_member_permissions: `${PermissionsBitField.Flags.Administrator}`,
     type: 1,
     options: [
         {
@@ -62,6 +62,36 @@ export default {
             description: '[moderation] Todas as informações sobre o comando Twitch',
             type: ApplicationCommandOptionType.Subcommand,
             options: []
+        },
+        {
+            name: 'search',
+            name_localizations: { 'pt-BR': 'pesquisar' },
+            description: '[general] Todas as informações sobre o comando Twitch',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'onde',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Onde você quer pesquisar?',
+                    required: true,
+                    choices: [
+                        {
+                            name: 'Categoria, Jogos ou Outros',
+                            value: 'categories'
+                        },
+                        {
+                            name: 'Canais ou Streamers',
+                            value: 'channels'
+                        }
+                    ]
+                },
+                {
+                    name: 'input',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'O que ou quem você procura no Twitch?',
+                    required: true
+                }
+            ]
         }
     ],
     helpData: {},
@@ -69,6 +99,8 @@ export default {
 
         const { options, member } = interaction
         const Subcommand = options.getSubcommand()
+
+        if (Subcommand == 'search') return search(interaction)
 
         if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
             return interaction.reply({

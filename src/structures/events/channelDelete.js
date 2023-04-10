@@ -17,22 +17,8 @@ client.on('channelDelete', async channel => {
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars TwitchNotifications")
     if (!guildData) return
 
-    if (guildData.TwitchNotifications?.length) {
-
-        const rawData = guildData.TwitchNotifications
-        const streamers = rawData.map(data => `${data?.streamer}`) || []
-
-        for (const streamer of streamers)
-            TwitchManager.removeChannel(streamer, channel.id)
-
-        await Database.Guild.updateOne(
-            { id: channel.guild.id },
-            {
-                $pull: { TwitchNotifications: { channelId: channel.id } }
-            }
-        )
-
-    }
+    if (guildData.TwitchNotifications?.length)
+        TwitchManager.deleteChannelFromTwitchNotification(channel.id)
 
     if (!guildData || !guildData?.LogSystem?.channel) return
     if (channel.id === guildData?.LogSystem?.channel)

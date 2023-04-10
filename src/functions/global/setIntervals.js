@@ -11,7 +11,7 @@ const pollInterval = () => setInterval(async () => {
         if (!poll.permanent && !Date.Timeout(poll?.TimeMs, poll?.DateNow))
             return await PollManager.cancel(poll)
 
-}, 5000)
+}, 1000 * 10)
 
 setInterval(() => {
     const toSendData = client.messagesToSend.slice(0, 40)
@@ -29,12 +29,6 @@ setInterval(() => {
 
     return
 }, 2000)
-
-// setInterval(async () => {
-//     client.shardUsers = await client.shard.fetchClientValues('users.cache')?.then(data => data.flat()).catch(() => client.users.cache)
-//     client.shardGuilds = await client.shard.fetchClientValues('guilds.cache')?.then(data => data.flat()).catch(() => client.guilds.cache)
-//     return
-// }, 1000 * 60 * 3)
 
 setInterval(async () => await Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
 
