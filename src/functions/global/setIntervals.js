@@ -28,9 +28,9 @@ setInterval(() => {
     }
 
     return
-}, 2000)
+}, 1000 * 2)
 
-setInterval(async () => await Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
+setInterval(() => Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
 
 export {
     pollInterval

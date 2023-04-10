@@ -22,5 +22,5 @@ new ShardingClient({
     autopost: true
 })
 
-Sharding.on('shardCreate', Sharding.shardCreate)
+// Sharding.on('shardCreate', Sharding.shardCreate)
 Sharding.spawn({ timeout: 1000 * 60 })

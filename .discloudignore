@@ -2,7 +2,6 @@ backup
 .vscode
 *.example
 node_modules
-TODO.txt
 README.md
 package-lock.json
 .gitattributes
