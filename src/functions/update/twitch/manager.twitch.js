@@ -218,7 +218,7 @@ export default new class TwitchManager {
                 .then(res => resolve(res.data || []))
                 .catch(err => {
                     clearTimeout(timeout)
-                    console.log(err)
+                    console.log('TWITCH MANAGER FETCH ERROR', err)
                     return resolve([])
                 })
         })
@@ -383,7 +383,7 @@ export default new class TwitchManager {
                 }
             }
 
-        setInterval(() => this.saveChannelsNotified(true), 1000 * 10)
+        setTimeout(() => this.saveChannelsNotified(true), 1000 * 10)
         return
     }
 
