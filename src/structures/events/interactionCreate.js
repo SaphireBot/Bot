@@ -21,19 +21,21 @@ client.on('interactionCreate', async interaction => {
             ephemeral: true
         })
 
-    const channelPermissions = await interaction.channel.permissionsFor(client.user)
-    const greenCard = Array.from(
-        new Set([
-            interaction.guild.members.me.permissions.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]),
-            channelPermissions?.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])
-        ].flat())
-    )
+    if (!interaction.channel.isDMBased()) {
+        const channelPermissions = await interaction.channel.permissionsFor(client.user)
+        const greenCard = Array.from(
+            new Set([
+                interaction.guild.members.me.permissions.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]),
+                channelPermissions?.missing([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])
+            ].flat())
+        )
 
-    if (greenCard.length)
-        return await interaction.reply({
-            content: `${e.DenyX} | Eu não tenho permissão o suficiente para interagir neste canal.\n${e.Info} | Me falta ${greenCard.length} permiss${greenCard.length > 1 ? 'ões' : 'ão'}: ${greenCard.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ')}`,
-            ephemeral: true
-        }).catch(() => { })
+        if (greenCard.length)
+            return await interaction.reply({
+                content: `${e.DenyX} | Eu não tenho permissão o suficiente para interagir neste canal.\n${e.Info} | Me falta ${greenCard.length} permiss${greenCard.length > 1 ? 'ões' : 'ão'}: ${greenCard.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ')}`,
+                ephemeral: true
+            }).catch(() => { })
+    }
 
     if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) return new SlashCommandInteraction(interaction).CheckBeforeExecute()
     if (interaction.isButton()) return new ButtonInteraction(interaction).execute()
