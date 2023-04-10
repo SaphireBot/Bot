@@ -47,7 +47,7 @@ export default {
         const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
         const memberAvatarImage = member ? member?.displayAvatarURL({ forceStatic: false, size: 1024 }) : null
 
-        const banner = await getBanner()
+        const banner = await user.banner()
 
         const embeds = [{
             color: client.blue,
@@ -71,20 +71,5 @@ export default {
 
         return await interaction.reply({ embeds: [...embeds], ephemeral: hide })
 
-        async function getBanner() {
-
-            const banner = await axios.get(
-                RouteBases.api + Routes.user(user.id),
-                { headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` } }
-            )
-                .then(value => {
-                    const user = value.data
-                    if (!user.banner) return null
-                    return `${RouteBases.cdn}/banners/${user.id}/${user.banner}.${user.banner.startsWith('a_') ? 'gif' : 'png'}?size=2048`
-                })
-                .catch(() => null)
-
-            return banner
-        }
     }
 }

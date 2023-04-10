@@ -1,10 +1,8 @@
 import { Base, SaphireClient as client, Database } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import moment from 'moment'
-import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js'
-import axios from 'axios'
+import moment from 'moment'
 import cantadasModal from './modals/cantadas/cantadas.modal.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
@@ -650,9 +648,8 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        return await axios({
-            method: "GET",
-            baseURL: `https://kitsu.io/api/edge/anime?filter[text]=${animeName
+        return await fetch(
+            `https://kitsu.io/api/edge/anime?filter[text]=${animeName
                 .toLowerCase()
                 .replace(/[ãâáàä]/gi, 'a')
                 .replace(/[êéèë]/gi, 'e')
@@ -660,23 +657,26 @@ export default class ModalInteraction extends Base {
                 .replace(/[õôóòö]/gi, 'o')
                 .replace(/[ûúùü]/gi, 'u')
                 .replace(/[ç]/gi, 'c')
-                }`,
-            headers: {
-                Accept: 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json'
-            }
-        })
-            .then(async result => {
-                if (!result || !result?.data?.data || !result?.data?.data?.length)
-                    return await interaction.reply({
+            }`,
+            {
+                method: "GET",
+                headers: {
+                    Accept: 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json'
+                }
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (!result || !result?.data || !result?.data?.length)
+                    return interaction.reply({
                         content: `${e.Deny} | Eu não achei nenhum anime com a sua indicação.`,
                         ephemeral: true
                     }).catch(() => { })
 
-                return await sendIndication()
+                return sendIndication()
             })
-            .catch(async () => {
-                return await interaction.reply({
+            .catch(() => {
+                return interaction.reply({
                     content: `${e.Deny} | O anime indicado não existe ou eu não achei ele na lista de animes da Kitsu.`,
                     ephemeral: true
                 })

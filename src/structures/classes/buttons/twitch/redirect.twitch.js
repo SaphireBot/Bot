@@ -1,13 +1,22 @@
 import { Emojis as e } from "../../../../util/util.js"
+import { Message, User } from "discord.js"
 import ButtonInteraction from "../../ButtonInteraction.js"
 import disable from './disable.twitch.js'
 import active from './active.twitch.js'
 
 /**
  * @param { ButtonInteraction } interaction
+ * @param { Message } message
+ * @param { User } user
  * @param { { c: 'twitch', cName: TwitchChannelName, cgId: GuildTextChannelNotificationId } } commandData
  */
-export default async ({ interaction }, commandData) => {
+export default async ({ interaction, message, user }, commandData) => {
+
+    if (user.id !== message.author.id)
+        return interaction.reply({
+            content: `${e.SaphireDesespero} | HEEY, você não pode clicar aqui, ok?`,
+            ephemeral: true
+        })
 
     if (commandData.src == 'active')
         return active(interaction, commandData)

@@ -85,6 +85,5 @@ export default async interaction => {
             "content-type": "application/json"
         })
             .catch(() => { })
-
     }
 }

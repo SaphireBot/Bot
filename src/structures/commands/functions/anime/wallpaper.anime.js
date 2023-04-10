@@ -1,9 +1,6 @@
 import { ButtonStyle } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
-import {
-    SaphireClient as client,
-    Database
-} from '../../../../classes/index.js'
+import { SaphireClient as client, Database } from '../../../../classes/index.js'
 import indicateAnime from './indicate.anime.js'
 
 export default async interaction => {
