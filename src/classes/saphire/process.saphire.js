@@ -1,10 +1,7 @@
 import uncaughtException from "../modules/errors/process/uncaughtException.js"
 import unhandledRejection from "../modules/errors/process/unhandledRejection.js"
 
-process.on('unhandledRejection', error => {
-    console.log(error)
-    unhandledRejection(error)
-})
+process.on('unhandledRejection', unhandledRejection)
 
 process.on('uncaughtException', (error, origin) => {
     console.log(error, origin)

@@ -48,6 +48,10 @@ export default async (interaction, commandData) => {
             ephemeral: true
         }).catch(() => { })
 
+    await interaction.update({
+        content: `${e.Loading} | Salvando ${commandData.length == 1 ? 'streamer' : `${commandData.length} streamers`}...`, components: [], embeds: []
+    }).catch(() => { })
+
     const toPushData = commandData.map(d => ({ channelId, streamer: d.streamer, roleId, message: d.message }))
     const guildData = await Database.Guild.findOne({ id: guild.id }, "TwitchNotifications")
     const streamersToSet = guildData.TwitchNotifications?.filter(d => !commandData.some(c => c.streamer == d.streamer)) || []
@@ -59,9 +63,6 @@ export default async (interaction, commandData) => {
     )
         .then(async () => {
 
-            await interaction.update({
-                content: `${e.Loading} | Salvando ${commandData.length == 1 ? 'streamer' : `${commandData.length} streamers`}...`, components: [], embeds: []
-            }).catch(() => { })
             TwitchManager.streamersOffline.push(...commandData.map(d => d.streamer))
 
             for await (const { streamer, oldChannelId, message, channelId } of commandData) {
@@ -69,6 +70,7 @@ export default async (interaction, commandData) => {
                 if (!TwitchManager.toCheckStreamers.includes(streamer)) TwitchManager.toCheckStreamers.push(streamer)
                 if (!TwitchManager.streamers.includes(streamer)) TwitchManager.streamers.push(streamer)
                 if (!TwitchManager.data[streamer]) TwitchManager.data[streamer] = []
+                if (!TwitchManager.channelsNotified[streamer]) TwitchManager.channelsNotified[streamer] = []
 
                 const index = TwitchManager.data[streamer].findIndex(cId => cId == oldChannelId)
                 if (index >= 0) TwitchManager.data[streamer].splice(index, 1)
@@ -87,7 +89,7 @@ export default async (interaction, commandData) => {
                     TwitchManager.customMessage[`${streamer}_${channelId}`] = message
             }
 
-            interaction.message.edit({
+            return interaction.message.edit({
                 content: null,
                 components: [],
                 embeds: [{
@@ -110,15 +112,14 @@ export default async (interaction, commandData) => {
                 }]
             }).catch(() => { })
 
-            return
         })
         .catch(err => {
-            interaction.update({
+            console.log(err)
+            return interaction.update({
                 content: `${e.cry} | Não foi possível salvar esta configuração.\n${e.bug} | \`${err}\``,
                 components: [],
                 ephemeral: true
             }).catch(() => { })
-            console.log(err)
         })
 
 }

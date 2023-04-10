@@ -11,9 +11,8 @@ export default async interaction => {
 
     const input = interaction.options.getString('input').replace(/\s/g, '%20')
     const where = interaction.options.getString('onde')
-    
     await interaction.reply({ content: `${e.Loading} | Buscando informações na Twitch...` })
-    const query = await TwitchManager.fetcher(`https://api.twitch.tv/helix/search/${where}?query=${input}&first=20`)
+    const query = await TwitchManager.fetcher(`https://api.twitch.tv/helix/search/${where}?query=${input}&first=25`)
     return { categories, channels }[where](interaction, query)
 
 }

@@ -2,7 +2,7 @@ import { Emojis as e } from '../../../../util/util.js'
 import { Config as config } from '../../../../util/Constants.js'
 import { SaphireClient as client } from '../../../index.js'
 
-export default async reason => {
+export default async (reason) => {
 
     /**
      * 500 Internal Server Error

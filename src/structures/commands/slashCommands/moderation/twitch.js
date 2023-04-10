@@ -1,8 +1,10 @@
 import { ApplicationCommandOptionType, ChannelType, PermissionsBitField } from 'discord.js'
+import { Emojis as e } from '../../../../util/util.js'
 import ativar from './functions/twitch/ativar.twitch.js'
 import desativar from './functions/twitch/desativar.twitch.js'
 import informations from './functions/twitch/informations.twitch.js'
 import search from './functions/twitch/search.twitch.js'
+import streamersOnline from './functions/twitch/streamersOnline.twitch.js'
 
 export default {
     name: 'twitch',
@@ -92,6 +94,31 @@ export default {
                     required: true
                 }
             ]
+        },
+        {
+            name: 'streamers_online',
+            name_localizations: { 'pt-BR': 'streamers_em_live' },
+            description: '[general] Veja alguns streamers que estão em live',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'idioma',
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Qual idioma você prefere?',
+                    autocomplete: true
+                },
+                {
+                    name: 'quantidade',
+                    type: ApplicationCommandOptionType.Integer,
+                    description: 'Quantos streamers você quer ver? (Padrão: 100)',
+                    choices: new Array(11)
+                        .fill(1)
+                        .map((_, i) => ({ name: `${i * 10} Streamers`, value: i * 10 }))
+                        .concat([{ name: '1 Streamer', value: 1 }, { name: '5 Streamers', value: 5 }])
+                        .slice(1, 13)
+                        .sort((a, b) => a.value - b.value)
+                }
+            ]
         }
     ],
     helpData: {},
@@ -101,6 +128,7 @@ export default {
         const Subcommand = options.getSubcommand()
 
         if (Subcommand == 'search') return search(interaction)
+        if (Subcommand == 'streamers_online') return streamersOnline(interaction)
 
         if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
             return interaction.reply({

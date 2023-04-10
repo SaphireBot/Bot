@@ -1,9 +1,9 @@
+import { formatString } from '../../functions/plugins/plugins.js'
+import { Colors, ColorsTranslate, Languages, TwitchLanguages } from '../../util/Constants.js'
+import { GiveawayManager } from '../../classes/index.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
-import { formatString } from '../../functions/plugins/plugins.js'
-import { Colors, ColorsTranslate, Languages } from '../../util/Constants.js'
-import { GiveawayManager } from '../../classes/index.js'
 
 export default class Autocomplete extends Base {
     constructor(interaction) {
@@ -75,13 +75,30 @@ export default class Autocomplete extends Base {
             itens: ['reminders', value],
             selecionar: ['quiz_selecionar', value],
             serverinfo: ['serverId', value],
-            streamer: ['disableTwitch', value]
+            streamer: ['disableTwitch', value],
+            idioma: ['languageTwitch', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    languageTwitch(value) {
+        const languages = Object.entries(TwitchLanguages)
+        const filter = languages.filter(
+            ([ISO, langName]) => ISO.toLowerCase().includes(value.toLowerCase())
+                || langName.toLowerCase().includes(value.toLowerCase())
+        )
+
+        if (!languages.length) return this.respond()
+
+        const map = filter.map(
+            ([ISO, langName]) => ({ name: langName, value: ISO })
+        )
+
+        return this.respond(map)
     }
 
     async disableTwitch(value) {
