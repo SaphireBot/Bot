@@ -1,4 +1,4 @@
-import { time } from "discord.js"
+import { ButtonStyle, parseEmoji, time } from "discord.js"
 import { Database, SaphireClient as client } from "../../../classes/index.js"
 import { Emojis as e } from "../../../util/util.js"
 import { TwitchLanguages } from "../../../util/Constants.js"
@@ -256,6 +256,7 @@ export default new class TwitchManager {
 
                 for (const channelId of channels)
                     client.postMessage({
+                        isTwitchNotification: true,
                         channelId,
                         content: offlineImage ? null : `${e.Notification} | **${streamer}** não está mais online.`,
                         embeds: offlineImage
@@ -272,7 +273,17 @@ export default new class TwitchManager {
                                     icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
                                 }
                             }]
-                            : []
+                            : [],
+                        components: [{
+                            type: 1,
+                            components: [{
+                                type: 2,
+                                label: 'Ver as Últimas 25 Lives',
+                                emoji: parseEmoji('🎬'),
+                                custom_id: JSON.stringify({ c: 'twitch', src: 'oldLive', streamerId: data.id }),
+                                style: ButtonStyle.Primary
+                            }]
+                        }]
                     })
 
             }
@@ -337,6 +348,7 @@ export default new class TwitchManager {
             this.notificationInThisSeason++
 
             client.postMessage({
+                isTwitchNotification: true,
                 channelId,
                 content: content || role || `${e.Notification} | ${messageDefault}`,
                 embeds: [{
@@ -361,6 +373,16 @@ export default new class TwitchManager {
                         text: `${client.user.username}'s Twitch Notification System`,
                         icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
                     }
+                }],
+                components: [{
+                    type: 1,
+                    components: [{
+                        type: 2,
+                        label: 'Liberar Clips',
+                        emoji: parseEmoji('🔒'),
+                        custom_id: JSON.stringify({ c: 'twitch', src: 'clips', streamerId: data.user_id }),
+                        style: ButtonStyle.Primary
+                    }]
                 }]
             })
             continue

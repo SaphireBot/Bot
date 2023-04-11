@@ -1,4 +1,4 @@
-import { Database, SaphireClient as client } from '../../classes/index.js'
+import { Database, TwitchManager, SaphireClient as client } from '../../classes/index.js'
 import { StringSelectMenuInteraction } from 'discord.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
@@ -93,11 +93,38 @@ export default class SelectMenuInteraction extends Base {
         const result2 = {
             anunciar: configAnunciar,
             amongus: deathAmongus,
-            serverinfo: pagesServerinfo
+            serverinfo: pagesServerinfo,
+            twitch: 'twitchClip'
         }[this.customId?.c]
+
+        if (typeof result2 == 'string')
+            return this[result2](this)
 
         if (result2)
             return result2(this)
+    }
+
+    async twitchClip({ value, interaction, message }) {
+
+        message.edit({ components: [message.components[0].toJSON()] }).catch(() => { })
+        await interaction.reply({ content: `${e.Loading} | Carregando clip...`, ephemeral: true })
+        const clipRequest = await TwitchManager.fetcher(`https://api.twitch.tv/helix/clips?id=${value}`)
+
+        if (!clipRequest || !clipRequest.length)
+            return interaction.editReply({ content: `${e.cry} | NOOO, eu não achei o clip!!` })
+
+        const clip = clipRequest[0]
+
+        if (!clipRequest || !clipRequest.length)
+            return interaction.editReply({ content: `${e.cry} | NOOO, eu não achei o clip!!` })
+
+        return interaction.editReply({
+            content: `🎬 | Aqui está o clip do **${clip.broadcaster_name}** \`${clip.broadcaster_id}\` criado por **${clip.creator_name}** \`${clip.creator_id}\`\n${e.Info} | Este video foi visto **${(clip.view_count || 0).currency()}** vezes e tem **${clip.duration} segundos**.\n${e.twitch} | [${clip.title}](${clip.url})`,
+            fetchReply: true
+        })
+            .catch(err => interaction.editReply({
+                content: `${e.SaphireDesespero} | WOOOW! Algo deu muito errado.\n${e.bug} | \`${err}\``
+            }).catch(() => { }))
     }
 
     jokempo() {

@@ -1,5 +1,5 @@
 import { Routes } from 'discord.js'
-import { Database, SaphireClient as client } from '../../classes/index.js'
+import { Database, TwitchManager, SaphireClient as client } from '../../classes/index.js'
 import PollManager from '../update/polls/poll.manager.js'
 
 const pollInterval = () => setInterval(async () => {
@@ -17,10 +17,18 @@ setInterval(() => {
     const toSendData = client.messagesToSend.slice(0, 40)
 
     if (toSendData.length) {
-        for (const { content, embeds, components, channelId } of toSendData) {
-            client.rest.post(Routes.channelMessages(channelId), {
-                body: { content, embeds, components }
-            }).catch(() => { })
+        for (const data of toSendData) {
+            client.rest.post(Routes.channelMessages(data.channelId), {
+                body: { content: data.content || null, embeds: data.embeds || [], components: data.components || [] }
+            }).catch(err => {
+                if (data.isTwitchNotification) {
+                    // Missing Access or Unknown Channel
+                    if ([50001, 10003].includes(err.code))
+                        return TwitchManager.deleteChannelFromTwitchNotification(data.channelId)
+                }
+
+                return
+            })
             continue;
         }
 

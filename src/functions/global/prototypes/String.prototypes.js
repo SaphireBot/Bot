@@ -101,6 +101,7 @@ String.prototype.limit = function (param) {
         AutocompleteName: 100,
         AutocompleteValue: 100,
         SelectMenuLabel: 100,
+        SelectMenuPlaceholder: 150,
         SelectMenuDescription: 100,
         SelectMenuValue: 100
     }[param] || this.length
