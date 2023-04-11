@@ -1,12 +1,11 @@
 import { ButtonStyle } from 'discord.js'
 import { Config as config, ErrorsToIgnore, ErrorResponse } from '../../../util/Constants.js'
 import { Emojis as e } from '../../../util/util.js'
-import reply from './functions/reply.errors.js'
 import { ChannelType } from 'discord.js'
+import reply from './functions/reply.errors.js'
 
 export default
     async ({ interaction, Database, user, guild, channel, client }, err) => {
-        console.log(err)
         if (
             !err
             || !interaction
@@ -15,6 +14,7 @@ export default
             || err.message === 'Unknown interaction'
         ) return
 
+        console.log(err)
         const { commandName, commandId } = interaction
         const isTextChannel = channel.type === ChannelType.GuildText
 

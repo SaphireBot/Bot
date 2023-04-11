@@ -4,7 +4,6 @@ import unhandledRejection from "../modules/errors/process/unhandledRejection.js"
 process.on('unhandledRejection', unhandledRejection)
 
 process.on('uncaughtException', (error, origin) => {
-    console.log(error, origin)
     const ignore = ['ERR_IPC_CHANNEL_CLOSED']
     if (ignore.includes(error.code)) return
 

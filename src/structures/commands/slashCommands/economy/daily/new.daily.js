@@ -18,15 +18,15 @@ export default class Daily extends Base {
 
     async execute() {
 
-        const { interaction, Database, client, emojis: e, guild } = this
+        const { interaction, Database, client, emojis: e, guild, options } = this
 
-        const option = this.options.getString('options')
+        const option = options.getString('options')
         const authorData = await Database.User.findOne({ id: this.user.id }, 'Timeouts DailyCount')
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'Titles.BugHunter PremiumServers')
         const bugHunters = clientData?.Titles.BugHunter || []
         const dailyTimeout = authorData?.Timeouts?.Daily || 0
         const count = authorData?.DailyCount || 0
-        const isReminder = option === 'reminder'
+        const isReminder = ['reminderPrivate', 'reminder'].includes(option)
 
         if (option === 'sequency') return this.dailyUserInfo(count)
 
@@ -38,7 +38,7 @@ export default class Daily extends Base {
         }
 
         if (Date.Timeout(86400000, dailyTimeout)) {
-            if (isReminder) return revalidateReminder(interaction, dailyTimeout, 86400000)
+            if (isReminder) return revalidateReminder(interaction, dailyTimeout, 86400000, isReminder)
             return await interaction.reply({
                 content: `⏱ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.\n${e.Info} | Se você quiser ver os seus status, use </daily:${interaction.commandId}>, vá em \`options\` e \`Meu status do daily\``,
                 ephemeral: true
@@ -112,7 +112,7 @@ export default class Daily extends Base {
         })
 
         data.fields.push({ name: '📆 Calendário', value: `\`\`\`txt\n${daysCountFormat}\n\`\`\`` })
-        this.setNewDaily(prize, isReminder)
+        this.setNewDaily(prize, isReminder, option)
 
         return await interaction.reply({
             embeds: [{
@@ -125,7 +125,7 @@ export default class Daily extends Base {
 
     }
 
-    async setNewDaily(prize, isReminder) {
+    async setNewDaily(prize, isReminder, option) {
 
         const dateNow = Date.now()
 
@@ -139,6 +139,7 @@ export default class Daily extends Base {
                 DateNow: dateNow,
                 isAutomatic: true,
                 ChannelId: this.channel.id,
+                privateOrChannel: option == 'reminderPrivate'
             })
 
         Experience.add(this.user.id, prize.xp)

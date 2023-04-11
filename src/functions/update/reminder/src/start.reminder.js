@@ -22,8 +22,10 @@ export default async ({ user, data }) => {
     if (!guild || !Channel || !hasMember)
         return NotifyUser(user, RemindMessage, data.id)
 
-    const msg = await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
-        .catch(async () => await NotifyUser())
+    const msg = data.privateOrChannel
+        ? NotifyUser(user, RemindMessage, data.id)
+        : await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
+            .catch(async () => await NotifyUser(user, RemindMessage, data.id))
 
     if (!msg) return
     if (isAutomatic) return managerReminder.remove(data.id)

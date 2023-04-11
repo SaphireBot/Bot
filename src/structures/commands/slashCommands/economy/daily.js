@@ -15,14 +15,25 @@ export default {
             name: 'options',
             description: 'Mais opções no sistema daily',
             type: ApplicationCommandOptionType.String,
-            autocomplete: true
+            choices: [
+                {
+                    name: 'Meu status do daily',
+                    value: 'sequency'
+                },
+                {
+                    name: 'Ativar lembrete automático',
+                    value: 'reminder'
+                },
+                {
+                    name: 'Ativar lembrete automático no privado',
+                    value: 'reminderPrivate'
+                }
+            ]
         }
     ],
     helpData: {
         color: Colors.Blue,
         description: 'Resgate recompensas diárias usando o daily'
     },
-    async execute({ interaction }) {
-        return new Daily(interaction).execute()
-    }
+    execute: ({ interaction }) => new Daily(interaction).execute()
 }

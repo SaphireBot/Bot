@@ -1,10 +1,10 @@
 import { ButtonStyle } from 'discord.js'
 import { Database } from '../../../../../classes/index.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
-import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 import { Emojis as e } from '../../../../../util/util.js'
+import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 
-export default async (interaction, dateNow, oneDayMiliseconds) => {
+export default async (interaction, dateNow, oneDayMiliseconds, privateOrChannel) => {
 
     const { user, channel, commandId, guild } = interaction
     const reminder = await Database.Reminder.findOne({ userId: user.id, DateNow: dateNow })
@@ -80,7 +80,8 @@ export default async (interaction, dateNow, oneDayMiliseconds) => {
             Time: 86400000,
             DateNow: dateNow,
             isAutomatic: true,
-            ChannelId: channel.id
+            ChannelId: channel.id,
+            privateOrChannel: privateOrChannel == 'reminderPrivate'
         })
 
         return await interaction.editReply({

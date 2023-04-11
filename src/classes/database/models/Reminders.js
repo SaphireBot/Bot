@@ -12,5 +12,6 @@ export default model("Reminders", new Schema({
     isAutomatic: { type: Boolean, default: false },
     DateNow: { type: Number, default: 0 },
     ChannelId: { type: String, default: "" },
-    Alerted: { type: Boolean, default: false }
+    Alerted: { type: Boolean, default: false },
+    privateOrChannel: { type: Boolean, default: false }
 }))

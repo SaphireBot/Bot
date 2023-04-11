@@ -38,7 +38,8 @@ export default new class ReminderManager {
                     timeout: false,
                     isAutomatic: data.isAutomatic,
                     DateNow: data.DateNow,
-                    ChannelId: data.ChannelId
+                    ChannelId: data.ChannelId,
+                    privateOrChannel: data.privateOrChannel
                 })
                 continue
             }

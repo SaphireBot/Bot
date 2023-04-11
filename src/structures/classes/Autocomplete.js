@@ -65,7 +65,6 @@ export default class Autocomplete extends Base {
             anime: ['wallpapers', value],
             flagadminstration: ['flagAdminOptions'],
             ranking: ['rankingOptions'],
-            daily: ['dailyOptions'],
             answers: ['answers'],
             level_options: ['levelOptions'],
             editar_imagem_com_censura: ['editImageLogoMarca'],
@@ -451,22 +450,6 @@ export default class Autocomplete extends Base {
 
         return await this.respond(mapped)
 
-    }
-
-    async dailyOptions() {
-
-        const data = [
-            {
-                name: 'Meu status do daily',
-                value: 'sequency'
-            },
-            {
-                name: 'Ativar lembrete automático',
-                value: 'reminder'
-            }
-        ]
-
-        return await this.respond(data)
     }
 
     async rankingOptions() {
