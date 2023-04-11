@@ -1,6 +1,6 @@
 import { ButtonStyle, ChatInputCommandInteraction, PermissionsBitField, time } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js"
-import { TwitchManager, SaphireClient as client } from "../../../../../../classes/index.js"
+import { TwitchManager } from "../../../../../../classes/index.js"
 import { TwitchLanguages } from "../../../../../../util/Constants.js"
 
 /**
