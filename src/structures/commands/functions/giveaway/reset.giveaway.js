@@ -38,7 +38,7 @@ export default async (interaction, guildData, giveawayId) => {
         ].flat())
     )
     if (greenCard.length)
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.DenyX} | Eu não tenho permissão o suficiente para interagir no canal ${channel}.\n${e.Info} | Me falta ${greenCard.length} permiss${greenCard.length > 1 ? 'ões' : 'ão'}: ${greenCard.map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ')}`,
             ephemeral: true
         }).catch(() => { })
@@ -49,6 +49,6 @@ export default async (interaction, guildData, giveawayId) => {
     giveaway.imageUrl = message?.embeds[0]?.data?.image?.url
     giveaway.color = message?.embeds[0]?.data?.color
 
-    await message.delete().catch(() => { })
+    client.pushMessage({ method: 'delete', channelId: channel.id, messageId: message.id })
     return createGiveaway(interaction, giveaway, giveawayId ? true : false)
 }

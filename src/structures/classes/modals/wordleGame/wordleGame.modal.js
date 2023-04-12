@@ -17,7 +17,7 @@ export default async ({ interaction, fields, Database, client, emojis: e }) => {
 
     if (!data || !message || !embed) {
         await Database.Cache.WordleGame.delete(customId)
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.Deny} | Jogo inválido ou já terminado.`,
             ephemeral: true
         }).catch(() => deleteGameFromCache())

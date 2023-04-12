@@ -22,20 +22,16 @@ client.once('ready', async () => {
 async function restarting(restart) {
 
     if (!restart.channelId || !restart.messageId)
-        return deleteRestartData()
+        return Database.Cache.Client.delete('Restart')
 
-    const channel = await client.channels.fetch(restart.channelId || '0').catch(() => null)
-    if (!channel) return deleteRestartData()
-
-    const message = await channel.messages.fetch(restart.messageId || '0').catch(() => null)
-    if (!message) return deleteRestartData()
-
-    return message.edit({ content: `${e.CheckV} | Reboot concluído.` })
-        .then(deleteRestartData)
-        .catch(() => { })
-
-    async function deleteRestartData() {
-        return await Database.Cache.Client.delete('Restart')
-    }
+    Database.Cache.Client.delete('Restart')
+    return client.pushMessage({
+        method: 'patch',
+        channelId: restart.channelId,
+        messageId: restart.messageId,
+        body: {
+            content: `${e.CheckV} | Reboot concluído.`
+        }
+    })
 
 }

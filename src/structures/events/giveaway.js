@@ -11,7 +11,7 @@ client.on('giveaway', async giveaway => {
     const channel = await guild?.channels?.fetch(giveaway.ChannelId || '0')?.catch(() => null)
     if (!channel?.id) return Database.deleteGiveaway(giveaway.MessageID, guild.id)
 
-    const channelPermissions = await channel.permissionsFor(client.user)
+    const channelPermissions = channel.permissionsFor(client.user)
     const permissions = [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
     const greenCard = Array.from(
         new Set([

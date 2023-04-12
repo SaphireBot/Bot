@@ -652,7 +652,7 @@ export default async interaction => {
                         ]
                     }
                 ]
-            })
+            }).catch(() => { })
         }
 
         return

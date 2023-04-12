@@ -125,7 +125,7 @@ export default class ButtonInteraction extends Base {
         const clearCommand = client.slashCommands.get(customData.c)
 
         if (!clearCommand)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.SaphireDesespero} | Epa epa epa, eu não achei o comando clear...`,
                 components: []
             })
@@ -136,7 +136,7 @@ export default class ButtonInteraction extends Base {
     async removeReaction({ interaction, customId, channel }, customData) {
 
         if (customId == 'cancel')
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.CheckV} | Comando cancelado com sucesso.`,
                 embeds: [], components: []
             }).catch(() => { })
@@ -144,24 +144,20 @@ export default class ButtonInteraction extends Base {
         const message = await channel.messages.fetch(customData.messageId || '0').catch(() => null)
 
         if (!message)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.DenyX} | A mensagem selecionada não foi encontrada.`,
                 embeds: [], components: []
             }).catch(() => { })
 
         return message.reactions.removeAll()
-            .then(async () => {
-                return await interaction.update({
-                    content: `${e.CheckV} | Todas as reações da [mensagem](${message.url}) foram removidas.`,
-                    embeds: [], components: []
-                }).catch(() => { })
-            })
-            .catch(async err => {
-                return await interaction.update({
-                    content: `${e.DenyX} | Não foi possível remover as reações da [mensagem](${message.url})\n${e.bug} | \`${err}\``,
-                    embeds: [], components: []
-                }).catch(() => { })
-            })
+            .then(() => interaction.update({
+                content: `${e.CheckV} | Todas as reações da [mensagem](${message.url}) foram removidas.`,
+                embeds: [], components: []
+            }).catch(() => { }))
+            .catch(err => interaction.update({
+                content: `${e.DenyX} | Não foi possível remover as reações da [mensagem](${message.url})\n${e.bug} | \`${err}\``,
+                embeds: [], components: []
+            }).catch(() => { }))
 
     }
 
@@ -175,7 +171,7 @@ export default class ButtonInteraction extends Base {
             const fields = await getMessagesAndFormat() || []
 
             if (!fields || !fields.length)
-                return await interaction.reply({
+                return interaction.reply({
                     content: `${e.Deny} | Não tem nenhum mensagem global por enquanto.`,
                     components: [{
                         type: 1,
@@ -191,7 +187,7 @@ export default class ButtonInteraction extends Base {
                     ephemeral: true
                 })
 
-            return await interaction.reply({
+            return interaction.reply({
                 embeds: [
                     {
                         color: client.blue,
@@ -228,7 +224,7 @@ export default class ButtonInteraction extends Base {
                     const fields = await getMessagesAndFormat() || []
                     if (!fields.length) return
 
-                    return await interaction.editReply({
+                    return interaction.editReply({
                         embeds: [
                             {
                                 color: client.blue,
@@ -276,19 +272,20 @@ export default class ButtonInteraction extends Base {
             }
         }
 
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.DenyX} | Nenhuma função encontrada para este botão.`,
             ephemeral: true
         })
     }
 
-    async deleteMessage({ message, user }, commandData) {
+    async deleteMessage({ message, user, channel }, commandData) {
 
         if (user.id === commandData.userId)
-            return await message.delete().catch(() => { })
+            return client.pushMessage({ method: 'delete', channelId: channel.id, messageId: message.id })
 
         if (user.id !== message.interaction?.user?.id) return
-        return await message.delete().catch(() => { })
+        return client.pushMessage({ method: 'delete', channelId: channel.id, messageId: message.id })
+
     }
 
     async refeshPing(interaction, commandData) {
@@ -298,7 +295,7 @@ export default class ButtonInteraction extends Base {
         const pingCommand = client.slashCommands.find(cmd => cmd.name === 'ping')
 
         if (!pingCommand)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.Deny} | Comando não encontrado`,
                 components: []
             }).catch(() => { })

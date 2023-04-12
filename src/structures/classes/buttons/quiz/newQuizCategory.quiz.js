@@ -70,16 +70,14 @@ Você está sujeito a punições dentro dos sistemas da Saphire BOT em quebra de
         const attachment = new AttachmentBuilder(buffer, { name: `${user.id}.txt`, description: 'Solicitação de Nova Pergunta para o Quiz' })
         Quiz.sendDocument(attachment).catch(() => { })
 
-        return await interaction.message.edit({
+        return await interaction.editReply({
             content: `${e.Check} | A sua solicitação foi enviada com sucesso.\n${e.Info} | Sua indicação está na posição **${Quiz.CategoriesIndications.length}°** na fila de espera.`,
             embeds: [], components: [], files: [attachment]
-        }).catch(async err => {
-            return await interaction.message.edit({
-                content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.CategoriesIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
-                embeds: [],
-                components: []
-            }).catch(() => { })
-        })
+        }).catch(err =>  channel.send({
+            content: `${e.Info} | Tive um pequeno problema na autenticação de dados. Porém, sua indicação foi salva. Ela está na posição **${Quiz.CategoriesIndications.length}°** na fila de espera.\n${e.bug} | \`${err}\``,
+            embeds: [],
+            components: []
+        }).catch(() => { }))
 
     }
 

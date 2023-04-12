@@ -57,5 +57,4 @@ client.on('paymentCreate', async newPayment => {
         ]
     })
 
-
 })

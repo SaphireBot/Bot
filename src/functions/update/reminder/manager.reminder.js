@@ -318,7 +318,7 @@ export default new class ReminderManager {
         const reminder = [...this.reminders, ...this.over32Bits].find(reminder => reminder?.id === reminderId)
 
         if (!reminder)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.Deny} | Lembrete não encontrado`,
                 embeds: [], components: []
             }).catch(() => { })
@@ -326,15 +326,13 @@ export default new class ReminderManager {
         const date = Date.stringDate((reminder.DateNow + reminder.Time) - Date.now())
         const message = reminder.RemindMessage
 
-        await interaction.message.delete().catch(() => { })
-
         if (!date || !message)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.Deny} | Lembrete não encontrado ou já disparado`,
                 embeds: [], components: []
             }).catch(() => { })
 
-        return await interaction.showModal(Modals.ReminderEdit(date, message, reminderId))
+        return interaction.showModal(Modals.ReminderEdit(date, message, reminderId))
     }
 
     async edit(interaction, reminderId) {
@@ -345,13 +343,13 @@ export default new class ReminderManager {
         const Time = timeMs(date)
 
         if (!date)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | O tempo dado não é válido. Atualização cancelada.`,
                 ephemeral: true
             })
 
         if (!RemindMessage)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Mensagem não encontrada.`,
                 ephemeral: true
             })
@@ -361,13 +359,13 @@ export default new class ReminderManager {
         const data = this.reminders[indexReminders] || this.over32Bits[indexBits]
 
         if (data.Time == Time && RemindMessage == data.RemindMessage)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Qual é, tá mesmo solicitando uma edição para editar a mesma coisa? Cancelei essa edição só por causa dos valores identicos.`,
                 ephemeral: true
             })
 
         if (date <= 3000)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | O tempo mínimo é 3 segundos.`,
                 ephemeral: true
             })

@@ -1,4 +1,4 @@
-import { Database, GiveawayManager } from '../../../../classes/index.js'
+import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { ButtonStyle } from 'discord.js'
 
@@ -53,12 +53,11 @@ export default async (interaction, guildData, giveawayId) => {
 
             GiveawayManager.deleteGiveaway(sorteio)
 
-            const channel = await guild.channels.fetch(sorteio?.ChannelId || '0').catch(() => null)
-
-            if (channel) {
-                const message = await channel.messages.fetch(gwId || '0').catch(() => null)
-                if (message) message.delete().catch(() => { })
-            }
+            client.pushMessage({
+                method: 'delete',
+                channelId: sorteio?.ChannelId,
+                messageId: gwId
+            })
 
             return await int.update({
                 content: `${e.Check} | Sorteio deletado com sucesso!`,

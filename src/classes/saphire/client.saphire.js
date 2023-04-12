@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { Client, Collection, Guild, Routes, messageLink } from 'discord.js'
 import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
-import { Database, Discloud } from '../index.js'
+import { Database, Discloud, TwitchManager } from '../index.js'
 import * as TopGG from 'topgg-autoposter'
 import axios from 'axios'
 
@@ -293,9 +293,75 @@ export default new class SaphireClient extends Client {
             .catch(() => null)
     }
 
-    async postMessage({ content = null, embeds = [], components = [], channelId = null }) {
-        if (!content && !embeds.length && !components.length && !channelId) return
-        this.messagesToSend.push({ content, embeds, components, channelId })
+    async pushMessage(data) {
+        if (!data.method) return
+
+        if (this.shardId == 0) this.messagesToSend.push(data)
+        else this.sendDataToShardZero()
         return
+    }
+
+    async sendDataToShardZero() {
+        // Building
+    }
+
+    async executeMessages() {
+
+        if (this.messagesToSend.length) {
+            const toSendData = this.messagesToSend.slice(0, 40)
+
+            for (const data of toSendData) {
+                switch (data.method) {
+                    case 'post': this.postMessage(data); break;
+                    case 'patch': this.patchMessage(data); break;
+                    case 'delete': this.deleteMessage(data); break;
+                }
+                continue;
+            }
+
+            this.messagesToSend.splice(0, toSendData.length)
+        }
+
+        return setTimeout(() => this.executeMessages(), 1000 * 2)
+    }
+
+    async deleteMessage(data) {
+        if (!data.channelId || !data.messageId) return
+        return await this.rest.delete(Routes.channelMessage(data.channelId, data.messageId))
+            .catch(err => {
+                // Unknown Message
+                if ([10008].includes(err.code)) return
+                return console.log('deleteMessage', err)
+            })
+    }
+
+    async patchMessage(data) {
+        if (!data.channelId || !data.messageId || !data.body) return
+        return await this.rest.patch(
+            Routes.channelMessage(data.channelId, data.messageId),
+            { body: data.body }
+        )
+            .catch(err => {
+                // Unknown Message
+                if ([10008].includes(err.code)) return
+                return console.log('patchMessage', err)
+            })
+    }
+
+    async postMessage(data) {
+        if (!data.channelId || !data.body) return
+        return await this.rest.post(
+            Routes.channelMessages(data.channelId),
+            { body: data.body }
+        )
+            .catch(err => {
+                if (data.isTwitchNotification) {
+                    // Missing Access or Unknown Channel
+                    if ([50001, 10003].includes(err.code))
+                        return TwitchManager.deleteChannelFromTwitchNotification(data.channelId)
+                }
+
+                return
+            })
     }
 }

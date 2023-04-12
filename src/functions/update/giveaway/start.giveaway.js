@@ -80,9 +80,9 @@ export default async (gw, guild, channel, messageFetched) => {
 
     const vencedores = Participantes.random(WinnersAmount)
     const vencedoresMapped = vencedores.map(memberId => `<@${memberId}> \`${memberId}\``)
-
     const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
     const dateNow = Date.now()
+
     if (GiveawayManager.giveaways[index]) {
         GiveawayManager.giveaways[index].DischargeDate = dateNow
         GiveawayManager.giveaways[index].Actived = false
@@ -155,6 +155,14 @@ export default async (gw, guild, channel, messageFetched) => {
             components.components[0].disabled = true
             components.components[0].label = `Participar (${Participantes.length})`
         }
-        return setTimeout(() => message?.edit({ components: components ? [components] : [] }).catch(() => { }), 1000)
+
+        return client.pushMessage({
+            method: 'patch',
+            channelId: channel.id,
+            messageId: giveaway.MessageID,
+            body: {
+                components: components ? [components] : []
+            }
+        })
     }
 }

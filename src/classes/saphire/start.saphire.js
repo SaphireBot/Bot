@@ -1,3 +1,5 @@
+import { Database, Discloud, SaphireClient as client, TwitchManager } from '../index.js'
+import { Config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import automaticSystems from '../../functions/update/index.js'
 import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
@@ -5,8 +7,6 @@ import PollManager from '../../functions/update/polls/poll.manager.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import QuizManager from '../games/QuizManager.js'
 import webhook from './webhooks.saphire.js'
-import { Database, Discloud, SaphireClient as client, TwitchManager } from '../index.js'
-import { Config } from '../../util/Constants.js'
 
 export default async () => {
 
@@ -40,6 +40,7 @@ export default async () => {
     if (client.shardId == 0) {
         import('../../api/app.js')
         TwitchManager.load()
+        client.executeMessages()
     }
 
     client.user.setPresence({

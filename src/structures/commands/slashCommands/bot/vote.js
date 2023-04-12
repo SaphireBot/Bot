@@ -1,3 +1,4 @@
+import { parseEmoji } from 'discord.js'
 import { Config } from '../../../../util/Constants.js'
 import axios from 'axios'
 
@@ -77,7 +78,16 @@ export default {
                 ephemeral: true
             }).catch(() => { })
 
-        interaction.editReply({
+        await Database.Cache.General.set(`TopGG.${user.id}`, {
+            userId: user.id,
+            channelId: channel.id,
+            guildId: guild.id,
+            messageId: msg.id,
+            isReminder: options.getString('reminder') === 'reminder',
+            messageUrl: msg.url
+        })
+
+        return interaction.editReply({
             content: null,
             embeds: [{
                 color: client.blue,
@@ -90,29 +100,19 @@ export default {
                     {
                         type: 2,
                         label: 'VOTAR',
-                        emoji: e.Upvote,
+                        emoji: parseEmoji(e.Upvote),
                         url: Config.TopGGLink,
                         style: 5
                     },
                     {
                         type: 2,
                         label: 'CANCELR',
-                        customId: JSON.stringify({ c: 'vote', src: 'cancelVote' }),
-                        emoji: `${e.Trash}`,
+                        custom_id: JSON.stringify({ c: 'vote', src: 'cancelVote' }),
+                        emoji: parseEmoji(e.Trash),
                         style: 4
                     }
                 ]
-            }],
-            fetchReply: true
-        }).catch(() => { })
-
-        return await Database.Cache.General.set(`TopGG.${user.id}`, {
-            userId: user.id,
-            channelId: channel.id,
-            guildId: guild.id,
-            messageId: msg.id,
-            isReminder: options.getString('reminder') === 'reminder',
-            messageUrl: msg.url
+            }]
         })
 
         async function reload() {
@@ -125,21 +125,7 @@ export default {
                 })
 
             await Database.Cache.General.delete(`TopGG.${user.id}`)
-            const channelCached = await guild.channels.fetch(data?.channelId || '0').catch(() => null)
-            if (!channel)
-                return await interaction.reply({
-                    content: `${e.Check} | Canal não encontrado. Porém, eu fechei a solicitação no banco de dados.`,
-                    ephemeral: true
-                })
-
-            const message = await channelCached.messages.fetch(data?.messageId || '0').catch(() => null)
-            if (!message)
-                return await interaction.reply({
-                    content: `${e.Check} | Mensagem não encontrada. Porém, eu fechei a solicitação no banco de dados.`,
-                    ephemeral: true
-                })
-
-            await message.delete().catch(() => { })
+            client.pushMessage({ method: 'delete', channelId: data.channelId, messageId: data.messageId })
             return await interaction.reply({
                 content: `${e.Check} | Solicitação de voto fechada com sucesso.`,
                 ephemeral: true

@@ -22,9 +22,12 @@ client
     })
     .on('shardReady', (shardId) => {
         client.shardId = shardId
-        return client.postMessage({
-            content: `${e.Check} | **Shard ${shardId} in Cluster ${client.clusterName} was been spawned.**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`,
-            channelId: Config.statusChannelNotification
+        return client.pushMessage({
+            method: 'post',
+            channelId: Config.statusChannelNotification,
+            body: {
+                content: `${e.Check} | **Shard ${shardId} in Cluster ${client.clusterName} was been spawned.**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`
+            }
         })
-        
+
     })

@@ -115,5 +115,4 @@ export default async (interaction, guildData, giveawayId = false) => {
     }]
 
     return await interaction.reply({ embeds, components })
-
 }

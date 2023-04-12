@@ -255,35 +255,38 @@ export default new class TwitchManager {
                 const offlineImage = data?.offline_image_url || null
 
                 for (const channelId of channels)
-                    client.postMessage({
-                        isTwitchNotification: true,
+                    client.pushMessage({
+                        method: 'post',
                         channelId,
-                        content: offlineImage ? null : `${e.Notification} | **${streamer}** não está mais online.`,
-                        embeds: offlineImage
-                            ? [{
-                                color: 0x9c44fb, /* Twitch's Logo Purple */
-                                author: {
-                                    name: `${data.display_name || streamer} não está mais online.`,
-                                    icon_url: data.profile_image_url || null,
-                                    url: `https://www.twitch.tv/${streamer}`
-                                },
-                                image: { url: offlineImage },
-                                footer: {
-                                    text: `${client.user.username}'s Twitch Notification System`,
-                                    icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
-                                }
-                            }]
-                            : [],
-                        components: [{
-                            type: 1,
+                        isTwitchNotification: true,
+                        body: {
+                            content: offlineImage ? null : `${e.Notification} | **${streamer}** não está mais online.`,
+                            embeds: offlineImage
+                                ? [{
+                                    color: 0x9c44fb, /* Twitch's Logo Purple */
+                                    author: {
+                                        name: `${data.display_name || streamer} não está mais online.`,
+                                        icon_url: data.profile_image_url || null,
+                                        url: `https://www.twitch.tv/${streamer}`
+                                    },
+                                    image: { url: offlineImage },
+                                    footer: {
+                                        text: `${client.user.username}'s Twitch Notification System`,
+                                        icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
+                                    }
+                                }]
+                                : [],
                             components: [{
-                                type: 2,
-                                label: 'Ver as Últimas 25 Lives',
-                                emoji: parseEmoji('🎬'),
-                                custom_id: JSON.stringify({ c: 'twitch', src: 'oldLive', streamerId: data.id }),
-                                style: ButtonStyle.Primary
+                                type: 1,
+                                components: [{
+                                    type: 2,
+                                    label: 'Ver as Últimas 25 Lives',
+                                    emoji: parseEmoji('🎬'),
+                                    custom_id: JSON.stringify({ c: 'twitch', src: 'oldLive', streamerId: data.id }),
+                                    style: ButtonStyle.Primary
+                                }]
                             }]
-                        }]
+                        }
                     })
 
             }
@@ -347,43 +350,46 @@ export default new class TwitchManager {
             this.notifications++
             this.notificationInThisSeason++
 
-            client.postMessage({
+            client.pushMessage({
+                method: 'post',
                 isTwitchNotification: true,
                 channelId,
-                content: content || role || `${e.Notification} | ${messageDefault}`,
-                embeds: [{
-                    color: 0x9c44fb, // Twitch's Logo Purple
-                    title: data.title?.slice(0, 256) || 'Nenhum título foi definido',
-                    author: {
-                        name: data.user_name || '??',
-                        icon_url: avatar || null,
+                body: {
+                    content: content || role || `${e.Notification} | ${messageDefault}`,
+                    embeds: [{
+                        color: 0x9c44fb, // Twitch's Logo Purple
+                        title: data.title?.slice(0, 256) || 'Nenhum título foi definido',
+                        author: {
+                            name: data.user_name || '??',
+                            icon_url: avatar || null,
+                            url,
+                        },
                         url,
-                    },
-                    url,
-                    thumbnail: { url: avatar || null },
-                    description: `📺 Transmitindo **${game}**\n👥 ${viewers} pessoas assistindo agora`,
-                    fields: [
-                        {
-                            name: '📝 Adicional',
-                            value: `⏳ Está online ${time(date, 'R')}\n🗓️ Iniciou a live: ${Date.complete(data.started_at)}\n⏱️ Demorei \`${Date.stringDate(Date.now() - date?.valueOf())}\` para enviar esta notificação\n🏷️ Tags: ${data.tags?.map(tag => `\`${tag}\``)?.join(', ') || 'Nenhuma tag'}\n🔞 +18: ${data?.is_mature ? 'Sim' : 'Não'}\n💬 Idioma: ${TwitchLanguages[data?.language] || 'Indefinido'}`
+                        thumbnail: { url: avatar || null },
+                        description: `📺 Transmitindo **${game}**\n👥 ${viewers} pessoas assistindo agora`,
+                        fields: [
+                            {
+                                name: '📝 Adicional',
+                                value: `⏳ Está online ${time(date, 'R')}\n🗓️ Iniciou a live: ${Date.complete(data.started_at)}\n⏱️ Demorei \`${Date.stringDate(Date.now() - date?.valueOf())}\` para enviar esta notificação\n🏷️ Tags: ${data.tags?.map(tag => `\`${tag}\``)?.join(', ') || 'Nenhuma tag'}\n🔞 +18: ${data?.is_mature ? 'Sim' : 'Não'}\n💬 Idioma: ${TwitchLanguages[data?.language] || 'Indefinido'}`
+                            }
+                        ],
+                        image: { url: imageUrl || null },
+                        footer: {
+                            text: `${client.user.username}'s Twitch Notification System`,
+                            icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
                         }
-                    ],
-                    image: { url: imageUrl || null },
-                    footer: {
-                        text: `${client.user.username}'s Twitch Notification System`,
-                        icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
-                    }
-                }],
-                components: [{
-                    type: 1,
+                    }],
                     components: [{
-                        type: 2,
-                        label: 'Liberar Clips',
-                        emoji: parseEmoji('🔒'),
-                        custom_id: JSON.stringify({ c: 'twitch', src: 'clips', streamerId: data.user_id }),
-                        style: ButtonStyle.Primary
+                        type: 1,
+                        components: [{
+                            type: 2,
+                            label: 'Liberar Clips',
+                            emoji: parseEmoji('🔒'),
+                            custom_id: JSON.stringify({ c: 'twitch', src: 'clips', streamerId: data.user_id }),
+                            style: ButtonStyle.Primary
+                        }]
                     }]
-                }]
+                }
             })
             continue
         }

@@ -37,11 +37,15 @@ export default async userId => {
         embed.description += `\n${e.Notification} | Como você ativou o lembrete automático, vou te lembrar ${Date.GetTimeout(43200000, Date.now(), 'R')}`
     }
 
-    return client.rest.patch(
-        Routes.channelMessage(data.channelId, data.messageId),
-        { body: { embeds: [embed], components: [] } }
-    )
-        .catch(() => { })
+    return client.pushMessage({
+        method: 'patch',
+        channelId: data.channelId,
+        messageId: data.messageId,
+        body: {
+            embeds: [embed],
+            components: []
+        }
+    })
 
     async function giveRewards() {
         Experience.add(userId, 1000)
