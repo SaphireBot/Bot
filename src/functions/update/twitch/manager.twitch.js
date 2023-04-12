@@ -20,6 +20,62 @@ export default new class TwitchManager {
         this.notificationInThisSeason = 0
     }
 
+    async checkAccessTokenAndStartLoading() {
+
+        const clientData = await Database.Client.findOne({ id: client.user.id })
+        client.TwitchAccessToken = clientData?.TwitchAccessToken
+        if (!client.TwitchAccessToken) return this.renewToken()
+
+        // https://dev.twitch.tv/docs/authentication/validate-tokens/#how-to-validate-a-token
+        return await fetch(
+            'https://id.twitch.tv/oauth2/validate',
+            {
+                method: 'GET',
+                headers: { Authorization: `OAuth ${client.TwitchAccessToken}`, }
+            }
+        )
+            .then(res => res.json())
+            .then(data => {
+
+                if (
+                    data.status == 401
+                    || data.message == "invalid access token"
+                    || data.expires_in < 86400 // 24hrs in seconds
+                )
+                    return this.renewToken()
+
+                return this.load()
+            })
+            .catch(console.log)
+
+    }
+
+    async renewToken() {
+        // https://dev.twitch.tv/docs/api/get-started/
+        return await fetch(
+            `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        )
+            .then(res => res.json())
+            .then(async data => {
+                return await Database.Client.updateOne(
+                    { id: client.user.id },
+                    { $set: { TwitchAccessToken: data.access_token } }
+                )
+                    .then(() => {
+                        client.TwitchAccessToken = data.access_token
+                        return this.load()
+                    })
+                    .catch(console.log)
+            })
+            .catch(console.log)
+    }
+
     async load() {
 
         await this.refreshStreamersCache()
@@ -207,7 +263,7 @@ export default new class TwitchManager {
             fetch(url, {
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN}`,
+                    Authorization: `Bearer ${client.TwitchAccessToken}`,
                     "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
                 }
             })
@@ -215,7 +271,13 @@ export default new class TwitchManager {
                     clearTimeout(timeout)
                     return res.json()
                 })
-                .then(res => resolve(res.data || []))
+                .then(res => {
+                    if (res.status == 401 || res.message == "invalid access token") {
+                        this.renewToken()
+                        return resolve([])
+                    }
+                    return resolve(res.data || [])
+                })
                 .catch(err => {
                     clearTimeout(timeout)
                     console.log('TWITCH MANAGER FETCH ERROR', err)

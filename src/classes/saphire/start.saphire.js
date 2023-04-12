@@ -39,7 +39,7 @@ export default async () => {
 
     if (client.shardId == 0) {
         import('../../api/app.js')
-        TwitchManager.load()
+        TwitchManager.checkAccessTokenAndStartLoading()
         client.executeMessages()
     }
 

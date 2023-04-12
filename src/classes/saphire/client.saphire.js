@@ -169,10 +169,9 @@ export default new class SaphireClient extends Client {
         this.messagesToSend = []
 
         /**
-         * @returns All Client Data
+         * @returns Twitch Access Token
          */
-        // this.shardGuilds = []
-        // this.shardUsers = []
+        this.TwitchAccessToken = ""
     }
 
     /**
