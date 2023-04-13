@@ -293,11 +293,10 @@ export default new class TwitchManager {
                         resolve([])
                     }
 
-                    const remaining = Number(res.headers.get('ratelimit-remaining'))
-                    console.log(remaining)
                     if (this.rateLimit.inCheck) resolve('TIMEOUT')
                     this.rateLimit.MaxLimit = Number(res.headers.get('ratelimit-limit'))
 
+                    const remaining = Number(res.headers.get('ratelimit-remaining'))
                     if (remaining >= 70)
                         this.rateLimit.remaining = Number(res.headers.get('ratelimit-remaining'))
 
@@ -345,7 +344,6 @@ export default new class TwitchManager {
             const check = await this.check()
             if (check) {
                 this.rateLimit.inCheck = false
-                console.log(this.rateLimit)
                 clearInterval(interval)
                 return
             }
