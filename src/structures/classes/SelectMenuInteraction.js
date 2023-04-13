@@ -110,6 +110,11 @@ export default class SelectMenuInteraction extends Base {
         await interaction.reply({ content: `${e.Loading} | Carregando clip...`, ephemeral: true })
         const clipRequest = await TwitchManager.fetcher(`https://api.twitch.tv/helix/clips?id=${value}`)
 
+        if (clipRequest == 'TIMEOUT')
+            return interaction.editReply({
+                content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+            }).catch(() => { })
+
         if (!clipRequest || !clipRequest.length)
             return interaction.editReply({ content: `${e.cry} | NOOO, eu não achei o clip!!` })
 

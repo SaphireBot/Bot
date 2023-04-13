@@ -11,6 +11,11 @@ export default async (interaction, commandData) => {
 
     const streamerVideos = await TwitchManager.fetcher(`https://api.twitch.tv/helix/videos?user_id=${commandData.streamerId}&first=25&type=archive`) || []
 
+    if (streamerVideos == 'TIMEOUT')
+        return interaction.editReply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        }).catch(() => { })
+
     if (!streamerVideos.length)
         return interaction.editReply({ content: `${e.cry} | Eita... Eu não achei a live.` }).catch(() => { })
 

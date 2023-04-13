@@ -36,10 +36,15 @@ export default async interaction => {
                 .split(/(?:(?:https?:\/\/(?:www\.)?(?:m\.)?twitch\.tv\/)|\W+)/)
                 .filter(NoEmptyStrings => NoEmptyStrings)
         )
-    )   
+    )
         .slice(0, 100)
 
     const result = await TwitchManager.fetcher(`https://api.twitch.tv/helix/users?${streamers.map(str => `login=${str}`).join('&')}`)
+
+    if (result == 'TIMEOUT')
+        return interaction.reply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        })
 
     if (!result || !result.length)
         return await interaction.reply({

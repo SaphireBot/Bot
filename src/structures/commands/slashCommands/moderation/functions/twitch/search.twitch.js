@@ -13,6 +13,11 @@ export default async interaction => {
     const where = interaction.options.getString('onde')
     await interaction.reply({ content: `${e.Loading} | Buscando informações na Twitch...` })
     const query = await TwitchManager.fetcher(`https://api.twitch.tv/helix/search/${where}?query=${input}&first=25`)
-    return { categories, channels }[where](interaction, query)
 
+    if (query == 'TIMEOUT')
+        return interaction.editReply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        }).catch(() => { })
+
+    return { categories, channels }[where](interaction, query)
 }

@@ -44,7 +44,7 @@ export default async (interaction, commandData) => {
 
     if (!jokempo)
         return message.edit({
-            content: `${e.DenyX} | Nenhum jokempo global foi encontrado no valor **${value} ${MoedaCustom}**.\n${e.Info} | Se apareceu algum Jokempo disponível, provavelmente é o seu.`,
+            content: `${e.DenyX} | Nenhum jokempo global foi encontrado no valor **${value.currency()} ${MoedaCustom}**.\n${e.Info} | Se apareceu algum Jokempo disponível, provavelmente é o seu.`,
             ephemeral: true
         }).catch(() => { })
 

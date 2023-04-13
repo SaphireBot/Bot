@@ -13,6 +13,7 @@ import GiveawayManager from '../functions/update/giveaway/manager.giveaway.js'
 import Experience from './modules/Experience.js'
 import Logomarca from './games/Logomarca.js'
 import TwitchManager from '../functions/update/twitch/manager.twitch.js'
+import AfkManager from '../functions/update/afk/manager.afk.js'
 
 export {
     Models,
@@ -29,5 +30,6 @@ export {
     GiveawayManager,
     Experience,
     Logomarca,
-    TwitchManager
+    TwitchManager,
+    AfkManager
 }

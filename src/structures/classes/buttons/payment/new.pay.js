@@ -18,7 +18,7 @@ export default async (interaction, customId) => {
     const userMention = message.mentions.users.first()
     const components = rawComponents[0].toJSON()
     const { confirmated, value } = paymentData
-    if (![author.id, userMention.id].includes(user.id)) return
+    if (![author.id, userMention.id].includes(user.id) || !confirmated) return
 
     if (customId === 'deny') {
         Database.add(author.id, value)
@@ -29,12 +29,12 @@ export default async (interaction, customId) => {
         }).catch(() => { })
     }
 
-    if (confirmated.includes(user.id))
+    if (confirmated?.includes(user.id))
         return await interaction.deferUpdate().catch(() => { })
 
     const data = await Database.Cache.Pay.push(`${author.id}.${message.id}.confirmated`, user.id)
-    components.components[0].label = `Confirmar ${confirmated.length + 1}/2`
-    if ((confirmated.length + 1) >= 2) return validatePayment(interaction, data[message.id])
+    components.components[0].label = `Confirmar ${confirmated?.length + 1}/2`
+    if ((confirmated?.length + 1) >= 2) return validatePayment(interaction, data[message.id])
     return await interaction.update({ components: [components] }).catch(() => { })
 
 }

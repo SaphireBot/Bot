@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
+import { AfkManager } from '../../../../classes/index.js'
 
 export default {
     name: 'afk',
@@ -78,7 +79,7 @@ export default {
     },
     async execute({ interaction, Database }) {
 
-        const { options, user, guild, member } = interaction
+        const { options } = interaction
         const subCommand = options.getSubcommand()
 
         if (!subCommand)
@@ -87,35 +88,7 @@ export default {
                 ephemeral: true
             })
 
-        return subCommand === "ativar"
-            ? activeAfkCommand()
-            : desableAfkCommand()
-
-        async function activeAfkCommand() {
-            const message = options.getString('message') || 'No Message'
-            const where = options.getString('onde') === "server"
-
-            await Database.Cache.AfkSystem.set(`${where ? guild.id : 'Global'}.${user.id}`, message)
-
-            member.setNickname(`${member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
-
-            return await interaction.reply({
-                content: `${e.Check} | Você ativou o AFK. Eu vou avisar todos que marcarem você.${message !== 'No Message' ? `\n📝 | ${message}` : ''}`,
-                ephemeral: true
-            })
-        }
-
-        async function desableAfkCommand() {
-
-            Database.Cache.AfkSystem.delete(`${guild.id}.${user.id}`)
-            Database.Cache.AfkSystem.delete(`Global.${user.id}`)
-            member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
-
-            return await interaction.reply({
-                content: `${e.Check} | Sistema AFK desativado.`,
-                ephemeral: true
-            })
-        }
+        return subCommand === "ativar" ? AfkManager.enable(interaction) : AfkManager.disable(interaction)
 
     }
 }

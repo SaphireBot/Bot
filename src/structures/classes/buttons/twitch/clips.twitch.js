@@ -16,6 +16,11 @@ export default async (interaction, commandData) => {
     const { message, user } = interaction
     const streamerCrips = await TwitchManager.fetcher(`https://api.twitch.tv/helix/clips?broadcaster_id=${commandData.streamerId}&first=25`)
 
+    if (streamerCrips == 'TIMEOUT')
+        return interaction.editReply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        }).catch(() => { })
+
     if (!streamerCrips.length)
         return interaction.editReply({
             content: `${e.cry} | Nenhum clip foi encontrado.`,

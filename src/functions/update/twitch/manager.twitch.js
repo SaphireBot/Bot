@@ -14,6 +14,12 @@ export default new class TwitchManager {
         this.customMessage = {} // { 'alanzoka_channelId': 'text...', 'cellbit_channelId': 'text...', ... }
         this.streamersOffline = [] // ['cellbit']
         this.streamersOnline = [] // ['alanzoka']
+        this.onTimeout = false // If API Request is under 50 requests remaining
+        this.rateLimit = {
+            MaxLimit: 800,
+            remaining: 800,
+            inCheck: false,
+        }
         this.notifications = 0
         this.allGuildsID = 0
         this.awaitingRequests = 0
@@ -160,7 +166,7 @@ export default new class TwitchManager {
         if (streamers?.length) {
 
             const streamersStatus = await this.fetcher(`https://api.twitch.tv/helix/streams?${streamers.map(str => `user_login=${str}`).join('&')}`)
-            if (streamersStatus.length) {
+            if (streamersStatus !== 'TIMEOUT' && streamersStatus.length) {
                 this.offlineStreamers(
                     this.streamers
                         .filter(streamer => !streamersStatus.some(data => data?.user_login == streamer))
@@ -169,9 +175,9 @@ export default new class TwitchManager {
                 this.onlineStreamers(streamersStatus.filter(data => this.data[data?.user_login]?.length))
             }
 
+            streamers.splice(0, streamers.length)
         }
 
-        streamers.splice(0, streamers.length)
         setTimeout(() => this.checkStreamersStatus(), 1000 * 5)
         return
     }
@@ -256,7 +262,16 @@ export default new class TwitchManager {
     }
 
     async fetcher(url) {
-        const data = new Promise((resolve) => {
+        return new Promise((resolve) => {
+
+            this.rateLimit.remaining--
+            if (
+                this.rateLimit.inCheck
+                || this.rateLimit.remaining < 70
+            ) {
+                this.checkRatelimit(this.rateLimit.remaining)
+                return resolve('TIMEOUT')
+            }
 
             const timeout = setTimeout(() => resolve([]), 2000)
 
@@ -269,23 +284,93 @@ export default new class TwitchManager {
             })
                 .then(res => {
                     clearTimeout(timeout)
+
+                    if (res.status == 429) // Rate limit exceeded
+                        resolve('TIMEOUT')
+
+                    if (res.status == 400) { // Bad Request
+                        console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
+                        resolve([])
+                    }
+
+                    const remaining = Number(res.headers.get('ratelimit-remaining'))
+                    console.log(remaining)
+                    if (this.rateLimit.inCheck) resolve('TIMEOUT')
+                    this.rateLimit.MaxLimit = Number(res.headers.get('ratelimit-limit'))
+
+                    if (remaining >= 70)
+                        this.rateLimit.remaining = Number(res.headers.get('ratelimit-remaining'))
+
+                    if (this.rateLimit.remaining < 70)
+                        this.checkRatelimit(this.rateLimit.remaining)
+
                     return res.json()
                 })
                 .then(res => {
-                    if (res.status == 401 || res.message == "invalid access token") {
-                        this.renewToken()
-                        return resolve([])
+
+                    if (res.status == 401) { // Unauthorized                         
+                        console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
+                        resolve([])
                     }
-                    return resolve(res.data || [])
+
+                    if (res.message == "invalid access token") {
+                        this.renewToken()
+                        resolve([])
+                    }
+
+                    resolve(res.data || [])
                 })
                 .catch(err => {
                     clearTimeout(timeout)
                     console.log('TWITCH MANAGER FETCH ERROR', err)
-                    return resolve([])
+                    resolve([])
                 })
         })
+    }
 
-        return data
+    async checkRatelimit(remaining) {
+
+        if (remaining > 780) {
+            this.rateLimit.inCheck = false
+            return
+        }
+
+        if (this.rateLimit.inCheck) return
+        this.rateLimit.inCheck = true
+
+        const check = await this.check()
+        if (check) return
+
+        const interval = setInterval(async () => {
+            const check = await this.check()
+            if (check) {
+                this.rateLimit.inCheck = false
+                console.log(this.rateLimit)
+                clearInterval(interval)
+                return
+            }
+        }, 1000 * 5)
+        return
+    }
+
+    async check() {
+
+        return await fetch('https://api.twitch.tv/helix/users?login=alanzoka', { // Top One of Brazil
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${client.TwitchAccessToken}`,
+                "Client-Id": `${process.env.TWITCH_CLIENT_ID}`
+            }
+        })
+            .then(res => {
+                this.rateLimit.remaining = Number(res.headers.get('ratelimit-remaining'))
+                console.log('CHECKING', this.rateLimit.remaining)
+                if (this.rateLimit.remaining > (this.rateLimit.MaxLimit - 20))
+                    this.rateLimit.inCheck = false
+
+                return this.rateLimit.remaining > (this.rateLimit.MaxLimit - 20)
+            })
+            .catch(err => console.log('TWITCH MANAGER FETCH ERROR', err))
     }
 
     async getFollowers(broadcaster_id) {
@@ -307,8 +392,9 @@ export default new class TwitchManager {
     }
 
     async notifyOfflineStreamersChannels(offlineStreamers) {
-
+        if (!offlineStreamers.length) return
         const request = await this.fetcher(`https://api.twitch.tv/helix/users?${offlineStreamers.map(d => `login=${d.streamer}`).join('&')}`)
+        if (request == 'TIMEOUT') return
 
         if (request.length)
             for (const { streamer, channels } of offlineStreamers) {
@@ -356,8 +442,9 @@ export default new class TwitchManager {
     }
 
     async onlineStreamers(streamersStatus) {
+        if (!streamersStatus.length) return
         const streamersData = await this.fetcher(`https://api.twitch.tv/helix/users?${streamersStatus.map(data => `login=${data.user_login}`).join('&')}`)
-        if (!streamersData.length) return
+        if (streamersData == 'TIMEOUT' || !streamersData.length) return
 
         const oldOfflineMembers = await Database.Cache.General.pull('StreamersOffline', str => streamersStatus.some(d => d.user_login == str))
         this.streamersOffline = oldOfflineMembers

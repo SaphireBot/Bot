@@ -14,8 +14,12 @@ export default async interaction => {
     const amount = options.getInteger('quantidade') || 100
 
     const message = await interaction.reply({ content: `${e.Loading} | Buscando os streamers que você pediu.`, fetchReply: true })
-
     const data = await TwitchManager.fetcher(`https://api.twitch.tv/helix/streams?type=live&first=${amount}${lang}`)
+
+    if (data == 'TIMEOUT')
+        return interaction.editReply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        }).catch(() => { })
 
     if (!data.length)
         return interaction.editReply({
@@ -24,6 +28,11 @@ export default async interaction => {
 
     const hasPerm = member.permissions.has(PermissionsBitField.Flags.Administrator)
     const streamersData = await TwitchManager.fetcher(`https://api.twitch.tv/helix/users?${data.map(d => `login=${d.user_login}`).join('&')}`)
+
+    if (streamersData == 'TIMEOUT')
+        return interaction.editReply({
+            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+        }).catch(() => { })
 
     const responseData = data.map((d, i) => {
 
