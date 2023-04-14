@@ -75,8 +75,8 @@ export default async (interaction, commandData) => {
         const name = embed?.fields[1]?.value
 
         if (client.animes.find(an => an?.id === id)
-            || client.animes.find(an => an?.name?.toLowerCase() === name.toLowerCase())
-            || client.animes.filter(an => an?.type === 'anime').find(an => an?.name?.toLowerCase() === name.toLowerCase())
+            || (client.animes.find(an => an?.name?.toLowerCase() === name.toLowerCase())
+                && client.animes.filter(an => an?.type === 'anime').find(an => an?.name?.toLowerCase() === name.toLowerCase()))
         ) {
             removeIndication(id)
             embed.color = client.red

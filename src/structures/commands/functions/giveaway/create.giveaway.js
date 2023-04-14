@@ -19,7 +19,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
     const imageURL = bySelectMenuInteraction ? giveawayResetedData?.imageUrl : options.getString('imageurl') || giveawayResetedData?.imageUrl
     const Channel = bySelectMenuInteraction ? interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId) : options.getChannel('channel') || interaction.guild.channels.cache.get(giveawayResetedData?.ChannelId)
 
-    // WE NEED THE BASIC PERMISSIONS!!!
+    // I NEED THE BASIC PERMISSIONS!!!
     const basicPermissions = [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.AddReactions]
     const channelPermissions = await Channel.permissionsFor(client.user)
     const greenCard = Array.from(
@@ -36,7 +36,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
     const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color || client.blue
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
-    const collectorData = { reaction: '🎉', AllowedRoles: [], LockedRoles: [], AllowedMembers: [], LockedMembers: [] }
+    const collectorData = { reaction: '🎉', AllowedRoles: [], LockedRoles: [], AllowedMembers: [], LockedMembers: [], RequiredAllRoles: true }
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
     if (!TimeMs)
@@ -70,9 +70,9 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             ephemeral: true
         })
 
-    const msg = await Channel.send({ embeds: [{ color: color || client.blue, title: `${e.Loading} | Construindo sorteio...` }] }).catch(() => { })
+    const msg = await Channel.send({ embeds: [{ color: color || client.blue, title: `${e.Loading} Construindo sorteio...` }] }).catch(() => null)
 
-    if (!msg?.id)
+    if (!msg || !msg?.id)
         return await interaction.reply({
             content: `${e.Deny} | Falha ao obter o ID da mensagem do sorteio. Verifique se eu realmente tenho permissão para enviar mensagem no canal de sorteios.`,
             ephemeral: true
@@ -215,6 +215,13 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                                 emoji: '✖️',
                                 custom_id: 'cancel',
                                 style: ButtonStyle.Danger
+                            },
+                            {
+                                type: 2,
+                                label: 'Todos os Cargos São Obrigatórios',
+                                emoji: '🔄',
+                                custom_id: 'switchRoles',
+                                style: ButtonStyle.Primary
                             }
                         ]
                     }
@@ -241,6 +248,22 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         buttonCollector.stop()
                         msg.delete().catch(() => { })
                         return int.update({ content: `${e.CheckV} Ok ok, tudo cancelado.`, embeds: [], components: [] }).catch(() => { })
+                    }
+
+                    if (customId == 'switchRoles') {
+                        collectorData.RequiredAllRoles = !collectorData.RequiredAllRoles
+                        const message = int.message.toJSON()
+
+                        embed.fields[1].name = collectorData.RequiredAllRoles
+                            ? '🔰 Todos os Cargos São Obrigatórios'
+                            : '🔰 Apenas Um Cargo é Obrigatório'
+
+                        const components = message.components
+                        components[4].components[2].label = collectorData.RequiredAllRoles
+                            ? 'Todos os Cargos São Obrigatórios'
+                            : 'Apenas Um Cargo é Obrigatório'
+
+                        return int.update({ components, embeds: [embed] }).catch(() => { })
                     }
 
                     if (customId == 'roles') {
@@ -350,30 +373,30 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 embed.fields[0].value = `${e.CheckV} O emoji foi salvo.`
 
                 embed.fields[1] = {
-                    name: '🔰 Cargos Obrigatórios',
+                    name: collectorData.RequiredAllRoles ? '🔰 Cargos Obrigatórios' : '🔰 Ter Apenas um Dos Cargos Abaixo',
                     value: collectorData.AllowedRoles.length > 0 || botRole || extra
-                        ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
-                        : 'Só participa quem tiver TODOS os cargos'
+                        ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || 'Nenhum cargo selecionado\n'}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
+                        : 'Nenhum cargo selecionado'
                 }
 
                 embed.fields[2] = {
                     name: '🚫 Cargos Bloqueados',
                     value: collectorData.LockedRoles.length > 0 || botRole || extra
-                        ? `${collectorData.LockedRoles.map(roleId => `<@&${roleId}>`).join(', ') || ''}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
+                        ? `${collectorData.LockedRoles.map(roleId => `<@&${roleId}>`).join(', ') || 'Quem tiver um desses cargos, está de fora.'}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
                         : 'Quem tiver um desses cargos, está de fora.'
                 }
 
                 embed.fields[3] = {
                     name: '👥 Usuários Permitidos',
                     value: collectorData.AllowedMembers.length > 0 || memberBot || extra
-                        ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
+                        ? `${collectorData.AllowedMembers.map(userId => `<@${userId}>`).join(', ') || 'Somente os usuários selecionados aqui poderão participar do sorteio'}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
                         : 'Somente os usuários selecionados aqui poderão participar do sorteio'
                 }
 
                 embed.fields[4] = {
                     name: '🚫 Usuários Bloqueados',
                     value: collectorData.LockedMembers.length > 0 || memberBot || extra
-                        ? `${collectorData.LockedMembers.map(userId => `<@${userId}>`).join(', ') || ''}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
+                        ? `${collectorData.LockedMembers.map(userId => `<@${userId}>`).join(', ') || 'Os usuários selecionados aqui, **NÃO** poderão participar do sorteio'}` + `${memberBot ? `\n${e.Deny} Um Bot foi selecionado` : ''}` + `${memberBot == 'UserAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo usuário nos dois campos` : ''}`
                         : 'Os usuários selecionados aqui, **NÃO** poderão participar do sorteio'
                 }
 
@@ -403,7 +426,8 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             AllowedRoles: collectorData.AllowedRoles, // Cargos que podem participar
             LockedRoles: collectorData.LockedRoles, // Cargos que não podem participar
             AllowedMembers: collectorData.AllowedMembers, // Usuários que podem participar
-            LockedMembers: collectorData.LockedMembers // Usuários que não podem participar
+            LockedMembers: collectorData.LockedMembers, // Usuários que não podem participar
+            RequiredAllRoles: collectorData.RequiredAllRoles
         }
 
         await Database.Guild.updateOne(
@@ -464,7 +488,9 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
         if (collectorData.AllowedRoles.length)
             embed.fields.push({
-                name: `🔰 Cargos Obrigatórios (${collectorData.AllowedRoles.length})`,
+                name: collectorData.RequiredAllRoles
+                    ? `🔰 Cargos Obrigatórios (${collectorData.AllowedRoles.length})`
+                    : `🔰 Ter Apenas um Dos ${collectorData.AllowedRoles.length} Cargos`,
                 value: collectorData.AllowedRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
             })
 

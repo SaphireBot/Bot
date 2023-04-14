@@ -426,7 +426,7 @@ export default new class TwitchManager {
                                 type: 1,
                                 components: [{
                                     type: 2,
-                                    label: 'Ver as Últimas 25 Lives',
+                                    label: `Mais lives de ${streamer}`.limit('ButtonLabel'),
                                     emoji: parseEmoji('🎬'),
                                     custom_id: JSON.stringify({ c: 'twitch', src: 'oldLive', streamerId: data.id }),
                                     style: ButtonStyle.Primary

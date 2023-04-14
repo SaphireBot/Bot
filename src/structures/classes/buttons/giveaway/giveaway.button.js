@@ -52,13 +52,25 @@ export default async ({ interaction }, commandData) => {
         if (giveaway.Participants.includes(user.id))
             return askToLeave()
 
-        if (giveaway.AllowedRoles?.length > 0) {
+        let hasRole = false
+
+        if (giveaway.AllowedRoles?.length > 0 && !giveaway.AllowedMembers.includes(user.id)) {
             const memberRolesIds = member.roles.cache.map(role => role.id)
-            if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
-                return interaction.reply({
-                    content: `${e.DenyX} | Poooxa, que pena. Você não tem todos os cargos obrigatórios para entrar neste sorteio.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
-                    ephemeral: true
-                })
+
+            if (giveaway.RequiredAllRoles) {
+                if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
+                    return interaction.reply({
+                        content: `${e.DenyX} | Poooxa, que pena. Você não tem todos os cargos obrigatórios para entrar neste sorteio.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
+                        ephemeral: true
+                    })
+            }
+            else
+                if (!giveaway.AllowedRoles.some(id => memberRolesIds.includes(id)))
+                    return interaction.reply({
+                        content: `${e.DenyX} | Ooops! Você não possui nenhum dos cargos selecionados.\n${e.Info} | Pra você entrar, você precisa de pelo menos um desses cargos: ${giveaway.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ')}`,
+                        ephemeral: true
+                    })
+            hasRole = true
         }
 
         if (giveaway.LockedRoles?.length > 0) {
@@ -70,7 +82,7 @@ export default async ({ interaction }, commandData) => {
                 })
         }
 
-        if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id))
+        if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id) && !hasRole)
             return interaction.reply({
                 content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
                 ephemeral: true

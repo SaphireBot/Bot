@@ -103,7 +103,8 @@ String.prototype.limit = function (param) {
         SelectMenuLabel: 100,
         SelectMenuPlaceholder: 150,
         SelectMenuDescription: 100,
-        SelectMenuValue: 100
+        SelectMenuValue: 100,
+        ButtonLabel: 80
     }[param] || this.length
 
     if (this.length > limit)
