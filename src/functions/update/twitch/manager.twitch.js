@@ -249,6 +249,7 @@ export default new class TwitchManager {
 
         for (const streamer of streamers)
             if (this.channelsNotified[streamer]?.length) {
+                if (!this.data[streamer]) this.data[streamer] = []
                 this.data[streamer].push(...this.channelsNotified[streamer])
                 notifiedChannels[streamer] = []
                 streamersToNotifier.push({ streamer, channels: Array.from(new Set(this.channelsNotified[streamer])).filter(i => i) })

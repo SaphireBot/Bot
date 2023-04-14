@@ -1,9 +1,9 @@
-import Base from '../../../../classes/Base.js'
 import { Config as config } from '../../../../../util/Constants.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
+import { Experience } from '../../../../../classes/index.js'
+import Base from '../../../../classes/Base.js'
 import revalidateReminder from './reminder.daily.js'
 import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
-import { Experience } from '../../../../../classes/index.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -18,15 +18,22 @@ export default class Daily extends Base {
 
     async execute() {
 
-        const { interaction, Database, client, emojis: e, guild, options } = this
+        const { interaction, Database, client, emojis: e, guild, options, user } = this
 
+        const transferUser = options.getUser('transfer')
         const option = options.getString('options')
-        const authorData = await Database.User.findOne({ id: this.user.id }, 'Timeouts DailyCount')
+        const authorData = await Database.User.findOne({ id: user.id }, 'Timeouts DailyCount')
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'Titles.BugHunter PremiumServers')
         const bugHunters = clientData?.Titles.BugHunter || []
         const dailyTimeout = authorData?.Timeouts?.Daily || 0
         const count = authorData?.DailyCount || 0
         const isReminder = ['reminderPrivate', 'reminder'].includes(option)
+
+        if (transferUser?.bot)
+            return interaction.reply({
+                content: `${e.DenyX} | Bots não podem receber daily, ok?`,
+                ephemeral: true
+            })
 
         if (option === 'sequency') return this.dailyUserInfo(count)
 
@@ -112,20 +119,22 @@ export default class Daily extends Base {
         })
 
         data.fields.push({ name: '📆 Calendário', value: `\`\`\`txt\n${daysCountFormat}\n\`\`\`` })
-        this.setNewDaily(prize, isReminder, option)
+        this.setNewDaily(prize, isReminder, option, transferUser)
 
         return await interaction.reply({
             embeds: [{
                 color: client.green,
                 title: `${e.waku} ${client.user.username} Daily Rewards`,
-                description: `Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
+                description: transferUser
+                    ? `Você transferiu o daily **${prize.day}º** para ${transferUser.tag}`
+                    : `Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
                 fields: data.fields
             }]
         })
 
     }
 
-    async setNewDaily(prize, isReminder, option) {
+    async setNewDaily(prize, isReminder, option, transferUser) {
 
         const dateNow = Date.now()
 
@@ -142,14 +151,26 @@ export default class Daily extends Base {
                 privateOrChannel: option == 'reminderPrivate'
             })
 
-        Experience.add(this.user.id, prize.xp)
+        if (transferUser)
+            Experience.add(transferUser.id, prize.xp)
+        else Experience.add(this.user.id, prize.xp)
 
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },
             $set: { 'Timeouts.Daily': dateNow }
         }
 
-        if (prize.day > 0)
+        if (transferUser)
+            data.$push = {
+                Transactions: {
+                    $each: [{
+                        time: `${Date.format(0, true)}`,
+                        data: `${this.emojis.gain} Ganhou ${prize.money} Safiras transferidas do ${prize.day}º dia do *daily* de ${this.user.tag}.`
+                    }],
+                    $position: 0
+                }
+            }
+        else if (prize.day > 0)
             data.$push = {
                 Transactions: {
                     $each: [{
@@ -160,8 +181,7 @@ export default class Daily extends Base {
                 }
             }
 
-        return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
-
+        return await this.Database.User.updateOne({ id: transferUser ? transferUser.id : this.user.id }, data, { upsert: true })
     }
 
     formatCalendar(prize, num, i) {
@@ -177,15 +197,10 @@ export default class Daily extends Base {
     }
 
     async dailyUserInfo(count) {
-
-        if (count === 0)
-            return await this.interaction.reply({
-                content: `${this.emojis.Info} | Você não tem nenhum dia consecutivo contabilizado.`,
-                ephemeral: true
-            })
-
-        return await this.interaction.reply({
-            content: `${this.emojis.Info} | Atualmente, você resgatou **${count - 1}** prêmios diários consecutivos.`
+        return this.interaction.reply({
+            content: count == 0
+                ? `${this.emojis.Info} | Você não tem nenhum dia consecutivo contabilizado.`
+                : `${this.emojis.Info} | Atualmente, você resgatou **${count - 1}** prêmios diários consecutivos.`
         })
     }
 

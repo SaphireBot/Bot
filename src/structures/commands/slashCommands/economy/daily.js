@@ -6,13 +6,20 @@ export default {
     name: 'daily',
     description: '[economy] Obtenha uma recompensa diária.',
     category: "economy",
-    name_localizations: { "en-US": "daily", 'pt-BR': 'diário' },
+    name_localizations: { 'pt-BR': 'diário' },
     dm_permission: false,
     database: false,
     type: 1,
     options: [
         {
+            name: 'transfer',
+            name_localizations: { 'pt-BR': 'transferir' },
+            description: 'Usuário que receberá o seu daily',
+            type: ApplicationCommandOptionType.User
+        },
+        {
             name: 'options',
+            name_localizations: { 'pt-BR': 'opções' },
             description: 'Mais opções no sistema daily',
             type: ApplicationCommandOptionType.String,
             choices: [
