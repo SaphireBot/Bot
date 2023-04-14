@@ -15,8 +15,8 @@ export default async (reason) => {
      * 10062 Unknow Interaction
      */
 
-    if ([500, 10004, 10008, 10062].includes(reason.code)) return
-    console.log(reason)
+    if ([500, 10004, 10008, 10062, 50001].includes(reason.code)) return
+    console.log('unhandledRejection', reason)
 
     await client.users.cache.get(config.ownerId)?.send({
         embeds: [{
