@@ -30,7 +30,7 @@ export default new class TwitchManager {
 
         const clientData = await Database.Client.findOne({ id: client.user.id })
         client.TwitchAccessToken = clientData?.TwitchAccessToken
-        if (!client.TwitchAccessToken) return this.renewToken()
+        if (!client.TwitchAccessToken) return this.renewToken(true)
 
         // https://dev.twitch.tv/docs/authentication/validate-tokens/#how-to-validate-a-token
         return await fetch(
@@ -48,7 +48,7 @@ export default new class TwitchManager {
                     || data.message == "invalid access token"
                     || data.expires_in < 86400 // 24hrs in seconds
                 )
-                    return this.renewToken()
+                    return this.renewToken(true)
 
                 return this.load()
             })
@@ -56,7 +56,7 @@ export default new class TwitchManager {
 
     }
 
-    async renewToken() {
+    async renewToken(isIniciating) {
         // https://dev.twitch.tv/docs/api/get-started/
         return await fetch(
             `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
@@ -75,7 +75,8 @@ export default new class TwitchManager {
                 )
                     .then(() => {
                         client.TwitchAccessToken = data.access_token
-                        return this.load()
+                        if (isIniciating) return this.load()
+                        return
                     })
                     .catch(console.log)
             })
@@ -274,7 +275,11 @@ export default new class TwitchManager {
                 return resolve('TIMEOUT')
             }
 
-            const timeout = setTimeout(() => resolve([]), 2000)
+            let timedOut = false
+            const timeout = setTimeout(() => {
+                timedOut = true
+                return resolve([])
+            }, 2000)
 
             fetch(url, {
                 method: "GET",
@@ -284,17 +289,18 @@ export default new class TwitchManager {
                 }
             })
                 .then(res => {
+                    if (timedOut) return
                     clearTimeout(timeout)
 
                     if (res.status == 429) // Rate limit exceeded
-                        resolve('TIMEOUT')
+                        return resolve([])('TIMEOUT')
 
                     if (res.status == 400) { // Bad Request
                         console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
-                        resolve([])
+                        return resolve([])
                     }
 
-                    if (this.rateLimit.inCheck) resolve('TIMEOUT')
+                    if (this.rateLimit.inCheck) return resolve('TIMEOUT')
                     this.rateLimit.MaxLimit = Number(res.headers.get('ratelimit-limit'))
 
                     const remaining = Number(res.headers.get('ratelimit-remaining'))
@@ -310,20 +316,20 @@ export default new class TwitchManager {
 
                     if (res.status == 401) { // Unauthorized                         
                         console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
-                        resolve([])
+                        return resolve([])
                     }
 
                     if (res.message == "invalid access token") {
-                        this.renewToken()
-                        resolve([])
+                        this.renewToken(false)
+                        return resolve([])
                     }
 
-                    resolve(res.data || [])
+                    return resolve(res.data || [])
                 })
                 .catch(err => {
                     clearTimeout(timeout)
                     console.log('TWITCH MANAGER FETCH ERROR', err)
-                    resolve([])
+                    return resolve([])
                 })
         })
     }
