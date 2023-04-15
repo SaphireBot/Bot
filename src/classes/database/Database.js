@@ -3,6 +3,7 @@ import Mongoose from 'mongoose'
 import Cache from './CacheManager.js'
 import 'dotenv/config'
 import { GiveawayManager, Models, SaphireClient as client } from '../index.js'
+import { Emojis as e } from '../../util/util.js'
 const { connect } = Mongoose
 
 /**
@@ -394,8 +395,6 @@ export default new class Database extends Models {
 
         if (g || g?.id === guild.id) return
 
-        const emojis = JSON.parse(fs.readFileSync('./JSON/emojis.json'))
-
         await this.Guild.updateOne(
             { id: guild.id },
             {
@@ -421,7 +420,7 @@ export default new class Database extends Models {
                 username: "[Saphire] Saphire Database Logs",
                 embeds: [{
                     color: client.green,
-                    title: `${emojis.Loud} Servidor Adicionado`,
+                    title: `${e.Loud} Servidor Adicionado`,
                     fields: [
                         {
                             name: 'Status',

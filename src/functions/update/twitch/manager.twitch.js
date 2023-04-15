@@ -264,7 +264,7 @@ export default new class TwitchManager {
     }
 
     async fetcher(url) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
 
             this.rateLimit.remaining--
             if (
@@ -292,27 +292,28 @@ export default new class TwitchManager {
                     if (timedOut) return
                     clearTimeout(timeout)
 
-                    if (res.status == 429) // Rate limit exceeded
-                        return resolve([])('TIMEOUT')
+                    if (res.status == 429 || this.rateLimit.inCheck) // Rate limit exceeded
+                        return resolve('TIMEOUT')
 
-                    if (res.status == 400) { // Bad Request
-                        console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
-                        return resolve([])
-                    }
-
-                    if (this.rateLimit.inCheck) return resolve('TIMEOUT')
                     this.rateLimit.MaxLimit = Number(res.headers.get('ratelimit-limit'))
-
                     const remaining = Number(res.headers.get('ratelimit-remaining'))
+
                     if (remaining >= 70)
                         this.rateLimit.remaining = Number(res.headers.get('ratelimit-remaining'))
 
                     if (this.rateLimit.remaining < 70)
                         this.checkRatelimit(this.rateLimit.remaining)
 
+                    if (res.status == 400) { // Bad Request
+                        console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
+                        return resolve([])
+                    }
+
                     return res.json()
                 })
                 .then(res => {
+
+                    if (!res) return
 
                     if (res.status == 401) { // Unauthorized                         
                         console.log('BAD REQUEST TWITCH MANAGER FETCHER', url)
@@ -473,7 +474,7 @@ export default new class TwitchManager {
         const channelsId = this.data[streamer] || []
         if (!data || !streamer || !channelsId.length) return
 
-        if (!this.channelsNotified[streamer]) this.channelsNotified[streamer] = []
+        if (!this.channelsNotified[streamer]?.length) this.channelsNotified[streamer] = []
         this.data[streamer] = this.data[streamer].filter(cId => !this.channelsNotified[streamer]?.includes(cId))
         this.channelsNotified[streamer]?.push(...this.data[streamer])
 
