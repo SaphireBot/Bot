@@ -2,7 +2,7 @@ import { Database, SaphireClient as client } from '../../../classes/index.js'
 import { Config as config } from '../../../util/Constants.js'
 import { Routes, RouteBases, User } from 'discord.js'
 
-User.prototype.banner = async function () {
+User.prototype.getBanner = async function () {
 
     const banner = await fetch(
         RouteBases.api + Routes.user(this.id),

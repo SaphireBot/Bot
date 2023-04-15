@@ -47,7 +47,7 @@ export default {
         const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
         const memberAvatarImage = member ? member?.displayAvatarURL({ forceStatic: false, size: 1024 }) : null
 
-        const banner = await user.banner()
+        const banner = await user.getBanner()
 
         const embeds = [{
             color: client.blue,
