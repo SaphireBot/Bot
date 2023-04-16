@@ -15,9 +15,6 @@ export default async message => {
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
-    const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
-    if (!channel) return
-
     const auditory = await guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete }).catch(() => null)
     if (!auditory) return
 
@@ -67,5 +64,13 @@ export default async message => {
             value: 'Esta era uma mensagem fixada'
         })
 
-    return channel?.send({ content: `🛰️ | **Global System Notification** | Message Delete`, embeds }).catch(() => { })
+    return client.pushMessage({
+        channelId: guildData.LogSystem?.channel,
+        method: 'post',
+        guildId: guild.id,
+        LogType: 'messages',
+        body: {
+            content: `🛰️ | **Global System Notification** | Message Delete`, embeds
+        }
+    })
 }

@@ -1,7 +1,10 @@
-import { AuditLogEvent } from 'discord.js'
+import { AuditLogEvent, GuildChannel } from 'discord.js'
 import { SaphireClient as client, Database, GiveawayManager, TwitchManager } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
+/**
+ * @param { GuildChannel } channel
+ */
 client.on('channelDelete', async channel => {
 
     const { guild } = channel
@@ -30,12 +33,11 @@ client.on('channelDelete', async channel => {
 
     if (!logChannel) return
 
-    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelDelete }).catch(() => null) // { type: 11 } - ChannelUpdate
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelDelete }).catch(() => null)
     if (!logs) return
 
     const Log = logs.entries.first()
     if (!Log || Log.action !== AuditLogEvent.ChannelDelete) return
-
 
     let { executor, target, executorId } = Log
 
@@ -45,11 +47,23 @@ client.on('channelDelete', async channel => {
         executor = await guild.members.fetch(executorId).then(member => member.user).catch(() => null)
 
     if (channel.id === guildData?.Stars?.channel)
-        return logChannel?.send({
-            content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* configurado como **\`Canal de Estrelas\`** foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`
-        }).catch(() => { })
+        return client.pushMessage({
+            channelId: guildData.LogSystem?.channel,
+            method: 'post',
+            guildId: guild.id,
+            LogType: 'channels',
+            body: {
+                content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* configurado como **\`Canal de Estrelas\`** foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.complete(new Date().valueOf())}`
+            }
+        })
 
-    return logChannel?.send({
-        content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.Timestamp()}`
-    }).catch(() => { })
+    return client.pushMessage({
+        channelId: guildData.LogSystem?.channel,
+        method: 'post',
+        guildId: guild.id,
+        LogType: 'channels',
+        body: {
+            content: `🛰️ | **Global System Notification** | Channel Delete\n \n${e.Info} | O canal **${channel.name}** - *\`${channel.id}\`* foi deletado por **${executor.tag || "\`Not Found\`"}** - *\`${executor.id}\`*.\n📅 | ${Date.complete(new Date().valueOf())}`
+        }
+    })
 })

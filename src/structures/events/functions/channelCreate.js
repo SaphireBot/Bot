@@ -1,7 +1,11 @@
 import { SaphireClient as client, Database } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 import { ChannelsTypes } from '../../../util/Constants.js'
+import { Guild, PermissionsBitField } from 'discord.js'
 
+/**
+ * @param { Guild } guild
+ */
 export default async (log, guild) => {
 
     const channel = log?.target
@@ -10,9 +14,6 @@ export default async (log, guild) => {
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
     if (!guildData || !guildData?.LogSystem?.channel || !guildData?.LogSystem?.channels?.active) return
-
-    const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel)?.catch(() => null)
-    if (!logChannel) return
 
     const channelType = ChannelsTypes[channel.type] || "Tipo de canal não reconhecido"
     const category = guild.channels.cache.get(channel.id)?.parent?.name || null
@@ -27,15 +28,15 @@ export default async (log, guild) => {
             ?.map(perm => perm?.id)
             ?.filter(i => i)
 
-        const adminRoles = guild.roles.cache.filter(role => role.permissions.toArray().includes("Administrator")).map(role => role.id)
+        const adminRoles = guild.roles.cache.filter(role => role.permissions.has(PermissionsBitField.Flags.Administrator)).map(role => role.id)
 
         const roles = [adminRoles, rolesAllowed]
             ?.flat()
-            ?.map(roleId => guild.roles.cache.get(roleId)) // 0 Role
+            ?.map(roleId => guild.roles.cache.get(roleId))
 
         const membersFilter = permissions
             .filter(perm => perm.type === 1)
-            ?.map(perm => perm.id) // 1 Member
+            ?.map(perm => perm.id)
             ?.filter(i => i)
 
         const members = await guild.members.fetch({ user: membersFilter }).catch(() => [])
@@ -43,13 +44,13 @@ export default async (log, guild) => {
         if (roles.length)
             fields.push({
                 name: "@ Cargos",
-                value: `Negados: ${guild.roles.everyone}\nPermitidos: ${roles.join(", ") || "Nenhum cargo"}`.limit("MessageEmbedFieldValue")
+                value: `${e.DenyX} Negados: ${guild.roles.everyone}\n${e.CheckV} Permitidos: ${roles.join(", ") || "Nenhum cargo"}`.limit("MessageEmbedFieldValue")
             })
 
         if (members.size)
             fields.push({
                 name: "@ Membros",
-                value: `Permitidos: ${members.toJSON().join(", ") || "Nenhum membro"}`.limit("MessageEmbedFieldValue")
+                value: `${e.CheckV} Permitidos: ${members.toJSON().join(", ") || "Nenhum membro"}`.limit("MessageEmbedFieldValue")
             })
 
     }
@@ -58,14 +59,20 @@ export default async (log, guild) => {
     if (!executor) return
     if (!executor.username) executor = await guild.members.fetch(executor.id).then(member => member.user).catch(() => null)
 
-    return logChannel.send({
-        content: "🛰️ | **Global System Notification** | Channel Create",
-        embeds: [{
-            color: client.blue,
-            title: `${e.Info} | Dados do Canal`,
-            description: `Canal: ${channel}\nUsuário: **${executor?.tag || "\`Not Found\`"}** - *\`${executor.id}\`*\nNome: **${channel.name}** - \`${channel.id}\`\nPosição: \`${channel.position + 1}/${guild.channels.cache.size}\`\nTipo: ${channelType}\n${category ? `Categoria: **${category?.toUpperCase()}**` : ""}\n${Date.Timestamp()}`,
-            fields
-        }]
-    }).catch(() => { })
+    return client.pushMessage({
+        channelId: guildData?.LogSystem?.channel,
+        method: 'post',
+        guildId: guild.id,
+        LogType: 'channels',
+        body: {
+            content: "🛰️ | **Global System Notification** | Channel Create",
+            embeds: [{
+                color: client.blue,
+                title: `${e.Info} Dados do Canal`,
+                description: `💬 Canal: ${channel}\n⚙️ Usuário: **${executor?.tag || "\`Not Found\`"}** - *\`${executor.id}\`*\n✍️ Nome: **${channel.name}** - \`${channel.id}\`\n📝 Posição: \`${channel.position + 1}/${guild.channels.cache.size}\`\n🏷️ Tipo: ${channelType}\n${category ? `#️⃣ Categoria: **${category?.toUpperCase()}**` : ""}\n📅 ${Date.complete(new Date().valueOf())}`,
+                fields
+            }]
+        }
+    })
 
 }

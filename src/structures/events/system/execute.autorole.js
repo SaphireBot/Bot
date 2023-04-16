@@ -1,7 +1,7 @@
-import { Database } from "../../../classes/index.js"
+import { Database, SaphireClient as client } from "../../../classes/index.js"
 import { DiscordPermissons, PermissionsTranslate } from "../../../util/Constants.js"
 
-export default async ({ member, guildData, client }) => {
+export default async ({ member, guildData }) => {
 
     const rolesId = guildData?.Autorole || []
     if (!rolesId || !rolesId.length) return;
@@ -58,46 +58,44 @@ export default async ({ member, guildData, client }) => {
 
     async function notify({ status, rolesToRemove }) {
 
-        const channel = await guild.channels.fetch(guildData?.LogSystem?.channel || "undefined").catch(() => null)
-        if (!channel) return
-
-        const execute = {
-            noPermissions: noPermissions,
-            removeRole: removeRole
-        }[status]
+        const execute = { noPermissions, removeRole }[status]
 
         if (execute) execute()
         return
 
         async function noPermissions() {
             disable()
-            return channel?.send({
-                content: `🛰 | **Global System Notification** | Autorole System\n \nEu estou sem a permissão **${PermissionsTranslate.ManageRoles}** para executar o sistema de Autorole.\nO autorole foi desativado neste servidor.`
-            }).catch(() => { })
+            return client.pushMessage({
+                channelId: guildData?.LogSystem?.channel,
+                method: 'post',
+                guildId: guild.id,
+                LogType: 'channel',
+                body: {
+                    content: `🛰 | **Global System Notification** | Autorole System\n \nEu estou sem a permissão **${PermissionsTranslate.ManageRoles}** para executar o sistema de Autorole.\nO autorole foi desativado neste servidor.`
+                }
+            })
         }
 
         async function removeRole() {
             await Database.Guild.updateOne(
                 { id: guild.id },
-                {
-                    $pullAll: {
-                        Autorole: rolesToRemove
-                    }
-                }
+                { $pullAll: { Autorole: rolesToRemove } }
             )
-            return channel?.send({
-                content: `🛰 | **Global System Notification** | Autorole System\n \nOs seguintes cargos foram removidos do autorole por conter permissões administrativas ou por serem inválidos.\n${rolesToRemove.map(r => guild.roles.cache.get(r)).join(', ')}`
-            }).catch(() => { })
+            return client.pushMessage({
+                channelId: guildData?.LogSystem?.channel,
+                method: 'post',
+                guildId: guild.id,
+                LogType: 'channel',
+                body: {
+                    content: `🛰 | **Global System Notification** | Autorole System\n \nOs seguintes cargos foram removidos do autorole por conter permissões administrativas ou por serem inválidos.\n${rolesToRemove.map(r => guild.roles.cache.get(r)).filter(i => i).join(', ')}`
+                }
+            })
         }
 
         async function disable() {
-            await Database.Guild.updateOne(
+            return await Database.Guild.updateOne(
                 { id: guild.id },
-                {
-                    $unset: {
-                        Autorole: true
-                    }
-                }
+                { $unset: { Autorole: true } }
             )
         }
     }

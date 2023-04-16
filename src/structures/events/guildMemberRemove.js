@@ -1,7 +1,11 @@
+import { GuildMember } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Permissions } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 
+/**
+ * @param { GuildMember } member
+ */
 client.on('guildMemberRemove', async member => {
 
     if (!member || !member.guild || !member.guild.available) return
@@ -15,22 +19,29 @@ client.on('guildMemberRemove', async member => {
 
     if (!guildData) return Database.registerServer(guild)
 
-    const LeaveChannel = guild.channels.cache.get(guildData?.LeaveChannel?.Canal)
-    if (!LeaveChannel) return
+    if (!guildData?.LeaveChannel?.Canal) return
 
-    if (guildData?.LeaveChannel?.Canal && !LeaveChannel) return unset()
-
-    const Mensagem = guildData.LeaveChannel.Mensagem || '$member saiu do servidor.'
+    const Mensagem = guildData.LeaveChannel?.Mensagem || '$member saiu do servidor.'
     const newMessage = Mensagem.replace('$member', member.user.tag).replace('$servername', guild.name)
 
-    return LeaveChannel?.send(`${newMessage}`).catch(() => unset())
+    if (
+        guildData?.LeaveChannel?.Canal
+        && !member.guild.channels.cache.has(guildData?.LeaveChannel?.Canal)
+    ) return unset()
+
+    client.pushMessage({
+        channelId: guildData?.LeaveChannel?.Canal,
+        method: 'post',
+        guildId: member.guild.id,
+        LogType: 'channels',
+        body: { content: newMessage }
+    })
 
     async function unset() {
-        await Database.Guild.updateOne(
+        return await Database.Guild.updateOne(
             { id: guild.id },
             { $unset: { LeaveChannel: 1 } }
         )
-        return;
     }
 
     async function Notify() {
@@ -39,9 +50,6 @@ client.on('guildMemberRemove', async member => {
         if (member.id === client.user.id || !guild.clientHasPermission(Permissions.ViewAuditLog) || !guildData.LogSystem?.channel) return
 
         if (!guildData?.LogSystem?.kick?.active) return
-
-        const channel = guild.channels.cache.get(guildData.LogSystem?.channel)
-        if (!channel) return
 
         const guildAuditLogs = await guild.fetchAuditLogs().catch(() => null) // { type: 20 } - MemberKick
         if (!guildAuditLogs) return
@@ -65,12 +73,18 @@ client.on('guildMemberRemove', async member => {
                 { name: '👤 Usuário', value: `${member.user.tag} - *\`${member.user.id}\`*` },
                 { name: `${e.ModShield} Moderador`, value: `${executor.tag} \`${executor.id}\`` },
                 { name: '📝 Razão', value: `${reason || 'Sem motivo informado'}` },
-                { name: '📅 Data', value: `${Date.Timestamp()}` }
+                { name: '📅 Data', value: `${Date.complete(new Date().valueOf())}` }
             ],
             footer: { text: guild.name, iconURL: guild.iconURL({ forceStatic: false }) }
         }
 
-        return channel.send({ embeds: [embed] }).catch(() => { })
+        return client.pushMessage({
+            channelId: guildData.LogSystem?.channel,
+            method: 'post',
+            guildId: member.guild.id,
+            LogType: 'channels',
+            body: { embeds: [embed] }
+        })
     }
 
 })

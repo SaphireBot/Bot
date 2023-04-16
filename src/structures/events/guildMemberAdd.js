@@ -12,7 +12,7 @@ client.on('guildMemberAdd', async member => {
     if (!guildData) return Database.registerServer(member.guild)
 
     if (guildData?.Autorole)
-        return executeAutorole({ member, guildData, client })
+        return executeAutorole({ member, guildData })
 
     return;
 })

@@ -12,9 +12,6 @@ client.on('guildBanRemove', async ban => {
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
     if (!guildData?.LogSystem?.unban?.active) return
 
-    const channel = guild.channels.cache.get(guildData.LogSystem?.channel)
-    if (!channel || !guildData.LogSystem?.channel) return
-
     const logs = await guild.fetchAuditLogs().catch(() => null) // { type: 23 } - MemberBanRemove
     if (!logs) return
 
@@ -30,17 +27,22 @@ client.on('guildBanRemove', async ban => {
         || [user.id, client.user.id].includes(executor.id)
     ) return
 
-    const embed = {
-        color: client.red,
-        title: "🛰️ Global System Notification | Ban Remove",
-        fields: [
-            { name: '👤 Usuário', value: `${user.tag} - *\`${user.id}\`*` },
-            { name: `${e.ModShield} Moderador`, value: `${executor.tag} \`${executor.id}\`` },
-            { name: '📅 Data', value: `${Date.Timestamp()}` }
-        ],
-        footer: { text: guild.name, iconURL: guild.iconURL({ forceStatic: false }) }
-    }
-
-    return channel.send({ embeds: [embed] }).catch(() => { })
-
+    return client.pushMessage({
+        channelId: guildData.LogSystem?.channel,
+        method: 'post',
+        guildId: guild.id,
+        LogType: 'unban',
+        body: {
+            embeds: [{
+                color: client.red,
+                title: "🛰️ Global System Notification | Ban Remove",
+                fields: [
+                    { name: '👤 Usuário', value: `${user.tag} - *\`${user.id}\`*` },
+                    { name: `${e.ModShield} Moderador`, value: `${executor.tag} \`${executor.id}\`` },
+                    { name: '📅 Data', value: `${Date.complete(new Date().valueOf())}` }
+                ],
+                footer: { text: guild.name, iconURL: guild.iconURL({ forceStatic: false }) }
+            }]
+        }
+    })
 })

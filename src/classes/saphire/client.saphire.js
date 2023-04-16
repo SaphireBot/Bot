@@ -370,11 +370,7 @@ export default new class SaphireClient extends Client {
                     if ([50001, 10003].includes(err.code))
                         return await Database.Guild.updateOne(
                             { id: data.guildId },
-                            {
-                                $unset: {
-                                    [`LogSystem.${data.LogType}`]: true
-                                }
-                            }
+                            { $unset: { [`LogSystem.${data.LogType}`]: true } }
                         )
 
                 return console.log(data, err)

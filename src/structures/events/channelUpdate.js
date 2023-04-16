@@ -1,7 +1,4 @@
-import {
-    Database,
-    SaphireClient as client
-} from "../../classes/index.js";
+import { Database, SaphireClient as client } from "../../classes/index.js";
 import { AuditLogEvent } from "discord.js";
 import { Emojis as e } from "../../util/util.js";
 import { ChannelsTypes, PermissionsTranslate } from "../../util/Constants.js";
@@ -15,10 +12,7 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     const guildData = await Database.Guild.findOne({ id: guild?.id }, "LogSystem")
     if (!guildData) return
 
-    const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
-    if (!logChannel) return
-
-    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelUpdate }).catch(() => null) // { type: 11 } - ChannelUpdate
+    const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelUpdate }).catch(() => null)
     if (!logs) return
 
     const Log = logs.entries.first()
@@ -116,7 +110,6 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
         }
     }
 
-
     function formatRoles(roles) {
         const rolesAllowed = roles
             .filter(perm => perm.type === 0 && perm?.id !== guild.roles.everyone?.id)
@@ -127,16 +120,15 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
 
         return [adminRoles, rolesAllowed]
             ?.flat()
-            ?.map(roleId => guild.roles.cache.get(roleId)) // 0 Role
+            ?.map(roleId => guild.roles.cache.get(roleId))
     }
 
     function formatMembers(members) {
         return members
             .filter(perm => perm.type === 1)
-            ?.map(perm => perm?.id) // 1 Member
+            ?.map(perm => perm?.id)
             ?.filter(i => i)
     }
-
 
     const everyonePermissions = guild.roles.everyone.permissions.serialize() || {}
     const oldPermissionsFor = oldChannel.permissionsFor(guild.roles.everyone, true)
@@ -169,19 +161,25 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     if (Log?.executor)
         fields.push({
             name: `${e.Info} Informações Extra`,
-            value: `${e.Admin} **${Log?.executor.tag}** - *\`${Log?.executor?.id}\`*\n📅 ${Date.Timestamp()}\n💬 ${newChannel}`
+            value: `${e.Admin} **${Log?.executor.tag}** - *\`${Log?.executor?.id}\`*\n📅 ${Date.complete(new Date().valueOf())}\n💬 ${newChannel}`
         })
 
     if (((!description || !description.length) && !fields.length) || (fields.length === 1 && !description)) return
 
-    if (!logChannel?.id || !logChannel?.name) return
-    return logChannel?.send({
-        content: "🛰️ | **Global System Notification** | Channel Updated",
-        embeds: [{
-            color: client.blue,
-            title: "📝 Canal Atualizado - Relatório",
-            description,
-            fields
-        }]
-    }).catch(() => { })
+    client.pushMessage({
+        channelId: guildData?.LogSystem?.channel,
+        LogType: 'channels',
+        method: 'post',
+        guildId: guild.id,
+        body: {
+            content: "🛰️ | **Global System Notification** | Channel Updated",
+            embeds: [{
+                color: client.blue,
+                title: "📝 Canal Atualizado - Relatório",
+                description,
+                fields
+            }]
+        }
+    })
+    return
 })

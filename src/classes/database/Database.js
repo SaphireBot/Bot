@@ -412,29 +412,7 @@ export default new class Database extends Models {
             { upsert: true }
         )
 
-        const owner = await client.users.fetch(guild?.ownerId || "undefined").catch(() => null)
-
-        return client.sendWebhook(
-            process.env.WEBHOOK_DATABASE_LOGS,
-            {
-                username: "[Saphire] Saphire Database Logs",
-                embeds: [{
-                    color: client.green,
-                    title: `${e.Loud} Servidor Adicionado`,
-                    fields: [
-                        {
-                            name: 'Status',
-                            value: `**Dono:** ${owner?.tag || '`Not Found`'} *\`(${guild?.ownerId || '0'})\`*\n**Membros:** ${guild.memberCount}`
-                        },
-                        {
-                            name: 'Register',
-                            value: `O servidor ${guild.name} foi registrado com sucesso!`
-                        }
-                    ]
-                }]
-            }
-        )
-
+        return;
     }
 
     registerClient = async (clientId) => {

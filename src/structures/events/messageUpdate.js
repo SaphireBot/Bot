@@ -1,4 +1,4 @@
-import { ButtonStyle } from 'discord.js'
+import { ButtonStyle, parseEmoji } from 'discord.js'
 import { Database, SaphireClient as client } from '../../classes/index.js'
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
@@ -24,9 +24,6 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 
     const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
-
-    const channel = await guild.channels.fetch(guildData.LogSystem?.channel).catch(() => null)
-    if (!channel) return
 
     const embeds = [{
         color: client.blue,
@@ -66,19 +63,27 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
         })
     }
 
-    const components = [{
-        type: 1,
-        components: [
-            {
-                type: 2,
-                label: "Ir até a mensagem",
-                emoji: "📎",
-                url: newMessage.url,
-                style: ButtonStyle.Link
-            }
-        ]
-    }]
-
-    return channel?.send({ content: `🛰️ | **Global System Notification** | Message Edited`, embeds, components }).catch(() => { })
+    return client.pushMessage({
+        channelId: guildData.LogSystem?.channel,
+        method: 'post',
+        guildId: guild.id,
+        LogType: 'messages',
+        body: {
+            content: `🛰️ | **Global System Notification** | Message Edited`,
+            embeds,
+            components: [{
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: "Ir até a mensagem",
+                        emoji: parseEmoji('📎'),
+                        url: newMessage.url,
+                        style: ButtonStyle.Link
+                    }
+                ]
+            }]
+        }
+    })
 
 })
