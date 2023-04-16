@@ -373,7 +373,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 embed.fields[0].value = `${e.CheckV} O emoji foi salvo.`
 
                 embed.fields[1] = {
-                    name: collectorData.RequiredAllRoles ? '🔰 Cargos Obrigatórios' : '🔰 Ter Apenas um Dos Cargos Abaixo',
+                    name: collectorData.RequiredAllRoles ? '🔰 Cargos Obrigatórios' : '🔰 Possuir um dos cargos abaixo',
                     value: collectorData.AllowedRoles.length > 0 || botRole || extra
                         ? `${collectorData.AllowedRoles.map(roleId => `<@&${roleId}>`).join(', ') || 'Nenhum cargo selecionado\n'}` + `${botRole ? `\n${e.Deny} Um cargo de Bot foi selecionado` : ''}` + `${extra == 'RoleAlreadySelected' ? `\n${e.Deny} Não é possível colocar o mesmo cargo nos dois campos` : ''}`
                         : 'Nenhum cargo selecionado'
@@ -490,7 +490,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             embed.fields.push({
                 name: collectorData.RequiredAllRoles
                     ? `🔰 Cargos Obrigatórios (${collectorData.AllowedRoles.length})`
-                    : `🔰 Ter Apenas um Dos ${collectorData.AllowedRoles.length} Cargos`,
+                    : `🔰 Possuir um dos ${collectorData.AllowedRoles.length} cargos`,
                 value: collectorData.AllowedRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
             })
 
