@@ -2,8 +2,8 @@ import { Database, TwitchManager, SaphireClient as client } from "../../../../cl
 import { Emojis as e, Byte } from "../../../../util/util.js"
 import { ButtonStyle, version as DiscordJsVersion } from 'discord.js'
 import { Config } from "../../../../util/Constants.js"
-import os from 'os'
 import { readFileSync } from 'fs'
+import os from 'os'
 const packageData = JSON.parse(readFileSync('./package.json'))
 let timeouts = []
 const Timeouts = {}
@@ -14,7 +14,7 @@ export default async (interaction, commandData) => {
 
     if (commandData && commandData?.userId !== interaction.user.id)
         return await interaction.reply({
-            content: `${e.Deny} | Calma calma, só <@${commandData.userId}> pode atualizar, ok?`,
+            content: `${e.Deny} | Calma calma, só <@${commandData.userId}> pode clicar aqui, ok?`,
             ephemeral: true
         })
 
@@ -141,7 +141,7 @@ export default async (interaction, commandData) => {
             description: `${rankingHi} ${data.greetingTime}.`,
             fields: [
                 {
-                    name: '📜 Números do Cliente Atual',
+                    name: '📜 Números do Cliente',
                     value: `\`\`\`txt\nShard: ${client.shardId}\nUsuários: ${data.usersShardInCache}\nServidores: ${data.guildsShardInCache}\nCanais: ${data.channelsShardInCache}\nEmojis: ${data.emojisShardInCache}\nOnline: ${result.toFixed(2)}%\nCluster: ${client.clusterName}\n\`\`\``,
                     inline: true
                 },
@@ -151,24 +151,28 @@ export default async (interaction, commandData) => {
                     inline: true
                 },
                 {
-                    name: '⚙️ Desenvolvimento e Construção',
-                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nClient Version: ${data.version} (${packageData.version || 'Primary'})\nHost: discloud.app\n\`\`\``
+                    name: `${e.discloud} Hospedagem`,
+                    value: `\`\`\`txt\nProcessador: ${data.processor}\nArquitetura: ${data.archtecture}\nPlataforma: ${data.platform}\nRAM: ${new Byte(data.memoryUsage)}\nTotal: ${new Byte(data.totalMen)}\n\`\`\``,
+                    inline: true
+                },
+                {
+                    name: '⚙️ Desenvolvimento',
+                    value: `\`\`\`txt\nLinguagem: JavaScript ES6 Modules\nLivraria: Discord.js (${DiscordJsVersion})\nAmbiente: Node.js (${process.version})\nClient Version: ${data.version} (${packageData.version || 'Primary'})\nHost: discloud.app\n\`\`\``,
+                    inline: false
                 },
                 {
                     name: '🛰️ Informações Gerais',
-                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``
+                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``,
+                    inline: false
                 },
                 {
-                    name: `${e.twitch} Gerenciador da Twitch Notification System`,
-                    value: `\`\`\`txt\nStreamers: ${TwitchManager.streamers.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${TwitchManager.streamersOnline.length}\nStreamers Offline: ${TwitchManager.streamersOffline.length}\nServidores Registrados: ${TwitchManager.allGuildsID.length}\nRequisições em Espera: ${TwitchManager.awaitingRequests}\n\`\`\``
+                    name: `${e.twitch} Twitch System`,
+                    value: `\`\`\`txt\nStreamers: ${TwitchManager.streamers.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${TwitchManager.streamersOnline.length}\nStreamers Offline: ${TwitchManager.streamersOffline.length}\nServidores Registrados: ${TwitchManager.allGuildsID.length}\nRequisições em Espera: ${TwitchManager.awaitingRequests}\n\`\`\``,
+                    inline: false
                 },
-                {
-                    name: `${e.discloud} Máquina de Hospedagem`,
-                    value: `\`\`\`txt\nNome: ${data.hostname}\nProcessador: ${data.processor}\nArquitetura: ${data.archtecture}\nPlataforma: ${data.platform}\nRAM: ${new Byte(data.memoryUsage)}/${new Byte(data.totalMen)}\n\`\`\``
-                }
             ],
             footer: {
-                text: Timeouts[interaction.user.id] ? `Cooldown: ${Date.stringDate(Timeouts[interaction.user.id])} | From Cluster ${client.clusterName}` : null
+                text: `💚 Powered by discloud.app | From Cluster ${client.clusterName}`
             }
         }
 

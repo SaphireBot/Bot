@@ -290,7 +290,11 @@ export default class ButtonInteraction extends Base {
 
     async refeshPing(interaction, commandData) {
 
-        if (interaction.user.id !== interaction.message.interaction.user.id) return
+        if (interaction.user.id !== interaction.message.interaction.user.id)
+            return await interaction.reply({
+                content: `${e.Deny} | Calma calma, só <@${interaction.message.interaction.user.id}> pode atualizar, ok?`,
+                ephemeral: true
+            })
 
         const pingCommand = client.slashCommands.find(cmd => cmd.name === 'ping')
 
