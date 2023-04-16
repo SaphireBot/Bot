@@ -15,15 +15,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         new: newMember.communicationDisabledUntil
     }
 
-    if (!mute.old && !mute.new) return
+    if (!mute.old && !mute.new || mute.old == mute.new ) return
 
     const guildData = await Database.Guild.findOne({ id: oldMember.guild.id }, 'LogSystem')
     if (!guildData) return
 
     if (!guildData?.LogSystem?.mute?.active) return
-
-    const logChannel = newMember.guild.channels.cache.get(guildData?.LogSystem?.channel)
-    if (!logChannel) return
 
     let auditory = {}
 
@@ -43,7 +40,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     if (!mute.new && mute.old)
         return muteRemoved()
 
-    return
+    return console.log('Mute Ignored')
     async function muteAdded() {
 
         const fields = [
@@ -58,39 +55,49 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         ]
 
         if (reason?.length)
-            fields.push({
-                name: '📝 Motivo',
-                value: reason
-            })
+            fields.push({ name: '📝 Motivo', value: reason })
 
-        return logChannel.send({
-            content: '🛰️ | **Global System Notification** | New User Muted',
-            embeds: [{
-                color: client.blue,
-                description: `O usuário ${newMember} \`${newMember.id}\` foi mutado`,
-                fields
-            }]
-        }).catch(err => console.log(err))
+        return client.pushMessage({
+            channelId: guildData?.LogSystem?.channel,
+            method: 'post',
+            guildId: oldMember.guild.id,
+            LogType: 'mute',
+            body: {
+                content: '🛰️ | **Global System Notification** | New User Muted',
+                embeds: [{
+                    color: client.blue,
+                    description: `O usuário ${newMember} \`${newMember.id}\` foi mutado`,
+                    fields
+                }]
+            }
+        })
     }
 
     async function muteRemoved() {
-        return logChannel.send({
-            content: '🛰️ | **Global System Notification** | New User Unmuted',
-            embeds: [{
-                color: client.blue,
-                description: `O mute do usuário ${newMember} \`${newMember.id}\` foi removido`,
-                fields: [
-                    {
-                        name: `${e.ModShield} Moderador`,
-                        value: `${auditory.executor || 'Moderador não encontrado'}`
-                    },
-                    {
-                        name: '⏳ Estava mutado até:',
-                        value: `\`${getDate(mute.old)}\``
-                    }
-                ]
-            }]
-        }).catch(() => { })
+
+        return client.pushMessage({
+            channelId: guildData?.LogSystem?.channel,
+            method: 'post',
+            guildId: oldMember.guild.id,
+            LogType: 'mute',
+            body: {
+                content: '🛰️ | **Global System Notification** | New User Unmuted',
+                embeds: [{
+                    color: client.blue,
+                    description: `O mute do usuário ${newMember} \`${newMember.id}\` foi removido`,
+                    fields: [
+                        {
+                            name: `${e.ModShield} Moderador`,
+                            value: `${auditory.executor || 'Moderador não encontrado'}`
+                        },
+                        {
+                            name: '⏳ Estava mutado até:',
+                            value: `\`${getDate(mute.old)}\``
+                        }
+                    ]
+                }]
+            }
+        })
     }
 
     function getDate(time) {

@@ -24,6 +24,7 @@ client
         client.shardId = shardId
         return client.pushMessage({
             method: 'post',
+            type: 'initing',
             channelId: Config.statusChannelNotification,
             body: {
                 content: `${e.Check} | **Shard ${shardId} in Cluster ${client.clusterName} was been spawned.**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}`

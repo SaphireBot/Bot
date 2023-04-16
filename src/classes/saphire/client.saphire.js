@@ -349,19 +349,35 @@ export default new class SaphireClient extends Client {
     }
 
     async postMessage(data) {
-        if (!data.channelId || !data.body) return
+        if (
+            !data.channelId
+            || !data.body
+            || data.type == 'initing' && this.user.id == this.canaryId
+        ) return
+
         return await this.rest.post(
             Routes.channelMessages(data.channelId),
             { body: data.body }
         )
-            .catch(err => {
-                if (data.isTwitchNotification) {
+            .catch(async err => {
+                if (data.isTwitchNotification)
                     // Missing Access or Unknown Channel
                     if ([50001, 10003].includes(err.code))
                         return TwitchManager.deleteChannelFromTwitchNotification(data.channelId)
-                }
 
-                return
+                if (data.LogType)
+                    // Missing Access or Unknown Channel
+                    if ([50001, 10003].includes(err.code))
+                        return await Database.Guild.updateOne(
+                            { id: data.guildId },
+                            {
+                                $unset: {
+                                    [`LogSystem.${data.LogType}`]: true
+                                }
+                            }
+                        )
+
+                return console.log(data, err)
             })
     }
 }

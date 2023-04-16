@@ -110,6 +110,7 @@ async function alertLogin(host) {
 
   return client.pushMessage({
     method: 'post',
+    type: 'initing',
     body: {
       content: `${e.Check} | **Shard ${client.shardId} in Cluster ${client.clusterName} Online**\n📅 | ${new Date().toLocaleString("pt-BR").replace(" ", " ás ")}\n${e.cpu} | Processo iniciado na Host ${host}\n📝 | H.O.S Name: ${hostName}`
     },
