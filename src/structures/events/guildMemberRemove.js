@@ -2,6 +2,7 @@ import { GuildMember } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Permissions } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
+import notifyMemberExit from './functions/remove.guildMemberRemove.js'
 
 /**
  * @param { GuildMember } member
@@ -19,31 +20,10 @@ client.on('guildMemberRemove', async member => {
 
     if (!guildData) return Database.registerServer(guild)
 
-    if (!guildData?.LeaveChannel?.Canal) return
+    if (guildData.LeaveChannel?.channelId)
+        notifyMemberExit(member, guildData.LeaveChannel)
 
-    const Mensagem = guildData.LeaveChannel?.Mensagem || '$member saiu do servidor.'
-    const newMessage = Mensagem.replace('$member', member.user.tag).replace('$servername', guild.name)
-
-    if (
-        guildData?.LeaveChannel?.Canal
-        && !member.guild.channels.cache.has(guildData?.LeaveChannel?.Canal)
-    ) return unset()
-
-    client.pushMessage({
-        channelId: guildData?.LeaveChannel?.Canal,
-        method: 'post',
-        guildId: member.guild.id,
-        LogType: 'channels',
-        body: { content: newMessage }
-    })
-
-    async function unset() {
-        return await Database.Guild.updateOne(
-            { id: guild.id },
-            { $unset: { LeaveChannel: 1 } }
-        )
-    }
-
+    return
     async function Notify() {
 
         if (!guildData) return

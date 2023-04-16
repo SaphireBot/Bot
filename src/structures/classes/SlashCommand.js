@@ -19,10 +19,8 @@ export default class SlashCommandInteraction extends Base {
         this.e = this.emojis
     }
 
-    async execute(guildData, clientData, command) {
+    async execute(command) {
 
-        this.guildData = guildData
-        this.clientData = clientData
         Experience.add(this.user.id, 5)
 
         return command.execute(this)
@@ -51,9 +49,9 @@ export default class SlashCommandInteraction extends Base {
                 ephemeral: true
             })
 
-        return command.database === false
-            ? this.execute({}, {}, command)
-            : this.checkAndDefineDatabase(command)
+        this.guildData = {}
+        this.clientData = {}
+        return command.database === false ? this.execute(command) : this.checkAndDefineDatabase(command)
     }
 
     async checkAndDefineDatabase(command) {
@@ -86,7 +84,9 @@ export default class SlashCommandInteraction extends Base {
             })
 
         this.Moeda = guildData?.Moeda || `${e.Coin} Safiras`
-        return this.execute(guildData, clientData, command)
+        this.guildData = guildData
+        this.clientData = clientData
+        return this.execute(command)
     }
 
     async registerCommand(commandName) {

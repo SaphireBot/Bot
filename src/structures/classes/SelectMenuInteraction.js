@@ -42,6 +42,8 @@ export default class SelectMenuInteraction extends Base {
 
     filterAndChooseFunction() {
 
+        if (['custom', 'custom1'].includes(this.customId)) return
+
         const animesIndicationIds = ['animeSuggestionsGender', 'animeSuggestionsTags', 'animeSuggestionsTags2', 'animeSuggestionsMatchPublic']
         if (animesIndicationIds.includes(this.customId))
             return this.animeSetSuggestions(this)

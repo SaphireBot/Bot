@@ -1,4 +1,6 @@
 import { PermissionFlagsBits } from 'discord.js'
+import { PermissionsTranslate } from '../../util/Constants.js'
+import { Emojis as e } from '../../util/util.js'
 import {
     SlashCommandInteraction,
     Autocomplete,
@@ -7,8 +9,6 @@ import {
     SelectMenuInteraction,
     SaphireClient as client
 } from '../../classes/index.js'
-import { PermissionsTranslate } from '../../util/Constants.js'
-import { Emojis as e } from '../../util/util.js'
 
 client.on('interactionCreate', async interaction => {
     client.interactions++

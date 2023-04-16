@@ -113,6 +113,21 @@ function GetTimeout(TimeToCooldown = 0, DateNowInDatabase = 0, withDateNow = tru
     return `${Day}${Dh}${Hours}${Hm}${Minutes}${Ms}${Seconds}${Nothing}`.replace(/SPACE/g, ' ')
 }
 
+/**
+ * @param { String } string
+ * @returns String
+ */
+function replacePlaceholder(string, member) {
+    if (!string) return null
+    const replace = string
+        .replace(/\$memberTag/g, member.user.tag)
+        .replace(/\$memberId/g, member.id)
+        .replace(/\$member/g, member)
+        .replace(/\$server/g, member.guild.name)
+
+    return replace
+}
+
 export {
     formatString,
     formatArray,
@@ -122,5 +137,6 @@ export {
     emoji,
     formatWord,
     CodeGenerator,
-    GetTimeout
+    GetTimeout,
+    replacePlaceholder
 }

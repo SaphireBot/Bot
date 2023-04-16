@@ -365,6 +365,14 @@ export default new class SaphireClient extends Client {
                     if ([50001, 10003].includes(err.code))
                         return TwitchManager.deleteChannelFromTwitchNotification(data.channelId)
 
+                if (data.LogType == 'WelcomeChannel')
+                    // Missing Access or Unknown Channel
+                    if ([50001, 10003].includes(err.code))
+                        return await Database.Guild.updateOne(
+                            { id: data.guildId },
+                            { $unset: { WelcomeChannel: true } }
+                        )
+
                 if (data.LogType)
                     // Missing Access or Unknown Channel
                     if ([50001, 10003].includes(err.code))

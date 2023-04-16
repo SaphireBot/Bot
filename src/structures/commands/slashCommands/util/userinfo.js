@@ -1,6 +1,7 @@
 import { DiscordFlags as flags, PermissionsTranslate, Permissions, DiscordPermissons } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
+import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'userinfo',
@@ -11,7 +12,7 @@ export default {
     type: 1,
     options: [
         {
-            name: 'member',
+            name: 'user',
             description: 'Selecione um membro para ver suas informações',
             type: ApplicationCommandOptionType.User
         },
@@ -29,12 +30,6 @@ export default {
                     value: 'false'
                 }
             ]
-        },
-        {
-            name: 'user',
-            description: 'Pesquise por um usuário em todos os servidores (que eu estou)',
-            type: ApplicationCommandOptionType.String,
-            autocomplete: true
         }
     ],
     helpData: {
@@ -43,14 +38,10 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, e }) {
+    async execute({ interaction }) {
 
         const { options, guild, user: author } = interaction
-        const searchUser = options.getString('user') || null
-
-        const user = options.getUser('member')
-            || await client.users.fetch(searchUser, { force: true }).catch(() => null)
-            || author
+        const user = options.getString('user') || author
 
         if (!user)
             return await interaction.reply({

@@ -53,6 +53,7 @@ const ChannelsTypes = {
 
 const DiscordColors = {
     Default: "Padrão",
+    Invisible: "Invisível",
     White: "Branco",
     Aqua: "Água",
     Green: "Verde",
@@ -87,6 +88,7 @@ const DiscordColors = {
 
 const BitColors = {
     Default: 0x000000,
+    Invisible: 0x2b2d31,
     White: 0xffffff,
     Aqua: 0x1abc9c,
     Green: 0x57f287,
@@ -121,6 +123,7 @@ const BitColors = {
 
 const HexColors = {
     Default: "#000000",
+    Invisible: "#2b2d31",
     White: "#ffffff",
     Aqua: "#1abc9c",
     Green: "#57f287",

@@ -49,12 +49,12 @@ export default model("Guild", new Schema({
         Mensagem: String
     },
     LeaveChannel: {
-        Canal: String,
-        Mensagem: String,
+        channelId: String,
+        body: Object
     },
     WelcomeChannel: {
-        Canal: String,
-        Mensagem: String,
+        channelId: String,
+        body: Object
     },
     Stars: {
         limit: Number,
