@@ -262,6 +262,32 @@ const Languages = {
     zu: "Zulu",
 }
 
+const UserFlags = {
+    "1": "Staff",
+    "2": "Partner",
+    "4": "Hypesquad",
+    "8": "BugHunterLevel1",
+    "16": "MFASMS",
+    "32": "PremiumPromoDismissed",
+    "64": "HypeSquadOnlineHouse1",
+    "128": "HypeSquadOnlineHouse2",
+    "256": "HypeSquadOnlineHouse3",
+    "512": "PremiumEarlySupporter",
+    "1024": "TeamPseudoUser",
+    "8192": "HasUnreadUrgentMessages",
+    "16384": "BugHunterLevel2",
+    "65536": "VerifiedBot",
+    "131072": "VerifiedDeveloper",
+    "262144": "CertifiedModerator",
+    "524288": "BotHTTPInteractions",
+    "1048576": "Spammer",
+    "2097152": "DisablePremium",
+    "4194304": "ActiveDeveloper",
+    "17592186044416": "Quarantined",
+    "1125899906842624": "Collaborator",
+    "2251799813685248": "RestrictedCollaborator"
+}
+
 const Flags = {
     BotHTTPInteractions: "Bot de integração via HTTP",
     BugHunterLevel1: "Bug Hunter Level 1",
@@ -281,18 +307,13 @@ const Flags = {
     VerifiedBot: "Bot Verificado",
     System: "Sistema",
     VerifiedDeveloper: "Desenvolvedor de bot inicial",
-    DISCORD_EMPLOYEE: 'Empregado do Discord',
-    DISCORD_PARTNER: 'Parceiro do Discord',
-    HYPESQUAD_EVENTS: 'HypeSquad Events',
-    HOUSE_BRAVERY: 'House of Bravery',
-    HOUSE_BRILLIANCE: 'House of Brilliance',
-    HOUSE_BALANCE: 'House of Balance',
-    EARLY_SUPPORTER: 'Apoiador inicial',
-    TEAM_USER: 'Usuário de Time',
-    SYSTEM: 'Sistema',
-    VERIFIED_BOT: 'Bot Verificado',
-    VERIFIED_DEVELOPER: 'Verified Bot Developer',
-    BOT_HTTP_INTERACTIONS: 'Bot de Interação HTTP'
+
+    MFASMS: "OAUTH SMS",
+    PremiumPromoDismissed: "Nitro Perdido",
+    HasUnreadUrgentMessages: "Mensagem urgente não lida",
+    DisablePremium: "Premium Disativado",
+    Collaborator: "Colaborador",
+    RestrictedCollaborator: "Colaborador Restrito",
 }
 
 const PermissionsAsFlagBits = {
@@ -1284,5 +1305,5 @@ export {
     GuildFeatures,
     GuildFeaturesTranslate,
     locales, JokempoValues,
-    TwitchLanguages
+    TwitchLanguages, UserFlags
 }

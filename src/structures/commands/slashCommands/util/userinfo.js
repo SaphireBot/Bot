@@ -41,7 +41,7 @@ export default {
     async execute({ interaction }) {
 
         const { options, guild, user: author } = interaction
-        const user = options.getString('user') || author
+        const user = options.getUser('user') || author
 
         if (!user)
             return await interaction.reply({
@@ -60,7 +60,14 @@ export default {
         const whoIs = user.id === author.id ? 'Suas Informações' : `Informações de ${user.username}`
 
         if (user.bot && !userflags.includes('VerifiedBot')) userflags.push('Bot')
-        userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => e[flag] || flags[flag] || flag).join(' ') : 'Nenhuma'}`
+
+        userData.Bandeiras = userflags.length > 0
+            ? userflags
+                .filter(i => isNaN(i))
+                .map(flag => e[flag] || flags[flag] || `\`${flag}\``)
+                .join(' ') || 'Nenhuma'
+            : 'Nenhuma'
+
         userData.system = user.system ? '\n🧑‍💼 `\`Usuário do Sistema\``' : ''
         userData.avatar = user.avatarURL({ forceStatic: false, format: "png", size: 1024 })
         userData.bot = user.bot ? '\`Sim\`' : '\`Não\`'
