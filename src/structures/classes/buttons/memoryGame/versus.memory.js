@@ -69,7 +69,7 @@ export default async (interaction, customIdData) => {
         const win = allButtons.every(b => b.style === ButtonStyle.Success)
 
         if (componentsUpdate)
-            return await interaction.update({ components })
+            return await interaction.update({ components }).catch(() => { })
 
         if (replied)
             return await interaction.editReply({
