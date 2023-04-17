@@ -159,7 +159,7 @@ export default {
         const ignoreMembers = commandData?.ignoreMembers || interaction?.options?.getString('filter') == 'ignoreMembers'
         const ignoreWebhooks = commandData?.ignoreWebhooks || interaction?.options?.getString('filter') == 'ignoreWebhooks'
         const script = commandData?.script || interaction?.options?.getString('script')
-        const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots || ignoreWebhooks || member 
+        const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots || ignoreWebhooks || member
 
         if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true) && script)
             return await interaction.reply({
@@ -301,6 +301,8 @@ export default {
                 control.older += messages.sweep(msg => !Date.Timeout(((1000 * 60 * 60) * 24) * 14, msg.createdAt.valueOf()))
                 control.undeletable += messages.sweep(msg => !msg.deletable)
 
+                if (messages.size <= 0) break;
+
                 if (ignoreBots)
                     control.ignoreBots += messages.sweep(msg => {
                         if (member?.user?.bot) return msg?.author?.bot && msg?.author?.id !== member?.user?.id
@@ -312,7 +314,7 @@ export default {
                         if (member) return !msg?.author?.bot && !msg?.webhookId && !msg?.system && msg?.author?.id !== member?.user?.id
                         return !msg?.author?.bot && !msg?.webhookId && !msg?.system
                     })
-                    
+
                 if (ignoreWebhooks)
                     control.ignoreWebhooks += messages.sweep(msg => msg?.webhookId)
 
