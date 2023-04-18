@@ -27,7 +27,7 @@ export default async (interaction, resource) => {
 
     const streamers = await TwitchManager.fetcher(`https://api.twitch.tv/helix/users?${resource.map(d => `login=${d.broadcaster_login}`).join('&')}`)
 
-    if (streamerVideos == 'TIMEOUT')
+    if (streamers == 'TIMEOUT')
         return interaction.editReply({
             content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
         }).catch(() => { })
