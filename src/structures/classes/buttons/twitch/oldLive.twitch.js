@@ -1,3 +1,4 @@
+import { ButtonStyle, time } from "discord.js"
 import { ButtonInteraction, TwitchManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
@@ -19,45 +20,64 @@ export default async (interaction, commandData) => {
     if (!streamerVideos.length)
         return interaction.editReply({ content: `${e.cry} | Eita... Eu não achei a live.` }).catch(() => { })
 
-    // const selectMenuObject = {
-    //     type: 1,
-    //     components: [{
-    //         type: 3,
-    //         custom_id: 'menu',
-    //         placeholder: `👁️‍🗨️ Últimas ${streamerVideos.length} lives de ${streamerVideos[0].user_name}`,
-    //         options: []
-    //     }]
-    // }
-
-    // selectMenuObject.components[0].options = streamerVideos
-    //     .map(data => ({
-    //         label: data.title,
-    //         emoji: '🎬',
-    //         description: `Duração de ${data.duration}`,
-    //         value: data.url,
-    //     }))
-
-    // return interaction.editReply({
-    //     content: null,
-    //     embeds: [],
-    //     components: [selectMenuObject]
-    // })
-
-    return interaction.editReply({
-        content: null,
-        embeds: [{
-            color: 0x9c44fb, /* Twitch's Logo Purple */
-            title: `👁️‍🗨️ Últimas ${streamerVideos.length} lives de ${streamerVideos[0].user_name}`,
-            description: `${streamerVideos
-                // .map(data => `\`${data.duration}\` [${data.title}](${data.url}) ${hyperlink(data.title, data.url)}`)
-                .map(data => `\`${data.duration}\` [${data.title.replace(/#|\[|\]|\p{S}|\d+/gu, "").trim()}](${data.url})`)
-                .join('\n') || 'Nenhuma live carregada?'}`
-                .limit('MessageEmbedDescription'),
-            image: { url: streamerVideos[0]?.thumbnail_url || null },
-            footer: {
-                text: `${client.user.username}'s Twitch Notification System`,
-                icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
-            }
+    const selectMenuObject = {
+        type: 1,
+        components: [{
+            type: 3,
+            custom_id: 'menu',
+            placeholder: `👁️‍🗨️ Últimas ${streamerVideos.length} lives de ${streamerVideos[0].user_name}`,
+            options: []
         }]
-    }).catch(() => { })
+    }
+
+    selectMenuObject.components[0].options = streamerVideos
+        .map((data, i) => ({
+            label: data.title,
+            emoji: '🎬',
+            description: `Duração de ${data.duration}`,
+            value: `${i}`,
+        }))
+
+    const data = streamerVideos
+        .map(data => ({
+            content: null,
+            embeds: [{
+                color: 0x9c44fb,
+                title: data.title,
+                url: data.url,
+                image: { url: data.thumbnail_url?.replace('%{width}x%{height}', '620x378') || null },
+                description: `\n👥 ${(data.view_count || 0).currency()} pessoas assistiram\n🗓️ Transmitiu em ${time(new Date(data.published_at), 'f')}\n⏳ Durou um total de \`${data.duration?.replace('d', 'd ').replace('h', 'h ').replace('m', 'm ').trim()}\``,
+                footer: {
+                    text: `${client.user.username}'s Twitch Notification System`,
+                    icon_url: 'https://freelogopng.com/images/all_img/1656152623twitch-logo-round.png',
+                }
+            }],
+            components: [
+                selectMenuObject,
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: 'Assistir na Twitch',
+                            emoji: '🎬',
+                            url: data.url,
+                            style: ButtonStyle.Link
+                        }
+                    ]
+                }
+            ]
+        }))
+
+    return await interaction.editReply({ ...data[0], fetchReply: true })
+        .then(msg => {
+            return msg.createMessageComponentCollector({
+                filter: int => int.user.id === interaction.user.id,
+                idle: 1000 * 60 * 4
+            })
+                .on('collect', int => int.update(data[int.values[0]]))
+                .on('end', () => msg.edit({ components: [] }).catch(() => { }))
+        })
+        .catch(() => { })
+
 }

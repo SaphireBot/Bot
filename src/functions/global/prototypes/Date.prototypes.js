@@ -33,7 +33,7 @@ const TimestampStyles = {
 }
 
 Date.prototype.constructor.complete = ms => {
-    return `${time(new Date(ms), 'D')} ás ${time(new Date(ms), 'T')}`
+    return `${time(new Date(ms), 'D')} às ${time(new Date(ms), 'T')}`
 }
 
 Date.prototype.constructor.GetTimeout = function (TimeToCooldown = 0, DateNowInDatabase = 0, style) {
