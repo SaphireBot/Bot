@@ -1286,6 +1286,53 @@ const TwitchLanguages = {
     "zu": "Zulu"
 }
 
+const NSFWImagesCategory = [
+    "anal",
+    "ass",
+    "bdsm",
+    "cum",
+    "classic",
+    "creampie",
+    "manga",
+    "femdom",
+    "hentai",
+    "incest",
+    "masturbation",
+    "public",
+    "ero",
+    "orgy",
+    "elves",
+    "yuri",
+    "pantsu",
+    "glasses",
+    "cuckold",
+    "blowjob",
+    "boobjob",
+    // "footjoob",
+    "handjoob",
+    "boobs",
+    "thighs",
+    "pussy",
+    "ahegao",
+    "gangbang",
+    "tentacles",
+    "uniform",
+    "gif",
+    "nsfwNeko",
+    "nsfwMobileWallpaper",
+    "zettaiRyouiki",
+
+    // NekoBot
+    "paizuri",
+    "hanal",
+    "kitsune",
+    "lewdneko",
+    "tentacle",
+
+    // Nekos
+    "wallpaper"
+]
+
 export {
     ConfigurationBase as Config,
     DiscordColors as ColorsTranslate,
@@ -1305,5 +1352,6 @@ export {
     GuildFeatures,
     GuildFeaturesTranslate,
     locales, JokempoValues,
-    TwitchLanguages, UserFlags
+    TwitchLanguages, UserFlags,
+    NSFWImagesCategory
 }

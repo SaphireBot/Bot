@@ -34,6 +34,7 @@ import connect from './buttons/connect/redirect.connect.js'
 import checkJokempo from './buttons/jokempo/redirect.jokempo.js'
 import twitch from './buttons/twitch/redirect.twitch.js'
 import serverRedirect from './buttons/server/redirect.server.js'
+import images from '../commands/functions/nsfw/images.js'
 
 export default class ButtonInteraction extends Base {
     /**
@@ -100,7 +101,8 @@ export default class ButtonInteraction extends Base {
             connect: [connect, this, commandData],
             jkp: [checkJokempo, this, commandData] /* Jokempo */,
             twitch: [twitch, this, commandData],
-            server: [serverRedirect, this.interaction, commandData]
+            server: [serverRedirect, this.interaction, commandData],
+            nsfw: [images, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))

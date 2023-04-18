@@ -1,5 +1,5 @@
 import { formatString } from '../../functions/plugins/plugins.js'
-import { Colors, ColorsTranslate, Languages, TwitchLanguages } from '../../util/Constants.js'
+import { Colors, ColorsTranslate, Languages, NSFWImagesCategory, TwitchLanguages } from '../../util/Constants.js'
 import { GiveawayManager } from '../../classes/index.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
@@ -75,13 +75,22 @@ export default class Autocomplete extends Base {
             selecionar: ['quiz_selecionar', value],
             serverinfo: ['serverId', value],
             streamer: ['disableTwitch', value],
-            idioma: ['languageTwitch', value]
+            idioma: ['languageTwitch', value],
+            category: ['nsfw_categories', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    nsfw_categories(value) {
+        const itens = NSFWImagesCategory
+            .filter(item => item.includes(value?.toLowerCase()))
+            .map(item => ({ name: item, value: item }))
+
+        return this.respond(itens)
     }
 
     languageTwitch(value) {
