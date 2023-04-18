@@ -114,7 +114,7 @@ export default async ({ interaction, guildData, Database, client }) => {
         rolesFromDB.push(...roleInDatabase)
 
     return await interaction.reply({
-        embeds: [{ // TODO: Deixar a embed mais bonita
+        embeds: [{
             color: client.blue,
             title: `${client.user.username}'s Autorole System`,
             fields: [
