@@ -126,7 +126,8 @@ export default class SelectMenuInteraction extends Base {
             return interaction.editReply({ content: `${e.cry} | NOOO, eu não achei o clip!!` })
 
         return interaction.editReply({
-            content: `🎬 | Aqui está o clip de **${clip.broadcaster_name}** \`${clip.broadcaster_id}\` criado por **${clip.creator_name}** \`${clip.creator_id}\`\n${e.Info} | Este video foi visto **${(clip.view_count || 0).currency()}** vezes e tem **${clip.duration} segundos**.\n${e.twitch} | [${clip.title}](${clip.url})`,
+            // content: `🎬 | Aqui está o clip de **${clip.broadcaster_name}** \`${clip.broadcaster_id}\` criado por **${clip.creator_name}** \`${clip.creator_id}\`\n${e.Info} | Este video foi visto **${(clip.view_count || 0).currency()}** vezes e tem **${clip.duration} segundos**.\n${e.twitch} | [${clip.title.replace(/#|\[|\]|\p{S}|\d+/gu, "").trim()}](${clip.url})`,
+            content: `🎬 | Aqui está o clip de **${clip.broadcaster_name}** \`${clip.broadcaster_id}\` criado por **${clip.creator_name}** \`${clip.creator_id}\`\n${e.Info} | Este video foi visto **${(clip.view_count || 0).currency()}** vezes e tem **${clip.duration} segundos**.\n${e.twitch} | [Assistir Clip na Twitch](${clip.url})`,
             fetchReply: true
         })
             .catch(err => interaction.editReply({

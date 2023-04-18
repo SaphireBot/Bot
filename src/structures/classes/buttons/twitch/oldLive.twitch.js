@@ -19,12 +19,40 @@ export default async (interaction, commandData) => {
     if (!streamerVideos.length)
         return interaction.editReply({ content: `${e.cry} | Eita... Eu não achei a live.` }).catch(() => { })
 
+    // const selectMenuObject = {
+    //     type: 1,
+    //     components: [{
+    //         type: 3,
+    //         custom_id: 'menu',
+    //         placeholder: `👁️‍🗨️ Últimas ${streamerVideos.length} lives de ${streamerVideos[0].user_name}`,
+    //         options: []
+    //     }]
+    // }
+
+    // selectMenuObject.components[0].options = streamerVideos
+    //     .map(data => ({
+    //         label: data.title,
+    //         emoji: '🎬',
+    //         description: `Duração de ${data.duration}`,
+    //         value: data.url,
+    //     }))
+
+    // return interaction.editReply({
+    //     content: null,
+    //     embeds: [],
+    //     components: [selectMenuObject]
+    // })
+
     return interaction.editReply({
         content: null,
         embeds: [{
             color: 0x9c44fb, /* Twitch's Logo Purple */
             title: `👁️‍🗨️ Últimas ${streamerVideos.length} lives de ${streamerVideos[0].user_name}`,
-            description: `${streamerVideos.map(data => `\`${data.duration}\` [${data.title}](${data.url})`).join('\n') || 'Nenhuma live carregada?'}`.limit('MessageEmbedDescription'),
+            description: `${streamerVideos
+                // .map(data => `\`${data.duration}\` [${data.title}](${data.url}) ${hyperlink(data.title, data.url)}`)
+                .map(data => `\`${data.duration}\` [${data.title.replace(/#|\[|\]|\p{S}|\d+/gu, "").trim()}](${data.url})`)
+                .join('\n') || 'Nenhuma live carregada?'}`
+                .limit('MessageEmbedDescription'),
             image: { url: streamerVideos[0]?.thumbnail_url || null },
             footer: {
                 text: `${client.user.username}'s Twitch Notification System`,
