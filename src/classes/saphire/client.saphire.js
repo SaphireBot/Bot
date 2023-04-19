@@ -367,7 +367,7 @@ export default new class SaphireClient extends Client {
 
                 if (data.LogType == 'WelcomeChannel')
                     // Missing Access or Unknown Channel
-                    if ([50001, 10003].includes(err.code))
+                    if ([50001, 10003, 50035].includes(err.code))
                         return await Database.Guild.updateOne(
                             { id: data.guildId },
                             { $unset: { WelcomeChannel: true } }

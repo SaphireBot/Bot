@@ -84,11 +84,11 @@ export default async (interaction, bodyCustom, type) => {
     }).catch(() => { })
 
     const messageCollector = channel.createMessageCollector({
-        filter: msg => msg.author.id == user.id,
+        filter: msg => msg.author.id == user.id && msg.content?.length,
         idle: 1000 * 60 * 2
     })
         .on('collect', message => {
-            const replacedLength = replacePlaceholder(message.content, member).length
+            const replacedLength = replacePlaceholder(message.content, member)?.length
 
             if (replacedLength > 1000)
                 return message.reply({
