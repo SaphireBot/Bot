@@ -228,6 +228,14 @@ export default (interaction, body, type) => {
             }
         }[int.values[0]]
 
+        if (!edit) {
+            console.log(edit)
+            return int.update({
+                content: `${e.Warn} | Não foi possível continuar.`,
+                embeds: [], components: []
+            }).catch(() => { })
+        }
+
         // return edit(int)
         return createCollector(int, edit.text, edit.limit, edit.key)
     }
