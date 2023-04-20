@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { Client, Collection, Guild, Routes, messageLink } from 'discord.js'
+import { ApplicationRoleConnectionMetadataType, Client, Collection, Guild, Routes, messageLink } from 'discord.js'
 import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
 import { Database, Discloud, TwitchManager } from '../index.js'
@@ -15,6 +15,10 @@ export default new class SaphireClient extends Client {
     constructor() {
         super(ClientOptions)
 
+        /**
+         * @returns Client Secret
+         */
+        this.secretId = ""
         /**
          * @returns BLUE - Hexadecimal
          */
@@ -269,6 +273,39 @@ export default new class SaphireClient extends Client {
         this.restart = `${e.Loading} | Reinicialização Automática Programada.`
         await Discloud.apps.restart('saphire').catch(() => { })
         return
+    }
+
+    async linkedRolesLoad() {
+
+        const bodyContent = [
+            {
+                key: 'safiras',
+                name: 'Rico em Safiras',
+                description: 'Quantidade de Safiras',
+                type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
+            }
+        ]
+
+        const response = await fetch(
+            `https://discord.com/api/v10/applications/${this.user.id}/role-connections/metadata`,
+            {
+                method: "PUT",
+                body: JSON.stringify(bodyContent),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+                }
+            }
+        )
+
+        if (!response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            //throw new Error(`Error pushing discord metadata schema: [${response.status}] ${response.statusText}`);
+            const data = await response.text();
+            console.log(data);
+        }
     }
 
     async getUser(userId) {

@@ -38,9 +38,14 @@ export default async () => {
 
     console.log(`Shard ${client.shardId} is ready and was started.`)
 
+    client.secretId = client.user.id == client.canaryId
+        ? process.env.CANARY_SECRET
+        : process.env.CLIENT_SECRET
+
     if (client.shardId == 0) {
         import('../../api/app.js')
         TwitchManager.checkAccessTokenAndStartLoading()
+        client.linkedRolesLoad()
         client.executeMessages()
     }
 

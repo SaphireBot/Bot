@@ -1,29 +1,34 @@
-import express from 'express'
-import { SaphireClient as client } from '../classes/index.js'
-import { Emojis as e } from '../util/util.js'
-import os from 'os'
-import topggPost from './functions/topgg.post.js'
-import slashcommandsGet from './functions/slashcommands.get.js'
-import animesFromDB from './functions/animes.get.js'
-import cantadasFromDB from './functions/cantadas.get.js'
-import clientFromDB from './functions/client.get.js'
-import economiesFromDB from './functions/economies.get.js'
-import fanartsFromDB from './functions/fanarts.get.js'
-import guildsFromDB from './functions/guilds.get.js'
-import indicationsFromDB from './functions/indications.get.js'
-import memesFromDB from './functions/memes.get.js'
-import rathersFromDB from './functions/rathers.get.js'
-import remindersFromDB from './functions/reminders.get.js'
-import usersFromDB from './functions/users.get.js'
-import quizFromDB from './functions/quiz.get.js'
-import { Config } from '../util/Constants.js'
-
+import('dotenv/config');
+import { SaphireClient as client } from '../classes/index.js';
+import { Emojis as e } from '../util/util.js';
+import { Config } from '../util/Constants.js';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import * as linkedRole from './linkedRoles.api.js';
+import * as storage from './storage.api.js';
+import os from 'os';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import topggPost from './functions/topgg.post.js';
+import slashcommandsGet from './functions/slashcommands.get.js';
+import animesFromDB from './functions/animes.get.js';
+import cantadasFromDB from './functions/cantadas.get.js';
+import clientFromDB from './functions/client.get.js';
+import economiesFromDB from './functions/economies.get.js';
+import fanartsFromDB from './functions/fanarts.get.js';
+import guildsFromDB from './functions/guilds.get.js';
+import indicationsFromDB from './functions/indications.get.js';
+import memesFromDB from './functions/memes.get.js';
+import rathersFromDB from './functions/rathers.get.js';
+import remindersFromDB from './functions/reminders.get.js';
+import usersFromDB from './functions/users.get.js';
+import quizFromDB from './functions/quiz.get.js';
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const hostName = os.hostname()
 const system = {
   name: hostName === 'RodrigoPC' ? 'RodrigoPC' : 'Discloud',
   port: hostName === 'RodrigoPC' ? 1000 : 8080
 }
-import('dotenv/config');
 
 const app = express()
 
@@ -36,7 +41,49 @@ app.use((_, res, next) => {
   next();
 })
 
+app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
+
+app.get('/linked-roles', (_, res) => {
+  const { url, state } = linkedRole.getOAuthUrl();
+  res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true });
+  res.redirect(url);
+})
+
+app.get('/discord-oauth-linkedRoles', async (req, res) => {
+  try {
+    // 1. Uses the code and state to acquire Discord OAuth2 tokens
+    const code = req.query['code'];
+    const discordState = req.query['state'];
+
+    // make sure the state parameter exists
+    if (req.signedCookies?.clientState !== discordState)
+      return res.send({
+        status: 403,
+        message: 'Unauthorized | Access Denied | Acesso Negado'
+      });
+
+    const tokens = await linkedRole.getOAuthTokens(code);
+    if (!tokens) return res.send({ message: "Dados não obtidos ou expirados." })
+
+    // 2. Uses the Discord Access Token to fetch the user profile
+    const meData = await linkedRole.getUserData(tokens);
+    const userId = meData.user.id;
+    await storage.storeDiscordTokens(userId, {
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      expires_at: Date.now() + tokens.expires_in * 1000,
+    });
+
+    // 3. Update the users metadata, assuming future updates will be posted to the `/update-metadata` endpoint
+    await linkedRole.updateMetadata(userId);
+
+    res.sendFile(__dirname + '/toback.html');
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+})
 
 app.post(`${process.env.ROUTE_TOP_GG}`, topggPost)
 app.get(`${process.env.ROUTE_COMMANDS}`, slashcommandsGet)

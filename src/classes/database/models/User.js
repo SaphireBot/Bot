@@ -4,6 +4,12 @@ const { Schema, model } = Mongoose
 export default model("User", new Schema({
     id: { type: String, unique: true },
     Likes: Number,
+    // {
+    //     access_token: String,
+    //     refresh_token: tokens.refresh_token,
+    //     expires_at: Date.now() + tokens.expires_in * 1000,
+    // }
+    Tokens: Object,
     Xp: Number,
     Level: Number,
     Transactions: Array,
