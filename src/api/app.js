@@ -44,8 +44,6 @@ app.use((_, res, next) => {
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
 
-console.log(`${process.env.ROUTE_LINKED_ROLES}`)
-console.log(`${process.env.ROUTE_LINKED_ROLES_CALLBACK}`)
 app.get(`${process.env.ROUTE_LINKED_ROLES}`, (_, res) => {
   const { url, state } = linkedRole.getOAuthUrl();
   res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true });

@@ -280,25 +280,25 @@ export default new class SaphireClient extends Client {
         const bodyContent = [
             {
                 key: 'balance',
-                name: 'Rico em Safiras',
-                description: 'Safiras mínima',
+                name: 'Safiras',
+                description: 'Quantidade de Safiras mínima',
                 type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
             },
             {
                 key: 'level',
-                name: 'Um Ser Experiente',
-                description: 'Level mínimo',
+                name: 'Levels',
+                description: 'Quantidade de Level mínimo',
                 type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
             },
             {
                 key: 'likes',
-                name: 'Fama me Persegue',
-                description: 'Likes mínimo',
+                name: 'Likes',
+                description: 'Quantidade de Likes mínimo',
                 type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
             },
             {
                 key: 'date_create',
-                name: 'Uma Conta com História',
+                name: 'Dias de Conta',
                 description: 'Dias com a conta criada',
                 type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
             }
