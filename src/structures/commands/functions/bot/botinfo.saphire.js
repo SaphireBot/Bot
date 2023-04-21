@@ -162,7 +162,7 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: '🛰️ Informações Gerais',
-                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages}\nInterações: ${client.interactions}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``,
+                    value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages?.currency()}\nInterações: ${client.interactions?.currency()}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``,
                     inline: false
                 },
                 {
