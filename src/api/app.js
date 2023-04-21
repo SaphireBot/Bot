@@ -44,45 +44,38 @@ app.use((_, res, next) => {
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
 
-app.get('/linked-roles', (_, res) => {
+console.log(`${process.env.ROUTE_LINKED_ROLES}`)
+console.log(`${process.env.ROUTE_LINKED_ROLES_CALLBACK}`)
+app.get(`${process.env.ROUTE_LINKED_ROLES}`, (_, res) => {
   const { url, state } = linkedRole.getOAuthUrl();
   res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true });
   res.redirect(url);
 })
 
-app.get('/discord-oauth-linkedRoles', async (req, res) => {
-  try {
-    // 1. Uses the code and state to acquire Discord OAuth2 tokens
-    const code = req.query['code'];
-    const discordState = req.query['state'];
+app.get(`${process.env.ROUTE_LINKED_ROLES_CALLBACK}`, async (req, res) => {
+  const code = req.query['code'];
+  const discordState = req.query['state'];
 
-    // make sure the state parameter exists
-    if (req.signedCookies?.clientState !== discordState)
-      return res.send({
-        status: 403,
-        message: 'Unauthorized | Access Denied | Acesso Negado'
-      });
-
-    const tokens = await linkedRole.getOAuthTokens(code);
-    if (!tokens) return res.send({ message: "Dados não obtidos ou expirados." })
-
-    // 2. Uses the Discord Access Token to fetch the user profile
-    const meData = await linkedRole.getUserData(tokens);
-    const userId = meData.user.id;
-    await storage.storeDiscordTokens(userId, {
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      expires_at: Date.now() + tokens.expires_in * 1000,
+  if (req.signedCookies?.clientState !== discordState)
+    return res.send({
+      status: 403,
+      message: 'Unauthorized | Access Denied | Acesso Negado'
     });
 
-    // 3. Update the users metadata, assuming future updates will be posted to the `/update-metadata` endpoint
-    await linkedRole.updateMetadata(userId);
+  const tokens = await linkedRole.getOAuthTokens(code);
+  if (!tokens) return res.send({ message: "Dados não obtidos ou expirados." })
 
-    res.sendFile(__dirname + '/toback.html');
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
+  const meData = await linkedRole.getUserData(tokens);
+  const userId = meData.user.id;
+  await storage.storeDiscordTokens(userId, {
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token,
+    expires_at: Date.now() + tokens.expires_in * 1000,
+  });
+
+  const response = await linkedRole.updateMetadata(userId);
+  if (response == 'success') return res.sendFile(__dirname + '/html/success.linkedroles.html');
+  return res.sendFile(__dirname + '/html/fail.linkedroles.html');
 })
 
 app.post(`${process.env.ROUTE_TOP_GG}`, topggPost)

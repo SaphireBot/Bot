@@ -279,9 +279,27 @@ export default new class SaphireClient extends Client {
 
         const bodyContent = [
             {
-                key: 'safiras',
+                key: 'balance',
                 name: 'Rico em Safiras',
-                description: 'Quantidade de Safiras',
+                description: 'Safiras mínima',
+                type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
+            },
+            {
+                key: 'level',
+                name: 'Um Ser Experiente',
+                description: 'Level mínimo',
+                type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
+            },
+            {
+                key: 'likes',
+                name: 'Fama me Persegue',
+                description: 'Likes mínimo',
+                type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
+            },
+            {
+                key: 'date_create',
+                name: 'Uma Conta com História',
+                description: 'Dias com a conta criada',
                 type: ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
             }
         ]
@@ -298,14 +316,12 @@ export default new class SaphireClient extends Client {
             }
         )
 
-        if (!response.ok) {
+        if (response.ok) {
             const data = await response.json();
-            console.log(data);
-        } else {
-            //throw new Error(`Error pushing discord metadata schema: [${response.status}] ${response.statusText}`);
-            const data = await response.text();
-            console.log(data);
+            return console.log(`${data.length} Linked Roles Setted`);
         }
+
+        return console.log('Erro ao configurar os Linked Roles', await response.text());
     }
 
     async getUser(userId) {

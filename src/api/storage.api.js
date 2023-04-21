@@ -12,12 +12,10 @@ export async function storeDiscordTokens(userId, tokens) {
 }
 
 export async function getDiscordTokens(userId) {
-    let data = store.get(`discord-${userId}`);
-
-    if (!data) {
-        const request = await Database.User.findOne({ id: userId }, 'Tokens')
-        data = request.Tokens
-    }
+    const data = store.get(`discord-${userId}`)
+        || await Database.User.findOne({ id: userId }, 'Tokens')
+            .then(data => data.Tokens)
+            .catch(() => undefined)
 
     return data;
 }
