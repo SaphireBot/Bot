@@ -97,7 +97,7 @@ export default {
             memberData.roles = member.roles.cache.filter(r => r.name !== '@everyone').map(r => `\`${r.name}\``).join(', ') || '\`Nenhum cargo\`'
             memberData.permissions = (() => {
                 if (user.id === guild.ownerId) return `${user.username} é o dono*(a)* do servidor. Possui todas as permissões.`
-                return member.permissions.toArray().map(perm => `\`${PermissionsTranslate[perm]}\``).join(', ')
+                return member.permissions.toArray().map(perm => `\`${PermissionsTranslate[perm] || perm}\``).join(', ')
             })()
 
             embeds.push({

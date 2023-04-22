@@ -489,7 +489,9 @@ const PermissionsTranslate = {
     UseVAD: "Usar detecção de voz",
     ViewAuditLog: "Ver o registro de auditoria",
     ViewChannel: "Ver canais",
-    ViewGuildInsights: "Ver Análises do servidor"
+    ViewGuildInsights: "Ver Análises do servidor",
+    UseSoundboard: "Usar sons em call",
+    UseExternalSounds: "User sons externos"
 }
 
 const DiscordErrors = {
