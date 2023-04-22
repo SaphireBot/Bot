@@ -10,11 +10,9 @@ export default async interaction => {
     await interaction.reply({ content: `${e.Loading} | Carregando...` })
 
     const { options, guild } = interaction
-    const option = options.getString('method')
-    if (option == 'reset') return resetRanking()
-    return option == 'enable' ? enable() : disable()
+    return { reset, enable, disable }[options.getString('method')]()
 
-    async function resetRanking() {
+    async function reset() {
         await Database.Guild.updateOne(
             { id: guild.id },
             { $unset: { 'TempCall.members': true } }
