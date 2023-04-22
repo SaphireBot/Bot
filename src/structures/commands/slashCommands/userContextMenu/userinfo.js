@@ -21,7 +21,12 @@ export default {
         const userflags = user?.flags?.toArray() || []
 
         if (user.bot && !userflags.includes('VerifiedBot')) userflags.push('Bot')
-        userData.Bandeiras = `${userflags.length > 0 ? userflags.map(flag => e[flag] || flags[flag] || flag).join(' ') : 'Nenhuma'}`
+        userData.Bandeiras = userflags.length > 0
+            ? userflags
+                .filter(i => isNaN(i))
+                .map(flag => e[flag] || flags[flag] || `\`${flag}\``)
+                .join(' ') || 'Nenhuma'
+            : 'Nenhuma'
         userData.system = user.system ? '\n🧑‍💼 `\`Usuário do Sistema\``' : ''
         userData.avatar = user.avatarURL({ forceStatic: false, format: "png", size: 1024 })
         userData.bot = user.bot ? '\`Sim\`' : '\`Não\`'
