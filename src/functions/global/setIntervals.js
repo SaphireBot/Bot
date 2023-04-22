@@ -14,6 +14,24 @@ const pollInterval = () => setInterval(async () => {
 
 setInterval(() => Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
 
-export {
-    pollInterval
-}
+setInterval(async () => {
+    const allData = await Database.Cache.TempCall.all()
+    if (!allData?.length) return
+
+    for await (const { id: guildId, value } of allData) {
+        if (!value || !Object.values(value || {})?.length) return
+        const data = Object.entries(value).map(([id, time]) => ({ id, time }))
+        for await (const member of data) {
+            await Database.Guild.updateOne(
+                { id: guildId },
+                {
+                    $inc: { [`TempCall.members.${member.id}`]: Date.now() - member.time }
+                },
+                { new: true }
+            )
+            await Database.Cache.TempCall.set(`${guildId}.${member.id}`, Date.now())
+        }
+    }
+}, 1000 * 60 * 5)
+
+export { pollInterval }

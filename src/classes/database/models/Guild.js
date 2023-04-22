@@ -4,6 +4,10 @@ const { Schema, model } = Mongoose
 export default model("Guild", new Schema({
     id: { type: String, unique: true },
     Giveaways: Array,
+    TempCall: {
+        enable: Boolean,
+        members: Object
+    },
     Polls: Array,
     Moeda: String,
     FirstSystem: Boolean,

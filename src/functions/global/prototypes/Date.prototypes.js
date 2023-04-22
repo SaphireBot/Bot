@@ -87,7 +87,7 @@ Date.prototype.constructor.thirteen = (formatBr = false) => {
 
 }
 
-Date.prototype.constructor.stringDate = (ms, withMilliseconds = false) => {
+Date.prototype.constructor.stringDate = (ms = 0, withMilliseconds = false) => {
 
     if (!ms || isNaN(ms) || ms <= 0) return '0 segundo'
 
