@@ -13,7 +13,7 @@ export default async interaction => {
 
     if (guildData?.TempCall && !guildData?.TempCall?.enable)
         return interaction.reply({
-            content: `${e.SaphireDesespero} | Ha não, o sistema de Tempo em Call está desativado.`,
+            content: `${e.SaphireDesespero} | Ah não, o sistema de Tempo em Call está desativado.`,
             ephemeral: true
         })
 
@@ -45,7 +45,7 @@ export default async interaction => {
                 title: `🎙️ ${guild.name}'s Ranking Temp Voice System`,
                 description: data.join('\n'),
                 footer: {
-                    text: `${data.length} Usuários registrados`
+                    text: `${data.length} Usuários registrados | Atualizado a cada 1 minuto`
                 }
             }]
         })
@@ -166,7 +166,7 @@ export default async interaction => {
                 title: `🎙️ ${guild.name}'s Ranking Temp Voice System ${pageCount}`,
                 description,
                 footer: {
-                    text: `${data.length} Usuários registrados`
+                    text: `${data.length} Usuários registrados | Atualizado a cada 1 minuto`
                 }
             })
 

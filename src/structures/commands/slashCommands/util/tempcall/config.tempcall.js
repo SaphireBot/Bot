@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js"
+import { ChannelType, ChatInputCommandInteraction } from "discord.js"
 import { Emojis as e } from "../../../../../util/util.js"
 import { Database } from "../../../../../classes/index.js"
 
@@ -24,19 +24,43 @@ export default async interaction => {
     }
 
     async function enable() {
-        await Database.Cache.TempCall.push('GuildsEnabled', guild.id)
+        const guildsEnabled = await Database.Cache.TempCall.get('GuildsEnabled') || []
+        if (!guildsEnabled.includes(guild.id))
+            await Database.Cache.TempCall.push('GuildsEnabled', guild.id)
+
         await Database.Guild.updateOne(
             { id: guild.id },
             { $set: { 'TempCall.enable': true } }
         )
+        await guild.members.fetch()
+
+        const channelsData = guild.channels
+            .cache
+            .filter(ch => ch.type == ChannelType.GuildVoice)
+            .filter(ch => ch.members.size)
+            .map(ch => ({ channelId: ch.id, members: ch.members.toJSON() }))
+            .flat()
+
+        let membersInCall = 0
+
+        if (channelsData.length)
+            for await (let { channelId, members } of channelsData) {
+                members = members.filter(m => !m?.user?.bot)?.map(m => m.id)
+                membersInCall += members.length
+                await Database.Cache.TempCall.set(`${guild.id}.inCall.${channelId}`, members)
+                for (const memberId of members)
+                    await Database.Cache.TempCall.set(`${guild.id}.${memberId}`, Date.now())
+            }
 
         return interaction.editReply({
-            content: `${e.Check} | Ok ok, agora vou contar o tempo em call.\n${e.Info} | O tempo começará a ser contado apartir que um membro entrar em call de agora em diante.`
+            content: `${e.Check} | Ok ok, agora vou contar o tempo em call de todo mundo (Menos bots, claro).\n${e.Info} | O tempo de atualização é de +/- 5 segundos.\n${membersInCall > 0 ? `${e.saphireLendo} | Já estou contando o tempo de ${membersInCall} membros em calls agora mesmo.` : ""}`
         }).catch(() => { })
     }
 
     async function disable() {
-        await Database.Cache.TempCall.pull('GuildsEnabled', guild.id)
+        await Database.Cache.TempCall.pull('GuildsEnabled', id => id == guild.id)
+        await Database.Cache.TempCall.delete(guild.id)
+        await Database.Cache.TempCall.delete(`${guild.id}.inCall`)
         await Database.Guild.updateOne(
             { id: guild.id },
             { $set: { 'TempCall.enable': false } }

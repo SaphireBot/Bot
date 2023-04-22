@@ -1,7 +1,4 @@
-import {
-    SaphireClient as client,
-    Database
-} from '../../classes/index.js'
+import { SaphireClient as client, Database } from '../../classes/index.js'
 import { Config } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 
@@ -10,6 +7,8 @@ client.on('guildDelete', async guild => {
     if (!guild.id) return
 
     await Database.Guild.deleteMany({ id: guild.id })
+    await Database.Cache.TempCall.delete(guild.id)
+    await Database.Cache.TempCall.pull('GuildsEnabled', guild.id)
 
     if (!guild.ownerId) return
     const owner = await client.users.fetch(guild.ownerId).catch(() => null)

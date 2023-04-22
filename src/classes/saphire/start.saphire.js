@@ -25,6 +25,7 @@ export default async () => {
 
     automaticSystems()
 
+    client.loadCalls()
     client.setCantadas()
     client.setMemes()
     client.refreshStaff()

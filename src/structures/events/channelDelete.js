@@ -10,6 +10,7 @@ client.on('channelDelete', async channel => {
     const { guild } = channel
 
     if (!channel || !guild) return
+    await Database.Cache.TempCall.delete(`${guild.id}.inCall.${channel.id}`)
 
     if (GiveawayManager.getGiveaway(null, channel.id))
         Database.deleteGiveaway(null, guild.id, null, channel.id)
