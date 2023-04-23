@@ -2,9 +2,9 @@ import { ButtonInteraction, ButtonStyle } from "discord.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { ColorsTranslate, HexColors, Colors } from "../../../../util/Constants.js"
+import { replacePlaceholder } from "../../../../functions/plugins/plugins.js"
 import build from "./build.server.js"
 import save from "./save.server.js"
-import { replacePlaceholder } from "../../../../functions/plugins/plugins.js"
 
 /**
  * @param { ButtonInteraction } interaction
