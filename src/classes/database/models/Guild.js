@@ -6,7 +6,9 @@ export default model("Guild", new Schema({
     Giveaways: Array,
     TempCall: {
         enable: Boolean,
-        members: Object
+        muteTime: Boolean,
+        members: Object,
+        membersMuted: Object
     },
     Polls: Array,
     Moeda: String,

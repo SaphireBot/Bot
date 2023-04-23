@@ -11,11 +11,14 @@ export default new class TempCallManager {
     constructor() {
         this.guildsId = []
         this.inCall = {}
+        this.inMute = {}
+        this.guildsWithMuteCount = []
     }
 
     async load() {
-        const guildCallsEnabled = await Database.Guild.find({ 'TempCall.enable': true })
+        const guildCallsEnabled = await Database.Guild.find({ 'TempCall.enable': true }, "id TempCall")
         this.guildsId = guildCallsEnabled?.length ? guildCallsEnabled.map(g => g.id) : []
+        this.guildsWithMuteCount = guildCallsEnabled?.length ? guildCallsEnabled.filter(g => g.TempCall?.muteTime).map(g => g.id) : []
         this.check()
 
         if (this.guildsId?.length)
@@ -23,15 +26,24 @@ export default new class TempCallManager {
                 const guild = await client.guilds.fetch(guildId || '0').catch(() => null)
                 if (!guild) continue
 
-                if (!this.inCall[guildId])
-                    this.inCall[guildId] = {}
+                if (!this.inCall[guildId]) this.inCall[guildId] = {}
+                if (!this.inMute[guildId]) this.inMute[guildId] = {}
 
                 guild.channels.cache
                     .filter(channel => channel.type == ChannelType.GuildVoice && channel.members?.size)
-                    .forEach(channel => {
-                        for (const memberId of channel.members.filter(member => !member.user.bot).map(member => member.user.id))
-                            this.inCall[guildId][memberId] = Date.now()
-                    })
+                    .forEach(channel => channel.members
+                        .forEach(member => {
+                            if (member.user.bot) return
+                            if (
+                                this.guildsWithMuteCount.includes(guildId)
+                                && (member.voice.selfMute
+                                    || member.voice.selfDeaf
+                                    || member.voice.serverMute
+                                    || member.voice.serverDeaf)
+                            )
+                                return this.inMute[guildId][member.user.id] = Date.now()
+                            else this.inCall[guildId][member.user.id] = Date.now()
+                        }))
 
                 continue
             }
@@ -41,27 +53,54 @@ export default new class TempCallManager {
 
     async check() {
         const guildsId = Object.keys(this.inCall) // [guildsId]
-        if (guildsId?.length)
-            for (const guildId of guildsId) {
-                const guildData = Object.entries(this.inCall[guildId] || {})
-                if (!guildData?.length) continue
+        const mutedId = Object.keys(this.inMute) // [guildsId]
+        if (guildsId?.length) this.saveInCall(guildsId)
+        if (mutedId?.length) this.saveInMute(mutedId)
 
-                // [["userId", Date.now()], ["userId", Date.now()]]
-                const dataToSave = []
-
-                for (const [memberId, time] of guildData) {
-                    dataToSave.push([`TempCall.members.${memberId}`, Date.now() - time])
-                    this.inCall[guildId][memberId] = Date.now()
-                }
-
-                await Database.Guild.updateOne(
-                    { id: guildId },
-                    { $inc: Object.fromEntries(dataToSave) },
-                    { upsert: true }
-                )
-
-                continue
-            }
         return setTimeout(() => this.check(), 1000 * 30)
+    }
+
+    async saveInCall(guildsId) {
+        for (const guildId of guildsId) {
+            const guildData = Object.entries(this.inCall[guildId] || {})
+            if (!guildData?.length) continue
+
+            // [["userId", Date.now()], ["userId", Date.now()]]
+            const dataToSave = []
+
+            for (const [memberId, time] of guildData) {
+                dataToSave.push([`TempCall.members.${memberId}`, Date.now() - time])
+                this.inCall[guildId][memberId] = Date.now()
+            }
+            await Database.Guild.updateOne(
+                { id: guildId },
+                { $inc: Object.fromEntries(dataToSave) },
+                { upsert: true }
+            )
+
+            continue
+        }
+    }
+
+    async saveInMute(guildsId) {
+        for (const guildId of guildsId) {
+            const guildData = Object.entries(this.inMute[guildId] || {})
+            if (!guildData?.length) continue
+
+            // [["userId", Date.now()], ["userId", Date.now()]]
+            const dataToSave = []
+
+            for (const [memberId, time] of guildData) {
+                dataToSave.push([`TempCall.membersMuted.${memberId}`, Date.now() - time])
+                this.inMute[guildId][memberId] = Date.now()
+            }
+            await Database.Guild.updateOne(
+                { id: guildId },
+                { $inc: Object.fromEntries(dataToSave) },
+                { upsert: true }
+            )
+
+            continue
+        }
     }
 }

@@ -16,25 +16,26 @@ export default async interaction => {
             ephemeral: true
         })
 
-    if (
-        !guildData
-        || !guildData?.TempCall
-        || !guildData?.TempCall?.members
-        || !Object.keys(guildData?.TempCall?.members || {})?.length
-    )
+    const usersId = [Object.keys(guildData?.TempCall?.members || {}), Object.keys(guildData?.TempCall?.membersMuted || {})].flat()
+
+    if (!usersId?.length)
         return interaction.reply({
             content: `${e.cry} | Nenhum membro foi contabilizado para o ranking.`,
             ephemeral: true
         })
 
+    if (!guildData.TempCall.members) guildData.TempCall.members = {}
+    if (!guildData.TempCall.membersMuted) guildData.TempCall.membersMuted = {}
+
     await interaction.reply({ content: `${e.Loading} | Carregando ranking` })
     await guild.members.fetch()
-
-    const data = Object.entries(guildData?.TempCall?.members || {})
-        .map(([id, time]) => ({ member: guild.members.cache.get(id), time: time }))
+    const data = usersId
+        .map(userId => ({ member: guild.members.cache.get(userId), OnTime: guildData?.TempCall?.members[userId] || 0, offTime: guildData?.TempCall?.membersMuted[userId] || 0 }))
         .filter(d => d.member)
-        .sort((a, b) => b.time - a.time)
-        .map((d, i) => `${emojiRanking(i)} ${d.member?.user?.tag || 'Not Found'} \`${d.member?.id}\`\n⏱️ \`${Date.stringDate(d.time, true)}\``)
+        .sort((a, b) => b.OnTime - a.OnTime)
+        .map((d, i) => {
+            return `${emojiRanking(i)} ${d.member?.user?.tag || 'Not Found'} \`${d.member?.id}\`\n🎙️ \`${Date.stringDate(d.OnTime, true)}\`\n🔇 \`${Date.stringDate(d.offTime, true)}\``
+        })
 
     if (data.length <= 20)
         return interaction.editReply({
@@ -148,7 +149,7 @@ export default async interaction => {
         })
 
     return
- 
+
     function EmbedGenerator(array) {
 
         let amount = 10

@@ -23,12 +23,8 @@ export default {
                     required: true,
                     choices: [
                         {
-                            name: 'Ativar',
-                            value: 'enable'
-                        },
-                        {
-                            name: 'Desativar',
-                            value: 'disable'
+                            name: 'Ativar/Desativar Contador de Tempo em Call',
+                            value: 'layout'
                         },
                         {
                             name: 'Resetar Ranking',
@@ -45,7 +41,7 @@ export default {
         }
     ],
     helpData: { },
-    async execute({ interaction }) {
+    async execute({ interaction, guildData }) {
 
         const { options, member } = interaction
         const subCommand = options.getSubcommand()
@@ -63,6 +59,6 @@ export default {
                 content: `${e.Deny} | Sub-comando não encontrado. #9989898565`
             })
 
-        return execute(interaction)
+        return execute(interaction, guildData)
     }
 }
