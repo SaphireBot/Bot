@@ -44,7 +44,7 @@ export default async interaction => {
                 title: `🎙️ ${guild.name}'s Ranking Temp Voice System`,
                 description: data.join('\n'),
                 footer: {
-                    text: `${data.length} Usuários registrados | Atualizado a cada 1 minuto`
+                    text: `${data.length} Usuários registrados | Atualizado a cada 30 segundos`
                 }
             }]
         })
@@ -167,7 +167,7 @@ export default async interaction => {
                 title: `🎙️ ${guild.name}'s Ranking Temp Voice System ${pageCount}`,
                 description,
                 footer: {
-                    text: `${data.length} Usuários registrados | Atualizado a cada 1 minuto`
+                    text: `${data.length} Usuários registrados | Atualizado a cada  30 segundos`
                 }
             })
 

@@ -62,6 +62,6 @@ export default new class TempCallManager {
 
                 continue
             }
-        return setTimeout(() => this.check(), 1000 * 4)
+        return setTimeout(() => this.check(), 1000 * 30)
     }
 }
