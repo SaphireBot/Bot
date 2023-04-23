@@ -147,11 +147,10 @@ export async function updateMetadata(userId) {
         { headers: { authorization: `Bot ${process.env.BOT_TOKEN_REQUEST}` } }
     )
         .then(data => data.json())
-
     const user = new User(client, userAccountData)
-    metadata.date_create = user?.id
-    ? parseInt((user?.createdAt?.valueOf() / 1000 / 60 / 60 / 24).toFixed(0))
-    : 0
+    metadata.date_create = user?.createdAt
+        ? parseInt((new Date() - new Date(user?.createdAt.valueOf())) / (1000 * 60 * 60 * 24))
+        : 0
 
     metadata.balance = userData?.Balance || 0
     metadata.level = userData?.Level || 0

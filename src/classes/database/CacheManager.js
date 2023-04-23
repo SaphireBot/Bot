@@ -21,7 +21,6 @@ export default new class CacheManager extends Cache {
         this.Chat = this.table('Chat')
         this.Connect = this.table('Connect')
         this.Jokempo = this.table('Jokempo')
-        this.TempCall = this.table('TempCall')
     }
 
     async clearTables(shardId) {

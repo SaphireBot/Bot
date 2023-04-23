@@ -275,13 +275,6 @@ export default new class SaphireClient extends Client {
         return
     }
 
-    async loadCalls() {
-        const guildCallsEnabled = await Database.Guild.find({ 'TempCall.enable': true })
-        if (!guildCallsEnabled?.length) return await Database.Cache.TempCall.set('GuildsEnabled', [])
-        await Database.Cache.TempCall.set('GuildsEnabled', guildCallsEnabled.map(g => g.id))
-        return
-    }
-
     async linkedRolesLoad() {
 
         const bodyContent = [
