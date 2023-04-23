@@ -26,7 +26,7 @@ export default async ({ partyData, user, e, interaction, Database, client, chann
         inMute: gameData.inMute
     })
 
-    interaction.message.delete()
+    interaction.message.delete().catch(() => { })
     await interaction.reply({
         embeds: [{
             color: client.blue,

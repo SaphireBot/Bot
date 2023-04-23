@@ -167,7 +167,7 @@ export default async (message, correctAnswer, Quiz, question) => {
                 }
                 if (userTag) embed.fields.push({ name: '👤 Sugerido Por', value: userTag })
                 await Quiz.channelSend({ embeds: [embed] })
-                message.delete()
+                message.delete().catch(() => { })
             }
             Quiz.unregister()
             return Quiz.finalize()

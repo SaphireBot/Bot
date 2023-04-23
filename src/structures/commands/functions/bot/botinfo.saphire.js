@@ -191,12 +191,12 @@ export default async (interaction, commandData) => {
         }
 
         message = commandData
-            ? await interaction.message.edit({ content: null, embeds: [embed], components: [button] }).catch(() => resend())
-            : await interaction.editReply({ content: null, embeds: [embed], components: [button], fetchReply: true }).catch(() => resend())
+            ? await interaction.message.edit({ content: null, embeds: [embed], components: [button] }).catch(() => resend(embed))
+            : await interaction.editReply({ content: null, embeds: [embed], components: [button], fetchReply: true }).catch(() => resend(embed))
         return removeTimeout(button)
     }
 
-    function resend() {
+    function resend(embed) {
         return interaction.channel.send({ content: null, embeds: [embed], components: [button] })
     }
 

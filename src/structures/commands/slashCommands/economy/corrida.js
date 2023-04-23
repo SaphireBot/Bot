@@ -350,7 +350,7 @@ export default {
         async function newWinner(atualize, MessageRunning, winnerData, result) {
 
             clearInterval(atualize)
-            MessageRunning.delete()
+            MessageRunning.delete().catch(() => { })
 
             await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
 
