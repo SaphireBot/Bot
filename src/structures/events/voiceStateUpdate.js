@@ -38,6 +38,9 @@ async function userJoin(memberId, guildId, inMute) {
 
 async function userLeave(memberId, guildId) {
 
+    if (!TempCallManager.inCall[guildId]) TempCallManager.inCall[guildId] = {}
+    if (!TempCallManager.inMute[guildId]) TempCallManager.inMute[guildId] = {}
+
     const inCallTime = TempCallManager.inCall[guildId][memberId]
     const inMuteTime = TempCallManager.inMute[guildId][memberId]
     delete TempCallManager.inCall[guildId][memberId]

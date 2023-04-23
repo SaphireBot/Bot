@@ -45,6 +45,9 @@ export default async (interaction, commandData) => {
         if (!TempCallManager.inCall[guildId])
             TempCallManager.inCall[guildId] = {}
 
+        if (!TempCallManager.inMute[guildId])
+            TempCallManager.inMute[guildId] = {}
+
         const guildData = await Database.Guild.findOneAndUpdate(
             { id: guildId },
             { $set: { 'TempCall.enable': true } },
@@ -171,10 +174,10 @@ export default async (interaction, commandData) => {
                     if (member.user.bot) return
 
                     state
-                    && (member.voice.selfMute
-                        || member.voice.selfDeaf
-                        || member.voice.serverMute
-                        || member.voice.serverDeaf)
+                        && (member.voice.selfMute
+                            || member.voice.selfDeaf
+                            || member.voice.serverMute
+                            || member.voice.serverDeaf)
                         ? mutedUser(member.user.id)
                         : inCallUser(member.user.id)
                     return
