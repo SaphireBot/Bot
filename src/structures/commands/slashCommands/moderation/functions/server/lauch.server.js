@@ -23,7 +23,7 @@ export default async (interaction, guildData, type) => {
 
     if (!messageData?.embeds) messageData.embeds = []
     const embed = messageData?.embeds[0] || {}
-    if (!embed.description || !embed.title) messageData.embeds = []
+    if (!embed.description && !embed.title) messageData.embeds = []
 
     if (!messageData && !messageData?.content && !messageData?.embeds?.length)
         messageData = {
