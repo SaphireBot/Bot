@@ -14,6 +14,7 @@ import Experience from './modules/Experience.js'
 import Logomarca from './games/Logomarca.js'
 import TwitchManager from '../functions/update/twitch/manager.twitch.js'
 import AfkManager from '../functions/update/afk/manager.afk.js'
+import TempCallManager from '../functions/update/tempcall/tempcall.manager.js'
 
 export {
     Models,
@@ -31,5 +32,6 @@ export {
     Experience,
     Logomarca,
     TwitchManager,
-    AfkManager
+    AfkManager,
+    TempCallManager
 }

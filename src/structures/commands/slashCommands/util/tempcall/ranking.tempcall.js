@@ -1,7 +1,6 @@
 import { ButtonStyle, ChatInputCommandInteraction } from "discord.js"
 import { Database, SaphireClient as client } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
-import { emoji as emojiRanking } from "../../../../../functions/plugins/plugins.js"
 
 /**
  * @param { ChatInputCommandInteraction } interaction
@@ -107,13 +106,14 @@ export default async interaction => {
 
             const { customId } = int
 
-            if (customId == 'back') index = embeds[index - 1] ? index-- : 0
-            if (customId == 'foward') index = embeds[index + 1] ? index++ : 0
+            if (customId == 'back') index = embeds[index - 1] ? index - 1 : embeds.length - 1
+            if (customId == 'foward') index = embeds[index + 1] ? index + 1 : 0
 
             if (customId == 'cancel')
                 return collector.stop()
 
             return int.update({ embeds: [embeds[index]] })
+                .catch(() => { })
         })
         .on('end', (_, reason) => {
 
@@ -148,6 +148,7 @@ export default async interaction => {
         })
 
     return
+ 
     function EmbedGenerator(array) {
 
         let amount = 10
@@ -176,5 +177,13 @@ export default async interaction => {
         }
 
         return embeds
+    }
+
+    function emojiRanking(i) {
+        return {
+            0: '🥇',
+            1: '🥈',
+            2: '🥉'
+        }[i] || `${i + 1}. `
     }
 }

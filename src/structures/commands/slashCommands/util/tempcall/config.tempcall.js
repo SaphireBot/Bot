@@ -1,6 +1,6 @@
 import { ChannelType, ChatInputCommandInteraction } from "discord.js"
 import { Emojis as e } from "../../../../../util/util.js"
-import { Database } from "../../../../../classes/index.js"
+import { Database, TempCallManager } from "../../../../../classes/index.js"
 
 /**
  * @param { ChatInputCommandInteraction } interaction
@@ -9,7 +9,7 @@ export default async interaction => {
 
     await interaction.reply({ content: `${e.Loading} | Carregando...` })
 
-    const { options, guild } = interaction
+    const { options, guild, guildId } = interaction
     return { reset, enable, disable }[options.getString('method')]()
 
     async function reset() {
@@ -24,9 +24,16 @@ export default async interaction => {
     }
 
     async function enable() {
-        const guildsEnabled = await Database.Cache.TempCall.get('GuildsEnabled') || []
-        if (!guildsEnabled.includes(guild.id))
-            await Database.Cache.TempCall.push('GuildsEnabled', guild.id)
+        if (TempCallManager.guildsId.includes(guildId))
+            return interaction.editReply({
+                content: `${e.saphireLendo} | Eu olhei aqui e este servidor já tem o Tempo em Call ativado.`
+            })
+
+        if (!TempCallManager.inCall[guildId])
+            TempCallManager.inCall[guildId] = {}
+
+        if (!TempCallManager.guildsId.includes(guildId))
+            TempCallManager.guildsId.push(guildId)
 
         await Database.Guild.updateOne(
             { id: guild.id },
@@ -34,23 +41,16 @@ export default async interaction => {
         )
         await guild.members.fetch()
 
-        const channelsData = guild.channels
-            .cache
-            .filter(ch => ch.type == ChannelType.GuildVoice)
-            .filter(ch => ch.members.size)
-            .map(ch => ({ channelId: ch.id, members: ch.members.toJSON() }))
-            .flat()
-
         let membersInCall = 0
-
-        if (channelsData.length)
-            for await (let { channelId, members } of channelsData) {
-                members = members.filter(m => !m?.user?.bot)?.map(m => m.id)
-                membersInCall += members.length
-                await Database.Cache.TempCall.set(`${guild.id}.inCall.${channelId}`, members)
-                for (const memberId of members)
-                    await Database.Cache.TempCall.set(`${guild.id}.${memberId}`, Date.now())
-            }
+        guild.channels.cache
+            .filter(channel => channel.type == ChannelType.GuildVoice && channel.members?.size)
+            .forEach(channel => {
+                const channelsMembersId = channel.members.filter(member => !member.user?.bot).map(member => member.user.id)
+                membersInCall += channelsMembersId.length
+                for (const memberId of channelsMembersId) {
+                    TempCallManager.inCall[guildId][memberId] = Date.now()
+                }
+            })
 
         return interaction.editReply({
             content: `${e.Check} | Ok ok, agora vou contar o tempo em call de todo mundo (Menos bots, claro).\n${e.Info} | O tempo de atualização é de +/- 5 segundos.\n${membersInCall > 0 ? `${e.saphireLendo} | Já estou contando o tempo de ${membersInCall} membros em calls agora mesmo.` : ""}`
@@ -58,9 +58,15 @@ export default async interaction => {
     }
 
     async function disable() {
-        await Database.Cache.TempCall.pull('GuildsEnabled', id => id == guild.id)
-        await Database.Cache.TempCall.delete(guild.id)
-        await Database.Cache.TempCall.delete(`${guild.id}.inCall`)
+
+        delete TempCallManager.inCall[guildId]
+        if (!TempCallManager.guildsId.includes(guildId))
+            return interaction.editReply({
+                content: `${e.saphireLendo} | Meus sistemas dizem que este servidor não tem o Tempo em Call ativo.`
+            })
+
+        TempCallManager.guildsId = TempCallManager.guildsId.filter(id => id != guildId)
+
         await Database.Guild.updateOne(
             { id: guild.id },
             { $set: { 'TempCall.enable': false } }

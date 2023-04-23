@@ -1,4 +1,4 @@
-import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager } from '../index.js'
+import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager, TempCallManager } from '../index.js'
 import { Config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/slashCommands.js'
 import automaticSystems from '../../functions/update/index.js'
@@ -22,6 +22,7 @@ export default async () => {
     GiveawayManager.setGiveaways()
     AfkManager.load()
     PollManager.set()
+    TempCallManager.load()
 
     automaticSystems()
 
