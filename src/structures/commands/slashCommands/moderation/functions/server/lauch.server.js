@@ -8,7 +8,7 @@ import { Emojis as e } from "../../../../../../util/util.js"
 export default async (interaction, guildData, type) => {
 
     const config = type == 'welcome' ? guildData?.WelcomeChannel : guildData?.LeaveChannel
-    let messageData = undefined
+    let messageData = {}
 
     if (!config)
         messageData = {
@@ -20,6 +20,10 @@ export default async (interaction, guildData, type) => {
             content: config.body.content ?? null,
             embeds: config.body.embeds ?? []
         }
+
+    if (!messageData?.embeds) messageData.embeds = []
+    const embed = messageData?.embeds[0] || {}
+    if (!embed.description || !embed.title) messageData.embeds = []
 
     if (!messageData && !messageData?.content && !messageData?.embeds?.length)
         messageData = {
