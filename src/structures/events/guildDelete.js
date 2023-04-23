@@ -7,8 +7,6 @@ client.on('guildDelete', async guild => {
     if (!guild.id) return
 
     await Database.Guild.deleteMany({ id: guild.id })
-    await Database.Cache.TempCall.delete(guild.id)
-    await Database.Cache.TempCall.pull('GuildsEnabled', guild.id)
 
     if (!guild.ownerId) return
     const owner = await client.users.fetch(guild.ownerId).catch(() => null)
