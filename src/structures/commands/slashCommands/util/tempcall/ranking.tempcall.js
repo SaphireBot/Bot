@@ -16,7 +16,7 @@ export default async interaction => {
             ephemeral: true
         })
 
-    const usersId = [Object.keys(guildData?.TempCall?.members || {}), Object.keys(guildData?.TempCall?.membersMuted || {})].flat()
+    const usersId = Array.from(new Set([Object.keys(guildData?.TempCall?.members || {}), Object.keys(guildData?.TempCall?.membersMuted || {})].flat()))
 
     if (!usersId?.length)
         return interaction.reply({
