@@ -38,6 +38,7 @@ app.use((_, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", true);
   res.setHeader("Access-Control-Allow-Methods", "GET, POST");
   res.setHeader("Access-Control-Max-Age", 3600)
+  res.setHeader("Cache-Control", "no-store, no-cache")
   next();
 })
 
@@ -47,7 +48,7 @@ app.use(express.json())
 app.get(`${process.env.ROUTE_LINKED_ROLES}`, (_, res) => {
   const { url, state } = linkedRole.getOAuthUrl();
   res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true });
-  res.redirect(url);
+  return res.redirect(url);
 })
 
 app.get(`${process.env.ROUTE_LINKED_ROLES_CALLBACK}`, async (req, res) => {

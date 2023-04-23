@@ -32,7 +32,7 @@ export async function getOAuthTokens(code) {
             }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            }
         });
 
     if (response.ok)
@@ -42,11 +42,6 @@ export async function getOAuthTokens(code) {
     return null
 }
 
-/**
- * The initial token request comes with both an access token and a refresh
- * token.  Check if the access token has expired, and if it has, use the
- * refresh token to acquire a new, fresh access token.
- */
 export async function getAccessToken(userId, tokens) {
     if (!userId || !tokens) return
 
