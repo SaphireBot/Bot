@@ -37,7 +37,15 @@ export default {
         {
             name: 'ranking',
             description: 'Ranking dos membros com mais tempo em call',
-            type: ApplicationCommandOptionType.Subcommand
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'member',
+                    name_localizations: { 'pt-BR': 'membro' },
+                    description: 'verificar o ranking de um membro',
+                    type: ApplicationCommandOptionType.User
+                }
+            ]
         }
     ],
     helpData: { },

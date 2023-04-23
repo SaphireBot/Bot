@@ -171,16 +171,15 @@ export default async (interaction, commandData) => {
             .filter(channel => channel.type == ChannelType.GuildVoice && channel.members?.size)
             .forEach(channel => channel.members
                 .forEach(member => {
-                    if (member.user.bot) return
-
-                    state
-                        && (member.voice.selfMute
-                            || member.voice.selfDeaf
-                            || member.voice.serverMute
-                            || member.voice.serverDeaf)
-                        ? mutedUser(member.user.id)
-                        : inCallUser(member.user.id)
-                    return
+                    if (!member.user.bot) {
+                        state
+                            && (member.voice.selfMute
+                                || member.voice.selfDeaf
+                                || member.voice.serverMute
+                                || member.voice.serverDeaf)
+                            ? mutedUser(member.user.id)
+                            : inCallUser(member.user.id)
+                    }
                 }))
 
         const guildData = await Database.Guild.findOneAndUpdate(

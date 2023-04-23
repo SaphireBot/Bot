@@ -1,13 +1,14 @@
 import { ButtonStyle, ChatInputCommandInteraction } from "discord.js"
 import { Database, SaphireClient as client } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
+import rankMember from './member.ranking.tempcall.js'
 
 /**
  * @param { ChatInputCommandInteraction } interaction
  */
 export default async interaction => {
 
-    const { guild, user, channel } = interaction
+    const { guild, user, channel, options } = interaction
     const guildData = await Database.Guild.findOne({ id: guild.id }, 'TempCall')
 
     if (guildData?.TempCall && !guildData?.TempCall?.enable)
@@ -15,6 +16,8 @@ export default async interaction => {
             content: `${e.SaphireDesespero} | Ah não, o sistema de Tempo em Call está desativado.`,
             ephemeral: true
         })
+
+    if (options.getMember('member')) return rankMember(interaction, guildData)
 
     const usersId = Array.from(new Set([Object.keys(guildData?.TempCall?.members || {}), Object.keys(guildData?.TempCall?.membersMuted || {})].flat()))
 

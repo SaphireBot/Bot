@@ -33,16 +33,15 @@ export default new class TempCallManager {
                     .filter(channel => channel.type == ChannelType.GuildVoice && channel.members?.size)
                     .forEach(channel => channel.members
                         .forEach(member => {
-                            if (member.user.bot) return
-                            if (
+                            if (!member.user.bot) {
                                 this.guildsWithMuteCount.includes(guildId)
-                                && (member.voice.selfMute
-                                    || member.voice.selfDeaf
-                                    || member.voice.serverMute
-                                    || member.voice.serverDeaf)
-                            )
-                                return this.inMute[guildId][member.user.id] = Date.now()
-                            else this.inCall[guildId][member.user.id] = Date.now()
+                                    && (member.voice.selfMute
+                                        || member.voice.selfDeaf
+                                        || member.voice.serverMute
+                                        || member.voice.serverDeaf)
+                                    ? this.inMute[guildId][member.user.id] = Date.now()
+                                    : this.inCall[guildId][member.user.id] = Date.now()
+                            }
                         }))
 
                 continue
