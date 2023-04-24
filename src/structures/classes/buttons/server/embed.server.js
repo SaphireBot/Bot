@@ -146,6 +146,11 @@ export default (interaction, body, type) => {
                 return save(int, body, type)
             }
 
+            if (customId == 'embed') {
+                collector.stop('ignore')
+                return build(int)
+            }
+
             return console.log(`#46841544 - Custom ID without function - ${customId}`)
         })
         .on('end', (_, reason) => {
