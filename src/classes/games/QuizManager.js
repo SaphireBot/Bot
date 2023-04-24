@@ -81,9 +81,9 @@ export default new class QuizManager {
 
         if (webhooks && webhooks.size) {
             const saphireWebhook = webhooks.find(wb => wb.owner.id == client.user.id)
-            if (saphireWebhook) return saphireWebhook.url
-            else return await this.createWebhook(channel)
-        } else return await this.createWebhook(channel)
+            return saphireWebhook ? saphireWebhook.url : await this.createWebhook(channel)
+        }
+        return await this.createWebhook(channel)
     }
 
     // Button Interaction

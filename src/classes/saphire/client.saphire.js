@@ -349,9 +349,9 @@ export default new class SaphireClient extends Client {
     async pushMessage(data) {
         if (!data.method) return
 
-        if (this.shardId == 0) this.messagesToSend.push(data)
-        else this.sendDataToShardZero()
-        return
+        return this.shardId == 0
+            ? this.messagesToSend.push(data)
+            : this.sendDataToShardZero()
     }
 
     async sendDataToShardZero() {

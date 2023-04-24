@@ -77,7 +77,8 @@ export default new class GiveawayManager {
                 this.selectGiveaways([gw])
                 this.awaiting.splice(this.awaiting.findIndex(g => g.MessageID === gw.MessageID), 1)
                 continue
-            } else continue
+            }
+            continue
         }
 
         return setTimeout(() => this.checkBits(), 600000)

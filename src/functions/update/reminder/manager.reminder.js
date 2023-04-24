@@ -130,7 +130,8 @@ export default new class ReminderManager {
                 this.start(reminder.userId, reminder)
                 this.over32Bits.splice(this.over32Bits.findIndex(r => r.id === reminder.id), 1)
                 continue
-            } else continue
+            }
+            continue
         }
 
         return setTimeout(() => this.checkBits(), 600000)
