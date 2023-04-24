@@ -88,7 +88,7 @@ export default async (interaction, resource) => {
                 fields: [
                     {
                         name: `${e.Info} Informações Gerais`,
-                        value: `🆔 \`${d?.id || 0}\`\n👥 \`${(streamer.followers || 0).currency()}\` Seguidores\n👁️‍🗨️ \`${(streamer?.view_count || 0).currency()}\` Visualizações${partner}\n💬 Idioma \`${TwitchLanguages[d.broadcaster_language] || d.broadcaster_language || 'Nenhum'}\`\n🏷️ Tags: \`${d.tags?.join(', ') || 'Nenhuma tag'}\`${d.is_live ? `\n🟢 [Ao Vivo](${url})` : '\n🔴 Não está ao vivo'}`
+                        value: `🆔 \`${d?.id || 0}\`\n👁️‍🗨️ \`${(streamer?.view_count || 0).currency()}\` Visualizações${partner}\n💬 Idioma \`${TwitchLanguages[d.broadcaster_language] || d.broadcaster_language || 'Nenhum'}\`\n🏷️ Tags: \`${d.tags?.join(', ') || 'Nenhuma tag'}\`${d.is_live ? `\n🟢 [Ao Vivo](${url})` : '\n🔴 Não está ao vivo'}`
                     }
                 ],
                 thumbnail: {
