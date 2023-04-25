@@ -39,11 +39,12 @@ export default {
 
         const msg = await interaction.reply({ content: `${e.Loading} | Contactando Top.gg...`, fetchReply: true })
 
-        const hasVoted = await axios.get(
-            `https://top.gg/api/bots/912509487984812043/check?userId=${user.id}`,
-            { headers: { authorization: process.env.TOP_GG_TOKEN } }
-        )
-            .then(res => res?.data?.voted === 1)
+        const hasVoted = await fetch(`https://top.gg/api/bots/912509487984812043/check?userId=${user.id}`,
+            { headers: { authorization: process.env.TOP_GG_TOKEN }, method: 'GET' })
+            .then(async data => {
+                const res = await data.json()
+                return res?.data?.voted
+            })
             .catch(() => 2)
 
         if (hasVoted === 2)
