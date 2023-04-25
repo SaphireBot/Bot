@@ -9,13 +9,13 @@ const wall = new AnimeWallpaper();
  * @param { Boolean | undefined } isRefresh
  * @param { String | undefined } searchResource
  */
-export default async (interaction, isRefresh, searchResource) => {
+export default async function execute(interaction, isRefresh, searchResource) {
 
     const { options } = interaction
     const message = await interaction[isRefresh ? 'update' : 'reply']({ content: `${e.Loading} | Carregando wallpapers...`, fetchReply: true, components: [] })
     const search = isRefresh ? searchResource : options.getString('pesquisar')
     const wallpapers = await wall.getAnimeWall2(search).catch(() => null)
-    const refresh = (int, search) => this.execute({ interaction: int, client }, true, search)
+    const refresh = (int, search) => execute(int, true, search)
 
     if (!wallpapers || !wallpapers.length)
         return message.edit({
