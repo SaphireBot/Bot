@@ -62,7 +62,7 @@ export default async interaction => {
                     color: d.colors.length ? Number(d.colors.random().replace('#', '0x')) : client.blue,
                     title: `🖼️ ${client.user.username}'s Wallpaper Anime`,
                     url: d.url || null,
-                    description: `🔎 Pesquisa \`${options.getString('anime_ou_personagem')}\`🎞️ Resolução de \`${d.resolution || '0x0'}\`\n💾 Tamanho de arquivo em \`${new Byte(d.file_size || 0)}\`\n👁‍🗨 Visto \`${d.views || 0}\` vezes\n🖌️ Cores ${d.colors?.map(str => `\`${str}\``)?.join(', ') || 'encontrada'}\n${e.Info} *Resolução da imagem reduzida para melhor desempenho. Acesse o site [clicando aqui](${d.url}) ou no botão para obter 100% da qualidade original.*`,
+                    description: `🔎 Pesquisa \`${options.getString('anime_ou_personagem')}\`\n🎞️ Resolução de \`${d.resolution || '0x0'}\`\n💾 Tamanho de arquivo em \`${new Byte(d.file_size || 0)}\`\n👁‍🗨 Visto \`${d.views || 0}\` vezes\n🖌️ Cores ${d.colors?.map(str => `\`${str}\``)?.join(', ') || 'encontrada'}\n${e.Info} *Resolução da imagem reduzida para melhor desempenho. Acesse o site [clicando aqui](${d.url}) ou no botão para obter 100% da qualidade original.*`,
                     image: { url: `${d.thumbs?.large || null}` },
                     footer: {
                         text: `❤️ Powered by wallhaven | Wallpaper ID: ${d.id}`
