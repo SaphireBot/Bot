@@ -76,7 +76,7 @@ export default async (interaction, resource) => {
         const partner = { affiliate: '\n🧩 Afiliado da Twitch', partner: '\n🤝 Parceiro da Twitch' }[streamer?.broadcaster_type] || ''
         const url = `https://www.twitch.tv/${d.broadcaster_login}`
         const ms = new Date(streamer?.created_at)?.valueOf()
-        const createdAt = `${time(new Date(ms), 'd')}  ${time(new Date(ms), 'T')}`
+        const createdAt = `${time(new Date(ms), 'd')} ${time(new Date(ms), 'T')}`
 
         return {
             content: null,
