@@ -115,7 +115,7 @@ export default async interaction => {
             .then(msg => {
                 return msg.createMessageComponentCollector({
                     filter: int => int.user.id == user.id,
-                    idle: 1000 * 60 * 5
+                    idle: 1000 * 60 * 30
                 })
                     .on('collect', int => {
                         const { customId } = int
