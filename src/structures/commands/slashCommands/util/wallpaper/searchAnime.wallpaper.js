@@ -123,10 +123,10 @@ export default async interaction => {
                     })
                     .on('end', (_, reason) => {
                         if (['limit', 'time', 'idle'].includes(reason))
-                            return client.postMessage({
+                            return client.pushMessage({
                                 method: 'patch',
-                                messageId: msg.id,
                                 channelId: interaction.channelId,
+                                messageId: msg.id,
                                 body: {
                                     components: []
                                 }
