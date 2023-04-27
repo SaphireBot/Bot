@@ -177,7 +177,7 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: `${e.twitch} Twitch System`,
-                    value: `\`\`\`txt\nStreamers: ${TwitchManager.streamers.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${TwitchManager.streamersOnline.length}\nStreamers Offline: ${TwitchManager.streamersOffline.length}\nServidores Registrados: ${TwitchManager.allGuildsID.length}\nRequisições em Espera: ${TwitchManager.awaitingRequests}\n\`\`\``,
+                    value: `\`\`\`txt\nStreamers: ${TwitchManager.streamersOffline.length + TwitchManager.streamersOnline.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${TwitchManager.streamersOnline.length}\nStreamers Offline: ${TwitchManager.streamersOffline.length}\nServidores Registrados: ${TwitchManager.allGuildsID.length}\nRequisições em Espera: ${TwitchManager.awaitingRequests}\n\`\`\``,
                     inline: false
                 },
             ],

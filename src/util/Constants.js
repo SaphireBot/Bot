@@ -1058,6 +1058,8 @@ const GuildFeaturesTranslate = {
     GUILD_ONBOARDING_EVER_ENABLED: "Integração de Servidor Ativada",
     COMMUNITY_EXP_LARGE_UNGATED: "Grande Experiência Comunitária Sem Garantia",
     GUILD_ONBOARDING_HAS_PROMPTS: "Integração de Servidor Possui Prompts",
+    SOUNDBOARD: "Painel de Sons",
+    GUILD_SERVER_GUIDE: "Guia do Servidor Ativado",
     GUILD_ONBOARDING: "Integração de Servidor",
     NEW_THREAD_PERMISSIONS: "Permissão de Novas Threads",
     THREADS_ENABLED: "Threads Ativada",
