@@ -37,6 +37,7 @@ export default class SlashCommandInteraction extends Base {
                 ephemeral: true
             })
 
+        this.client.commandsUsed[command.name]++
         if (command.admin && !this.client.admins.includes(this.user.id))
             return await this.interaction.reply({
                 content: `${this.e.Deny} | Este comando é exclusivo para meus administradores.`,

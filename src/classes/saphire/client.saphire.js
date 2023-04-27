@@ -104,10 +104,11 @@ export default new class SaphireClient extends Client {
         this.fanarts = []
 
         /**
-         * @returns Número de interações criadas após inicialização do client
+         * @returns Contagem de Eventos
          */
-        this.interactions = 0
-        this.messages = 0
+        this.interactions = 0 // Interações Recebidas
+        this.messages = 0 // Mensagens Recebidas
+        this.commandsUsed = {} // Comandos Usados
 
         /**
          * @returns Heartbeat

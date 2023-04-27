@@ -110,7 +110,12 @@ export default async (interaction, commandData) => {
             processor: os.cpus()[0].model,
             platform: os.platform(),
             totalMen: os.totalmem(),
-            memoryUsage: process.memoryUsage().heapUsed
+            memoryUsage: process.memoryUsage().heapUsed,
+            popularCommands: Object.entries(client.commandsUsed)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .map(([cmdName, count]) => `${cmdName}: ${count}`)
+                .join('\n')
         }
 
         const { primary, accumulate } = client.uptimeAllTime
@@ -163,6 +168,11 @@ export default async (interaction, commandData) => {
                 {
                     name: '🛰️ Informações Gerais',
                     value: `\`\`\`txt\nShard Ping: ${data.ping}\nTempo Online: ${data.uptime}\nCriador: ${data.developer}\nComandos: ${data.commandsSize} disponíveis\nMensagens: ${client.messages?.currency()}\nInterações: ${client.interactions?.currency()}\nEmoji Handler: ${data.emojisHandlerCount}\n\`\`\``,
+                    inline: false
+                },
+                {
+                    name: `${e.slash} Comandos Populares`,
+                    value: `\`\`\`txt\n${data.popularCommands}\n\`\`\``,
                     inline: false
                 },
                 {
