@@ -21,7 +21,7 @@ export default async (interaction) => {
 
     if (user.id !== userId)
         return await interaction.reply({
-            content: `${e.cry} | Infelizmente, você não é o usuário desafiado neste jokempo.`,
+            content: `${e.SaphireChorando} | Infelizmente, você não é o usuário desafiado neste jokempo.`,
             ephemeral: true
         })
 

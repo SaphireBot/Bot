@@ -32,7 +32,7 @@ export default async (message, correctAnswer, Quiz, question) => {
 
         if (alreadyReplied.includes(user.id))
             return await int.reply({
-                content: `${e.sleep} | Você já errou esta pergunta, ok? Espere pela próxima, é rapidinho.`,
+                content: `${e.SaphireDormindo} | Você já errou esta pergunta, ok? Espere pela próxima, é rapidinho.`,
                 ephemeral: true
             })
 
@@ -45,7 +45,7 @@ export default async (message, correctAnswer, Quiz, question) => {
             Quiz.data.misses++
             questionMisses++
             return await int.reply({
-                content: `${e.cry} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
+                content: `${e.SaphireChorando} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
                 ephemeral: true
             })
         }

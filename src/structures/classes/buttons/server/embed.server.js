@@ -184,7 +184,7 @@ export default (interaction, body, type) => {
     function cancel() {
         stopCollectors()
         interaction.editReply({
-            content: `${e.sleep} | Tuuuudo cancelado.`,
+            content: `${e.SaphireDormindo} | Tuuuudo cancelado.`,
             embeds: [], components: []
         }).catch(() => { })
         return

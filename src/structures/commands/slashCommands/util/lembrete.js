@@ -115,7 +115,7 @@ export default {
                 ephemeral: true
             }))
             .catch(async err => await interaction.reply({
-                content: `${e.cry} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
+                content: `${e.SaphireChorando} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
             }))
 
     }

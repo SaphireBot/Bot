@@ -155,7 +155,7 @@ export default class FlagGame {
         if (!this.message) {
             this.unregister()
             return await this.interaction.channel.send({
-                content: `${e.cry} | Não foi possível continuar com o quiz por razões desconhecidas do universo...`
+                content: `${e.SaphireChorando} | Não foi possível continuar com o quiz por razões desconhecidas do universo...`
             })
         }
 

@@ -160,7 +160,7 @@ export default async (interaction, bodyCustom, type) => {
 
             if (reason == 'user' & !body.embedConfigEnabled)
                 interaction.editReply({
-                    content: `${e.sleep} | Beleza, configuração encerrada.`,
+                    content: `${e.SaphireDormindo} | Beleza, configuração encerrada.`,
                     embeds: [], components: []
                 }).catch(() => { })
 

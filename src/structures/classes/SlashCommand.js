@@ -33,7 +33,7 @@ export default class SlashCommandInteraction extends Base {
         const command = this.client.slashCommands.get(this.commandName);
         if (!command)
             return this.interaction.reply({
-                content: `${this.e.sleep} | Eu ainda estou acordando, pode usar o comando de novo?`,
+                content: `${this.e.SaphireDesmaiada} | Eu ainda estou acordando, pode usar o comando de novo?`,
                 ephemeral: true
             })
 

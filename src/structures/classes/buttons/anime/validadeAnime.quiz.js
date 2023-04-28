@@ -95,7 +95,7 @@ export default async (interaction, commandData) => {
         })
         .catch(async err => {
             return await interaction.update({
-                content: `${e.cry} | Não foi possível salvar a sua sugestão...\n${e.bug} | \`${err}\``,
+                content: `${e.SaphireChorando} | Não foi possível salvar a sua sugestão...\n${e.bug} | \`${err}\``,
                 embeds: [], components: []
             })
         })

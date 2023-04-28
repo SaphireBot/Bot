@@ -38,7 +38,7 @@ export default async (interaction, commandData) => {
             components: []
         }).catch(() => { }))
         .catch(err => interaction.update({
-            content: `${e.cry} | Não foi possível desativar esta configuração.\n${e.bug} | \`${err}\``,
+            content: `${e.SaphireChorando} | Não foi possível desativar esta configuração.\n${e.bug} | \`${err}\``,
             components: [],
             ephemeral: true
         }).catch(() => { }))

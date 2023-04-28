@@ -20,7 +20,7 @@ export default async (gw, guild, channel, messageFetched) => {
     let message = messageFetched || await channel?.messages?.fetch(MessageID || '0').catch(() => null)
 
     if (!message) {
-        channel.send({ content: `${e.cry} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
+        channel.send({ content: `${e.SaphireChorando} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
         return GiveawayManager.deleteGiveaway(giveaway)
     }
 

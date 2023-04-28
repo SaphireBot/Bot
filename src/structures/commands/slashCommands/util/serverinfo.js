@@ -64,7 +64,7 @@ export default {
 
         if (guildData.joinedAt.first)
             fields.push({
-                name: `${e.sleep} Minha Relação Com o Servidor`,
+                name: `${e.SaphireDormindo} Minha Relação Com o Servidor`,
                 value: `Eu não lembro que me chamou para cá, mas eu sei que cheguei em **\`${guildData.joinedAt.first}\`** e estou aqui a tudo isso de tempo, olha -> **\`${guildData.joinedAt.second}\`**`
             })
 

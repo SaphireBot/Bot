@@ -20,7 +20,7 @@ export default async ({ interaction }, commandData) => {
         if (!giveaway) {
             disableButton(true)
             return await interaction.reply({
-                content: `${e.cry} | Por razões mistícas do universo, esse sorteio não existe mais.`,
+                content: `${e.SaphireChorando} | Por razões mistícas do universo, esse sorteio não existe mais.`,
                 ephemeral: true
             })
         }
@@ -46,7 +46,7 @@ export default async ({ interaction }, commandData) => {
 
         if (hasEnded) {
             disableButton()
-            return interaction.reply({ content: `${e.cry} | Poooxa, o sorteio já foi acabou.`, ephemeral: true })
+            return interaction.reply({ content: `${e.SaphireChorando} | Poooxa, o sorteio já foi acabou.`, ephemeral: true })
         }
 
         if (giveaway.Participants.includes(user.id))
@@ -84,7 +84,7 @@ export default async ({ interaction }, commandData) => {
 
         if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id) && !hasRole)
             return interaction.reply({
-                content: `${e.cry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
+                content: `${e.SaphireChorando} | Você não está na lista de pessoas que podem entrar no sorteio.`,
                 ephemeral: true
             })
 
@@ -107,14 +107,14 @@ export default async ({ interaction }, commandData) => {
 
                 if (!giveawayObject)
                     return await interaction.reply({
-                        content: `${e.cry} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                        content: `${e.SaphireChorando} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         ephemeral: true
                     })
 
                 GiveawayManager.pushParticipants(gwId, giveawayObject.Participants)
                 refreshButton()
                 await interaction.reply({
-                    content: `${e.Tada} | Boooa! Coloquei você na lista de participantes.\n${e.sleep} | Agora é só esperar o sorteio terminar, boa sorte ${e.amongusdance}`,
+                    content: `${e.Tada} | Boooa! Coloquei você na lista de participantes.\n${e.SaphireDormindo} | Agora é só esperar o sorteio terminar, boa sorte ${e.amongusdance}`,
                     ephemeral: true
                 })
 
@@ -158,7 +158,7 @@ export default async ({ interaction }, commandData) => {
 
     async function ignore() {
         return await interaction.update({
-            content: `${e.sleep} | Ok, vamos fingir que nada aconteceu por aqui.`,
+            content: `${e.SaphireDormindo} | Ok, vamos fingir que nada aconteceu por aqui.`,
             components: []
         }).catch(() => { })
     }
@@ -167,13 +167,13 @@ export default async ({ interaction }, commandData) => {
 
         if (hasEnded)
             return await interaction.update({
-                content: `${e.cry} | O sorteio já acabooou. Não da mais pra sair.`,
+                content: `${e.SaphireChorando} | O sorteio já acabooou. Não da mais pra sair.`,
                 components: []
             }).catch(() => { })
 
         if (!giveaway.Participants.includes(user.id))
             return await interaction.update({
-                content: `${e.cry} | Você não está participando deste sorteio.`,
+                content: `${e.SaphireChorando} | Você não está participando deste sorteio.`,
                 components: []
             }).catch(() => { })
 
@@ -190,13 +190,13 @@ export default async ({ interaction }, commandData) => {
 
                 if (!giveawayObject)
                     return await interaction.update({
-                        content: `${e.cry} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                        content: `${e.SaphireChorando} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         components: []
                     })
 
                 refreshButton()
                 return await interaction.update({
-                    content: `${e.cry} | Pronto pronto, você não está mais participando deste sorteio.`,
+                    content: `${e.SaphireChorando} | Pronto pronto, você não está mais participando deste sorteio.`,
                     components: []
                 }).catch(() => { })
             })
@@ -234,7 +234,7 @@ export default async ({ interaction }, commandData) => {
 
         const buffer = createBuffer()
         return await interaction.editReply({
-            content: `${e.sleep} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
+            content: `${e.SaphireDormindo} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
             files: [new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
         })
             .catch(async err => await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { }))

@@ -116,7 +116,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     msg.delete().catch(() => { })
                     if (msg?.channel)
                         return msg.channel.send({
-                            content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.cry}`
+                            content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.SaphireChorando}`
                         }).catch(() => { })
                 }
 
@@ -124,7 +124,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     Database.deleteGiveaway(msg.id, interaction.guild.id)
                     msg.delete().catch(() => { })
                     return interaction.channel.send({
-                        content: `${e.cry} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
+                        content: `${e.SaphireChorando} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
                     }).catch(() => { })
                 }
 
@@ -137,7 +137,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     embed.description = 'Beleza, estava tudo certo até aqui'
                     embed.fields.push({
                         name: '⏱️ O Tempo Passou',
-                        value: `Se passou muitas eras e eu cai em um sono profundo...\n${e.sleep} Cancelei o sorteio, beleza?`
+                        value: `Se passou muitas eras e eu cai em um sono profundo...\n${e.SaphireDesmaiada} Cancelei o sorteio, beleza?`
                     })
                     return Message.edit({ content: null, embeds: [embed] }).catch(() => { })
                 }
@@ -227,7 +227,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }
                 ],
             })
-                .catch(err => channel.send({ content: `${e.cry} | Erro ao editar a mensagem principal de configuração do sorteio.\n${e.bug} | \`${err}\`` }))
+                .catch(err => channel.send({ content: `${e.SaphireChorando} | Erro ao editar a mensagem principal de configuração do sorteio.\n${e.bug} | \`${err}\`` }))
 
             const buttonCollector = Message.createMessageComponentCollector({
                 filter: int => int.user.id === user.id,
@@ -351,7 +351,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     if (reason == 'messageDelete') {
                         msg.delete().catch(() => { })
                         return channel.send({
-                            content: `${e.cry} | A mensagem foi apagada no meio da configuração, que maldade cara...`,
+                            content: `${e.SaphireChorando} | A mensagem foi apagada no meio da configuração, que maldade cara...`,
                             components: []
                         })
                     }
@@ -360,7 +360,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         embed.color = client.red
                         embed.fields.push({
                             name: '⏱️ E se passou eternidades',
-                            value: `Após 5 longas eternidades eu cai em um sono profundo ${e.sleep}. Cancelei tudo para eu dormir em paz.`
+                            value: `Após 5 longas eternidades eu cai em um sono profundo ${e.SaphireDesmaiada}. Cancelei tudo para eu dormir em paz.`
                         })
                         embed.footer = { text: 'Tempo Expirado' }
                         return Message.edit({ content: null, embeds: [embed], components: [] }).catch(() => { })

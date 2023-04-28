@@ -40,7 +40,7 @@ export default async (interaction, commandData) => {
     if (execute) return execute[commandData.src](interaction, execute.body, execute.type)
 
     return interaction.update({
-        content: `${e.cry} | Sub-função não encontrada #16845345400`,
+        content: `${e.SaphireChorando} | Sub-função não encontrada #16845345400`,
         embeds: [], components: []
     }).catch(() => { })
 }

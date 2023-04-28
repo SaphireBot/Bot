@@ -106,10 +106,10 @@ export default ({ interaction, user, message }, commandData) => {
             ephemeral: true
         })
             .catch(err => {
-                if (err.code == 10062) return interaction.channel.send({ connect: `${e.cry} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
+                if (err.code == 10062) return interaction.channel.send({ connect: `${e.SaphireChorando} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
                 Database.Cache.Connect.delete(message.id)
                 message.delete().catch(() => { })
-                return interaction.channel.send({ content: `${e.cry} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
+                return interaction.channel.send({ content: `${e.SaphireChorando} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
             })
     }
 

@@ -105,7 +105,7 @@ export default async interaction => {
 
             if (err) {
                 embed.color = client.red
-                embed.fields[0].value = `${e.cry} Não deu certo dentro do meu sistema, mas o emoji foi adicionado.\n${emoji} Emoji adicionado com sucesso. O nome dele é \`:${emoji.name}:\``
+                embed.fields[0].value = `${e.SaphireChorando} Não deu certo dentro do meu sistema, mas o emoji foi adicionado.\n${emoji} Emoji adicionado com sucesso. O nome dele é \`:${emoji.name}:\``
                 return message.edit({ embeds: [] }).catch(() => { })
             }
 
@@ -144,7 +144,7 @@ export default async interaction => {
     function ended(reason) {
         if (reason !== 'idle') return
         embed.color = client.red
-        embed.fields[0].value = `${e.cry} O tempo limite deste comando acabou.`
+        embed.fields[0].value = `${e.SaphireChorando} O tempo limite deste comando acabou.`
         return message.edit({ embeds: [embed] }).catch(() => { })
     }
 

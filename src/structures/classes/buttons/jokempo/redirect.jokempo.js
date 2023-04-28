@@ -36,7 +36,7 @@ export default async (Interaction, commandData) => {
 
     if (!gameData)
         return interaction.update({
-            content: `${e.cry} | Jokempo não foi encontrado no cache.`,
+            content: `${e.SaphireChorando} | Jokempo não foi encontrado no cache.`,
             components: [], embeds: []
         }).catch(() => { })
 

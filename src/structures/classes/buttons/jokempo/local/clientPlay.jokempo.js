@@ -23,7 +23,7 @@ export default async (interaction, click) => {
             description: `${e.amongusdance} ${client.user} ganhou jogando ${emoji(botChoice)}\n${e.amongusdeath} ${interaction.user} perdeu jogando ${emoji(click)}`,
             fields: [
                 {
-                    name: `${e.sleep} Inocente`,
+                    name: `${e.SaphireDormindo} Inocente`,
                     value: 'Você realmente pensou que poderia ganhar de mim?'
                 }
             ]

@@ -91,7 +91,7 @@ async function local(SlashCommand) {
 
     if (value > 0 && opponentBalance < value)
         return interaction.reply({
-            content: `${e.cry} | ${opponent} não tem **${value.currency()} ${MoedaCustom}** para apostar com você.`,
+            content: `${e.SaphireChorando} | ${opponent} não tem **${value.currency()} ${MoedaCustom}** para apostar com você.`,
             ephemeral: true
         })
 

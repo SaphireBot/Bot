@@ -49,7 +49,7 @@ export default {
 
         if (hasVoted === 2)
             return await interaction.editReply({
-                content: `${e.cry} | Não foi possível falar com o Top.GG. Tente novamente daqui a pouco, ok?`
+                content: `${e.SaphireChorando} | Não foi possível falar com o Top.GG. Tente novamente daqui a pouco, ok?`
             }).catch(() => { })
 
         if (hasVoted)

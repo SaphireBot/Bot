@@ -26,7 +26,7 @@ export default async interaction => {
 
     if (greenCard.length)
         return interaction.reply({
-            content: `${e.cry} | Eu não tenho todas as permissões necessárias.\n${e.Info} | Permissões faltando: ${greenCard.map(perm => `\`${PermissionsTranslate[perm || perm]}\``).join(', ') || 'Nenhuma? WTF'}`
+            content: `${e.SaphireChorando} | Eu não tenho todas as permissões necessárias.\n${e.Info} | Permissões faltando: ${greenCard.map(perm => `\`${PermissionsTranslate[perm || perm]}\``).join(', ') || 'Nenhuma? WTF'}`
         }).catch(() => { })
 
     let streamers = Array.from(
