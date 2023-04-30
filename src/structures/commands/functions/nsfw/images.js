@@ -51,7 +51,7 @@ export default async (interaction, commandData) => {
 
                 if (err.code == 50007)
                     return interaction.reply({
-                        content: `${e.SaphireChorando} | Poooxa, a sua DM está trancada ${user}. Abre ela e clica no botão de novo, ok?`,
+                        content: `${e.Animated.SaphireCry} | Poooxa, a sua DM está trancada ${user}. Abre ela e clica no botão de novo, ok?`,
                         ephemeral: true
                     })
 
@@ -91,7 +91,7 @@ export default async (interaction, commandData) => {
 
     if (!image || !image.url)
         return interaction.editReply({
-            content: `${e.SaphireChorando} | Eu não achei nenhuma imagem...`,
+            content: `${e.Animated.SaphireCry} | Eu não achei nenhuma imagem...`,
             components: [
                 {
                     type: 1,

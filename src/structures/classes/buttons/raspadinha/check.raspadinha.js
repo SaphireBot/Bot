@@ -57,7 +57,7 @@ export default async (interaction, buttons) => {
     ) {
         disableAllButtons()
         await interaction.update({
-            content: `${e.Deny} | Que pena, você não ganhou nada nessa raspadinha`,
+            content: `${e.Animated.SaphireCry} | Que pena, você não ganhou nada nessa raspadinha`,
             components: buttons
         }).catch(() => { })
         return null

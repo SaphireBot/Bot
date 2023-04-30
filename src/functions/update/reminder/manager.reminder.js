@@ -2,6 +2,12 @@ import { Database, Modals, SaphireClient as client } from "../../../classes/inde
 import { Emojis as e } from "../../../util/util.js"
 import timeMs from "../../plugins/timeMs.js"
 import execute from './src/start.reminder.js'
+const intervals = {
+    0: 'Disparo Único',
+    1: 'Diariamente',
+    2: 'Semanalmente',
+    3: 'Mensal'
+}
 
 export default new class ReminderManager {
     constructor() {
@@ -111,6 +117,7 @@ export default new class ReminderManager {
                 DateNow: data.DateNow,
                 ChannelId: data.ChannelId,
                 Alerted: data.Alerted,
+                interval: data.interval
             })
 
         reminder.timeout = timeout
@@ -134,7 +141,7 @@ export default new class ReminderManager {
             continue
         }
 
-        return setTimeout(() => this.checkBits(), 600000)
+        return setTimeout(() => this.checkBits(), 1000 * 60 * 60)
     }
 
     async remove(reminderId) {
@@ -147,9 +154,8 @@ export default new class ReminderManager {
             return this.reminders.splice(this.reminders.findIndex(r => r.id === reminderId), 1)
         }
 
-        if (reminderOver) {
+        if (reminderOver)
             return this.over32Bits.splice(this.over32Bits.findIndex(r => r.id === reminderId), 1)
-        }
 
         return
     }
@@ -178,7 +184,8 @@ export default new class ReminderManager {
                         isAutomatic: doc.isAutomatic,
                         DateNow: doc.DateNow,
                         ChannelId: doc.ChannelId,
-                        Alerted: doc.Alerted
+                        Alerted: doc.Alerted,
+                        interval: doc.interval
                     })
                 else {
                     this.reminders.push({
@@ -192,7 +199,8 @@ export default new class ReminderManager {
                         isAutomatic: doc.isAutomatic,
                         DateNow: doc.DateNow,
                         ChannelId: doc.ChannelId,
-                        Alerted: doc.Alerted
+                        Alerted: doc.Alerted,
+                        interval: doc.interval
                     })
                     await this.start(user, doc)
                 }
@@ -236,6 +244,10 @@ export default new class ReminderManager {
                         value: data.RemindMessage || 'Sem mensagem definida'
                     },
                     {
+                        name: '⏳ Intervalo',
+                        value: intervals[data.interval ?? 0]
+                    },
+                    {
                         name: '⏱️ Tempo Definido',
                         value: `${Date.GetTimeout(data.Time, data.DateNow, 'f')} (${Date.GetTimeout(data.Time, data.DateNow, 'R')})\n${data.Alerted ? 'Este lembrete já foi disparado' : 'Este lembrete não foi disparado'}${data.snoozed ? "\nLembrete adiado" : ""}`
                     }
@@ -272,9 +284,9 @@ export default new class ReminderManager {
             ephemeral: true
         }
 
-        if (toEdit)
-            return await interaction.update(responseData).catch(() => { })
-        else return await interaction.reply(responseData)
+        return toEdit
+            ? interaction.update(responseData).catch(() => { })
+            : interaction.reply(responseData)
     }
 
     async move(interaction, reminderId) {
@@ -403,7 +415,7 @@ export default new class ReminderManager {
             { id: data.id },
             {
                 $set: {
-                    Time: 600000, // 10 Minutes
+                    Time: 1000 * 60 * 10,
                     DateNow: Date.now(),
                     snoozed: true,
                     Alerted: false

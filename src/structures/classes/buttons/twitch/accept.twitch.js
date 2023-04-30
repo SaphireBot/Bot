@@ -44,7 +44,7 @@ export default async (interaction, commandData) => {
 
     if (greenCard.length)
         return interaction.update({
-            content: `${e.SaphireChorando} | Eu não tenho todas as permissões necessárias.\n${e.Info} | Permissões faltando: ${greenCard.map(perm => `\`${PermissionsTranslate[perm || perm]}\``).join(', ') || 'Nenhuma? WTF'}`,
+            content: `${e.Animated.SaphireCry} | Eu não tenho todas as permissões necessárias.\n${e.Info} | Permissões faltando: ${greenCard.map(perm => `\`${PermissionsTranslate[perm || perm]}\``).join(', ') || 'Nenhuma? WTF'}`,
             ephemeral: true
         }).catch(() => { })
 
@@ -116,7 +116,7 @@ export default async (interaction, commandData) => {
         .catch(err => {
             console.log(err)
             return interaction.update({
-                content: `${e.SaphireChorando} | Não foi possível salvar esta configuração.\n${e.bug} | \`${err}\``,
+                content: `${e.Animated.SaphireCry} | Não foi possível salvar esta configuração.\n${e.bug} | \`${err}\``,
                 components: [],
                 ephemeral: true
             }).catch(() => { })

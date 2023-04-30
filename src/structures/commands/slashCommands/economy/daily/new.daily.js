@@ -4,6 +4,7 @@ import { Experience } from '../../../../../classes/index.js'
 import Base from '../../../../classes/Base.js'
 import revalidateReminder from './reminder.daily.js'
 import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
+import { Emojis as e } from '../../../../../util/util.js'
 
 export default class Daily extends Base {
     constructor(interaction) {
@@ -18,7 +19,7 @@ export default class Daily extends Base {
 
     async execute() {
 
-        const { interaction, Database, client, emojis: e, guild, options, user } = this
+        const { interaction, Database, client, guild, options, user } = this
 
         const transferUser = options.getUser('transfer')
         const option = options.getString('options')
@@ -39,14 +40,14 @@ export default class Daily extends Base {
 
         if (count > 0 && dailyTimeout > 0 && !Date.Timeout(172800000, dailyTimeout)) {
             this.resetSequence()
-            return await interaction.reply({
-                content: `${e.SaphireChorando} | Você perdeu a sequência do prêmio diário.`
+            return interaction.reply({
+                content: `${e.Animated.SaphireCry} | Você perdeu a sequência do prêmio diário.`
             })
         }
 
         if (Date.Timeout(86400000, dailyTimeout)) {
             if (isReminder) return revalidateReminder(interaction, dailyTimeout, 86400000, isReminder)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `⏱ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.\n${e.Info} | Se você quiser ver os seus status, use </daily:${interaction.commandId}>, vá em \`options\` e \`Meu status do daily\``,
                 ephemeral: true
             })
@@ -121,13 +122,13 @@ export default class Daily extends Base {
         data.fields.push({ name: '📆 Calendário', value: `\`\`\`txt\n${daysCountFormat}\n\`\`\`` })
         this.setNewDaily(prize, isReminder, option, transferUser)
 
-        return await interaction.reply({
+        return interaction.reply({
             embeds: [{
                 color: client.green,
                 title: `${e.waku} ${client.user.username} Daily Rewards`,
                 description: transferUser
-                    ? `Você transferiu o daily **${prize.day}º** para ${transferUser.tag}`
-                    : `Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
+                    ? `${e.Animated.SaphireDance} | Você transferiu o daily **${prize.day}º** para ${transferUser.tag}`
+                    : `${e.Animated.SaphireDance} | Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
                 fields: data.fields
             }]
         })
@@ -151,9 +152,9 @@ export default class Daily extends Base {
                 privateOrChannel: option == 'reminderPrivate'
             })
 
-        if (transferUser)
-            Experience.add(transferUser.id, prize.xp)
-        else Experience.add(this.user.id, prize.xp)
+        transferUser
+            ? Experience.add(transferUser.id, prize.xp)
+            : Experience.add(this.user.id, prize.xp)
 
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },
@@ -199,8 +200,8 @@ export default class Daily extends Base {
     async dailyUserInfo(count) {
         return this.interaction.reply({
             content: count == 0
-                ? `${this.emojis.Info} | Você não tem nenhum dia consecutivo contabilizado.`
-                : `${this.emojis.Info} | Atualmente, você resgatou **${count - 1}** prêmios diários consecutivos.`
+                ? `${e.Animated.SaphireCry} | Você não tem nenhum dia consecutivo contabilizado.`
+                : `${e.Info} | Atualmente, você resgatou **${count - 1}** prêmios diários consecutivos.`
         })
     }
 

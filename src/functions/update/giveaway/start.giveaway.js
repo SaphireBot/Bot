@@ -17,10 +17,10 @@ export default async (gw, guild, channel, messageFetched) => {
     if (!giveaway || !guild || !channel || !gw) return
 
     const MessageID = giveaway.MessageID
-    let message = messageFetched || await channel?.messages?.fetch(MessageID || '0').catch(() => null)
+    let message = messageFetched || await channel.messages?.fetch(MessageID || '0').catch(() => null)
 
     if (!message) {
-        channel.send({ content: `${e.SaphireChorando} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
+        channel.send({ content: `${e.Animated.SaphireCry} | O sorteio acabou mas a mensagem sumiu, como pode isso???` })
         return GiveawayManager.deleteGiveaway(giveaway)
     }
 
@@ -78,10 +78,12 @@ export default async (gw, guild, channel, messageFetched) => {
         return GiveawayManager.deleteGiveaway(giveaway)
     }
 
-    const vencedores = Participantes.random(WinnersAmount)
+    const dateNow = Date.now()
+    await guild.members.fetch()
+    const guildMembers = guild.members.cache.map(member => member.id)
+    const vencedores = Participantes.filter(id => guildMembers.includes(id)).random(WinnersAmount)
     const vencedoresMapped = vencedores.map(memberId => `<@${memberId}> \`${memberId}\``)
     const index = GiveawayManager.giveaways.findIndex(gw => gw.MessageID == MessageID)
-    const dateNow = Date.now()
 
     if (GiveawayManager.giveaways[index]) {
         GiveawayManager.giveaways[index].DischargeDate = dateNow
@@ -91,9 +93,7 @@ export default async (gw, guild, channel, messageFetched) => {
     delete GiveawayManager.retryCooldown[giveaway.MessageID]
     GiveawayManager.managerUnavailablesGiveaways([giveaway])
 
-    const sponsor = await guild.members.fetch(Sponsor)
-        .then(member => member.user)
-        .catch(() => `<@${Sponsor}>`)
+    const sponsor = guild.members.cache.get(Sponsor)?.user || `<@${Sponsor}>`
 
     const fields = [
         {
@@ -123,7 +123,7 @@ export default async (gw, guild, channel, messageFetched) => {
 
     const toMention = Array.from(new Set([Sponsor, ...vencedores]))
     return channel.send({
-        content: `${e.Notification} | ${toMention.map(userId => `<@${userId}>`).join(', ').slice(0, 4000)}`,
+        content: `${e.Notification} | ${toMention.map(userId => `<@${userId}>`).join(', ').slice(0, 4000)}`.limit('MessageContent'),
         embeds: [{
             color: client.green,
             title: `${e.Tada} Sorteio Finalizado`,

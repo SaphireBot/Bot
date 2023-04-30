@@ -23,7 +23,7 @@ export default async interaction => {
 
     if (!usersId?.length)
         return interaction.reply({
-            content: `${e.SaphireChorando} | Nenhum membro foi contabilizado para o ranking.`,
+            content: `${e.Animated.SaphireCry} | Nenhum membro foi contabilizado para o ranking.`,
             ephemeral: true
         })
 

@@ -65,7 +65,7 @@ export default async (interaction, commandData) => {
 
     async function userNotFound() {
 
-        const content = `${e.SaphireChorando} | O usuário da aposta do Jokempo Global \`${jokempo?.id || '0'}\` não foi encontrado.\n${e.Info} | Aposta removida do escopo global. Por favor, tente novamente e desculpe o incomodo.`
+        const content = `${e.Animated.SaphireCry} | O usuário da aposta do Jokempo Global \`${jokempo?.id || '0'}\` não foi encontrado.\n${e.Info} | Aposta removida do escopo global. Por favor, tente novamente e desculpe o incomodo.`
         message.edit({ content }).catch(() => message.channel.send({ content }).catch(() => { }))
 
         await Database.User.updateOne(

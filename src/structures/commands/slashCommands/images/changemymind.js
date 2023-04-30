@@ -34,7 +34,7 @@ export default {
             ]
         })
             .catch(err => msg.edit({
-                content: `${e.SaphireChorando} | Não foi possível gerar o seu change my mind.\n${e.bug} | \`${err}\``
+                content: `${e.Animated.SaphireCry} | Não foi possível gerar o seu change my mind.\n${e.bug} | \`${err}\``
             }))
 
     }

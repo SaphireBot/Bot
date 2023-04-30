@@ -116,7 +116,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     msg.delete().catch(() => { })
                     if (msg?.channel)
                         return msg.channel.send({
-                            content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.SaphireChorando}`
+                            content: `${e.SaphireWhat} | O canal inteiro onde o sorteio estava sendo montado, **SUMIU**${e.SaphireDesespero}. Só vim aqui dizer que o sorteio que estava sendo montado foi cancelado, ok?${e.Animated.SaphireCry}`
                         }).catch(() => { })
                 }
 
@@ -124,7 +124,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     Database.deleteGiveaway(msg.id, interaction.guild.id)
                     msg.delete().catch(() => { })
                     return interaction.channel.send({
-                        content: `${e.SaphireChorando} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
+                        content: `${e.Animated.SaphireCry} | A mensagem original foi deletada e eu nunca mais vou conseguir completar o sorteio.`
                     }).catch(() => { })
                 }
 
@@ -227,7 +227,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     }
                 ],
             })
-                .catch(err => channel.send({ content: `${e.SaphireChorando} | Erro ao editar a mensagem principal de configuração do sorteio.\n${e.bug} | \`${err}\`` }))
+                .catch(err => channel.send({ content: `${e.Animated.SaphireCry} | Erro ao editar a mensagem principal de configuração do sorteio.\n${e.bug} | \`${err}\`` }))
 
             const buttonCollector = Message.createMessageComponentCollector({
                 filter: int => int.user.id === user.id,
@@ -351,7 +351,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     if (reason == 'messageDelete') {
                         msg.delete().catch(() => { })
                         return channel.send({
-                            content: `${e.SaphireChorando} | A mensagem foi apagada no meio da configuração, que maldade cara...`,
+                            content: `${e.Animated.SaphireCry} | A mensagem foi apagada no meio da configuração, que maldade cara...`,
                             components: []
                         })
                     }

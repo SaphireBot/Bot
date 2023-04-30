@@ -22,12 +22,24 @@ export default async ({ user, data }) => {
     if (!guild || !Channel || !hasMember)
         return NotifyUser(user, RemindMessage, data.id)
 
+    const oneDay = 1000 * 60 * 60 * 24
+    const intervalTime = {
+        1: oneDay,
+        2: oneDay * 7,
+        3: oneDay * 30
+    }[data.interval]
+
+    const intervalMessage = data.interval == 0
+        ? ''
+        : `⏱️ | Este lembrete será disparado novamente ${Date.GetTimeout(intervalTime, Date.now(), 'R')}`
+
     const msg = data.privateOrChannel
         ? NotifyUser(user, RemindMessage, data.id)
-        : await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**`)
-            .catch(async () => await NotifyUser(user, RemindMessage, data.id))
+        : await Channel.send(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**\n${intervalMessage}`)
+            .catch(() => NotifyUser(user, RemindMessage, data.id))
 
     if (!msg) return
+    if (intervalTime) return managerReminder.revalide(data.id, intervalTime, user)
     if (isAutomatic) return managerReminder.remove(data.id)
 
     managerReminder.setAlert(data.id)
@@ -38,7 +50,7 @@ export default async ({ user, data }) => {
 
     const collector = msg.createReactionCollector({
         filter: (reaction, u) => emojis.includes(reaction.emoji.name) && u.id === user.id,
-        idle: 600000,
+        idle: 1000 * 60 * 60,
         max: 1,
         errors: ['idle', 'max']
     })
@@ -47,7 +59,11 @@ export default async ({ user, data }) => {
             const { emoji } = reaction
 
             if (emoji.name === emojis[1]) {
-                msg.delete().catch(() => { })
+                client.pushMessage({
+                    method: 'delete',
+                    channelId: msg.channel.id,
+                    messageId: msg.id
+                })
                 return revalidateTime(Channel, user, data)
             }
 
@@ -56,7 +72,7 @@ export default async ({ user, data }) => {
 
             if (emoji.name === emojis[2]) {
                 managerReminder.remove(data.id)
-                return msg.edit(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**\n${e.Info} | Lembrete deletado.`)
+                return msg.edit(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**\n${e.Info} | Lembrete deletado.`).catch(() => { })
             }
 
             if (emoji.name === emojis[0])
@@ -69,7 +85,15 @@ export default async ({ user, data }) => {
             if (['user', 'limit'].includes(reason)) return
             managerReminder.remove(data.id)
             if (!msg) return
-            return msg.edit(`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**\n${e.Info} | Lembrete deletado.`).catch(() => { })
+            client.pushMessage({
+                method: 'patch',
+                messageId: msg.id,
+                channelId: msg.channel.id,
+                body: {
+                    content:`${e.Notification} | ${user}, lembrete pra você.\n🗒️ | **${RemindMessage}**\n${e.Info} | Lembrete deletado.`
+                }
+            })
+            return
         })
 
     return

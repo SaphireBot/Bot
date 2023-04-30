@@ -12,7 +12,7 @@ export default async (interaction, guildData, type) => {
 
     if (!config)
         messageData = {
-            content: `${e.SaphireChorando} | Nenhuma mensagem foi configurada ainda.`
+            content: `${e.Animated.SaphireCry} | Nenhuma mensagem foi configurada ainda.`
         }
 
     if (config.body)
@@ -27,7 +27,7 @@ export default async (interaction, guildData, type) => {
 
     if (!messageData && !messageData?.content && !messageData?.embeds?.length)
         messageData = {
-            content: `${e.SaphireChorando} | Nenhuma mensagem foi configurada ainda.`
+            content: `${e.Animated.SaphireCry} | Nenhuma mensagem foi configurada ainda.`
         }
 
     messageData.components = [{

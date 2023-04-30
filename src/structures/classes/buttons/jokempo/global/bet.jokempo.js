@@ -30,7 +30,7 @@ export default async interaction => {
             label: `${value.currency()} Safiras`,
             emoji: jokempoLength > 0
                 ? balance - value >= 0 ? e.CheckV : e.DenyX
-                : balance - value >= 0 ? e.SaphireChorando : e.DenyX,
+                : balance - value >= 0 ? e.Animated.SaphireCry : e.DenyX,
             description: balance - value >= 0
                 ? jokempoLength > 0 ? `${jokempoLength} apostas disponíveis` : 'Nenhum aposta disponível'
                 : 'Dinheiro Insuficiente',

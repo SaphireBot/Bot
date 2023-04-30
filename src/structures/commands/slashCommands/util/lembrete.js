@@ -18,18 +18,37 @@ export default {
             description: '[util] Crie um novo lembrete',
             options: [
                 {
+                    name: 'mensagem',
+                    description: 'Mensagem que eu devo te alertar',
+                    type: ApplicationCommandOptionType.String,
+                    min_length: 1,
+                    max_length: 700,
+                    required: true
+                },
+                {
                     name: 'quando',
                     description: 'Quando eu devo te avisar?',
                     type: ApplicationCommandOptionType.String,
                     required: true
                 },
                 {
-                    name: 'mensagem',
-                    description: 'Mensagem que eu devo te alertar',
-                    type: ApplicationCommandOptionType.String,
-                    min_length: 1,
-                    max_length: 1024,
-                    required: true
+                    name: 'intervalo',
+                    description: 'Intervalo em que o lembrete será desparado',
+                    type: ApplicationCommandOptionType.Integer,
+                    choices: [
+                        {
+                            name: 'Diariamente',
+                            value: 1
+                        },
+                        {
+                            name: 'Semanalmente',
+                            value: 2
+                        },
+                        {
+                            name: 'Mensal',
+                            value: 3
+                        }
+                    ]
                 }
             ]
         },
@@ -91,7 +110,8 @@ export default {
                 ephemeral: true
             })
 
-        if ((Date.now() + TimeMs) <= (Date.now() + 4000))
+        const dateNow = Date.now()
+        if ((dateNow + TimeMs) <= (dateNow + 4000))
             return await interaction.reply({
                 content: `${e.Deny} | O tempo minímo para configurar um lembrete é de 5 segundos.`,
                 ephemeral: true
@@ -105,8 +125,9 @@ export default {
             Time: TimeMs,
             timeout: false,
             snoozed: false,
-            DateNow: Date.now(),
-            ChannelId: channel.id
+            DateNow: dateNow,
+            ChannelId: channel.id,
+            interval: options.getInteger('intervalo') || 0
         }
 
         return managerReminder.save(user, data)
@@ -115,7 +136,7 @@ export default {
                 ephemeral: true
             }))
             .catch(async err => await interaction.reply({
-                content: `${e.SaphireChorando} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
+                content: `${e.Animated.SaphireCry} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
             }))
 
     }

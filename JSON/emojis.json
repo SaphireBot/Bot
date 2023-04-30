@@ -1,10 +1,16 @@
 {
+    "Animated": {
+        "SaphireDance": "<a:saphire_dance:1102198297365585972>",
+        "SaphireCry": "<a:saphire_cry:1102198271180550224>",
+        "SaphireQuestion": "<a:saphire_question:1102198589972807743>"
+    },
     "OwnerCrow": "<:owner:883713515796459590>",
     "SaphireDesmaiada": "<:saphire_desmaiada:1101309877982339123>",
     "SaphireIndignada": "<:saphire_indignada:1101309906625233097>",
     "saphirePolicial": "<:saphire_policial:1004052771584098334>",
     "SaphireRevoltada": "<:saphire_revoltada:1101309946051694592>",
     "SaphirePipoca": "<:saphire_pipoca:989673539084902410>",
+    "SaphireCry": "<a:saphire_cry:1102198271180550224>",
     "SaphireChorando": "<:saphire_chorando:1061052687241728053>",
     "saphireDesespero": "<:saphire_desespero:1007663363444187218>",
     "saphireRight": "<:saphire_right:1012121101624680468>",

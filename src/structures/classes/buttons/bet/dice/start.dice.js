@@ -80,14 +80,14 @@ export default async (msg, moeda) => {
 
         if (teamWinner === "blue") {
             embed.fields[0].name = `${embed.fields[0].name} ${e.waku}`
-            embed.fields[1].name = `${embed.fields[1].name} ${e.SaphireChorando}`
+            embed.fields[1].name = `${embed.fields[1].name} ${e.Animated.SaphireCry}`
 
             if (!diceGame.blue.length)
                 embed.fields[2].value = `${e.Check} O time Azul ganhou\n💸 Valor Pago: **${diceGame.value} ${moeda}**\n💰 Prêmio Acumulado: **${prize} ${moeda}**\n👤 Valor Recebido Por Pessoa: **0 ${moeda}** (Ninguém apostou no Azul)`
             else embed.fields[2].value = `${e.Check} O time Azul ganhou\n💸 Valor Pago: **${diceGame.value} ${moeda}**\n💰 Prêmio Acumulado: **${prize} ${moeda}**\n👤 Valor Recebido Por Pessoa: **${betResult} ${moeda}**`
         } else {
             embed.fields[1].name = `${embed.fields[1].name} ${e.waku}`
-            embed.fields[0].name = `${embed.fields[0].name} ${e.SaphireChorando}`
+            embed.fields[0].name = `${embed.fields[0].name} ${e.Animated.SaphireCry}`
 
             if (!diceGame.red.length)
                 embed.fields[2].value = `${e.Check} O time Vermelho ganhou\n💸 Valor Pago: **${diceGame.value} ${moeda}**\n💰 Prêmio Acumulado: **${prize} ${moeda}**\n👤 Valor Recebido Por Pessoa: **0 ${moeda}** (Ninguém apostou no Vermelho)`

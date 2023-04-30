@@ -19,7 +19,7 @@ export default async function execute(interaction, isRefresh, searchResource) {
 
     if (!wallpapers || !wallpapers.length)
         return message.edit({
-            content: `${e.SaphireChorando} | Nenhum wallpaper de anime foi encontrado.`,
+            content: `${e.Animated.SaphireCry} | Nenhum wallpaper de anime foi encontrado.`,
             ephemeral: true
         }).catch(() => { })
 

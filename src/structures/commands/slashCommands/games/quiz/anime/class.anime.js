@@ -341,7 +341,7 @@ export default class AnimeQuizManager {
         if (!this.availableSuggests.length) {
             this.unregister()
             await this.channel.send({
-                content: `${e.SaphireChorando} | Todas as alternativas para este modo acabou.\n${e.waku} | Mas você sabia que você pode enviar mais, né? Clica nesse comando aqui: ${this.commandSuggestMention}`
+                content: `${e.Animated.SaphireCry} | Todas as alternativas para este modo acabou.\n${e.waku} | Mas você sabia que você pode enviar mais, né? Clica nesse comando aqui: ${this.commandSuggestMention}`
             })
         }
 

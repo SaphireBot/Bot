@@ -23,7 +23,7 @@ export default async (interaction, click) => {
 
     if (!game.players.includes(user.id))
         return interaction.reply({
-            content: `${e.SaphireChorando} | Você não faz parte desse jokempo.`,
+            content: `${e.Animated.SaphireCry} | Você não faz parte desse jokempo.`,
             ephemeral: true
         })
 

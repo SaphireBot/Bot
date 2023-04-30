@@ -23,7 +23,7 @@ export default async (interaction, commandData) => {
 
     if (!streamerCrips.length)
         return interaction.editReply({
-            content: `${e.SaphireChorando} | Nenhum clip foi encontrado.`,
+            content: `${e.Animated.SaphireCry} | Nenhum clip foi encontrado.`,
             ephemeral: true
         }).catch(() => { })
 

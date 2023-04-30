@@ -4,8 +4,8 @@ import { Emojis as e } from '../../../../util/util.js'
 export default async (query, interaction) => {
 
     const { user, guild } = interaction
-    const playersInGame = await Database.Cache.WordleGame.get('inGame')
-    const gameUser = playersInGame?.find(value => value.userId === user.id)
+    const playersInGame = await Database.Cache.WordleGame.get('inGame') || []
+    const gameUser = playersInGame?.find(value => value?.userId === user.id)
 
     return guild.members.fetch({ user: query })
         .then(members => addPlayersToGame(members))

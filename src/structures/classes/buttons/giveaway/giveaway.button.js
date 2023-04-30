@@ -19,8 +19,8 @@ export default async ({ interaction }, commandData) => {
 
         if (!giveaway) {
             disableButton(true)
-            return await interaction.reply({
-                content: `${e.SaphireChorando} | Por razões mistícas do universo, esse sorteio não existe mais.`,
+            return interaction.reply({
+                content: `${e.Animated.SaphireCry} | Por razões mistícas do universo, esse sorteio não existe mais.`,
                 ephemeral: true
             })
         }
@@ -30,7 +30,7 @@ export default async ({ interaction }, commandData) => {
     const execute = { join, list, leave }[commandData?.src]
     if (execute) return execute()
 
-    return await interaction.reply({ content: `${e.bug} | Nenhuma sub-função encontrada. #18564846`, ephemeral: true })
+    return interaction.reply({ content: `${e.bug} | Nenhuma sub-função encontrada. #18564846`, ephemeral: true })
 
     async function disableButton(both) {
         message = await channel.messages.fetch(gwId).catch(() => null)
@@ -46,7 +46,7 @@ export default async ({ interaction }, commandData) => {
 
         if (hasEnded) {
             disableButton()
-            return interaction.reply({ content: `${e.SaphireChorando} | Poooxa, o sorteio já foi acabou.`, ephemeral: true })
+            return interaction.reply({ content: `${e.Animated.SaphireCry} | Poooxa, o sorteio já foi acabou.`, ephemeral: true })
         }
 
         if (giveaway.Participants.includes(user.id))
@@ -60,7 +60,7 @@ export default async ({ interaction }, commandData) => {
             if (giveaway.RequiredAllRoles) {
                 if (!giveaway.AllowedRoles.every(id => memberRolesIds.includes(id)))
                     return interaction.reply({
-                        content: `${e.DenyX} | Poooxa, que pena. Você não tem todos os cargos obrigatórios para entrar neste sorteio.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
+                        content: `${e.Animated.SaphireQuestion} | Hmmm... Parece que você não tem todos os cargos obrigatórios.\n${e.Info} | Pra você entrar, falta esses cargos: ${giveaway.AllowedRoles.filter(roleId => !memberRolesIds.includes(roleId)).map(roleId => `<@&${roleId}>`).join(', ')}`,
                         ephemeral: true
                     })
             }
@@ -84,7 +84,7 @@ export default async ({ interaction }, commandData) => {
 
         if (giveaway.AllowedMembers?.length > 0 && !giveaway.AllowedMembers?.includes(user.id) && !hasRole)
             return interaction.reply({
-                content: `${e.SaphireChorando} | Você não está na lista de pessoas que podem entrar no sorteio.`,
+                content: `${e.Animated.SaphireCry} | Você não está na lista de pessoas que podem entrar no sorteio.`,
                 ephemeral: true
             })
 
@@ -97,31 +97,36 @@ export default async ({ interaction }, commandData) => {
         GiveawayManager.pushParticipants(gwId, [user.id])
         return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': gwId },
-            {
-                $addToSet: { 'Giveaways.$.Participants': user.id }
-            },
+            { $addToSet: { 'Giveaways.$.Participants': user.id } },
             { new: true }
         )
-            .then(async document => {
+            .then(document => {
                 const giveawayObject = document.Giveaways.find(gw => gw.MessageID == gwId)
 
                 if (!giveawayObject)
-                    return await interaction.reply({
-                        content: `${e.SaphireChorando} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                    return interaction.reply({
+                        content: `${e.Animated.SaphireQuestion} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         ephemeral: true
                     })
 
                 GiveawayManager.pushParticipants(gwId, giveawayObject.Participants)
                 refreshButton()
-                await interaction.reply({
-                    content: `${e.Tada} | Boooa! Coloquei você na lista de participantes.\n${e.SaphireDormindo} | Agora é só esperar o sorteio terminar, boa sorte ${e.amongusdance}`,
+                const phrase = [
+                    "Boooa! Te coloquei na lista de participantes.",
+                    "Aeee! Agora você está participando deste sorteio.",
+                    `Okay okaaay. Agora você está concorrendo contra outros ${giveawayObject.Participants.length} participantes.`,
+                    "Uhhuuuuu!! Você entrou no sorteio."
+                ][Math.floor(Math.random() * 4)]
+
+                if (hasEnded) disableButton()
+                interaction.reply({
+                    content: `${e.Animated.SaphireDance} | ${phrase}\n${e.SaphireDormindo} | Agora é só esperar o sorteio terminar, boa sorte.`,
                     ephemeral: true
                 })
 
-                if (hasEnded) return disableButton()
                 return
             })
-            .catch(async err => await interaction.reply({
+            .catch(err => interaction.reply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
                 ephemeral: true
             }))
@@ -129,7 +134,7 @@ export default async ({ interaction }, commandData) => {
     }
 
     async function askToLeave() {
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.QuestionMark} | Você já está participando deste sorteio, você deseja sair?`,
             components: [
                 {
@@ -157,7 +162,7 @@ export default async ({ interaction }, commandData) => {
     }
 
     async function ignore() {
-        return await interaction.update({
+        return interaction.update({
             content: `${e.SaphireDormindo} | Ok, vamos fingir que nada aconteceu por aqui.`,
             components: []
         }).catch(() => { })
@@ -166,41 +171,39 @@ export default async ({ interaction }, commandData) => {
     async function leave() {
 
         if (hasEnded)
-            return await interaction.update({
-                content: `${e.SaphireChorando} | O sorteio já acabooou. Não da mais pra sair.`,
+            return interaction.update({
+                content: `${e.Animated.SaphireCry} | O sorteio já acabooou. Não da mais pra sair.`,
                 components: []
             }).catch(() => { })
 
         if (!giveaway.Participants.includes(user.id))
-            return await interaction.update({
-                content: `${e.SaphireChorando} | Você não está participando deste sorteio.`,
+            return interaction.update({
+                content: `${e.Animated.SaphireQuestion} | Pera aí, parece que você não está participando desse sorteio.`,
                 components: []
             }).catch(() => { })
 
         return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': gwId },
-            {
-                $pull: { 'Giveaways.$.Participants': user.id }
-            },
+            { $pull: { 'Giveaways.$.Participants': user.id } },
             { new: true }
         )
-            .then(async document => {
+            .then(document => {
                 GiveawayManager.removeParticipants(gwId, user.id)
                 const giveawayObject = document?.Giveaways?.find(gw => gw?.MessageID == gwId)
 
                 if (!giveawayObject)
-                    return await interaction.update({
-                        content: `${e.SaphireChorando} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
+                    return interaction.update({
+                        content: `${e.Animated.SaphireQuestion} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         components: []
                     })
 
                 refreshButton()
-                return await interaction.update({
-                    content: `${e.SaphireChorando} | Pronto pronto, você não está mais participando deste sorteio.`,
+                return interaction.update({
+                    content: `${e.Animated.SaphireCry} | Pronto pronto, você não está mais participando deste sorteio.`,
                     components: []
                 }).catch(() => { })
             })
-            .catch(async err => await interaction.update({
+            .catch(err => interaction.update({
                 content: `${e.SaphireDesespero} | Não foi possível te retirar do sorteio.\n${e.bug} | \`${err}\``,
                 ephemeral: true
             }))
@@ -209,7 +212,7 @@ export default async ({ interaction }, commandData) => {
     async function list() {
 
         if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true))
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar este recurso.`,
                 ephemeral: true
             })
@@ -232,16 +235,8 @@ export default async ({ interaction }, commandData) => {
                 .join('\n')
             : '~~ Ninguém ~~'
 
-        const buffer = createBuffer()
-        return await interaction.editReply({
-            content: `${e.SaphireDormindo} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
-            files: [new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
-        })
-            .catch(async err => await interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { }))
-
-        function createBuffer() {
-            return Buffer.from(
-                `Dados do Sorteio ${gwId}
+        const buffer = Buffer.from(
+            `Dados do Sorteio ${gwId}
 Servidor: ${guild.name}
 Lançado por: ${guild.members.cache.get(giveaway.Sponsor)?.user?.tag || 'User Not Found'} (${giveaway.Sponsor})
 Prêmio: ${giveaway.Prize}
@@ -261,8 +256,13 @@ ${giveaway.LockedRoles?.length > 0 ? `${giveaway.LockedRoles?.length} ` : ''}Car
 ${winners?.length > 0 ? `${winners.length} ` : ''}Vencedores do Sorteio:\n${winnersMapped}
 --------------------------------------------------------------
 ${participants.length > 0 ? `${participants.length} ` : ''}Participantes Por Ordem de Entrada:\n${participantsMapped}`
-            )
-        }
+        )
+
+        return interaction.editReply({
+            content: `${e.Animated.SaphireDance} | Se você encontrar qualquer erro, por favor, fale para os meus administradores no [meu servidor](${Config.MoonServerLink})`,
+            files: [new AttachmentBuilder(buffer, { name: 'participants.txt', description: `Lista de participantes do sorteio ${gwId}` })]
+        })
+            .catch(err => interaction.editReply({ content: `${e.Info} | Tive um pequeno problema na autenticação da lista de usuários. Por favor, tente novamente daqui uns segundos.\n${e.bug} | \`${err}\``, }).catch(() => { }))
 
     }
 

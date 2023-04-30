@@ -18,7 +18,7 @@ export default async (interaction, commandData) => {
         }).catch(() => { })
 
     if (!streamerVideos.length)
-        return interaction.editReply({ content: `${e.SaphireChorando} | Eita... Eu não achei a live.` }).catch(() => { })
+        return interaction.editReply({ content: `${e.Animated.SaphireCry} | Eita... Eu não achei a live.` }).catch(() => { })
 
     const selectMenuObject = {
         type: 1,

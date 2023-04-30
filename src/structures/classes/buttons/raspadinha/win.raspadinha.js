@@ -27,8 +27,8 @@ export default async (interaction, emoji, buttons) => {
         Database.subtract(user.id, winPrize, `${e.loss} Perdeu ${winPrize} Safiras em uma *raspadinha*`)
 
     const finalText = winPrize <= 0
-        ? `🦤 | Você encontrou uma sequência de dodos e perdeu 1000 ${moeda}`
-        : `${e.Check} | Você ganhou **${winPrize} ${moeda}** achando 3 ${emoji}`
+        ? `${e.Animated.SaphireCry} | Você encontrou uma sequência de dodos 🦤 e perdeu 1000 ${moeda}`
+        : `${e.Animated.SaphireDance} | Você ganhou **${winPrize} ${moeda}** achando 3 ${emoji}`
 
     return await interaction.update({
         content: finalText,
@@ -43,11 +43,7 @@ export default async (interaction, emoji, buttons) => {
             if (emoji !== '⭐') return
             await Database.Client.updateOne(
                 { id: client.user.id },
-                {
-                    $set: {
-                        'Raspadinhas.totalPrize': 0
-                    }
-                }
+                { $set: { 'Raspadinhas.totalPrize': 0 } }
             )
         }
     }

@@ -33,7 +33,7 @@ export default async (interaction, guild, commandData) => {
 
         if (!roles)
             return await interaction.message.edit({
-                embeds: [{ color: client.blue, description: `${e.SaphireChorando} Nenhum cargo foi encontrado.` }]
+                embeds: [{ color: client.blue, description: `${e.Animated.SaphireCry} Nenhum cargo foi encontrado.` }]
             }).catch(() => { })
 
         const rolesFormated = mapRole(roles)

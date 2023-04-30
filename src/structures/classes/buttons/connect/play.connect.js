@@ -16,7 +16,7 @@ export default async (interaction, commandData) => {
 
     if (!gameData?.players.includes(user.id))
         return interaction.reply({
-            content: `${e.SaphireChorando} | Você não está participando deste jogo.`,
+            content: `${e.Animated.SaphireCry} | Você não está participando deste jogo.`,
             ephemeral: true
         })
 
@@ -85,9 +85,9 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
             .catch(err => {
-                if (err.code == 10062) return interaction.channel.send({ connect: `${e.SaphireChorando} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
+                if (err.code == 10062) return interaction.channel.send({ connect: `${e.Animated.SaphireCry} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
                 Database.Cache.Connect.delete(message.id)
-                return interaction.channel.send({ content: `${e.SaphireChorando} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
+                return interaction.channel.send({ content: `${e.Animated.SaphireCry} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
             })
     }
 

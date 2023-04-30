@@ -45,7 +45,7 @@ export default async (message, correctAnswer, Quiz, question) => {
             Quiz.data.misses++
             questionMisses++
             return await int.reply({
-                content: `${e.SaphireChorando} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
+                content: `${e.Animated.SaphireCry} | Poooxa, você errou essa pergunta... Agora é só esperar pelo próxima, ok?`,
                 ephemeral: true
             })
         }

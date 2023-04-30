@@ -118,12 +118,12 @@ export default class SelectMenuInteraction extends Base {
             }).catch(() => { })
 
         if (!clipRequest || !clipRequest.length)
-            return interaction.editReply({ content: `${e.SaphireChorando} | NOOO, eu não achei o clip!!` })
+            return interaction.editReply({ content: `${e.Animated.SaphireCry} | NOOO, eu não achei o clip!!` })
 
         const clip = clipRequest[0]
 
         if (!clipRequest || !clipRequest.length)
-            return interaction.editReply({ content: `${e.SaphireChorando} | NOOO, eu não achei o clip!!` })
+            return interaction.editReply({ content: `${e.Animated.SaphireCry} | NOOO, eu não achei o clip!!` })
 
         return interaction.editReply({
             // content: `🎬 | Aqui está o clip de **${clip.broadcaster_name}** \`${clip.broadcaster_id}\` criado por **${clip.creator_name}** \`${clip.creator_id}\`\n${e.Info} | Este video foi visto **${(clip.view_count || 0).currency()}** vezes e tem **${clip.duration} segundos**.\n${e.twitch} | [${clip.title.replace(/#|\[|\]|\p{S}|\d+/gu, "").trim()}](${clip.url})`,

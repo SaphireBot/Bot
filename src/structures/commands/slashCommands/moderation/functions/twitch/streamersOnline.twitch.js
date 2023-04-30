@@ -23,7 +23,7 @@ export default async interaction => {
 
     if (!data.length)
         return interaction.editReply({
-            content: `${e.SaphireDesespero} | Eu não encontrei nenhum streamer online ${e.SaphireChorando}`
+            content: `${e.SaphireDesespero} | Eu não encontrei nenhum streamer online ${e.Animated.SaphireCry}`
         }).catch(() => { })
 
     const hasPerm = member.permissions.has(PermissionsBitField.Flags.Administrator)

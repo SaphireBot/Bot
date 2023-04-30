@@ -12,7 +12,7 @@ const ratelimit = { onTimeout: false, remaning: 3 }
 export default async message => {
 
     if (ratelimit.onTimeout)
-        return await message.reply({
+        return message.reply({
             content: `${e.SaphireDesespero} | Meu sistema está pegando foooogo 🔥\n🧑‍🚒 | Espera aí que os bombeiros do Rate Limit estão tomando as devidas previdências`
         }).then(msg => setTimeout(() => msg.delete().catch(() => { }), 1000 * 15))
 
@@ -66,7 +66,7 @@ export default async message => {
 
     if (!response)
         return Message.edit({
-            content: `${e.SaphireChorando} | Eu não sei responder sua pergunta.`
+            content: `${e.Animated.SaphireCry} | Eu não sei responder sua pergunta.`
         }).catch(() => { })
 
     return Message.edit({
@@ -89,15 +89,15 @@ export default async message => {
 
     function thinking() {
         const responses = [
-            `${e.Loading} | Calma calma, eu ainda estou pensando.`,
-            `${e.Loading} | Espera um pouco, deixa eu pensar um pouco mais.`,
-            `${e.Loading} | Pera aí, deixa eu pensar...`
+            `${e.Loading} | Calma calma, eu ainda estou pensando...`,
+            `${e.Loading} | Espera um pouco, deixa eu pensar um pouco mais...`,
+            `${e.Loading} | Um momento...`
         ]
 
         const interval = setInterval(() => {
             if (!onThinking[Message.id]) return clearInterval(interval)
-            Message.edit({ content: responses.random() }).catch(() => { })
-        }, 1000 * 10)
+            Message.edit({ content: responses.random() }).catch(() => Message.edit({ content: `${e.SaphireDesespero} | Não foi possível editar a mensagem...` }).catch(() => { }))
+        }, 1000 * 5)
     }
 
     function resetRequests() {

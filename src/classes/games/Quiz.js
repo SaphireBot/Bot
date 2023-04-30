@@ -193,7 +193,7 @@ export default class Quiz {
             this.stop = true
             this.unregister()
             return this.channel.send({
-                content: `${e.SaphireChorando} | Quaaal éh!! Deu algum erro mistíco aqui... O Quiz de Perguntas foi canceladinho.\n${e.bug} | \`${err}\``
+                content: `${e.Animated.SaphireCry} | Quaaal éh!! Deu algum erro mistíco aqui... O Quiz de Perguntas foi canceladinho.\n${e.bug} | \`${err}\``
             }).catch(() => { })
         })
 
@@ -205,7 +205,7 @@ export default class Quiz {
                 this.stop = true
                 this.unregister()
                 return this.channel.send({
-                    content: `${e.SaphireChorando} | Quaaal éh!! Sabe que não pode apagar uma mensagem que está carregando, não sabe? O Quiz de Perguntas foi canceladinho.`
+                    content: `${e.Animated.SaphireCry} | Quaaal éh!! Sabe que não pode apagar uma mensagem que está carregando, não sabe? O Quiz de Perguntas foi canceladinho.`
                 }).catch(() => { })
             })
 
@@ -253,7 +253,7 @@ export default class Quiz {
                 this.stop = true
                 this.unregister()
                 return this.channel.send({
-                    content: `${e.SaphireChorando} | Não foi possível mandar a mensageeeem.\n${e.bug} | \`${err}\``
+                    content: `${e.Animated.SaphireCry} | Não foi possível mandar a mensageeeem.\n${e.bug} | \`${err}\``
                 }).catch(() => { })
             })
 
@@ -395,7 +395,7 @@ export default class Quiz {
         if (!question) {
             this.stop = true
             this.unregister()
-            return this.channelSend({ content: `${e.SaphireDesespero} | Ok ok ok ok ok!!!!! **NENHUMA** pergunta foi encontrada...\n${e.SaphireChorando} | O jogo foi encerrado mas todos os pontos foram salvos.` })
+            return this.channelSend({ content: `${e.SaphireDesespero} | Ok ok ok ok ok!!!!! **NENHUMA** pergunta foi encontrada...\n${e.Animated.SaphireCry} | O jogo foi encerrado mas todos os pontos foram salvos.` })
         }
 
         await sleep(3000)
