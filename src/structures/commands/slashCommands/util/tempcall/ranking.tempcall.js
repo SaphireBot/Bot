@@ -37,7 +37,7 @@ export default async interaction => {
         .filter(d => d.member)
         .sort((a, b) => b.OnTime - a.OnTime)
         .map((d, i) => {
-            return `${emojiRanking(i)} ${d.member?.user?.tag || 'Not Found'} \`${d.member?.id}\`\n🎙️ \`${Date.stringDate(d.OnTime, true)}\`\n🔇 \`${Date.stringDate(d.offTime, true)}\``
+            return `${emojiRanking(i)} ${d.member?.user?.tag || 'Not Found'} \`${d.member?.id}\`\n🎙️ \`${Date.stringDate(d.OnTime)}\`\n🔇 \`${Date.stringDate(d.offTime)}\``
         })
 
     if (data.length <= 20)
