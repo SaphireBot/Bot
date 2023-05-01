@@ -24,7 +24,8 @@ export default new class ChestManager {
     }
 
     async execute() {
-        this.sendSapphireChest(await this.selectChannels())
+        const channelsId = await this.selectChannels()
+        this.sendSapphireChest(channelsId)
         this.counter = {}
         return
     }
@@ -32,11 +33,17 @@ export default new class ChestManager {
     async selectChannels() {
 
         const data = []
-        for await (const guildId of Object.keys(this.counter))
-            data.push(Object.entries(this.counter[guildId] || {}).filter(data => data[1] >= 1000).sort((a, b) => b[1] - a[1])[0])
+        for await (const guildId of Object.keys(this.counter)) {
+            const channelsData = Object.entries(this.counter[guildId] || {}).filter(data => (data[1] || 0) >= 1000)
+            if (!channelsData.length) continue
+            data.push(channelsData.sort((a, b) => b[1] - a[1])[0])
+            continue
+        }
 
         if (!data.length) return []
-        return data.sort((a, b) => b[1] - a[1]).map(([channelId, _]) => channelId).flat().slice(0, 5)
+        const fill = data.filter(i => i) || []
+        if (!fill.length) return []
+        return fill.sort((a, b) => b[1] - a[1]).slice(0, 5).map(arr => arr[0])
     }
 
     /**
