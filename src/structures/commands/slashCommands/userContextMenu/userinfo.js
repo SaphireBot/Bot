@@ -69,11 +69,11 @@ export default {
                 fields: [
                     {
                         name: '🔰 Servidor',
-                        value: `✏️ Nome no servidor: ${member?.displayName || user.username}\n${e.OwnerCrow} Dono: ${memberData?.onwer || 'Não'}\n${e.ModShield} Administrador: ${memberData?.adm || 'Não'}\n🎨 Cor: \`${member?.displayHexColor || "#000000"}\`\n🤝 Associado: ${memberData?.associado || "Não"}${memberData?.premiumSince || ''}\n📅 Entrada: ${memberData?.joinedAt || 'Dia 0'}\n⏱️ Membro ${memberData?.joinedTimestamp || '0 Segundos'}`
+                        value: `✏️ Nome no servidor: ${member?.displayName || user.username}\n${e.OwnerCrow} Dono: ${memberData?.onwer || 'Não'}\n${e.ModShield} Administrador: ${memberData?.adm || 'Não'}\n🎨 Cor: \`${member?.displayHexColor || "#000000"}\`\n🤝 Associado: ${memberData?.associado || "Não"}${memberData?.premiumSince || ''}\n📅 Entrada: ${memberData?.joinedAt || 'Membro saiu do servidor'}\n⏱️ Membro ${memberData?.joinedTimestamp || 'à 0 Segundos'}`
                     },
                     {
                         name: '@ Cargos',
-                        value: memberData?.roles?.limit('MessageEmbedFieldValue') || "`Not Found Roles`"
+                        value: memberData?.roles?.limit('MessageEmbedFieldValue') || "Não há nada por aqui"
                     }
                 ]
             },

@@ -82,7 +82,7 @@ export default async (interaction, commandData) => {
                             label: 'Desativar',
                             emoji: e.DenyX,
                             custom_id: JSON.stringify({ c: 'chest', src: 'disable' }),
-                            style: ButtonStyle.Success
+                            style: ButtonStyle.Danger
                         },
                         {
                             type: 2,
