@@ -10,6 +10,7 @@ export default model("Guild", new Schema({
         members: Object,
         membersMuted: Object
     },
+    Chest: { type: Boolean, default: true },
     Polls: Array,
     Moeda: String,
     FirstSystem: Boolean,

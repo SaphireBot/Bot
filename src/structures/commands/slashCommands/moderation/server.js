@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js'
+import { ApplicationCommandOptionType, ButtonStyle, PermissionFlagsBits, ChatInputCommandInteraction, PermissionsBitField } from 'discord.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { PermissionsTranslate } from '../../../../util/Constants.js'
 import lauch from './functions/server/lauch.server.js'
@@ -23,6 +23,10 @@ export default {
             {
                 name: 'Configurar mensagens de saída',
                 value: 'leave'
+            },
+            {
+                name: 'Sapphire Chest',
+                value: 'chest'
             }
         ]
     }],
@@ -31,6 +35,8 @@ export default {
 
         const { options, member } = interaction
         const option = options.getString('options')
+
+        if (option == 'chest') return askChest(interaction, guildData)
 
         if (
             ['welcome', 'leave'].includes(option)
@@ -43,4 +49,36 @@ export default {
 
         return lauch(interaction, guildData, option)
     }
+}
+
+/**
+ * @param { ChatInputCommandInteraction } interaction 
+ */
+function askChest(interaction, guildData) {
+
+    return interaction.reply({
+        content: `${guildData?.Chest ? e.Animated.SaphireDance : e.Animated.SaphireCry} | O sistema de Sapphire Chest está ${guildData?.Chest ? 'ativado.' : 'desativado.'}`,
+        components: [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        label: guildData?.Chest ? 'Desativar' : 'Ativar',
+                        emoji: guildData?.Chest ? e.DenyX : e.CheckV,
+                        custom_id: JSON.stringify({ c: 'chest', src: guildData?.Chest ? 'disable' : 'enable' }),
+                        style: guildData?.Chest ? ButtonStyle.Danger : ButtonStyle.Success,
+                        disabled: !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)
+                    },
+                    {
+                        type: 2,
+                        label: 'O que é Sapphire Chest?',
+                        emoji: e.Animated.SaphireQuestion,
+                        custom_id: JSON.stringify({ c: 'chest', src: 'info' }),
+                        style: ButtonStyle.Primary
+                    }
+                ]
+            }
+        ]
+    })
 }

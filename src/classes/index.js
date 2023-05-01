@@ -15,23 +15,25 @@ import Logomarca from './games/Logomarca.js'
 import TwitchManager from '../functions/update/twitch/manager.twitch.js'
 import AfkManager from '../functions/update/afk/manager.afk.js'
 import TempCallManager from '../functions/update/tempcall/manager.tempcall.js'
+import ChestManager from '../functions/update/chest/manager.chest.js'
 
 export {
     Models,
-    Database,
-    SaphireClient,
-    Discloud,
     Autocomplete,
     Base,
-    Modals,
     SlashCommandInteraction,
     ButtonInteraction,
     ModalInteraction,
     SelectMenuInteraction,
+    Logomarca,
+    Database,
+    SaphireClient,
+    Discloud,
+    Modals,
     GiveawayManager,
     Experience,
-    Logomarca,
     TwitchManager,
     AfkManager,
-    TempCallManager
+    TempCallManager,
+    ChestManager
 }

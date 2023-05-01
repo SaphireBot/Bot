@@ -1,4 +1,4 @@
-import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager, TempCallManager } from '../index.js'
+import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager, TempCallManager, ChestManager } from '../index.js'
 import { Config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/commands.handler.js'
 import automaticSystems from '../../functions/update/index.js'
@@ -30,6 +30,7 @@ export default async () => {
     client.setMemes()
     client.refreshStaff()
     managerReminder.load()
+    ChestManager.load()
     QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []

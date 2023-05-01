@@ -36,6 +36,7 @@ import twitch from './buttons/twitch/redirect.twitch.js'
 import serverRedirect from './buttons/server/redirect.server.js'
 import images from '../commands/functions/nsfw/images.js'
 import tempcall from './buttons/tempcall/redirect.tempcall.js'
+import chest from './buttons/chest/button.chest.js'
 
 export default class ButtonInteraction extends Base {
     /**
@@ -104,7 +105,8 @@ export default class ButtonInteraction extends Base {
             twitch: [twitch, this, commandData],
             server: [serverRedirect, this.interaction, commandData],
             nsfw: [images, this.interaction, commandData],
-            tcall: [tempcall, this.interaction, commandData]
+            tcall: [tempcall, this.interaction, commandData],
+            chest: [chest, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return await result[0](...result?.slice(1))
