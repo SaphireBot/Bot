@@ -83,7 +83,7 @@ export default {
                 fields: [
                     {
                         name: '⚙️ Permissões',
-                        value: `${memberData?.permissions}`
+                        value: `${memberData?.permissions || "Nenhuma"}`
                     }
                 ]
             }

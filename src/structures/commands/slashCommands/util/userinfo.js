@@ -120,7 +120,7 @@ export default {
                     fields: [
                         {
                             name: '⚙️ Permissões',
-                            value: `${memberData?.permissions}`.limit('MessageEmbedFieldValue')
+                            value: `${memberData?.permissions || "Nenhuma"}`.limit('MessageEmbedFieldValue')
                         }
                     ]
                 })

@@ -156,10 +156,10 @@ export default class Logomarca extends Base {
                 if (customId !== 'correct') {
 
                     this.gameData.replied.push(int.user.id)
-                    return await int.reply({
+                    return int.reply({
                         content: `${e.Deny} | Logomarca Quiz | Resposta errada.`,
                         ephemeral: true
-                    })
+                    }).catch(() => { })
                 }
 
                 if (this.collected) return
