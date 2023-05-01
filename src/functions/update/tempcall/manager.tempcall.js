@@ -15,8 +15,8 @@ export default new class TempCallManager {
         this.guildsWithMuteCount = []
     }
 
-    async load() {
-        const guildCallsEnabled = await Database.Guild.find({ 'TempCall.enable': true }, "id TempCall")
+    async load(guildsData) {
+        const guildCallsEnabled = guildsData.filter(gData => gData.TempCall?.enable)
         this.guildsId = guildCallsEnabled?.length ? guildCallsEnabled.map(g => g.id) : []
         this.guildsWithMuteCount = guildCallsEnabled?.length ? guildCallsEnabled.filter(g => g.TempCall?.muteTime).map(g => g.id) : []
         this.check()

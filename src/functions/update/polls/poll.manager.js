@@ -1,8 +1,5 @@
 import { ButtonStyle } from 'discord.js'
-import {
-    SaphireClient as client,
-    Database,
-} from '../../../classes/index.js'
+import { SaphireClient as client, Database, } from '../../../classes/index.js'
 import { Emojis as e } from '../../../util/util.js'
 import { pollInterval } from '../../global/setIntervals.js'
 
@@ -12,11 +9,10 @@ export default new class PollManager {
         this.Polls = []
     }
 
-    async set() {
+    async load(guildsData) {
 
-        const PollsFromGuilds = await Database.Guild.find({
-            id: { $in: [...client.guilds.cache.keys()] }
-        }, 'id Polls')
+        const guildsId = [...client.guilds.cache.keys()]
+        const PollsFromGuilds = guildsData.filter(gData => guildsId.includes(gData.id))
 
         if (!PollsFromGuilds || !PollsFromGuilds.length) return
 

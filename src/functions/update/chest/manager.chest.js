@@ -8,8 +8,7 @@ export default new class ChestManager {
         this.guildEnabled = {}
     }
 
-    async load() {
-        const guildsData = await Database.Guild.find({}, 'id Chest')
+    async load(guildsData) {
         for (const data of guildsData)
             if (data.Chest !== false) this.guildEnabled[data.id] = true
 

@@ -19,10 +19,14 @@ export default async () => {
     Database.MongoConnect()
     slashCommand(client)
     Database.Cache.clearTables(`${client.shardId}`)
-    GiveawayManager.setGiveaways()
+
+    const guildsData = await Database.Guild.find()
+
+    GiveawayManager.setGiveaways(guildsData)
+    ChestManager.load(guildsData)
+    PollManager.load(guildsData)
+    TempCallManager.load(guildsData)
     AfkManager.load()
-    PollManager.set()
-    TempCallManager.load()
 
     automaticSystems()
 
@@ -30,7 +34,6 @@ export default async () => {
     client.setMemes()
     client.refreshStaff()
     managerReminder.load()
-    ChestManager.load()
     QuizManager.load()
     client.fanarts = await Database.Fanart.find() || []
     client.animes = await Database.Anime.find() || []

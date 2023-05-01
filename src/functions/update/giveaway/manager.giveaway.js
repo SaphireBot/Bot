@@ -10,12 +10,10 @@ export default new class GiveawayManager {
         this.retryCooldown = {}
     }
 
-    async setGiveaways() {
+    async setGiveaways(guildsData) {
         await client.guilds.fetch()
-        const giveawaysFromGuilds = await Database.Guild.find({
-            id: { $in: [...client.guilds.cache.keys()] }
-        }, 'id Giveaways')
-
+        const guildsId = [...client.guilds.cache.keys()]
+        const giveawaysFromGuilds = guildsData.filter(gData => guildsId.includes(gData.id))
         if (!giveawaysFromGuilds || !giveawaysFromGuilds.length) return
 
         const fill = giveawaysFromGuilds
