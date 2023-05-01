@@ -2,7 +2,6 @@ import { ButtonStyle, ChatInputCommandInteraction, PermissionsBitField } from "d
 import { SaphireClient as client, Database, ChestManager } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
-
 /**
  * @param { ChatInputCommandInteraction } interaction
  * @param { { c: 'chest', src: 'enable' | 'disable' | 'info' } } commandData
