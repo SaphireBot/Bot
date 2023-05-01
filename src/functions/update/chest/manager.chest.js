@@ -106,7 +106,7 @@ export default new class ChestManager {
                                     ]
                                 }
                             ]
-                        })
+                        }).catch(() => { })
 
                     })
                     .on('end', (_, reason) => {
@@ -159,7 +159,18 @@ export default new class ChestManager {
     async setPrize(userId, coins, exp) {
         await Database.User.updateOne(
             { id: userId },
-            { $inc: { Balance: coins || 0, Xp: exp || 0 } },
+            {
+                $inc: { Balance: coins || 0, Xp: exp || 0 },
+                $push: {
+                    Transactions: {
+                        $each: [{
+                            time: `${Date.format(0, true)}`,
+                            data: `${e.gain} Ganhou ${coins} Safiras pegando um *Sapphire Chess*`
+                        }],
+                        $position: 0
+                    }
+                }
+            },
             { upsert: true }
         )
         return
