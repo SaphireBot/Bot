@@ -1,5 +1,6 @@
 import { Message } from "discord.js"
 import { SaphireClient as client, Database } from "../../../classes/index.js"
+import { Emojis as e } from "../../../util/util.js"
 
 export default new class SpamManager {
     constructor() {
@@ -17,6 +18,7 @@ export default new class SpamManager {
             const data = guildsData.find(gData => gData.id == guildId)
             if (data.Spam.enabled !== true) continue
             this.guildData[guildId] = data.Spam
+            this.guildData[guildId].GSN = data.LogSystem?.channel
             continue
         }
 
@@ -64,7 +66,7 @@ export default new class SpamManager {
 
         if (this.userData[message.author.id].messagesSent > guildData?.filters?.messagesTimer?.amount)
             if (message.deletable) {
-                this.deleteMessage(message.id, message.channelId, message.author.id)
+                this.deleteMessage(message, 'timer')
                 return true
             }
 
@@ -88,7 +90,7 @@ export default new class SpamManager {
 
         if (this.userData[message.author.id].lastMessage == message.content)
             if (message.deletable) {
-                this.deleteMessage(message.id, message.channelId, message.author.id)
+                this.deleteMessage(message, 'repeat')
                 this.userData[message.author.id].lastMessage = message.content
                 return true
             }
@@ -115,7 +117,7 @@ export default new class SpamManager {
         const percent = parseInt((upperCaseLetters / total) * 100)
         if (percent >= guildData.filters.capsLock.percent) {
             if (message.deletable) {
-                this.deleteMessage(message.id, message.channelId, message.author.id)
+                this.deleteMessage(message, 'capslock')
                 return true
             }
         }
@@ -127,9 +129,62 @@ export default new class SpamManager {
         return this.userData[authorId]?.warns ? this.userData[authorId].warns++ : this.userData[authorId].warns = 1
     }
 
-    deleteMessage(messageId, channelId, authorId) {
-        this.warn(authorId)
-        client.pushMessage({ method: 'delete', messageId, channelId })
+    /**
+     * @param { Message } message 
+     * @param { 'timer' | 'repeat' | 'capslock' } method
+     */
+    deleteMessage(message, method) {
+        this.warn(message.author.id)
+        client.pushMessage({ method: 'delete', messageId: message.id, channelId: message.channel.id })
+
+        const formatMethod = {
+            timer: 'Limite de mensagens por segundo excedido.',
+            repeat: 'Mensagens repetidas.',
+            capslock: 'Abuso de Capslock'
+        }[method]
+
+        const filters = this.guildData[message.guildId]?.filters || {}
+        const feedbackMethod = {
+            timer: `Heeey, maneira nas mensagens. Você só pode enviar **${filters.messagesTimer?.amount || 0} mensagens** em **${filters.messagesTimer?.seconds} segundos**.`,
+            repeat: 'OOOOOU. Nada de mensagens repetidas, ok?',
+            capslock: `Psiu, os administradores desse servidor limitou o Caps Lock em **${filters.capsLock?.percent}%**.`
+        }[method]
+
+        if (
+            !this.userData[message.author.id].alerted
+            || this.userData[message.author.id].alerted < Date.now()
+        ) {
+            this.userData[message.author.id].alerted = Date.now() + (1000 * 30)
+            message.channel.send({
+                content: `${e.SaphireRevoltada} | ${feedbackMethod || 'Anti-Spam Detected.'}`
+            }).then(msg => setTimeout(() => client.pushMessage({ method: 'delete', messageId: msg.id, channelId: msg.channelId }), 1000 * 4)).catch(() => { })
+        }
+
+        if (this.guildData[message.guild.id]?.GSN)
+            client.pushMessage({
+                method: 'post',
+                channelId: this.guildData[message.guild.id].GSN,
+                body: {
+                    embeds: [{
+                        color: client.blue,
+                        title: '🛰️ | **Global System Notification** | Anti-Spam System',
+                        description: `👤 ${message.member} \`${message.author.id}\`\n💬 ${message.channel} \`${message.channelId}\``,
+                        fields: [
+                            {
+                                name: '🛡️ Motivo',
+                                value: formatMethod || 'Não reconhecido'
+                            },
+                            {
+                                name: '📖 Conteúdo da Mensagem',
+                                value: `\`\`\`txt\n${message.content?.limit('MessageEmbedFieldValue') || 'Nada aqui'}\n\`\`\``
+                            }
+                        ],
+                        footer: {
+                            text: `${this.userData[message.author.id]?.warns || 0} warns`
+                        }
+                    }]
+                }
+            })
         return
     }
 
