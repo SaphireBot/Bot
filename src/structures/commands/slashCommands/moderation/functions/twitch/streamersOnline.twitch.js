@@ -18,7 +18,7 @@ export default async interaction => {
 
     if (data == 'TIMEOUT')
         return interaction.editReply({
-            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+            content: `${e.SaphireDesespero} | Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
         }).catch(() => { })
 
     if (!data.length)
@@ -31,7 +31,7 @@ export default async interaction => {
 
     if (streamersData == 'TIMEOUT')
         return interaction.editReply({
-            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+            content: `${e.SaphireDesespero} | Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
         }).catch(() => { })
 
     const responseData = data.map((d, i) => {

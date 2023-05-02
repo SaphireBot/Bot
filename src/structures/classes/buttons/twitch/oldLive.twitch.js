@@ -14,7 +14,7 @@ export default async (interaction, commandData) => {
 
     if (streamerVideos == 'TIMEOUT')
         return interaction.editReply({
-            content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+            content: `${e.SaphireDesespero} | Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
         }).catch(() => { })
 
     if (!streamerVideos.length)

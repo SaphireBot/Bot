@@ -114,7 +114,7 @@ export default async ({ interaction }, commandData) => {
                 const phrase = [
                     "Boooa! Te coloquei na lista de participantes.",
                     "Aeee! Agora você está participando deste sorteio.",
-                    `Okay okaaay. Agora você está concorrendo contra outros ${giveawayObject.Participants.length} participantes.`,
+                    `Okay okaaay. Agora você está concorrendo contra outros ${giveawayObject.Participants.length - 1} participantes.`,
                     "Uhhuuuuu!! Você entrou no sorteio."
                 ][Math.floor(Math.random() * 4)]
 

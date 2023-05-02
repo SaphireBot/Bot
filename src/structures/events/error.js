@@ -5,6 +5,5 @@ client.on('error', error => {
     const codesToIgnore = [10062, 40060]
     if (codesToIgnore.includes(error.code)) return
 
-    unhandledRejection(error)
-    console.log(error)
+    return unhandledRejection(error)
 })
