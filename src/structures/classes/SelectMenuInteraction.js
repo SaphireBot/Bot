@@ -21,6 +21,14 @@ import translateSearch from './selectmenu/search/translate.search.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js'
 import redirectJokempo from './buttons/jokempo/redirect.jokempo.js'
+import infoSpam from './selectmenu/spam/info.spam.js'
+import redirectSpam from './selectmenu/spam/redirect.spam.js'
+import unsetImuneChannels from './selectmenu/spam/unsetImuneChannels.spam.js'
+import setImuneRoles from './selectmenu/spam/setImuneRoles.spam.js'
+import unsetImuneRoles from './selectmenu/spam/unsetImuneRoles.spam.js'
+import messagesAmount from './selectmenu/spam/messagesAmount.spam.js'
+import messagesSeconds from './selectmenu/spam/messagesSeconds.spam.js'
+import setImuneChannels from './selectmenu/spam/setImuneChannels.spam.js'
 
 export default class SelectMenuInteraction extends Base {
     /**
@@ -65,7 +73,8 @@ export default class SelectMenuInteraction extends Base {
             genderEphemeral: 'chooseGender',
             reminder: 'reminder',
             jkp: 'jokempo',
-            selectRoles: 'selectRoles'
+            selectRoles: 'selectRoles',
+            spam: 'spam'
         }[this.customId]
 
         if (this[result])
@@ -92,6 +101,21 @@ export default class SelectMenuInteraction extends Base {
         if (typeof this.customId === 'string' && !this.customId?.startsWith('{')) return
         this.customId = JSON.parse(this?.customId)
 
+        if (this.customId?.c == 'spam') {
+
+            if (['messagesAmount', 'messagesSeconds'].includes(this.customId?.src))
+                return { messagesAmount, messagesSeconds }[this.customId?.src](this.interaction, this.value)
+
+            const execute = {
+                unsetImuneChannels,
+                unsetImuneRoles,
+                setImuneRoles,
+                setImuneChannels
+            }[this.customId?.src]
+
+            return execute(this.interaction, this.values)
+        }
+
         const result2 = {
             anunciar: configAnunciar,
             amongus: deathAmongus,
@@ -106,6 +130,14 @@ export default class SelectMenuInteraction extends Base {
             return result2(this)
     }
 
+    async spam({ value, interaction }) {
+
+        if (value == 'info')
+            return infoSpam(interaction)
+
+        return redirectSpam(interaction, value)
+    }
+
     async twitchClip({ value, interaction, message }) {
 
         message.edit({ components: [message.components[0].toJSON()] }).catch(() => { })
@@ -114,7 +146,7 @@ export default class SelectMenuInteraction extends Base {
 
         if (clipRequest == 'TIMEOUT')
             return interaction.editReply({
-                content: `${e.SaphireDesespero} |Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
+                content: `${e.SaphireDesespero} | Aaaaah, o sistema da Twitch está pegando FOOOOGO 🔥\n🧑‍🚒 | Fica tranquilo, que tudo está normal em menos de 1 minuto. ||Rate limit é uma coisinha chata||`
             }).catch(() => { })
 
         if (!clipRequest || !clipRequest.length)

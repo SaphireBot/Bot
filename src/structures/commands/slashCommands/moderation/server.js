@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType, ButtonStyle, PermissionFlagsBits, ChatInp
 import { Emojis as e } from '../../../../util/util.js'
 import { PermissionsTranslate } from '../../../../util/Constants.js'
 import lauch from './functions/server/lauch.server.js'
+import spam from './functions/server/spam.server.js'
 
 export default {
     name: 'server',
@@ -25,6 +26,10 @@ export default {
                 value: 'leave'
             },
             {
+                name: 'Configurar sistema Anti-Spam',
+                value: 'spam'
+            },
+            {
                 name: 'Sapphire Chest',
                 value: 'chest'
             }
@@ -36,7 +41,8 @@ export default {
         const { options, member } = interaction
         const option = options.getString('options')
 
-        if (option == 'chest') return askChest(interaction, guildData)
+        const execute = { chest: askChest, spam }[option]
+        if (execute) return execute(interaction, guildData)
 
         if (
             ['welcome', 'leave'].includes(option)

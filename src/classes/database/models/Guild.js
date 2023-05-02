@@ -10,6 +10,25 @@ export default model("Guild", new Schema({
         members: Object,
         membersMuted: Object
     },
+    Spam: {
+        enabled: { type: Boolean, default: false },
+        ignoreChannels: { type: Array, default: [] },
+        ignoreRoles: { type: Array, default: [] },
+        filters: {
+            capsLock: {
+                enabled: { type: Boolean, default: false },
+                percent: { type: Number, default: 0, max: 100, min: 0 }
+            },
+            messagesTimer: {
+                enabled: { type: Boolean, default: false },
+                amount: { type: Number, default: 3 },
+                seconds: { type: Number, default: 2 }
+            },
+            repeat: {
+                enabled: { type: Boolean, default: false }
+            }
+        }
+    },
     Chest: { type: Boolean, default: true },
     Polls: Array,
     Moeda: String,

@@ -1,5 +1,5 @@
 import { ChannelType } from 'discord.js';
-import { SaphireClient as client, Experience, Database, AfkManager, ChestManager } from '../../classes/index.js'
+import { SaphireClient as client, Experience, Database, AfkManager, ChestManager, SpamManager } from '../../classes/index.js'
 import { DiscordPermissons } from '../../util/Constants.js';
 import { Emojis as e } from '../../util/util.js'
 import chatGPT from './system/chatGPT.js';
@@ -20,8 +20,9 @@ client.on('messageCreate', async message => {
 
     if (message?.author?.bot || !message.guild || message.webhookId) return
     Experience.add(message.author.id, 1)
-    AfkManager.check(message)
     ChestManager.add(message.guildId, message.channelId)
+    AfkManager.check(message)
+    SpamManager.check(message)
 
     if (message.content === `<@${client.user.id}>`)
         return message.reply({ content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando \`/help\`` }).catch(() => { })

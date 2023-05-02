@@ -1,4 +1,4 @@
-import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager, TempCallManager, ChestManager } from '../index.js'
+import { Database, Discloud, SaphireClient as client, TwitchManager, AfkManager, TempCallManager, ChestManager, SpamManager } from '../index.js'
 import { Config } from '../../util/Constants.js'
 import slashCommand from '../../structures/handler/commands.handler.js'
 import automaticSystems from '../../functions/update/index.js'
@@ -26,6 +26,7 @@ export default async () => {
     ChestManager.load(guildsData)
     PollManager.load(guildsData)
     TempCallManager.load(guildsData)
+    SpamManager.load(guildsData)
     AfkManager.load()
 
     automaticSystems()

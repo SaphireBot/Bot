@@ -16,6 +16,7 @@ import TwitchManager from '../functions/update/twitch/manager.twitch.js'
 import AfkManager from '../functions/update/afk/manager.afk.js'
 import TempCallManager from '../functions/update/tempcall/manager.tempcall.js'
 import ChestManager from '../functions/update/chest/manager.chest.js'
+import SpamManager from '../functions/update/spam/manager.spam.js'
 
 export {
     Models,
@@ -35,5 +36,6 @@ export {
     TwitchManager,
     AfkManager,
     TempCallManager,
-    ChestManager
+    ChestManager,
+    SpamManager
 }
