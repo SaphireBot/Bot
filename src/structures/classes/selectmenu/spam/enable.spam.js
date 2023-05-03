@@ -7,8 +7,11 @@ import { Database, SpamManager } from "../../../../classes/index.js"
  */
 export default async interaction => {
 
-    const { member, guildId } = interaction
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    const { member, guildId, message } = interaction
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({ content: `${e.Deny} | Só adms por aqui, ok?`, ephemeral: true })
 
     if (SpamManager.guildsEnabled.includes(guildId))

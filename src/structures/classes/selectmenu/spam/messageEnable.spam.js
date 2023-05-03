@@ -7,9 +7,12 @@ import { Database, SpamManager } from "../../../../classes/index.js"
  */
 export default async interaction => {
 
-    const { member, guildId } = interaction
+    const { member, guildId, message } = interaction
 
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({
             content: `${e.Deny} | Apenas **administradores** podem acessar esta função.`,
             ephemeral: true

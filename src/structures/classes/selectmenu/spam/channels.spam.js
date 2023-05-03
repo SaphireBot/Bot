@@ -7,8 +7,11 @@ import { Emojis as e } from "../../../../util/util.js"
  */
 export default async interaction => {
 
-    const { member, guildId, guild } = interaction
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    const { member, guildId, guild, message } = interaction
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({
             content: `${e.DenyX} | Apenas **administradores** podem acessar este sistema.`,
             ephemeral: true

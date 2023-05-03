@@ -10,7 +10,10 @@ export default async (interaction, channelsId) => {
 
     const { member, guild, message } = interaction
 
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({
             content: `${e.DenyX} | Apenas **administradores** podem acessar este sistema.`,
             ephemeral: true

@@ -9,9 +9,12 @@ export default async interaction => {
 
     const { member, guild, message } = interaction
 
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({
-            content: `${e.DenyX} | Apenas administradores por aqui, ok?`,
+            content: `${e.DenyX} | Apenas administradores e o autor da mensagem pode entrar aqui, ok?`,
             ephemeral: true,
         })
 

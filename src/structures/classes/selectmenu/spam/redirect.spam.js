@@ -25,9 +25,12 @@ import messageDisable from "./messageDisable.spam.js"
  */
 export default (interaction, value) => {
 
-    const { member } = interaction
+    const { member, message } = interaction
 
-    if (!member.permissions.has(PermissionsBitField.Flags.Administrator))
+    if (
+        !member.permissions.has(PermissionsBitField.Flags.Administrator)
+        || member.id !== message.interaction?.user?.id
+    )
         return interaction.reply({
             content: `${e.Deny} | Apenas **administradores** podem acessar esta função.`,
             ephemeral: true
