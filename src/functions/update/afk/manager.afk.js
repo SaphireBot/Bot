@@ -4,16 +4,40 @@ import { Emojis as e } from "../../../util/util.js"
 
 export default new class AfkManager {
     constructor() {
-        this.data = {}
-        this.global = {}
+        this.data = new Map()
+        this.global = new Map()
     }
 
     async load() {
         const allData = await Database.Cache.AfkSystem.all() || []
+        const globalData = await Database.Cache.AfkSystem.get('Global') || {}
         if (!allData.length) return
 
-        for (const data of allData)
-            data.id == 'Global' ? this.global = data.value : this.data[data.id] = data.value
+        const toDelete = []
+        const toDeleteGlobal = []
+
+        for (const data of allData) {
+            if (data.id == 'Global') continue
+            if (typeof data.value !== 'string') {
+                toDelete.push(data.id)
+                continue
+            }
+            this.data.set(data.id, data.value)
+            continue
+        }
+
+        for (const key of Object.keys(globalData)) {
+            const content = globalData[key]
+            if (typeof content !== 'string') {
+                toDeleteGlobal.push(data.id)
+                continue
+            }
+            this.global.set(key, content)
+            continue
+        }
+
+        for (const id of toDelete) Database.Cache.AfkSystem.delete(id)
+        for (const id of toDeleteGlobal) Database.Cache.AfkSystem.delete(`Global.${id}`)
 
         return
     }
@@ -29,11 +53,9 @@ export default new class AfkManager {
 
         await Database.Cache.AfkSystem.set(`${where}.${user.id}`, message)
 
-        if (where == 'Global') this.global[user.id] = message
-        else {
-            if (!this.data[where]) this.data[where] = {}
-            this.data[where][user.id] = message
-        }
+        where == 'Global'
+            ? this.global.set(user.id, message)
+            : this.data.set(where, { [user.id]: message })
 
         member.setNickname(`${member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
         return await interaction.reply({
@@ -46,17 +68,23 @@ export default new class AfkManager {
      * @param { ChatInputCommandInteraction} interaction 
      */
     async disable(interaction) {
-        const { guild, user, member } = interaction
-        await Database.Cache.AfkSystem.delete(`${guild.id}.${user.id}`)
-
-        if (this.data[guild.id])
-            delete this.data[guild.id][user.id]
-
-        await Database.Cache.AfkSystem.delete(`Global.${user.id}`)
-        delete this.global[user.id]
-
+        const { user, member, guildId } = interaction
+        this.unset(guildId, user.id)
         member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
         return await interaction.reply({ content: `${e.Check} | Sistema AFK desativado.`, ephemeral: true })
+    }
+
+    async unset(guildId, userId) {
+
+        await Database.Cache.AfkSystem.delete(`${guildId}.${userId}`)
+        if (this.data.has(guildId)) {
+            const data = this.data.get(guildId)
+            delete data[userId]
+            this.data.set(guildId, data)
+        }
+        await Database.Cache.AfkSystem.delete(`Global.${userId}`)
+        this.global.delete(userId)
+        return
     }
 
     /**
@@ -75,22 +103,17 @@ export default new class AfkManager {
             || bot
         ) return
 
-        const inServerAuthorAFK = this.data[guildId] ? this.data[guildId][author.id] : undefined
-        const inGlobalAuthorAFK = this.global[author.id]
+        const guildData = this.data.get(guildId) || {}
 
         if (member.displayName.includes('[AFK]'))
             member.setNickname(member.displayName.replace('[AFK]', ''), 'AFK Command Disable').catch(() => { })
 
-        if (inServerAuthorAFK || inGlobalAuthorAFK) {
-
-            Database.Cache.AfkSystem.delete(`${guildId}.${author.id}`).catch(() => { })
-            if (this.data[guildId]) delete this.data[guildId][author.id]
-
-            Database.Cache.AfkSystem.delete(`Global.${author.id}`).catch(() => { })
-            delete this.global[author.id]
-
+        if (guildData[author.id] || this.global.has(author.id)) {
+            this.unset(guildId, author.id)
             return message.reply({
-                content: inServerAuthorAFK ? `${e.Afk} | O sistema de AFK foi desativado automaticamente.` : `${e.Afk} | O sistema de AFK Global foi desativado automaticamente.`
+                content: guildData[author.id]
+                    ? `${e.Afk} | O sistema de AFK foi desativado automaticamente.`
+                    : `${e.Afk} | O sistema de AFK Global foi desativado automaticamente.`
             }).then(pushDelete).catch(() => { })
         }
 
@@ -101,14 +124,14 @@ export default new class AfkManager {
 
         mentions.forEach(Member => {
 
-            const globalMessage = this.global[Member.user.id]
+            const globalMessage = this.global.get(Member.user.id)
             if (globalMessage) {
                 if (!Member?.displayName?.includes('[AFK]'))
                     Member.setNickname(`${Member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
                 content += `\n${e.Afk} | ${Member.user.tag} está offline globalmente.${globalMessage === 'No Message' ? "" : `\n📝 | ${globalMessage}`}\n`
             }
 
-            const serverMessage = this.data[Member.user.id]
+            const serverMessage = guildData[Member.user.id]
             if (serverMessage)
                 content += `\n${e.Afk} | ${Member.user.tag} está offline.${serverMessage === 'No Message' ? "" : `\n📝 | ${serverMessage}`}\n`
 

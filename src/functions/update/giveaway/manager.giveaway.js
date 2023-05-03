@@ -1,5 +1,5 @@
+import { SaphireClient as client, Database } from '../../../classes/index.js'
 import { Routes } from 'discord.js'
-import { SaphireClient as client, Database, } from '../../../classes/index.js'
 
 export default new class GiveawayManager {
     constructor() {
