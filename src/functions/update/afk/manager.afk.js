@@ -53,9 +53,16 @@ export default new class AfkManager {
 
         await Database.Cache.AfkSystem.set(`${where}.${user.id}`, message)
 
-        where == 'Global'
-            ? this.global.set(user.id, message)
-            : this.data.set(where, { [user.id]: message })
+        if (where == 'Global') {
+            this.global.set(user.id, message)
+        } else {
+
+            if (!this.data.has(guild.id)) this.data.set(guild.id, {})
+
+            const data = this.data.get(guild.id)
+            data[user.id] = message
+            this.data.set(guild.id, data)
+        }
 
         member.setNickname(`${member.displayName} [AFK]`, 'AFK Command Enable').catch(() => { })
         return await interaction.reply({
