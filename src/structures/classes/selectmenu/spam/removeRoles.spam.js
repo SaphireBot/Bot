@@ -54,7 +54,7 @@ export default async interaction => {
                             .map(roleId => {
                                 const role = guild.roles.cache.get(roleId)
                                 if (!role || !role.name || !role.id) return undefined
-                                return { label: role.name, value: role.id, default: roles.includes(role.id) }
+                                return { label: role.name, value: role.id }
                             })
                             .filter(i => i) || []
                     }

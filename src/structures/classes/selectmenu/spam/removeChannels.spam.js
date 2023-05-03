@@ -68,8 +68,7 @@ export default async interaction => {
                             return {
                                 label: channel.name,
                                 value: channel.id,
-                                emoji: channel.type == ChannelType.GuildVoice ? '🔊' : '💬',
-                                default: channels.includes(channel.id)
+                                emoji: channel.type == ChannelType.GuildVoice ? '🔊' : '💬'
                             }
                         })
                         .filter(i => i) || []

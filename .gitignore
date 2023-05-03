@@ -6,6 +6,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 backup
 TODO.txt
+updates.txt
 *.zip
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

@@ -106,15 +106,12 @@ export default new class SpamManager {
     capsLock(guildData, message) {
         if (!guildData?.filters?.capsLock?.enabled || message.content?.length < 10) return false
 
-        const content = message.content
+        const content = message.content || ""
         const total = content.length
-        let upperCaseLetters = 0
-
-        for (const letter of content)
-            if (letter == letter.toUpperCase())
-                upperCaseLetters++
-
+        const upperCaseLetters = (content.match(/[A-ZÁÂÃÀÉÊÍÓÔÕÚÜÇ]/g) || []).length
         const percent = parseInt((upperCaseLetters / total) * 100)
+
+
         if (percent >= guildData.filters.capsLock.percent) {
             if (message.deletable) {
                 this.deleteMessage(message, 'capslock')
