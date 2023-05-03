@@ -159,7 +159,8 @@ export default class ModalInteraction extends Base {
 
     async announce({ interaction, user, guild, member, fields }) {
 
-        const guildData = await Database.Guild.findOne({ id: guild.id }, "announce")
+        // const guildData = await Database.Guild.findOne({ id: guild.id }, "announce")
+        const guildData = await Database.getGuild(guild.id)
         const channel = await guild.channels.fetch(guildData?.announce?.channel || "undefined").catch(() => null)
         const notificationRole = await guild.roles.fetch(guildData?.announce?.notificationRole || "undefined").catch(() => null)
         const allowedRole = await guild.roles.fetch(guildData?.announce?.allowedRole || "undefined").catch(() => null)
@@ -1498,7 +1499,8 @@ export default class ModalInteraction extends Base {
     serverSugest = async ({ interaction, fields, user, client, guild } = this) => {
 
         const text = fields.getTextInputValue('text')
-        const guildData = await this.Database.Guild.findOne({ id: guild.id }, 'IdeiaChannel')
+        // const guildData = await this.Database.Guild.findOne({ id: guild.id }, 'IdeiaChannel')
+        const guildData = await this.Database.getGuild(guild.id)
         const channelId = guildData?.IdeiaChannel
         const channel = guild.channels.cache.get(channelId)
 
@@ -1538,7 +1540,8 @@ export default class ModalInteraction extends Base {
     serverReport = async ({ interaction, fields, user, client, guild } = this) => {
 
         const text = fields.getTextInputValue('text')
-        const guildData = await this.Database.Guild.findOne({ id: guild.id }, 'ReportChannel')
+        // const guildData = await this.Database.Guild.findOne({ id: guild.id }, 'ReportChannel')
+        const guildData = await this.Database.getGuild(guild.id)
         const channelId = guildData?.ReportChannel
         const channel = guild.channels.cache.get(channelId)
 

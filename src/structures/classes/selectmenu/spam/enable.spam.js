@@ -24,6 +24,7 @@ export default async interaction => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guildId] = doc.Spam
             if (!SpamManager.guildsEnabled.includes(guildId)) SpamManager.guildsEnabled.push(guildId)
             return interaction.editReply({

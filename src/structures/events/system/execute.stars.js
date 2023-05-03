@@ -51,11 +51,12 @@ export default async ({ MessageReaction, guildData }) => {
     if (embeds.length >= 10) embeds.length = 10
 
     return channel.send({ content: `⭐ | ${messageChannel}`, embeds })
-        .then(async () => await Database.Guild.updateOne(
+        .then(async () => await Database.Guild.findOneAndUpdate(
             { id: guild.id },
             { $push: { "Stars.sended": { userId: author.id, messageId } } },
-            { upsert: true }
-        ))
+            { upsert: true, new: true }
+        )
+            .then(data => Database.saveCacheData(data.id, data)))
         .catch(() => { })
 
 }

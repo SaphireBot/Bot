@@ -5,7 +5,8 @@ import { Emojis as e } from "../../../../util/util.js"
 export default async (interaction, guildResources) => {
 
     const { guild, member } = interaction
-    const guildData = guildResources || await Database.Guild.findOne({ id: guild.id })
+    // const guildData = guildResources || await Database.Guild.findOne({ id: guild.id })
+    const guildData = guildResources || await Database.getGuild(guild.id)
     const roleId = guildData?.announce?.notificationRole
 
     if (!roleId)

@@ -15,7 +15,7 @@ export default async (interaction, data, type) => {
             components: [], embeds: []
         }).catch(() => { })
 
-    return await Database.Guild.updateOne(
+    return await Database.Guild.findOneAndUpdate(
         { id: interaction.guildId },
         {
             $set: {
@@ -29,12 +29,17 @@ export default async (interaction, data, type) => {
                     }
                 }
             }
-        }
+        },
+        { new: true }
     )
-        .then(() => interaction.update({
-            content: `${e.Check} | Muito bem, tudo foi salvo sem nenhum problemas.`,
-            components: [], embeds: []
-        }).catch(() => { }))
+        .then(data => {
+            Database.saveCacheData(data.id, data)
+            interaction.update({
+                content: `${e.Check} | Muito bem, tudo foi salvo sem nenhum problemas.`,
+                components: [], embeds: []
+            }).catch(() => { })
+            return
+        })
         .catch(err => interaction.update({
             content: `${e.SaphireDesespero} | Algo de errado não está certo.\n${e.bug} | \`${err}\``,
             components: [], embeds: []

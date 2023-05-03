@@ -1,6 +1,6 @@
+import { Database, SaphireClient as client } from "../../../../../../classes/index.js"
 import { ChatInputCommandInteraction } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js"
-import { Database, SaphireClient as client } from "../../../../../../classes/index.js"
 
 /**
  * @param { ChatInputCommandInteraction } interaction
@@ -9,7 +9,8 @@ export default async interaction => {
 
     const { guild } = interaction
 
-    const data = await Database.Guild.findOne({ id: guild.id })
+    // const data = await Database.Guild.findOne({ id: guild.id })
+    const data = await Database.getGuild(guild.id)
     const twitchData = data?.TwitchNotifications || []
     const description = twitchData.length
         ? twitchData.map(tw => `\`${tw.streamer}\` -> <#${tw.channelId}>${tw.roleId ? ` -> <@&${tw.roleId}>` : ''}`).join('\n').limit('MessageEmbedDescription')

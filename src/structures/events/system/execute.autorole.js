@@ -77,10 +77,12 @@ export default async ({ member, guildData }) => {
         }
 
         async function removeRole() {
-            await Database.Guild.updateOne(
+            await Database.Guild.findOneAndUpdate(
                 { id: guild.id },
-                { $pullAll: { Autorole: rolesToRemove } }
+                { $pullAll: { Autorole: rolesToRemove } },
+                { new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
             return client.pushMessage({
                 channelId: guildData?.LogSystem?.channel,
                 method: 'post',
@@ -93,10 +95,12 @@ export default async ({ member, guildData }) => {
         }
 
         async function disable() {
-            return await Database.Guild.updateOne(
+            return await Database.Guild.findOneAndUpdate(
                 { id: guild.id },
-                { $unset: { Autorole: true } }
+                { $unset: { Autorole: true } },
+                { new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
         }
     }
 }

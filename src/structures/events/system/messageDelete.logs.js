@@ -1,6 +1,6 @@
+import { Database, SaphireClient as client } from "../../../classes/index.js"
 import { AuditLogEvent, Message } from "discord.js"
 import { Emojis as e } from "../../../util/util.js"
-import { Database, SaphireClient as client } from "../../../classes/index.js"
 
 /**
  * @param { Message } message
@@ -12,7 +12,8 @@ export default async message => {
     const { guild, author, type } = message
     if (type !== 0 || author?.bot) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
     const auditory = await guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete }).catch(() => null)

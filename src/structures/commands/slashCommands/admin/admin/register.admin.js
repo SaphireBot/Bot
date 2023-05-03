@@ -1,7 +1,4 @@
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../../classes/index.js"
+import { SaphireClient as client, Database } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
 
 export default async interaction => {
@@ -25,7 +22,7 @@ export default async interaction => {
     async function registerUser() {
 
         if (!userId) return
-        
+
         const user = await client.users.fetch(userId).catch(() => null)
 
         if (!user)
@@ -52,7 +49,7 @@ export default async interaction => {
         if (!guild)
             return responseMessage += `\n${e.Deny} | Servidor não encontrado para registro.`
 
-        const hasGuild = await Database.Guild.exists({ id: guild.id })
+        const hasGuild = Database.guildData.has(guild.id) || await Database.Guild.exists({ id: guild.id })
 
         if (hasGuild)
             return responseMessage += `\n${e.Deny} | O servidor ${guild.name} - \`${guild.id}\` já está cadastrado no banco de dados.`

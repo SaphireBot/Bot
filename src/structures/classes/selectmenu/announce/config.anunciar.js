@@ -17,7 +17,8 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
             ephemeral: true
         })
 
-    const guildData = guildResources || await Database.Guild.findOne({ id: guild.id })
+    // const guildData = guildResources || await Database.Guild.findOne({ id: guild.id })
+    const guildData = guildResources || await Database.getGuild(guild.id)
     const channel = options?.getChannel('notice_channel')
     const allowedRole = options?.getRole('allowed_role')
     const notificationRole = options?.getRole('notification_role')
@@ -85,15 +86,13 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
 
             return Database.Guild.findOneAndUpdate(
                 { id: guild.id },
-                {
-                    $unset: { 'announce': true }
-                },
-                {
-                    new: true,
-                    upsert: true
-                }
+                { $unset: { 'announce': true } },
+                { new: true, upsert: true }
             )
-                .then(guildData => channelAnunciar({ interaction, guildData, toEdit: true }))
+                .then(data => {
+                    Database.saveCacheData(data.id, data)
+                    return channelAnunciar({ interaction, guildData: data, toEdit: true })
+                })
                 .catch(async err => {
                     console.log(err)
                     return await interaction.update({
@@ -201,6 +200,10 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
             { $set: saveData },
             { new: true, upsert: true }
         )
+            .then(doc => {
+                Database.saveCacheData(doc.id, doc)
+                return doc
+            })
         return channelAnunciar({ interaction, guildData: resultGuildDatabase, toEdit: false, response })
     }
 

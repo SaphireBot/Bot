@@ -22,6 +22,7 @@ export default async interaction => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guildId] = doc.Spam
             const messagesTimer = doc.Spam?.filters?.messagesTimer
             const amount = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]

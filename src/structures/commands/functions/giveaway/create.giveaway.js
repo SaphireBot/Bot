@@ -430,11 +430,12 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             RequiredAllRoles: collectorData.RequiredAllRoles
         }
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id },
             { $push: { Giveaways: giveawayData } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         GiveawayManager.selectGiveaways([giveawayData])
 

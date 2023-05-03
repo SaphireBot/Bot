@@ -25,6 +25,7 @@ export default async (interaction, rolesId) => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guild.id] = doc.Spam
             const embed = message.embeds[0]?.data
             if (embed) {
@@ -32,7 +33,8 @@ export default async (interaction, rolesId) => {
                     ? doc.Spam.ignoreRoles.map(roleId => guild.roles.cache.get(roleId)).join(', ') || 'Nenhum Cargo Registrado'
                     : 'Nenhum Cargo Registrado'
             }
-            return interaction.editReply({
+
+            interaction.editReply({
                 content: null,
                 embeds: embed ? [embed] : [],
                 components: [
@@ -68,6 +70,7 @@ export default async (interaction, rolesId) => {
                     }
                 ]
             }).catch(() => { })
+            return
         })
         .catch(err => interaction.editReply({
             content: `${e.SaphireDesespero} | Não foi possível configurar os cargos imunes.\n${e.bug} | \`${err}\``,

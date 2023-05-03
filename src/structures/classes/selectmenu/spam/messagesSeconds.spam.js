@@ -23,11 +23,12 @@ export default async (interaction, value) => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guildId] = doc.Spam
             const messagesTimer = doc.Spam?.filters?.messagesTimer
             const amount = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-            return interaction.editReply({
+            interaction.editReply({
                 content: `${messagesTimer.enabled ? e.CheckV : e.DenyX} | O filtro de mensagem está ${messagesTimer.enabled ? '**ativo**' : '**desativado**'}.\n📝 | Configurado o envio de **${messagesTimer.amount || 0} mensagens** em **${messagesTimer.seconds || 0} segundos**.`,
                 components: [
                     {
@@ -69,6 +70,7 @@ export default async (interaction, value) => {
                     }
                 ]
             }).catch(() => { })
+            return
         })
         .catch(err => interaction.editReply({
             content: `${e.SaphireDesespero} | Não foi possível alterar a porcentagem permitida de Caps Lock.\n${e.bug} | \`${err}\``

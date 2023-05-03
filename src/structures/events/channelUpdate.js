@@ -1,7 +1,7 @@
+import { ChannelsTypes, PermissionsTranslate } from "../../util/Constants.js";
 import { Database, SaphireClient as client } from "../../classes/index.js";
 import { AuditLogEvent } from "discord.js";
 import { Emojis as e } from "../../util/util.js";
-import { ChannelsTypes, PermissionsTranslate } from "../../util/Constants.js";
 
 client.on("channelUpdate", async (oldChannel, newChannel) => {
 
@@ -9,7 +9,8 @@ client.on("channelUpdate", async (oldChannel, newChannel) => {
     const { guild } = oldChannel
     if (!guild) return
 
-    const guildData = await Database.Guild.findOne({ id: guild?.id }, "LogSystem")
+    // const guildData = await Database.Guild.findOne({ id: guild?.id }, "LogSystem")
+    const guildData = await Database.getGuild(guild?.id)
     if (!guildData) return
 
     const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.ChannelUpdate }).catch(() => null)

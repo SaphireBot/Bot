@@ -85,15 +85,16 @@ export default async ({ interaction, guildData, Database, client }) => {
     return await interaction.reply(dataSend)
 
     async function removeRoles(rolesId) {
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id },
-            {
-                $pullAll: {
-                    Autorole: rolesId
-                }
-            }
+            { $pullAll: { Autorole: rolesId } },
+            { new: true }
         )
-            .then(() => control.response += `${e.Info} | **${rolesId.length} cargos** foram removidos do autorole por não serem encontrados ou por possuirem permissões administrativas ou por ser um cargo maior que o meu.`)
+            .then(data => {
+                Database.saveCacheData(data.id, data)
+                control.response += `${e.Info} | **${rolesId.length} cargos** foram removidos do autorole por não serem encontrados ou por possuirem permissões administrativas ou por ser um cargo maior que o meu.`
+                return
+            })
             .catch(() => { })
     }
 }

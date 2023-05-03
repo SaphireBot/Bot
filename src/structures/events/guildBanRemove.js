@@ -9,7 +9,8 @@ client.on('guildBanRemove', async ban => {
     if (!user || !guild || !guild.available) return
     if (user.id === client.user.id || !guild.clientHasPermission(Permissions.ViewAuditLog)) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData?.LogSystem?.unban?.active) return
 
     const logs = await guild.fetchAuditLogs().catch(() => null) // { type: 23 } - MemberBanRemove

@@ -3,7 +3,7 @@ import Mongoose from 'mongoose'
 import Cache from './CacheManager.js'
 import 'dotenv/config'
 import { GiveawayManager, Models, SaphireClient as client } from '../index.js'
-import { Emojis as e } from '../../util/util.js'
+import { Collection } from 'discord.js'
 const { connect } = Mongoose
 
 /**
@@ -28,7 +28,8 @@ export default new class Database extends Models {
             Pandinho: "369810325022834688",
             Gorniaky: "395669252121821227",
             Mari: "704023863314350081"
-        }
+        },
+            this.guildData = new Collection()
     }
 
     get BgLevel() {
@@ -59,7 +60,7 @@ export default new class Database extends Models {
         return await this.Indications.find({})
     }
 
-    MongoConnect = async () => {
+    async MongoConnect() {
 
         Mongoose.set("strictQuery", true)
         return await connect(process.env.DATABASE_LINK_CONNECTION, {
@@ -72,7 +73,17 @@ export default new class Database extends Models {
             })
     }
 
-    add = async (userId, amount, message) => {
+    async loadGuilds() {
+
+        const guildsData = await this.Guild.find()
+
+        for (const guild of guildsData)
+            this.guildData.set(guild.id, guild)
+
+        return
+    }
+
+    async add(userId, amount, message) {
 
         if (!userId || isNaN(amount)) return
 
@@ -214,6 +225,12 @@ export default new class Database extends Models {
         )
     }
 
+    saveCacheData(guildId, data) {
+        if (!guildId || !data) return
+        this.guildData.set(guildId, data)
+        return
+    }
+
     deleteGiveaway = async (MessageID, GuildId, All = false, byChannelId) => {
         if (!GuildId) return
         if (byChannelId) return deleteAllGiveawaysIntoThisChannel(this.Guild)
@@ -231,20 +248,27 @@ export default new class Database extends Models {
         if (index.awaiting >= 0) GiveawayManager.awaiting.splice(index.awaiting, 1)
         if (index.toDelete >= 0) GiveawayManager.toDelete.splice(index.toDelete, 1)
 
-        return await this.Guild.updateOne({ id: GuildId }, { $pull: { Giveaways: { MessageID } } })
+        return await this.Guild.findOneAndUpdate(
+            { id: GuildId },
+            { $pull: { Giveaways: { MessageID } } },
+            { new: true }
+        )
+            .then(data => this.saveCacheData(data.id, data))
 
         async function deleteAll(GuildModel) {
             GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.GuildId != GuildId)
             GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.GuildId != GuildId)
             GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.GuildId != GuildId)
-            return await GuildModel.updateOne({ id: GuildId }, { $unset: { Giveaways: 1 } })
+            return await GuildModel.findOneAndUpdate({ id: GuildId }, { $unset: { Giveaways: 1 } }, { new: true })
+                .then(data => this.saveCacheData(data.id, data))
         }
 
         async function deleteAllGiveawaysIntoThisChannel(GuildModel) {
             GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.channelId != byChannelId)
             GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.channelId != byChannelId)
             GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.channelId != byChannelId)
-            return await GuildModel.updateOne({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } })
+            return await GuildModel.findOneAndUpdate({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } })
+                .then(data => this.saveCacheData(data.id, data))
         }
     }
 
@@ -268,20 +292,19 @@ export default new class Database extends Models {
         return userData
     }
 
-    getGuild = async ({ guildId, filter = '' }) => {
+    async getGuild(guildId) {
 
         if (!guildId) return null
 
-        const guildData = await this.Guild.findOne({ id: guildId }, filter)
+        let data = this.guildData.get(guildId)
 
-        if (!guildData) {
-            const allGuilds = await client.allGuildsData()
-            const guild = allGuilds?.flat()?.find(g => g.id === guildId)
-            this.registerServer(guild)
-            return null
+        if (!data) {
+            data = await this.Guild.findOne({ id: guildId })
+            if (!data) return null
+            this.guildData.set(data.id, data)
         }
 
-        return guildData
+        return data
     }
 
     registerChannelControl = (pullOrPush = '', where = '', channelId = '') => {
@@ -328,10 +351,12 @@ export default new class Database extends Models {
 
         if (!guildId || !key) return
 
-        return await this.Guild.updateOne(
+        return await this.Guild.findOneAndUpdate(
             { id: guildId },
-            { $unset: { [key]: 1 } }
+            { $unset: { [key]: 1 } },
+            { new: true }
         )
+            .then(data => this.saveCacheData(data.id, data))
     }
 
     PushTransaction = async (userId, Frase) => {
@@ -391,11 +416,11 @@ export default new class Database extends Models {
 
         if (!guild || !guild?.id) return
 
-        const g = await this.Guild.exists({ id: guild.id })
+        const g = this.guildData.has(guild.id) || await this.Guild.exists({ id: guild.id })
 
         if (g || g?.id === guild.id) return
 
-        await this.Guild.updateOne(
+        await this.Guild.findOneAndUpdate(
             { id: guild.id },
             {
                 $unset: {
@@ -409,14 +434,14 @@ export default new class Database extends Models {
                     Polls: 1
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(data => this.saveCacheData(data.id, data))
 
         return;
     }
 
     registerClient = async (clientId) => {
-
         const data = await this.Client.findOne({ id: clientId })
         if (data) return
         return new this.Client({ id: clientId }).save()

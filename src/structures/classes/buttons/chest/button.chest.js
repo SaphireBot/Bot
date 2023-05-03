@@ -63,11 +63,12 @@ export default async (interaction, commandData) => {
 
         await interaction.update({ content: `${e.Loading} | Ativando o Sapphire Chest...`, components: [] }).catch(() => { })
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: interaction.guildId },
             { $set: { Chest: true } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         ChestManager.guildEnabled[interaction.guildId] = true
         return interaction.editReply({
@@ -106,11 +107,12 @@ export default async (interaction, commandData) => {
 
         await interaction.update({ content: `${e.Loading} | Desativando o Sapphire Chest...`, components: [] }).catch(() => { })
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: interaction.guildId },
             { $set: { Chest: true } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         delete ChestManager.guildEnabled[interaction.guildId]
         return interaction.editReply({

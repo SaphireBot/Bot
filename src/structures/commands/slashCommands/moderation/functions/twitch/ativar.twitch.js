@@ -51,7 +51,8 @@ export default async interaction => {
             content: `${e.DenyX} | Nenhum dos ${streamers.length} streamers que você passou existe na Twitch.`
         })
 
-    const dataFromDatabase = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications') // [{ streamer: 'alanzoka', channelId: '123' }]
+    // const dataFromDatabase = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications') // [{ streamer: 'alanzoka', channelId: '123' }]
+    const dataFromDatabase = await Database.getGuild(guild.id) // [{ streamer: 'alanzoka', channelId: '123' }]
     const notifications = dataFromDatabase?.TwitchNotifications || []
 
     const data = result.map(str => {

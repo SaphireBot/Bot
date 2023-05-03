@@ -14,7 +14,8 @@ export default async ({ interaction }, commandData) => {
 
     if (!giveaway) {
 
-        const gw = await Database.Guild.findOne({ id: guild.id }, 'Giveaways')
+        // const gw = await Database.Guild.findOne({ id: guild.id }, 'Giveaways')
+        const gw = await Database.getGuild(guild.id)
         giveaway = gw?.Giveaways.find(g => g.MessageID == gwId)
 
         if (!giveaway) {
@@ -95,7 +96,7 @@ export default async ({ interaction }, commandData) => {
             })
 
         await interaction.reply({
-            content: `${e.Loading} | Te colocando no sorteio...`,
+            content: `${e.Loading} | Estou te colocando no sorteio...`,
             ephemeral: true
         })
         GiveawayManager.pushParticipants(gwId, [user.id])
@@ -105,6 +106,7 @@ export default async ({ interaction }, commandData) => {
             { new: true }
         )
             .then(async document => {
+                Database.guildData.set(document.id, document)
                 const giveawayObject = document.Giveaways.find(gw => gw.MessageID == gwId)
 
                 if (!giveawayObject)
@@ -190,6 +192,7 @@ export default async ({ interaction }, commandData) => {
             { new: true }
         )
             .then(document => {
+                Database.saveCacheData(document.id, document)
                 GiveawayManager.removeParticipants(gwId, user.id)
                 const giveawayObject = document?.Giveaways?.find(gw => gw?.MessageID == gwId)
 

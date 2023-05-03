@@ -10,7 +10,8 @@ export default async (log, guild) => {
     const integration = log?.target
     if (!log || !integration || !guild) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData || !guildData?.LogSystem?.channel || !guildData?.LogSystem?.botAdd?.active) return
 
     const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel)?.catch(() => null)

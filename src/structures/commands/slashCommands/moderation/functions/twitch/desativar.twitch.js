@@ -15,7 +15,8 @@ export default async interaction => {
         twitchChannelName = url
     }
 
-    const data = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications')
+    // const data = await Database.Guild.findOne({ id: guild.id }, 'TwitchNotifications')
+    const data = await Database.getGuild(guild.id)
     const notifications = data?.TwitchNotifications || []
     const hasConfig = notifications.find(tw => tw?.streamer == twitchChannelName)
 

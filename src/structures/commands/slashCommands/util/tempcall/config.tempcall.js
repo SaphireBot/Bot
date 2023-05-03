@@ -16,10 +16,12 @@ export default async (interaction, guildData) => {
     async function reset() {
         await interaction.reply({ content: `${e.Loading} | Carregando...` })
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id },
-            { $unset: { 'TempCall.members': true } }
+            { $unset: { 'TempCall.members': true } },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         return interaction.editReply({
             content: `${e.CheckV} | Ranking de Tempo em Call resetado.`

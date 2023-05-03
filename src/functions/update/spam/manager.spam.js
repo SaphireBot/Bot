@@ -188,6 +188,7 @@ export default new class SpamManager {
     async getGuildData(guildId) {
         return this.guildData[guildId]
             ? { Spam: this.guildData[guildId] }
-            : await Database.Guild.findOne({ id: guildId }, 'Spam')
+            // : await Database.Guild.findOne({ id: guildId }, 'Spam')
+            : await Database.getGuild(guildId)
     }
 }

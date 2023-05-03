@@ -19,7 +19,8 @@ client.on("guildCreate", async guild => {
                 return owner?.send(`${e.Deny} | Não foi possível sair da ${guild.id} \`${guild.id}\` que está na blacklist.\n> \`${err}\``).catch(() => { })
             })
 
-    const server = await Database.Guild.findOne({ id: guild.id })
+    // const server = await Database.Guild.findOne({ id: guild.id })
+    const server = await Database.getGuild(guild.id)
     if (!server) await Database.registerServer(guild)
 
     const owner = await client.users.fetch(guild?.ownerId || "undefined").catch(() => null)

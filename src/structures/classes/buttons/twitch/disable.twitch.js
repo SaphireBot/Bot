@@ -25,18 +25,19 @@ export default async (interaction, commandData) => {
         })
 
     TwitchManager.removeChannel(streamer, channelId)
-    return Database.Guild.updateOne(
+    return await Database.Guild.findOneAndUpdate(
         { id: guild.id },
-        {
-            $pull: {
-                TwitchNotifications: { streamer: streamer }
-            }
-        }
+        { $pull: { TwitchNotifications: { streamer: streamer } } },
+        { new: true }
     )
-        .then(() => interaction.update({
-            content: `${e.Check} | Prontinho! Não vou mais notificar nada sobre o/a streamer **${streamer}**.`,
-            components: []
-        }).catch(() => { }))
+        .then(data => {
+            Database.saveCacheData(data.id, data)
+            interaction.update({
+                content: `${e.Check} | Prontinho! Não vou mais notificar nada sobre o/a streamer **${streamer}**.`,
+                components: []
+            }).catch(() => { })
+            return
+        })
         .catch(err => interaction.update({
             content: `${e.Animated.SaphireCry} | Não foi possível desativar esta configuração.\n${e.bug} | \`${err}\``,
             components: [],

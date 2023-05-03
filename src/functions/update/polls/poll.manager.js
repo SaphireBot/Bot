@@ -115,7 +115,8 @@ export default new class PollManager {
 
     async close(interaction, MessageId) {
 
-        const pollGuildData = await Database.Guild.findOne({ id: interaction.guild.id }, 'Polls')
+        // const pollGuildData = await Database.Guild.findOne({ id: interaction.guild.id }, 'Polls')
+        const pollGuildData = await Database.getGuild(interaction.guild.id)
 
         if (!pollGuildData || !pollGuildData.Polls || !pollGuildData.Polls.length)
             return await interaction.reply({
@@ -150,10 +151,12 @@ export default new class PollManager {
 
         if (!messageId || !guildId) return
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
-            { $pull: { Polls: { MessageID: messageId } } }
+            { $pull: { Polls: { MessageID: messageId } } },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         await Database.Cache.Polls.pull(`${client.shardId}.${guildId}`, p => p?.MessageID === messageId)
         return

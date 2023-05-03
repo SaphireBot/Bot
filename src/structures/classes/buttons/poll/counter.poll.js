@@ -132,6 +132,10 @@ export default async ({ interaction, guild, message, user, member }, commandData
             fields: 'Polls'
         }
     )
+        .then(doc => {
+            Database.saveCacheData(doc.id, doc)
+            return doc
+        })
         .catch(err => ({ err: err.codeName }))
 
     if (voteData?.err) {

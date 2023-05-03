@@ -53,6 +53,10 @@ export default async (interaction, commandData) => {
             { $set: { 'TempCall.enable': true } },
             { new: true, upsert: true, fields: "TempCall" }
         )
+            .then(doc => {
+                Database.saveCacheData(doc.id, doc)
+                return doc
+            })
 
         await guild.members.fetch()
 
@@ -118,7 +122,10 @@ export default async (interaction, commandData) => {
             },
             { new: true, upsert: true, fields: 'TempCall' }
         )
-
+            .then(doc => {
+                Database.saveCacheData(doc.id, doc)
+                return doc
+            })
         const data = {
             enable: guildData?.TempCall?.enable || false,
             muteTime: guildData?.TempCall?.muteTime || false
@@ -187,6 +194,10 @@ export default async (interaction, commandData) => {
             { $set: { 'TempCall.muteTime': state } },
             { new: true, upsert: true, fields: "TempCall" }
         )
+            .then(doc => {
+                Database.saveCacheData(doc.id, doc)
+                return doc
+            })
 
         const data = {
             enable: guildData?.TempCall?.enable || false,

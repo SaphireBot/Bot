@@ -1,5 +1,5 @@
-import { Database } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
+import { Database } from "../../../../classes/index.js"
 import notify from "../../../../functions/plugins/notify.js"
 
 export default async interaction => {
@@ -8,8 +8,12 @@ export default async interaction => {
     const logData = await Database.Guild.findOneAndUpdate(
         { id: guild.id },
         { $unset: { "LogSystem": 1 } },
-        { returnDocument: true }
+        { new: true }
     )
+        .then(doc => {
+            Database.saveCacheData(doc.id, doc)
+            return doc
+        })
 
     const channel = guild.channels.cache.get(logData?.LogSystem?.channel)
     if (channel)

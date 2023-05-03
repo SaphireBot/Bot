@@ -1,7 +1,7 @@
-import { ButtonStyle, parseEmoji, time } from "discord.js"
 import { Database, SaphireClient as client } from "../../../classes/index.js"
-import { Emojis as e } from "../../../util/util.js"
+import { ButtonStyle, parseEmoji, time } from "discord.js"
 import { TwitchLanguages } from "../../../util/Constants.js"
+import { Emojis as e } from "../../../util/util.js"
 
 export default new class TwitchManager {
     constructor() {
@@ -15,15 +15,15 @@ export default new class TwitchManager {
         this.streamersOffline = [] // ['cellbit']
         this.streamersOnline = [] // ['alanzoka']
         this.onTimeout = false // If API Request is under 50 requests remaining
+        this.notifications = 0
+        this.allGuildsID = 0
+        this.awaitingRequests = 0
+        this.notificationInThisSeason = 0,
         this.rateLimit = {
             MaxLimit: 800,
             remaining: 800,
             inCheck: false,
         }
-        this.notifications = 0
-        this.allGuildsID = 0
-        this.awaitingRequests = 0
-        this.notificationInThisSeason = 0
     }
 
     async checkAccessTokenAndStartLoading() {
@@ -88,9 +88,10 @@ export default new class TwitchManager {
         await this.refreshStreamersCache()
         this.notifications = Array.from(new Set(Object.values(this.channelsNotified).flat())).flat().length
 
-        const allData = await Database.Guild.find({ TwitchNotifications: { $exists: true } }, 'id TwitchNotifications')
+        // const allData = await Database.Guild.find({ TwitchNotifications: { $exists: true } }, 'id TwitchNotifications')
+        const allData = Database.guildData.toJSON()
         this.allGuildsID = allData.filter(g => g.TwitchNotifications?.length).map(g => g.id).filter(i => i)
-
+ 
         const formated = allData
             .filter(g => g.TwitchNotifications?.length)
             .map(g => g.TwitchNotifications)
@@ -185,7 +186,8 @@ export default new class TwitchManager {
 
     async updateStreamer({ streamer, guildId, channelId }) {
         if (!streamer || !guildId || !channelId) return
-        const dataFromDatabase = await Database.Guild.findOne({ id: guildId }) // [{ streamer: 'alanzoka', channelId: '123' }]
+        // const dataFromDatabase = await Database.Guild.findOne({ id: guildId }) // [{ streamer: 'alanzoka', channelId: '123' }]
+        const dataFromDatabase = await Database.getGuild(guildId) // [{ streamer: 'alanzoka', channelId: '123' }]
         let notifications = dataFromDatabase?.TwitchNotifications || []
         const oldChannelId = notifications.find(d => d.channelId == channelId)?.channelId
         const data = notifications
@@ -193,10 +195,12 @@ export default new class TwitchManager {
 
         data.push({ streamer, channelId })
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
-            { $set: { TwitchNotifications: data } }
+            { $set: { TwitchNotifications: data } },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         this.toCheckStreamers.push(streamer)
         if (!this.streamers.includes(streamer)) this.streamers.push(streamer)
@@ -634,6 +638,7 @@ export default new class TwitchManager {
             this.channelsNotified[streamer] = await Database.Cache.General.pull(`channelsNotified.${streamer}`, cId => [channelId, null].includes(cId))
         }
 
+        Database.guildData.forEach(data => data.TwitchNotifications = data.TwitchNotifications.filter(d => d.channelId !== channelId))
         await Database.Guild.updateMany(
             {},
             { $pull: { TwitchNotifications: { channelId } } }

@@ -11,7 +11,8 @@ client.on('messageCreate', async message => {
 
         // Ideia original dada por André - 648389538703736833
         if (message.channel.type === ChannelType.GuildAnnouncement) {
-            const guildData = await Database.Guild.findOne({ id: message.guildId }, 'announce.crosspost')
+            // const guildData = await Database.Guild.findOne({ id: message.guildId }, 'announce.crosspost')
+            const guildData = await Database.getGuild(message.guildId)
             const isChannelCrosspostable = guildData?.announce?.crosspost
 
             if (isChannelCrosspostable && message.guild.members.me.permissions.has(DiscordPermissons.Administrator))

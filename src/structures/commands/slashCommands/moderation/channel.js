@@ -162,14 +162,12 @@ export default {
                     ephemeral: true
                 })
 
-            await Database.Guild.updateOne(
+            await Database.Guild.findOneAndUpdate(
                 { id: guild.id },
-                {
-                    $set: {
-                        'announce.crosspost': !guildData?.announce?.crosspost
-                    }
-                }
+                { $set: { 'announce.crosspost': !guildData?.announce?.crosspost } },
+                { new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
 
             return await interaction.reply({
                 content: `${e.Check} | ${!guildData?.announce?.crosspost

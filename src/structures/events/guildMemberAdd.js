@@ -6,7 +6,8 @@ client.on('guildMemberAdd', async member => {
 
     if (!member.guild.available) return
 
-    const guildData = await Database.Guild.findOne({ id: member.guild.id }, 'Autorole LogSystem WelcomeChannel')
+    // const guildData = await Database.Guild.findOne({ id: member.guild.id }, 'Autorole LogSystem WelcomeChannel')
+    const guildData = await Database.getGuild(member.guild.id)
     if (!guildData) return Database.registerServer(member.guild)
 
     if (guildData?.Autorole)

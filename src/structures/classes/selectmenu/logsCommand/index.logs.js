@@ -24,7 +24,8 @@ export default async ({ interaction, values: keys }) => {
     if (values.includes("disabled"))
         return disableLogs(interaction)
 
-    const logData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    // const logData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const logData = await Database.getGuild(guild.id)
 
     const baseData = {
         kick: logData?.LogSystem?.kick?.active || false,
@@ -70,7 +71,10 @@ export default async ({ interaction, values: keys }) => {
         { id: guild.id },
         { $set: toUpdate },
         { upsert: true, new: true }
-    )
+    ).then(doc => {
+        Database.saveCacheData(doc.id, doc)
+        return doc
+    })
 
     const logChannel = await guild.channels.fetch(guildData?.LogSystem?.channel).catch(() => null)
 

@@ -9,18 +9,19 @@ import QuizManager from '../games/QuizManager.js'
 import webhook from './webhooks.saphire.js'
 
 export default async () => {
-
+    console.log('Iniciating...')
     process.env.TZ = "America/Sao_Paulo"
     import('../../structures/handler/events.handler.js')
     import('../../functions/global/prototypes.js')
-    await client.login()
-    Discloud.login()
 
-    Database.MongoConnect()
+    await client.login()
+    await Discloud.login()
+    await Database.MongoConnect()
     slashCommand(client)
     Database.Cache.clearTables(`${client.shardId}`)
+    await Database.loadGuilds()
 
-    const guildsData = await Database.Guild.find()
+    const guildsData = Database.guildData.toJSON()
 
     GiveawayManager.setGiveaways(guildsData)
     ChestManager.load(guildsData)
@@ -63,5 +64,6 @@ export default async () => {
         shardId: client.shardId
     })
 
+    console.log('Iniciated')
     return client.calculateReload()
 }

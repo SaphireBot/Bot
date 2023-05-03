@@ -110,7 +110,8 @@ export default class Autocomplete extends Base {
     }
 
     async disableTwitch(value) {
-        const data = await this.Database.Guild.findOne({ id: this.guild.id }, "TwitchNotifications")
+        // const data = await this.Database.Guild.findOne({ id: this.guild.id }, "TwitchNotifications")
+        const data = await this.Database.getGuild(this.guild.id)
         const twitchData = data?.TwitchNotifications || []
         if (!twitchData?.length) return this.respond()
 
@@ -437,7 +438,8 @@ export default class Autocomplete extends Base {
 
     async available_polls(value) {
 
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Polls')
+        // const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Polls')
+        const guildData = await this.Database.getGuild(this.guild.id)
         const polls = guildData.Polls || []
 
         if (!polls || !polls.length) return await this.respond()
@@ -576,9 +578,9 @@ export default class Autocomplete extends Base {
             value: 'info'
         }]
 
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
-        let giveaways = guildData?.Giveaways || []
-        giveaways = giveaways.filter(w => !w.Actived && w.Participants?.length > 0)
+        // const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Giveaways')
+        const guildData = await this.Database.getGuild(this.guild.id)
+        let giveaways = (guildData?.Giveaways || []).filter(w => !w.Actived && w.Participants?.length)
         if (!giveaways.length) return this.respond(response)
 
         const fill = value ?
@@ -633,7 +635,8 @@ export default class Autocomplete extends Base {
 
     async roles_in_autorole(value) {
 
-        const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Autorole')
+        // const guildData = await this.Database.Guild.findOne({ id: this.guild.id }, 'Autorole')
+        const guildData = await this.Database.getGuild(this.guild.id)
         const rolesInAutorole = guildData?.Autorole || []
         if (rolesInAutorole.length === 0) return this.respond([{ name: 'Nenhum cargo configurado.', value: 'info' }])
 
@@ -646,10 +649,12 @@ export default class Autocomplete extends Base {
         })
 
         const removeRole = async (id) => {
-            await this.Database.Guild.updateOne(
+            await this.Database.Guild.findOneAndUpdate(
                 { id: this.guild.id },
-                { $pull: { Autorole: id } }
+                { $pull: { Autorole: id } },
+                { new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
             return
         }
 

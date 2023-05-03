@@ -1,7 +1,7 @@
 import { SaphireClient as client, Database } from '../../../classes/index.js'
-import { Emojis as e } from '../../../util/util.js'
-import { ChannelsTypes } from '../../../util/Constants.js'
 import { Guild, PermissionsBitField } from 'discord.js'
+import { ChannelsTypes } from '../../../util/Constants.js'
+import { Emojis as e } from '../../../util/util.js'
 
 /**
  * @param { Guild } guild
@@ -12,7 +12,8 @@ export default async (log, guild) => {
 
     if (!channel || !log || !guild || !guild.available) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem')
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData || !guildData?.LogSystem?.channel || !guildData?.LogSystem?.channels?.active) return
 
     const channelType = ChannelsTypes[channel.type] || "Tipo de canal não reconhecido"

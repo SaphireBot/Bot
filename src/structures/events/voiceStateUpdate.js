@@ -52,11 +52,12 @@ async function userLeave(memberId, guildId) {
     if (inMuteTime) dataToSave[`TempCall.membersMuted.${memberId}`] = Date.now() - inMuteTime
 
     if (Object.keys(dataToSave).length)
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
             { $inc: { dataToSave } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
     return
 }

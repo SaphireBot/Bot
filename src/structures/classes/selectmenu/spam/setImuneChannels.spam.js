@@ -37,6 +37,7 @@ export default async (interaction, channelIds) => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guild.id] = doc.Spam
             const embed = message.embeds[0]?.data
             if (embed) {
@@ -44,7 +45,8 @@ export default async (interaction, channelIds) => {
                     ? doc.Spam.ignoreChannels.map(channelId => guild.channels.cache.get(channelId)).join(', ') || 'Nenhum Canal Registrado'
                     : 'Nenhum Canal Registrado'
             }
-            return interaction.editReply({
+
+            interaction.editReply({
                 content: null,
                 embeds: embed ? [embed] : [],
                 components: [
@@ -82,6 +84,7 @@ export default async (interaction, channelIds) => {
                     }
                 ]
             }).catch(() => { })
+            return
         })
         .catch(err => interaction.editReply({
             content: `${e.SaphireDesespero} | Não foi possível configurar os canais imunes.\n${e.bug} | \`${err}\``,

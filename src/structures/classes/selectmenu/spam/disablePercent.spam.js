@@ -25,6 +25,7 @@ export default async interaction => {
         { upsert: true, new: true }
     )
         .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             SpamManager.guildData[guild.id] = doc.Spam
             const percent = doc.Spam?.filters?.capsLock?.percent || 0
             const enabled = doc.Spam?.filters?.capsLock?.enabled ?? false

@@ -19,7 +19,8 @@ export default async interaction => {
 
     const guildData = SpamManager.guildData[guildId]
         ? { Spam: SpamManager.guildData[guildId] }
-        : await Database.Guild.findOne({ id: guildId })
+        // : await Database.Guild.findOne({ id: guildId })
+        : await Database.getGuild(guildId)
 
     const repeat = guildData?.Spam?.filters?.repeat?.enabled || false
 

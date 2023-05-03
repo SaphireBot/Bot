@@ -71,11 +71,12 @@ export default new class TempCallManager {
                 dataToSave.push([`TempCall.members.${memberId}`, Date.now() - time])
                 this.inCall[guildId][memberId] = Date.now()
             }
-            await Database.Guild.updateOne(
+            await Database.Guild.findOneAndUpdate(
                 { id: guildId },
                 { $inc: Object.fromEntries(dataToSave) },
-                { upsert: true }
+                { upsert: true, new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
 
             continue
         }
@@ -93,11 +94,12 @@ export default new class TempCallManager {
                 dataToSave.push([`TempCall.membersMuted.${memberId}`, Date.now() - time])
                 this.inMute[guildId][memberId] = Date.now()
             }
-            await Database.Guild.updateOne(
+            await Database.Guild.findOneAndUpdate(
                 { id: guildId },
                 { $inc: Object.fromEntries(dataToSave) },
-                { upsert: true }
+                { upsert: true, new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
 
             continue
         }

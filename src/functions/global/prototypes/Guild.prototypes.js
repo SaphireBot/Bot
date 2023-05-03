@@ -8,7 +8,8 @@ Guild.prototype.clientHasPermission = function (Permission) {
 }
 
 Guild.prototype.getCoin = async function () {
-    const guildData = await Database.Guild.findOne({ id: this.id }, 'Moeda')
+    // const guildData = await Database.Guild.findOne({ id: this.id }, 'Moeda')
+    const guildData = await Database.getGuild(this.id)
     return guildData?.Moeda || `${e.Coin} Safiras`
 }
 

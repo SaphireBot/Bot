@@ -53,16 +53,18 @@ export default async (interaction, commandData) => {
     }).catch(() => { })
 
     const toPushData = commandData.map(d => ({ channelId, streamer: d.streamer, roleId, message: d.message }))
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "TwitchNotifications")
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, "TwitchNotifications")
+    const guildData = await Database.getGuild(guild.id)
     const streamersToSet = guildData.TwitchNotifications?.filter(d => !commandData.some(c => c.streamer == d.streamer)) || []
     streamersToSet.push(...toPushData)
 
-    await Database.Guild.updateOne(
+    await Database.Guild.findOneAndUpdate(
         { id: guild.id },
         { $set: { TwitchNotifications: streamersToSet } },
+        { new: true }
     )
-        .then(async () => {
-
+        .then(async data => {
+            Database.saveCacheData(data.id, data)
             TwitchManager.streamersOffline.push(...commandData.map(d => d.streamer))
 
             for await (const { streamer, oldChannelId, message, channelId } of commandData) {

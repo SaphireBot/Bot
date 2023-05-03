@@ -17,7 +17,8 @@ client.on('channelDelete', async channel => {
     const inLogomarcaGameChannel = await Database.Cache.Logomarca.get(`${client.shardId}.Channels`, channel.id) || []
     if (inLogomarcaGameChannel.includes(channel.id)) await Database.Cache.Logomarca.pull(`${client.shardId}.Channels`, channel.id)
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars TwitchNotifications")
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem Stars TwitchNotifications")
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData) return
 
     if (guildData.TwitchNotifications?.length)
@@ -25,7 +26,8 @@ client.on('channelDelete', async channel => {
 
     if (!guildData || !guildData?.LogSystem?.channel) return
     if (channel.id === guildData?.LogSystem?.channel)
-        return await Database.Guild.updateOne({ id: guild.id }, { $unset: { LogChannel: 1 } })
+        return await Database.Guild.findOneAndUpdate({ id: guild.id }, { $unset: { LogChannel: 1 } }, { new: true })
+            .then(data => Database.saveCacheData(data.id, data))
 
     const logChannel = guildData?.LogSystem?.channel
         ? await guild.channels.fetch(`${guildData?.LogSystem?.channel}`).catch(() => undefined)

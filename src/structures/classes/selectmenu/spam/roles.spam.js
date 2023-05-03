@@ -73,9 +73,11 @@ export default async interaction => {
 
     async function removeInvalidRoles() {
         roles = roles.filter(roleId => !rolesToIgnore.includes(roleId))
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
-            { $pullAll: rolesToIgnore }
+            { $pullAll: rolesToIgnore },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
     }
 }

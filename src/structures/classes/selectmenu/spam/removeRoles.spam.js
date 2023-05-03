@@ -17,7 +17,8 @@ export default async interaction => {
     await interaction.update({ content: `${e.Loading} | Carregando...`, embeds: [], components: [] }).catch(() => { })
     const guildData = SpamManager.guildData[guildId]
         ? { Spam: SpamManager.guildData[guildId] }
-        : await Database.Guild.findOne({ id: guildId })
+        // : await Database.Guild.findOne({ id: guildId })
+        : await Database.getGuild(guildId)
 
     await guild.roles.fetch().catch(() => { })
     let roles = guildData?.Spam?.ignoreRoles || []
@@ -85,10 +86,12 @@ export default async interaction => {
 
     async function removeInvalidRoles() {
         roles = roles.filter(id => !rolesToRemove.includes(id))
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
-            { $pullAll: rolesToRemove }
+            { $pullAll: rolesToRemove },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
         return
     }
 }

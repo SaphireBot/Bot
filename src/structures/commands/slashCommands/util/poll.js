@@ -224,10 +224,12 @@ export default {
                 : {}
         }
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id },
-            { $push: { Polls: data, $position: 0 } }
+            { $push: { Polls: data, $position: 0 } },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         if (endTime > 0 || anonymous) {
             await Database.Cache.Polls.push(`${client.shardId}.${guild.id}`, data)

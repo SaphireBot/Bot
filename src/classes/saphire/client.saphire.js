@@ -422,18 +422,22 @@ export default new class SaphireClient extends Client {
                 if (data.LogType == 'WelcomeChannel')
                     // Missing Access or Unknown Channel
                     if ([50001, 10003, 50035].includes(err.code))
-                        return await Database.Guild.updateOne(
+                        return await Database.Guild.findOneAndUpdate(
                             { id: data.guildId },
-                            { $unset: { WelcomeChannel: true } }
+                            { $unset: { WelcomeChannel: true } },
+                            { new: true }
                         )
+                            .then(data => Database.saveCacheData(data.id, data))
 
                 if (data.LogType)
                     // Missing Access or Unknown Channel
                     if ([50001, 10003].includes(err.code))
-                        return await Database.Guild.updateOne(
+                        return await Database.Guild.findOneAndUpdate(
                             { id: data.guildId },
-                            { $unset: { [`LogSystem.${data.LogType}`]: true } }
+                            { $unset: { [`LogSystem.${data.LogType}`]: true } },
+                            { new: true }
                         )
+                            .then(data => Database.saveCacheData(data.id, data))
 
                 return console.log(data, err)
             })

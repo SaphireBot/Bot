@@ -1,5 +1,5 @@
-import { AuditLogEvent } from 'discord.js'
 import { SaphireClient as client, Database } from '../../classes/index.js'
+import { AuditLogEvent } from 'discord.js'
 import { Permissions } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 
@@ -15,7 +15,8 @@ client.on('guildBanAdd', async ban => {
         || !guild.clientHasPermission(Permissions.ViewAuditLog)
     ) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData?.LogSystem?.ban?.active) return
 
     const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd, limit: 5 }).catch(() => null) // { type: 22 } - GuildBanAdd

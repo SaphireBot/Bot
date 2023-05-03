@@ -1,7 +1,8 @@
 import { DiscordPermissons, PermissionsTranslate } from "../../../../util/Constants.js"
 import { Emojis as e } from "../../../../util/util.js"
+import { Database } from "../../../../classes/index.js"
 
-export default async ({ interaction, guildData, Database, client }) => {
+export default async ({ interaction, guildData, client }) => {
 
     const { options, guild } = interaction
     const addRole = options.getRole('add')
@@ -98,6 +99,7 @@ export default async ({ interaction, guildData, Database, client }) => {
             { new: true, upsert: true }
         )
             .then(doc => {
+                Database.saveCacheData(doc.id, doc)
                 for (let roleId of doc.Autorole)
                     if (!rolesFromDB.includes(roleId))
                         rolesFromDB.push(roleId)
@@ -137,7 +139,10 @@ export default async ({ interaction, guildData, Database, client }) => {
             { $pull: { Autorole: roleId } },
             { new: true, upsert: true }
         )
-            .then(doc => rolesFromDB.push(...doc.Autorole))
+            .then(doc => {
+                Database.saveCacheData(doc.id, doc)
+                return rolesFromDB.push(...doc.Autorole)
+            })
             .catch(err => {
                 validate.error = true
                 content += `\n${e.bug} | ${err}`

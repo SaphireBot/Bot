@@ -10,7 +10,8 @@ export default async interaction => {
     const { guild } = interaction
     const guildData = SpamManager.guildData[guild.id]
         ? { Spam: SpamManager.guildData[guild.id] }
-        : await Database.Guild.findOne({ id: guild.id }, "Spam")
+        // : await Database.Guild.findOne({ id: guild.id }, "Spam")
+        : await Database.getGuild(guild.id)
     const enabled = guildData.Spam?.filters?.capsLock?.enabled || false
     const percent = guildData.Spam?.filters?.capsLock?.percent || 0
 

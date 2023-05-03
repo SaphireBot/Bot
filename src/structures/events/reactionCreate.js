@@ -19,7 +19,8 @@ client.on('messageReactionAdd', async (MessageReaction, user) => {
     if (!message || !message.id) return
 
     if (emojiName === '⭐' && MessageReaction.count >= 2) {
-        const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
+        // const guildData = await Database.Guild.findOne({ id: message.guild.id }, 'Stars')
+        const guildData = await Database.getGuild(message.guild.id)
         if (guildData?.Stars?.channel && !guildData.Stars?.sended?.some(data => data.messageId == message.id)) {
             if (onCooldown[message.id])
                 setTimeout(() => delete onCooldown[message.id], 1000 * 10)

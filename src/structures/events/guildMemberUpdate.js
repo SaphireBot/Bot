@@ -17,7 +17,8 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
     if (!mute.old && !mute.new || mute.old == mute.new) return
 
-    const guildData = await Database.Guild.findOne({ id: oldMember.guild.id }, 'LogSystem')
+    // const guildData = await Database.Guild.findOne({ id: oldMember.guild.id }, 'LogSystem')
+    const guildData = await Database.getGuild(oldMember.guild.id)
     if (!guildData) return
 
     if (!guildData?.LogSystem?.mute?.active) return

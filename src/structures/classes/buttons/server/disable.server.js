@@ -35,7 +35,7 @@ export default async (interaction, data) => {
             ]
         })
 
-    return await Database.Guild.updateOne(
+    return await Database.Guild.findOneAndUpdate(
         { id: interaction.guildId },
         {
             $unset: {
@@ -45,12 +45,17 @@ export default async (interaction, data) => {
                         : 'LeaveChannel'
                 ]: true
             }
-        }
+        },
+        { new: true }
     )
-        .then(() => interaction.update({
-            content: `${e.CheckV} | Tudo ok! Os dados de notificação foram deletados e desativados.`,
-            components: []
-        }).catch(() => { }))
+        .then(data => {
+            Database.saveCacheData(data.id, data)
+            interaction.update({
+                content: `${e.CheckV} | Tudo ok! Os dados de notificação foram deletados e desativados.`,
+                components: []
+            }).catch(() => { })
+            return
+        })
         .catch(err => interaction.update({
             content: `${e.SaphireDesespero} | EU RUIM AQUIII.\n${e.bug} | \`${err}\``,
             components: []

@@ -147,11 +147,12 @@ export default {
         const limit = options.getInteger('limit')
 
         if (limit == 0) {
-            await Database.Guild.updateOne(
+            await Database.Guild.findOneAndUpdate(
                 { id: guild.id },
                 { $unset: { Stars: 1 } },
-                { upsert: true }
+                { upsert: true, new: true }
             )
+                .then(data => Database.saveCacheData(data.id, data))
 
             return await interaction.reply({
                 content: `${e.Check} | Ok ok, sistema de estrelas desligado.`
@@ -177,18 +178,18 @@ export default {
                 content: `${e.Info} | A quantidade limite e o canal são os mesmos cadastrados no banco de dados.`
             })
 
-        return Database.Guild.updateOne(
+        return Database.Guild.findOneAndUpdate(
             { id: guild.id },
-            {
-                $set: {
-                    Stars: { limit, channel: channel.id }
-                }
-            },
-            { upsert: true }
+            { $set: { Stars: { limit, channel: channel.id } } },
+            { upsert: true, new: true }
         )
-            .then(async () => await interaction.reply({
-                content: `${e.Check} | As novas configurações de estrelas foi salva com sucesso.\n⭐ | Reaja com uma estrela em uma mensagem, ao atingir **${limit} reações**, a mensagem será enviada no canal ${channel} para que fique salva.`
-            }))
+            .then(async data => {
+                Database.saveCacheData(data.id, data)
+                interaction.reply({
+                    content: `${e.Check} | As novas configurações de estrelas foi salva com sucesso.\n⭐ | Reaja com uma estrela em uma mensagem, ao atingir **${limit} reações**, a mensagem será enviada no canal ${channel} para que fique salva.`
+                })
+                return
+            })
             .catch(async err => await interaction.reply({
                 content: `${e.Deny} | Não foi possível salvar as configurações.\n${e.bug} | \`${err}\``
             }))

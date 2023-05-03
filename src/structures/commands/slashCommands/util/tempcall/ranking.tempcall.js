@@ -9,7 +9,8 @@ import rankMember from './member.ranking.tempcall.js'
 export default async interaction => {
 
     const { guild, user, channel, options } = interaction
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'TempCall')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'TempCall')
+    const guildData = await Database.getGuild(guild.id)
 
     if (guildData?.TempCall && !guildData?.TempCall?.enable)
         return interaction.reply({

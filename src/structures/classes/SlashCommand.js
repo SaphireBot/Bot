@@ -58,7 +58,8 @@ export default class SlashCommandInteraction extends Base {
     async checkAndDefineDatabase(command) {
 
         const { guild, e, Database, interaction, user } = this
-        const guildData = await Database.Guild.findOne({ id: guild?.id })
+        // const guildData = await Database.Guild.findOne({ id: guild?.id })
+        const guildData = await Database.getGuild(guild?.id)
 
         if (!guildData && guild) {
             await Database.registerServer(guild)

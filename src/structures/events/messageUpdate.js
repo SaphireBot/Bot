@@ -22,7 +22,8 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     const { guild, author, type } = newMessage
     if (type !== 0) return
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
+    const guildData = await Database.getGuild(guild.id)
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 
     const embeds = [{

@@ -1,6 +1,7 @@
 import { Colors, DiscordPermissons, Permissions, PermissionsTranslate } from "../../../../util/Constants.js";
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import notify from "../../../../functions/plugins/notify.js";
+import { Database, SaphireClient as client } from "../../../../classes/index.js";
 
 export default {
     name: 'logs',
@@ -20,7 +21,7 @@ export default {
     helpData: {
         description: 'Sistema frontal para gerenciar os logs'
     },
-    async execute({ interaction, e, Database, client, guildData }) {
+    async execute({ interaction, e, guildData }) {
 
         const { guild, options, commandId, user, member } = interaction
 
@@ -177,6 +178,12 @@ export default {
                 .then(async result => {
 
                     if (result.modifiedCount > 0) {
+                        const data = Database.guildData.get(guild.id)
+                        if (data) {
+                            data["LogSystem.channel"] = configChannel.id
+                            data["LogSystem.webhookUrl"] = webhook.url
+                            Database.guildData.set(guild.id, data)
+                        }
                         notify(configChannel.id, 'Log System Enabled', `${user} \`${user.id}\` ativou o sistema de logs.`)
 
                         client.sendWebhook(

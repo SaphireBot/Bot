@@ -13,7 +13,8 @@ export default async ({ interaction, message, e, user, guild }, commandData) => 
             components: []
         }).catch(() => { })
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'Moeda')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'Moeda')
+    const guildData = await Database.getGuild(guild.id)
     const moeda = guildData?.Moeda || `${e.Coin} Safiras`
 
     if ((gameData.date + 20000) < Date.now())

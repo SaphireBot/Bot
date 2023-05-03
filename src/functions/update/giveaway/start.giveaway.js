@@ -137,7 +137,7 @@ export default async (gw, guild, channel, messageFetched) => {
 
     async function finish() {
 
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': MessageID },
             {
                 $set: {
@@ -146,8 +146,10 @@ export default async (gw, guild, channel, messageFetched) => {
                     'Giveaways.$.DischargeDate': dateNow,
                     'Giveaways.$.WinnersGiveaway': vencedores
                 }
-            }
+            },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
 
         message = await message.fetch().catch(() => null)
         const components = message?.components[0]?.toJSON()

@@ -216,7 +216,8 @@ export default class SelectMenuInteraction extends Base {
                 content: `${e.saphireDesespero} | NENHUMA COISA FOI ACHADAAA. Entra no meu servidor e fala pro meu criador, pelo amor de Deus!! \`#15482615\``
             })
 
-        const guildData = await Database.Guild.findOne({ id: guild.id }) || {}
+        // const guildData = await Database.Guild.findOne({ id: guild.id }) || {}
+        const guildData = await Database.getGuild(guild.id) || {}
         await execute(interaction, guildData, data.gwId)
 
         if (['delete', 'reset', 'finish'].includes(src))
@@ -304,7 +305,8 @@ export default class SelectMenuInteraction extends Base {
                 components: []
             }).catch(() => { })
 
-        const guildData = await Database.Guild.findOne({ id: guild.id })
+        // const guildData = await Database.Guild.findOne({ id: guild.id })
+        const guildData = await Database.getGuild(guild.id)
         const Moeda = guildData?.Moeda || `${e.Coin} Safiras`
 
         const clientData = await Database.Client.findOne({ id: client.user.id })
@@ -558,7 +560,8 @@ export default class SelectMenuInteraction extends Base {
             const name = embed.fields[0].value
             const guildId = embed.fields[embed.fields.length - 1]?.value
             const authorId = embed.footer.text
-            const guildData = await Database.Guild.findOne({ id: guildId })
+            // const guildData = await Database.Guild.findOne({ id: guildId })
+            const guildData = await Database.getGuild(guildId)
             const webhookUrl = guildData?.LogSystem?.webhookUrl
             if (!webhookUrl) return
 
@@ -602,7 +605,8 @@ export default class SelectMenuInteraction extends Base {
                 })
             }
 
-            const guildData = await Database.Guild.findOne({ id: guildId })
+            // const guildData = await Database.Guild.findOne({ id: guildId })
+            const guildData = await Database.getGuild(guildId)
             const webhookUrl = guildData?.LogSystem?.webhookUrl
 
             if (webhookUrl) sendWebhookMessage()

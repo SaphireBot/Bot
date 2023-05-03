@@ -24,7 +24,8 @@ export default async (interaction, guildData, commandData) => {
     await interaction.reply({ content: `${e.Loading} | Carregando...` })
 
     if (!guildData)
-        guildData = await Database.Guild.findOne({ id: guild.id })
+        // guildData = await Database.Guild.findOne({ id: guild.id })
+        guildData = await Database.getGuild(guild.id)
 
     const data = {
         enable: guildData?.TempCall?.enable || false,

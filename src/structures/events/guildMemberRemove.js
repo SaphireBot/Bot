@@ -15,7 +15,8 @@ client.on('guildMemberRemove', async member => {
     Database.Cache.AfkSystem.delete(`${guild.id}.${member.user.id}`).catch(() => { })
     Database.Cache.AfkSystem.delete(`Global.${member.user.id}`).catch(() => { })
 
-    const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    // const guildData = await Database.Guild.findOne({ id: guild.id }, 'LogSystem LeaveChannel')
+    const guildData = await Database.getGuild(guild.id)
     Notify()
 
     if (!guildData) return Database.registerServer(guild)

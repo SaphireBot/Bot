@@ -18,7 +18,8 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
 
-    const guildData = await Database.Guild.findOne({ id: guildId })
+    // const guildData = await Database.Guild.findOne({ id: guildId })
+    const guildData = await Database.getGuild(guildId)
 
     const execute = {
         welcome: {

@@ -17,7 +17,8 @@ export default async interaction => {
     await interaction.update({ content: `${e.Loading} | Carregando...`, embeds: [], components: [] }).catch(() => { })
     const guildData = SpamManager.guildData[guildId]
         ? { Spam: SpamManager.guildData[guildId] }
-        : await Database.Guild.findOne({ id: guildId })
+        // : await Database.Guild.findOne({ id: guildId })
+        : await Database.getGuild(guildId)
 
     await guild.channels.fetch()
     let channels = guildData?.Spam?.ignoreChannels || []
@@ -79,10 +80,12 @@ export default async interaction => {
 
     async function removeInvalidChannels() {
         channels = channels.filter(id => !channelsToRemove.includes(id))
-        await Database.Guild.updateOne(
+        await Database.Guild.findOneAndUpdate(
             { id: guildId },
-            { $pullAll: channelsToRemove }
+            { $pullAll: channelsToRemove },
+            { new: true }
         )
+            .then(data => Database.saveCacheData(data.id, data))
         return
     }
 }

@@ -36,11 +36,12 @@ export default async interaction => {
 
         if (!serverId) return
 
-        const hasGuild = await Database.Guild.exists({ id: serverId })
+        const hasGuild = Database.guildData.has(serverId) || await Database.Guild.exists({ id: serverId })
 
         if (!hasGuild)
             return responseMessage += `\n${e.Deny} | Esse servidor não existe no banco de dados.`
 
+        Database.guildData.delete(serverId)
         await Database.Guild.deleteOne({ id: serverId })
         return responseMessage += `\n${e.Check} | Servidor deletado com sucesso do banco de dados.`
     }

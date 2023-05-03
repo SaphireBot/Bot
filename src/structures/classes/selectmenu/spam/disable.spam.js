@@ -23,7 +23,8 @@ export default async interaction => {
         { $set: { 'Spam.enabled': false } },
         { upsert: true, new: true }
     )
-        .then(() => {
+        .then(doc => {
+            Database.saveCacheData(doc.id, doc)
             delete SpamManager.guildData[guildId]
             if (SpamManager.guildsEnabled.includes(guildId))
                 SpamManager.guildsEnabled = SpamManager.guildsEnabled.filter(gId => gId !== guildId)
