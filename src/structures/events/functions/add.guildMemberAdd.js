@@ -25,6 +25,7 @@ export default (member, data) => {
         channelId: data.channelId,
         LogType: 'WelcomeChannel',
         method: 'post',
+        guildId: member.guild.id,
         body
     })
 

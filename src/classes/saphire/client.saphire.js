@@ -427,7 +427,7 @@ export default new class SaphireClient extends Client {
                             { $unset: { WelcomeChannel: true } },
                             { new: true }
                         )
-                            .then(data => Database.saveCacheData(data.id, data))
+                            .then(data => Database.saveCacheData(data?.id, data))
 
                 if (data.LogType)
                     // Missing Access or Unknown Channel
