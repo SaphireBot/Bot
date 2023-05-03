@@ -267,7 +267,7 @@ export default new class Database extends Models {
             GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.channelId != byChannelId)
             GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.channelId != byChannelId)
             GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.channelId != byChannelId)
-            return await GuildModel.findOneAndUpdate({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } })
+            return await GuildModel.findOneAndUpdate({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } }, { new: true })
                 .then(data => this.saveCacheData(data.id, data))
         }
     }
