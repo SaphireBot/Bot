@@ -94,17 +94,21 @@ export default async ({ interaction }, commandData) => {
                 ephemeral: true
             })
 
+        await interaction.reply({
+            content: `${e.Loading} | Te colocando no sorteio...`,
+            ephemeral: true
+        })
         GiveawayManager.pushParticipants(gwId, [user.id])
         return Database.Guild.findOneAndUpdate(
             { id: guild.id, 'Giveaways.MessageID': gwId },
             { $addToSet: { 'Giveaways.$.Participants': user.id } },
             { new: true }
         )
-            .then(document => {
+            .then(async document => {
                 const giveawayObject = document.Giveaways.find(gw => gw.MessageID == gwId)
 
                 if (!giveawayObject)
-                    return interaction.reply({
+                    return interaction.editReply({
                         content: `${e.Animated.SaphireQuestion} | Que estranho... Não achei o sorteio no banco de dados... Você pode chamar um administrador por favor?`,
                         ephemeral: true
                     })
@@ -119,14 +123,12 @@ export default async ({ interaction }, commandData) => {
                 ][Math.floor(Math.random() * 4)]
 
                 if (hasEnded) disableButton()
-                interaction.reply({
+                return await interaction.editReply({
                     content: `${e.Animated.SaphireDance} | ${phrase}\n${e.SaphireDormindo} | Agora é só esperar o sorteio terminar, boa sorte.`,
                     ephemeral: true
                 })
-
-                return
             })
-            .catch(err => interaction.reply({
+            .catch(err => interaction.editReply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,
                 ephemeral: true
             }))

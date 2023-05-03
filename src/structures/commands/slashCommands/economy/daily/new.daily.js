@@ -152,16 +152,15 @@ export default class Daily extends Base {
                 privateOrChannel: option == 'reminderPrivate'
             })
 
-        transferUser
-            ? Experience.add(transferUser.id, prize.xp)
-            : Experience.add(this.user.id, prize.xp)
-
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },
             $set: { 'Timeouts.Daily': dateNow }
         }
 
-        if (transferUser)
+        if (transferUser) {
+            Experience.add(transferUser.id, prize.xp)
+            delete data.$inc.DailyCount
+            delete data.$set
             data.$push = {
                 Transactions: {
                     $each: [{
@@ -171,7 +170,14 @@ export default class Daily extends Base {
                     $position: 0
                 }
             }
-        else if (prize.day > 0)
+            await this.Database.User.updateOne({ id: transferUser.id }, data, { upsert: true })
+            data.$set = { 'Timeouts.Daily': dateNow }
+            data.$inc = { DailyCount: 1 }
+            delete data.$push
+            return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
+        }
+
+        if (prize.day > 0)
             data.$push = {
                 Transactions: {
                     $each: [{
@@ -181,8 +187,9 @@ export default class Daily extends Base {
                     $position: 0
                 }
             }
+        Experience.add(this.user.id, prize.xp)
 
-        return await this.Database.User.updateOne({ id: transferUser ? transferUser.id : this.user.id }, data, { upsert: true })
+        return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
     }
 
     formatCalendar(prize, num, i) {

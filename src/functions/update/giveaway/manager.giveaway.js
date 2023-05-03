@@ -153,23 +153,19 @@ export default new class GiveawayManager {
         const gw = this.getGiveaway(gwId)
         if (!gw) return
         gw.Participants = Array.from(new Set([...gw.Participants, ...usersId]))
+        return
     }
 
     removeParticipants(gwId, userId) {
         const gw = this.getGiveaway(gwId)
         if (!gw) return
         gw.Participants = gw.Participants.filter(id => id !== userId)
+        return
     }
 
     getGiveaway(gwId, channelId) {
         const gws = [...this.giveaways, ...this.awaiting, ...this.toDelete]
-
-        if (channelId) {
-            const exist = gws.some(g => g?.ChannelId == channelId)
-            return exist
-        }
-
-        const gw = gws.find(g => g?.MessageID == gwId)
-        return gw
+        if (channelId) return gws.some(g => g?.ChannelId == channelId)
+        return gws.find(g => g?.MessageID == gwId)
     }
 }

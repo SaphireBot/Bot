@@ -61,7 +61,7 @@ export default {
             axios.get("https://top.gg/api/bots/912509487984812043", { headers: { authorization: process.env.TOP_GG_TOKEN }, timeout: 10000 }).then(() => calculate()).catch(() => null),
             axios.get("https://saphire.one", { timeout: 10000 }).then(() => calculate()).catch(() => null),
             Discloud.user.fetch().then(() => calculate()).catch(() => null),
-            mongoose.connection.db.admin().ping().then(() => calculate()).catch(() => null)
+            mongoose.connection?.db?.admin()?.ping().then(() => calculate()).catch(() => null)
         ])
 
         const timeString = [
