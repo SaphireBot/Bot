@@ -26,7 +26,6 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "mongoose": "^7.1.0",
-    "openai": "^3.2.1",
     "parse-ms": "^3.0.0",
     "quick.db": "^9.1.6",
     "statcord.js": "^3.4.3",

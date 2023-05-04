@@ -2,7 +2,6 @@ import { ChannelType } from 'discord.js';
 import { SaphireClient as client, Experience, Database, AfkManager, ChestManager, SpamManager } from '../../classes/index.js'
 import { DiscordPermissons } from '../../util/Constants.js';
 import { Emojis as e } from '../../util/util.js'
-import chatGPT from './system/chatGPT.js';
 
 client.on('messageCreate', async message => {
     client.messages++
@@ -27,10 +26,6 @@ client.on('messageCreate', async message => {
 
     if (message.content === `<@${client.user.id}>`)
         return message.reply({ content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando \`/help\`` }).catch(() => { })
-
-    if (message.content.startsWith(`<@${client.user.id}>`))
-        if (message.content.length > `<@${client.user.id}>`.length)
-            return chatGPT(message)
 
     return
 })
