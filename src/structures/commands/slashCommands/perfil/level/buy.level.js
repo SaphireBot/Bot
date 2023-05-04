@@ -1,16 +1,13 @@
-import {
-    SaphireClient as client,
-    Database
-} from "../../../../../classes/index.js"
-import fs from 'fs'
+import { SaphireClient as client, Database } from "../../../../../classes/index.js"
 import { Emojis as e } from "../../../../../util/util.js"
+import fs from 'fs'
 
 export default async ({ interaction, code, clientData }) => {
 
     const { user, guild } = interaction
     const vip = await user.isVip()
     const moeda = await guild?.getCoin() || `${e.Coin} Safiras`
-    const userData = await Database.User.findOne({ id: user.id })
+    const userData = await Database.getUser(user.id)
     const BgLevel = Database.BgLevel
     const wallpaperData = BgLevel[code]
 

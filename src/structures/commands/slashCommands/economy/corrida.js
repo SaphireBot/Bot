@@ -4,6 +4,7 @@ ESCRITO POR: 451619591320371213 Rody#1000
 */
 import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import { Colors } from '../../../../util/Constants.js'
+import { Database } from "../../../../classes/index.js"
 const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
 export default {
@@ -88,7 +89,7 @@ export default {
             }
         ]
     },
-    async execute({ interaction, client, e, guildData, Database }) {
+    async execute({ interaction, client, e, guildData }) {
 
         const { options, user: author, channel, guild } = interaction
 
@@ -212,7 +213,7 @@ export default {
 
                 if (value > 0) {
 
-                    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+                    const userData = await Database.getUser(user.id)
                     const userMoney = userData?.Balance || 0
 
                     if (!userMoney || userMoney < value)
@@ -221,7 +222,7 @@ export default {
                             ephemeral: true
                         })
 
-                    await Database.User.updateOne(
+                    await Database.User.findOneAndUpdate(
                         { id: user.id },
                         {
                             $inc: {
@@ -237,10 +238,9 @@ export default {
                                 }
                             }
                         },
-                        {
-                            upsert: true
-                        }
+                        { upsert: true, new: true }
                     )
+                        .then(doc => Database.saveUserCache(doc?.id, doc))
 
                     total += value
                 }
@@ -300,7 +300,7 @@ export default {
             if (usersJoined.length < 2) {
                 await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
 
-                if (value > 0)
+                if (value > 0) {
                     await Database.User.updateMany(
                         { id: { $in: usersJoined.map(u => u.id) } },
                         {
@@ -309,6 +309,8 @@ export default {
                             }
                         }
                     )
+                    Database.refreshUsersData(usersJoined.map(u => u.id))
+                }
 
                 return channel.send({
                     content: `${e.Deny} | A corrida foi iniciada com menos de 2 jogadores.`
@@ -355,7 +357,7 @@ export default {
             await Database.Cache.Running.pull(`${client.shardId}.Channels`, channelId => channelId === channel.id)
 
             if (total > 0)
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: winnerData.id },
                     {
                         $inc: {
@@ -370,8 +372,10 @@ export default {
                                 $position: 0
                             }
                         }
-                    }
+                    },
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.saveUserCache(doc?.id, doc))
 
             embeds[0].fields[1].value = usersJoined.map((data, i) => {
                 const crown = data.id === winnerData.id ? '👑' : ''

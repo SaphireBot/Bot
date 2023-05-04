@@ -49,7 +49,7 @@ export default async (interaction, data) => {
         { new: true }
     )
         .then(data => {
-            Database.saveCacheData(data.id, data)
+            Database.saveGuildCache(data.id, data)
             interaction.update({
                 content: `${e.CheckV} | Tudo ok! Os dados de notificação foram deletados e desativados.`,
                 components: []

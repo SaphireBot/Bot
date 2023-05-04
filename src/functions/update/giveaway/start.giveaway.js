@@ -149,7 +149,7 @@ export default async (gw, guild, channel, messageFetched) => {
             },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         message = await message.fetch().catch(() => null)
         const components = message?.components[0]?.toJSON()

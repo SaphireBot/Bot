@@ -16,7 +16,7 @@ client.on('messageDelete', async message => {
     const pay = await Database.Cache.Pay.get(`${message.interaction?.user?.id}.${message.id}`)
     if (pay?.value) {
         Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: message.interaction?.user?.id },
             {
                 $inc: {
@@ -32,8 +32,9 @@ client.on('messageDelete', async message => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 
     const betDataFound = await Database.Cache.Bet.get(message.id)
@@ -67,7 +68,7 @@ client.on('messageDelete', async message => {
             }
         )
             .then(result => {
-
+                Database.refreshUsersData([...diceGame.red, ...diceGame.blue])
                 if (!message.channel) return
                 const usersRefunded = result.matchedCount || 0
 
@@ -99,6 +100,7 @@ client.on('messageDelete', async message => {
                 }
             )
                 .then(() => {
+                    Database.refreshUsersData(jokempoGame.players)
                     if (!message.channel) return
                     return message.channel.send({
                         content: `${e.Trash} | A mensagem do jokempo \`${message.id}\` foi deletada.\n${e.Check} | Eu devolvi **${jokempoGame.value} Safiras** para os jogadores ${jokempoGame.players.map(id => `<@${id}>`).join(' & ')}.`
@@ -120,7 +122,7 @@ client.on('messageDelete', async message => {
             webhookUrl: jokempoGameGlobal.webhookUrl
         }).save()
         Database.Cache.Jokempo.delete(`Global.${message.id}`)
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: jokempoGameGlobal.userId },
             {
                 $inc: { Balance: jokempoGameGlobal.value },
@@ -135,7 +137,8 @@ client.on('messageDelete', async message => {
                 }
             }
         )
-            .then(() => {
+            .then(doc => {
+                Database.saveUserCache(doc?.id, doc)
                 if (!message.channel) return
                 return message.channel.send({
                     content: `${e.Trash} | A mensagem do jokempo global \`${message.id}\` foi deletada.\n${e.Check} | Eu cancelei esta aposta e devolvi **${jokempoGameGlobal.value.currency()} Safiras** para o desafiante.`

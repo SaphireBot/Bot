@@ -192,7 +192,7 @@ export default async ({ interaction }, commandData) => {
             { new: true }
         )
             .then(document => {
-                Database.saveCacheData(document.id, document)
+                Database.saveGuildCache(document.id, document)
                 GiveawayManager.removeParticipants(gwId, user.id)
                 const giveawayObject = document?.Giveaways?.find(gw => gw?.MessageID == gwId)
 

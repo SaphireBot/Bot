@@ -8,7 +8,7 @@ import buildRaspadinha from "./build.raspadinha.js"
 export default async interaction => {
 
     const { user, guild } = interaction
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     const userBalance = userData?.Balance || 0
     const moeda = await guild.getCoin()
 
@@ -18,22 +18,13 @@ export default async interaction => {
             components: []
         }).catch(() => { })
 
-    return Database.User.updateOne(
+    return Database.User.findOneAndUpdate(
         { id: user.id },
-        {
-            $inc: {
-                Balance: -100
-            }
-        },
-        { upsert: true }
+        { $inc: { Balance: -100 } },
+        { upsert: true, new: true }
     )
         .then(async result => {
-
-            if (result.modifiedCount !== 1)
-                return await interaction.update({
-                    content: `${e.Deny} | Por algum motivo, não foi possível iniciar a sua raspadinha.`,
-                    components: []
-                }).catch(() => { })
+            Database.saveUserCache(result?.id, result)
 
             await Database.Client.updateOne(
                 { id: client.user.id },
@@ -46,7 +37,6 @@ export default async interaction => {
             )
 
             return buildRaspadinha(interaction)
-
         })
         .catch(async err => {
             console.log(err)

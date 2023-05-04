@@ -28,7 +28,7 @@ export default async interaction => {
         if (!hasUser)
             return responseMessage += `\n${e.Deny} | Esse usuário não existe no banco de dados.`
 
-        await Database.User.deleteOne({ id: userId })
+        await Database.deleteUser(userId)
         return responseMessage += `\n${e.Check} | Esse usuário foi deletado com sucesso do banco de dados.`
     }
 

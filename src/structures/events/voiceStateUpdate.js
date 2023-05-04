@@ -57,7 +57,7 @@ async function userLeave(memberId, guildId) {
             { $inc: { dataToSave } },
             { upsert: true, new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
     return
 }

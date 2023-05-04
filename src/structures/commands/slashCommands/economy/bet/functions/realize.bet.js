@@ -59,7 +59,7 @@ export default async (cachedData, message) => {
         },
         { upsert: true }
     )
-
+    Database.refreshUsersData(players.filter(id => id !== winner))
     return
 
     function getEmoji(userId) {

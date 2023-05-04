@@ -13,7 +13,7 @@ export default async ({ interaction, BlackJackEmojis }) => {
     let authorMoney = 0
 
     if (betValue > 0) {
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userData = await Database.getUser(user.id)
         const userMoney = userData?.Balance || 0
 
         if (!userMoney || userMoney < betValue)

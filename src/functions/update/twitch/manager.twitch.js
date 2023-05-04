@@ -200,7 +200,7 @@ export default new class TwitchManager {
             { $set: { TwitchNotifications: data } },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         this.toCheckStreamers.push(streamer)
         if (!this.streamers.includes(streamer)) this.streamers.push(streamer)

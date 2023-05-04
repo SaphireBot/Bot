@@ -260,9 +260,9 @@ export default class SelectMenuInteraction extends Base {
         })
     }
 
-    async editProfile({ Database, user, interaction, modals }) {
+    async editProfile({ user, interaction, modals }) {
 
-        const data = await Database.User.findOne({ id: user.id }, 'Perfil')
+        const data = await Database.getUser(user.id)
 
         if (!data) {
             await Database.registerUser(this.user)

@@ -133,7 +133,7 @@ export default async ({ interaction, guild, message, user, member }, commandData
         }
     )
         .then(doc => {
-            Database.saveCacheData(doc.id, doc)
+            Database.saveGuildCache(doc.id, doc)
             return doc
         })
         .catch(err => ({ err: err.codeName }))

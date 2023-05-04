@@ -17,7 +17,7 @@ export default async interaction => {
         })
 
     const MoedaCustom = await guild.getCoin()
-    const userBalance = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userBalance = await Database.getUser(user.id)
     const balance = userBalance?.Balance || 0
 
     if (balance < 100)

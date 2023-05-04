@@ -22,7 +22,8 @@ export default async (interaction, userId) => {
             ephemeral: true
         })
 
-    const dbData = await Database.User.find({ id: { $in: [author.id, user?.id] } }, 'id Timeouts.Rep Likes')
+    // const dbData = await Database.User.find({ id: { $in: [author.id, user?.id] } }, 'id Timeouts.Rep Likes')
+    const dbData = await Database.getUsers([author.id, user?.id])
     const data = {}
     const authorData = dbData.find(d => d.id === author.id)
 

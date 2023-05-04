@@ -52,7 +52,7 @@ export default async (interaction, commandData) => {
     if (!betUser) return userNotFound()
 
     if (!jokempo.userId) {
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userData = await Database.getUser(user.id)
         const balance = userData?.Balance || 0
         if (balance < value)
             return message.edit({
@@ -68,7 +68,7 @@ export default async (interaction, commandData) => {
         const content = `${e.Animated.SaphireCry} | O usuário da aposta do Jokempo Global \`${jokempo?.id || '0'}\` não foi encontrado.\n${e.Info} | Aposta removida do escopo global. Por favor, tente novamente e desculpe o incomodo.`
         message.edit({ content }).catch(() => message.channel.send({ content }).catch(() => { }))
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: jokempo.creatorId },
             {
                 $inc: {
@@ -83,8 +83,10 @@ export default async (interaction, commandData) => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
         await Database.Jokempo.deleteOne({ id: jokempo.id })
         return
     }
@@ -102,8 +104,8 @@ export default async (interaction, commandData) => {
             channelId: message.channel.id
         })
 
-        if (!jokempo.userId)
-            await Database.User.updateOne(
+        if (!jokempo.userId) {
+            await Database.User.findOneAndUpdate(
                 { id: user.id },
                 {
                     $inc: {
@@ -118,9 +120,12 @@ export default async (interaction, commandData) => {
                             $position: 0
                         }
                     }
-                }
+                },
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
+        }
         await sleep(2000)
         return sendMessage()
     }
@@ -162,7 +167,7 @@ export default async (interaction, commandData) => {
         delete jokempo.channelId
         new Database.Jokempo(jokempo).save()
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: user.id },
             {
                 $inc: {
@@ -177,8 +182,10 @@ export default async (interaction, commandData) => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
         return interaction.channel.send({ content: `${e.DenyX} | Não foi possível iniciar a aposta. Valores devolvidos.\n${e.bug} | \`${err}\`` }).catch(() => { })
     }

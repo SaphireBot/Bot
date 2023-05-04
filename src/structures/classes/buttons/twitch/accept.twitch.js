@@ -64,7 +64,7 @@ export default async (interaction, commandData) => {
         { new: true }
     )
         .then(async data => {
-            Database.saveCacheData(data.id, data)
+            Database.saveGuildCache(data.id, data)
             TwitchManager.streamersOffline.push(...commandData.map(d => d.streamer))
 
             for await (const { streamer, oldChannelId, message, channelId } of commandData) {

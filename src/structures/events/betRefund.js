@@ -12,7 +12,7 @@ client.on('betRefund', async (data, noDelete = false) => {
     if (!noDelete)
         await Database.Cache.Bet.delete(messageId)
 
-    if (players?.length > 0)
+    if (players?.length > 0) {
         await Database.User.updateMany(
             { id: { $in: players } },
             {
@@ -29,6 +29,7 @@ client.on('betRefund', async (data, noDelete = false) => {
             },
             { upsert: true }
         )
-
+        Database.refreshUsersData(players)
+    }
     return
 })

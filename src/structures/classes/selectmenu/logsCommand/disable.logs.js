@@ -11,7 +11,7 @@ export default async interaction => {
         { new: true }
     )
         .then(doc => {
-            Database.saveCacheData(doc.id, doc)
+            Database.saveGuildCache(doc.id, doc)
             return doc
         })
 

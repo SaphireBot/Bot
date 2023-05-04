@@ -117,7 +117,7 @@ export default {
         const { options, user } = interaction
         const amount = options.getInteger('amount')
         const subCommand = options.getSubcommand()
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userData = await Database.getUser(user.id)
         const userMoney = userData?.Balance || 0
 
         if (userMoney <= 0 || userMoney < amount)

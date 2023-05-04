@@ -1,4 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js'
+import { Database, SaphireClient as client } from '../../../../classes/index.js'
 
 export default {
     name: 'like',
@@ -20,7 +21,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, e, Database }) {
+    async execute({ interaction, e }) {
 
         const { options, user: author } = interaction
         const searchId = options.getString('search_user')
@@ -55,7 +56,8 @@ export default {
                 ephemeral: true
             })
 
-        const dbData = await Database.User.find({ id: { $in: [author.id, user?.id] } }, 'id Timeouts.Rep Likes')
+        // const dbData = await Database.User.find({ id: { $in: [author.id, user?.id] } }, 'id Timeouts.Rep Likes')
+        const dbData = await Database.getUsers([author.id, user?.id])
         const data = {}
         const authorData = dbData.find(d => d.id === author.id)
 

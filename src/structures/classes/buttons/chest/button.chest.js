@@ -68,7 +68,7 @@ export default async (interaction, commandData) => {
             { $set: { Chest: true } },
             { upsert: true, new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         ChestManager.guildEnabled[interaction.guildId] = true
         return interaction.editReply({
@@ -112,7 +112,7 @@ export default async (interaction, commandData) => {
             { $set: { Chest: true } },
             { upsert: true, new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         delete ChestManager.guildEnabled[interaction.guildId]
         return interaction.editReply({

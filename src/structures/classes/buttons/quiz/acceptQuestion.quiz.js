@@ -273,7 +273,7 @@ export default async interaction => {
     }
 
     async function addSafiras(userId) {
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: userId },
             {
                 $inc: {
@@ -289,8 +289,9 @@ export default async interaction => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 
 }

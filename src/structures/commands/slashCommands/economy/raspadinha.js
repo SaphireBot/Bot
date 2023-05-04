@@ -45,7 +45,7 @@ export default {
     async execute({ interaction, Moeda: moeda, Database }) {
 
         const { user } = interaction
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userData = await Database.getUser(user.id)
         const userBalance = userData?.Balance || 0
 
         if (userBalance < 100)

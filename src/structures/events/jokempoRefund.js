@@ -7,7 +7,7 @@ client.on('jokempoRefund', async (data) => {
     const value = data.value?.value || 0
     const messageId = data?.id
 
-    if (players?.length > 0 && value > 0)
+    if (players?.length > 0 && value > 0) {
         await Database.User.updateMany(
             { id: { $in: players } },
             {
@@ -24,6 +24,8 @@ client.on('jokempoRefund', async (data) => {
             },
             { upsert: true }
         )
+        Database.refreshUsersData(players)
+    }
 
     return Database.Cache.Jokempo.delete(messageId)
 })

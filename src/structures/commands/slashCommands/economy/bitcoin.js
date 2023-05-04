@@ -2,6 +2,7 @@ import { Colors } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
 import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
+import { Database } from '../../../../classes/index.js'
 
 export default {
     name: 'bitcoin',
@@ -37,7 +38,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, Database, e }) {
+    async execute({ interaction, e }) {
 
         const { options, user: author, guild } = interaction
         const user = options.getUser('user')
@@ -45,7 +46,7 @@ export default {
 
         if (user) {
 
-            const userData = await Database.User.findOne({ id: user?.id }, 'Perfil.Bitcoins Perfil.Bits')
+            const userData = await Database.getUser(user.id)
 
             if (!userData)
                 return await interaction.reply({
@@ -77,7 +78,7 @@ export default {
             })
         }
 
-        const authorData = await Database.User.findOne({ id: author.id }, 'Perfil.Bits Perfil.Bitcoins Timeouts')
+        const authorData = await Database.getUser(author.id)
         const Bits = authorData?.Perfil?.Bits || 0
         const moeda = await guild.getCoin()
         const timeout = authorData?.Timeouts?.Bitcoin
@@ -91,7 +92,7 @@ export default {
 
         async function NewBitCoin() {
 
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: author.id },
                 {
                     $inc: {
@@ -108,8 +109,10 @@ export default {
                             $position: 0
                         }
                     }
-                }
+                },
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
             return await interaction.reply({
                 content: `${e.Tada} | Você obteve **1 ${e.BitCoin} BitCoin**\n${e.PandaProfit} +5000000 ${moeda}`
@@ -118,14 +121,15 @@ export default {
 
         async function MineBitCoin() {
 
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: author.id },
                 {
                     $inc: { 'Perfil.Bits': 1 },
                     'Timeouts.Bitcoin': Date.now()
                 },
-                { upsert: true }
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
             let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(new Date((timeout || Date.now()) + 7200000), 'R', true)}`
 

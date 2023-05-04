@@ -28,12 +28,12 @@ export default async (interaction) => {
     const MoedaCustom = await guild.getCoin()
 
     if (value > 0) {
-        const userBalance = await Database.User.findOne({ id: userId }, 'Balance')
+        const userBalance = await Database.getUser(userId)
         const balance = userBalance?.Balance || 0
         if (balance < value) return disable(balance)
     }
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: userId },
         {
             $inc: { Balance: -value },
@@ -46,8 +46,10 @@ export default async (interaction) => {
                     $position: 0
                 }
             }
-        }
+        },
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     Database.Cache.Jokempo.push(`${message.id}.players`, userId)
 

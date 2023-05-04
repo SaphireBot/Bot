@@ -157,7 +157,7 @@ export default new class ChestManager {
     }
 
     async setPrize(userId, coins, exp) {
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: userId },
             {
                 $inc: { Balance: coins || 0, Xp: exp || 0 },
@@ -171,8 +171,9 @@ export default new class ChestManager {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
         return
     }
 }

@@ -33,7 +33,7 @@ export default async ({ interaction, message, e, user, guild }, commandData) => 
             ephemeral: true
         })
 
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     const userMoney = userData?.Balance || 0
     const value = gameData.value
 
@@ -52,10 +52,12 @@ export default async ({ interaction, message, e, user, guild }, commandData) => 
         return await interaction.reply({ content: `${e.Deny} | A embed da aposta \`${message.id}\` não foi encontrada.` })
     }
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: user.id },
-        { $inc: { Balance: -value } }
+        { $inc: { Balance: -value } },
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     gameData = await Database.Cache.Bet.push(`${messageId}.${side}`, user.id)
     usersInGame = [...gameData.blue, ...gameData.red]

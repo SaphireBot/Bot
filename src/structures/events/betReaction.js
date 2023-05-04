@@ -26,7 +26,7 @@ client.on('betReaction', async ({ message, user, emojiName }) => {
     const timestamp = embed.fields[2].value.replace(/[^0-9]/g, '')
     const time = new Date(timestamp * 1000).valueOf()
     const { authorId, players, playersCount, versus, amount } = betCachedData
-    const userData = await Database.User.findOne({ id: user.id }, "Balance")
+    const userData = await Database.getUser(user.id)
     const userBalance = userData?.Balance || 0
 
     if (time < Date.now() || emojiName === '✅' && user.id === authorId)

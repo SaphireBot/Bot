@@ -56,7 +56,7 @@ export default async ({ MessageReaction, guildData }) => {
             { $push: { "Stars.sended": { userId: author.id, messageId } } },
             { upsert: true, new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data)))
+            .then(data => Database.saveGuildCache(data.id, data)))
         .catch(() => { })
 
 }

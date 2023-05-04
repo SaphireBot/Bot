@@ -88,7 +88,7 @@ export default async (interaction, { src: customId }) => {
             { upsert: true }
         )
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: user.id },
             {
                 $inc: {
@@ -104,8 +104,9 @@ export default async (interaction, { src: customId }) => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
         return
     }

@@ -23,7 +23,7 @@ export default class Daily extends Base {
 
         const transferUser = options.getUser('transfer')
         const option = options.getString('options')
-        const authorData = await Database.User.findOne({ id: user.id }, 'Timeouts DailyCount')
+        const authorData = await Database.getUser(user.id)
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'Titles.BugHunter PremiumServers')
         const bugHunters = clientData?.Titles.BugHunter || []
         const dailyTimeout = authorData?.Timeouts?.Daily || 0
@@ -170,11 +170,13 @@ export default class Daily extends Base {
                     $position: 0
                 }
             }
-            await this.Database.User.updateOne({ id: transferUser.id }, data, { upsert: true })
+            await this.Database.User.findOneAndUpdate({ id: transferUser.id }, data, { upsert: true, new: true })
+                .then(doc => this.Database.saveUserCache(doc?.id, doc))
             data.$set = { 'Timeouts.Daily': dateNow }
             data.$inc = { DailyCount: 1 }
             delete data.$push
-            return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
+            return await this.Database.User.findOneAndUpdate({ id: this.user.id }, data, { upsert: true, new: true })
+                .then(doc => this.Database.saveUserCache(doc?.id, doc))
         }
 
         if (prize.day > 0)
@@ -189,7 +191,8 @@ export default class Daily extends Base {
             }
         Experience.add(this.user.id, prize.xp)
 
-        return await this.Database.User.updateOne({ id: this.user.id }, data, { upsert: true })
+        return await this.Database.User.findOneAndUpdate({ id: this.user.id }, data, { upsert: true, new: true })
+            .then(doc => this.Database.saveUserCache(doc?.id, doc))
     }
 
     formatCalendar(prize, num, i) {
@@ -214,7 +217,7 @@ export default class Daily extends Base {
 
     async resetSequence() {
 
-        await this.Database.User.updateOne(
+        await this.Database.User.findOneAndUpdate(
             { id: this.user.id },
             {
                 $unset: {
@@ -222,8 +225,9 @@ export default class Daily extends Base {
                     DailyCount: 1
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
         return
     }
 

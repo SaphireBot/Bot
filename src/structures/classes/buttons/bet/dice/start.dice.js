@@ -99,7 +99,7 @@ export default async (msg, moeda) => {
         return message.edit({ embeds: [embed] }).catch(() => { })
     }
 
-    async function givePrize(betResult, winnersId, losersId) {
+    async function givePrize(betResult, winnersId = [], losersId = []) {
         await Database.Cache.Bet.delete(message.id)
 
         if (winnersId.length)
@@ -134,6 +134,8 @@ export default async (msg, moeda) => {
                     }
                 }
             )
+
+        Database.refreshUsersData([...winnersId, ...losersId])
         return
     }
 

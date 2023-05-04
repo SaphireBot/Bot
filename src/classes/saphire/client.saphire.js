@@ -427,7 +427,7 @@ export default new class SaphireClient extends Client {
                             { $unset: { WelcomeChannel: true } },
                             { new: true }
                         )
-                            .then(data => Database.saveCacheData(data?.id, data))
+                            .then(data => Database.saveGuildCache(data?.id, data))
 
                 if (data.LogType)
                     // Missing Access or Unknown Channel
@@ -437,7 +437,7 @@ export default new class SaphireClient extends Client {
                             { $unset: { [`LogSystem.${data.LogType}`]: true } },
                             { new: true }
                         )
-                            .then(data => Database.saveCacheData(data.id, data))
+                            .then(data => Database.saveGuildCache(data.id, data))
 
                 return console.log(data, err)
             })

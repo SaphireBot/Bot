@@ -38,7 +38,7 @@ export default async (interaction, gameData) => {
     interaction.update({ content, components: [] })
         .catch(() => channel.send({ content }).catch(() => { }))
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: gameData.creatorId },
         {
             $inc: { Balance: gameData.value * 2 },
@@ -51,8 +51,10 @@ export default async (interaction, gameData) => {
                     $position: 0
                 }
             }
-        }
+        },
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     const webhookUrl = await webhookJokempo(gameData.channelOrigin)
 

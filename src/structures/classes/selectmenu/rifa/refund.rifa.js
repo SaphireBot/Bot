@@ -179,7 +179,7 @@ export default async ({
         )
 
         async function subtractMoneyFromUser() {
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: user.id },
                 {
                     $inc: {
@@ -195,8 +195,9 @@ export default async ({
                         }
                     }
                 },
-                { upsert: true }
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
             return
         }
 

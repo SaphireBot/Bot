@@ -52,7 +52,7 @@ export default async (interaction, commandData) => {
 
     async function feedback() {
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: user.id },
             {
                 $push: {
@@ -64,8 +64,10 @@ export default async (interaction, commandData) => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
         await sleep(1000)
         

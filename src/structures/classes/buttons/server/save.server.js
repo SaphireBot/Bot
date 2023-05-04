@@ -33,7 +33,7 @@ export default async (interaction, data, type) => {
         { new: true }
     )
         .then(data => {
-            Database.saveCacheData(data.id, data)
+            Database.saveGuildCache(data.id, data)
             interaction.update({
                 content: `${e.Check} | Muito bem, tudo foi salvo sem nenhum problemas.`,
                 components: [], embeds: []

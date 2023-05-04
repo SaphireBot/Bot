@@ -152,7 +152,7 @@ export default {
                 { $unset: { Stars: 1 } },
                 { upsert: true, new: true }
             )
-                .then(data => Database.saveCacheData(data.id, data))
+                .then(data => Database.saveGuildCache(data.id, data))
 
             return await interaction.reply({
                 content: `${e.Check} | Ok ok, sistema de estrelas desligado.`
@@ -184,7 +184,7 @@ export default {
             { upsert: true, new: true }
         )
             .then(async data => {
-                Database.saveCacheData(data.id, data)
+                Database.saveGuildCache(data.id, data)
                 interaction.reply({
                     content: `${e.Check} | As novas configurações de estrelas foi salva com sucesso.\n⭐ | Reaja com uma estrela em uma mensagem, ao atingir **${limit} reações**, a mensagem será enviada no canal ${channel} para que fique salva.`
                 })

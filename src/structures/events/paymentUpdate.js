@@ -109,7 +109,12 @@ client.on('paymentUpdate', async paymentUpdated => {
             }
         else editData.$inc['Vip.TimeRemaing'] = vipBonus
 
-        return await Database.User.updateOne({ id: metadata.user_id }, editData, { upsert: true })
+        return await Database.User.findOneAndUpdate(
+            { id: metadata.user_id },
+            editData,
+            { upsert: true, new: true }
+        )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
     }
 })

@@ -77,12 +77,14 @@ export default async (interaction, gameData) => {
                 }
             }
         )
+
+        Database.refreshUsersData(players)
         return
     }
 
     async function addReward() {
         if (!value || value < 0) return
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: winnerId },
             {
                 $inc: { Balance: value * 2 },
@@ -95,8 +97,11 @@ export default async (interaction, gameData) => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
+        return
     }
 
 }

@@ -28,7 +28,7 @@ export default async (interaction, rolesId) => {
         { upsert: true, new: true }
     )
         .then(doc => {
-            Database.saveCacheData(doc.id, doc)
+            Database.saveGuildCache(doc.id, doc)
             SpamManager.guildData[guild.id] = doc.Spam
             const embed = message.embeds[0]?.data
             if (embed) {

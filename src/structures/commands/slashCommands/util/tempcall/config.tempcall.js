@@ -21,7 +21,7 @@ export default async (interaction, guildData) => {
             { $unset: { 'TempCall.members': true } },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         return interaction.editReply({
             content: `${e.CheckV} | Ranking de Tempo em Call resetado.`

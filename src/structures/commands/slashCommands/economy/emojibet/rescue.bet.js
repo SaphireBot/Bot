@@ -21,7 +21,7 @@ export default async interaction => {
         })
     }
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: user.id },
         {
             $inc: {
@@ -37,10 +37,9 @@ export default async interaction => {
                 }
             }
         },
-        {
-            upsert: true
-        }
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     await Database.Cache.EmojiBetRescue.delete(user.id)
     const coin = await guild.getCoin()

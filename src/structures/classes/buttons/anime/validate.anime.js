@@ -141,7 +141,7 @@ export default async (interaction, commandData) => {
                 client.animes.push(doc)
                 removeIndication(id, true)
 
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: sendedFor },
                     {
                         $inc: { Balance: 5000 },
@@ -155,8 +155,9 @@ export default async (interaction, commandData) => {
                             }
                         }
                     },
-                    { upsert: true }
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.saveUserCache(doc?.id, doc))
 
                 return await msg.edit({
                     content: null,

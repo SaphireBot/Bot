@@ -27,7 +27,7 @@ client.on('channelDelete', async channel => {
     if (!guildData || !guildData?.LogSystem?.channel) return
     if (channel.id === guildData?.LogSystem?.channel)
         return await Database.Guild.findOneAndUpdate({ id: guild.id }, { $unset: { LogChannel: 1 } }, { new: true })
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
     const logChannel = guildData?.LogSystem?.channel
         ? await guild.channels.fetch(`${guildData?.LogSystem?.channel}`).catch(() => undefined)

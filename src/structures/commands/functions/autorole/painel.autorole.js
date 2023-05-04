@@ -91,7 +91,7 @@ export default async ({ interaction, guildData, Database, client }) => {
             { new: true }
         )
             .then(data => {
-                Database.saveCacheData(data.id, data)
+                Database.saveGuildCache(data.id, data)
                 control.response += `${e.Info} | **${rolesId.length} cargos** foram removidos do autorole por não serem encontrados ou por possuirem permissões administrativas ou por ser um cargo maior que o meu.`
                 return
             })

@@ -73,7 +73,7 @@ export default {
                 ephemeral
             })
 
-        const data = await Database.User.findOne({ id: user.id })
+        const data = await Database.getUser(user.id)
 
         if (!data)
             return await interaction.reply({ content: `${e.DenyX} Nenhum dado foi encontrado.`, ephemeral })
@@ -206,7 +206,7 @@ ${rawData}
                     ephemeral: true
                 })
 
-            return Database.User.deleteOne({ id: commandData.userId })
+            return Database.deleteUser(commandData.userId)
                 .then(async value => {
 
                     if (value.deletedCount == 1)

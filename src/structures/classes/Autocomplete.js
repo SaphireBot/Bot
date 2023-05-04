@@ -324,7 +324,7 @@ export default class Autocomplete extends Base {
 
     async rifaNumero(value) {
 
-        const userData = await this.Database.User.findOne({ id: this.user.id }, 'Balance')
+        const userData = await this.Database.getUser(this.user.id)
         const userBalance = userData?.Balance || 0
 
         if (!userBalance || userBalance < 1000)
@@ -654,7 +654,7 @@ export default class Autocomplete extends Base {
                 { $pull: { Autorole: id } },
                 { new: true }
             )
-                .then(data => Database.saveCacheData(data.id, data))
+                .then(data => Database.saveGuildCache(data.id, data))
             return
         }
 
@@ -901,7 +901,7 @@ export default class Autocomplete extends Base {
     }
 
     async changeLevelBackground(value) {
-        const userData = await this.Database.User.findOne({ id: this.user.id }, 'Walls') || []
+        const userData = await this.Database.getUser(this.user.id)
         const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess') || []
         const wallSetted = userData.Walls?.Set
 
@@ -936,7 +936,7 @@ export default class Autocomplete extends Base {
         const clientData = await this.Database.Client.findOne({ id: this.client.user.id }, 'BackgroundAcess') || []
         if (clientData?.BackgroundAcess?.includes(this.user.id)) return this.respond()
 
-        const userData = await this.Database.User.findOne({ id: this.user.id }, 'Walls') || []
+        const userData = await this.Database.getUser(this.user.id) || {}
         const userBackgrounds = userData.Walls?.Bg || []
         const backgrounds = Object.entries(this.Database.BgLevel || {})
         const walls = backgrounds

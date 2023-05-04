@@ -386,6 +386,7 @@ export default class Quiz {
     async addUsersPoint(usersId = []) {
         if (typeof usersId == 'string') usersId = [usersId]
         await Database.User.updateMany({ id: { $in: usersId } }, { $inc: { "GamingCount.QuizQuestions": 1 } }, { upsert: true })
+        Database.refreshUsersData(usersId)
     }
 
     async next() {

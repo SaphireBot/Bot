@@ -1,7 +1,4 @@
-import {
-    Database,
-    SaphireClient as client
-} from '../../classes/index.js'
+import { Database, SaphireClient as client } from '../../classes/index.js'
 import { Emojis as e } from '../../util/util.js'
 
 client.on('blackjackRefund', async ({ availablePlayers, bet, messageId }, noDelete = false) => {
@@ -11,7 +8,7 @@ client.on('blackjackRefund', async ({ availablePlayers, bet, messageId }, noDele
     if (!noDelete)
         await Database.Cache.Blackjack.delete(messageId)
 
-    if (availablePlayers?.length > 0 && bet > 0)
+    if (availablePlayers?.length > 0 && bet > 0) {
         await Database.User.updateMany(
             { id: { $in: availablePlayers } },
             {
@@ -28,6 +25,7 @@ client.on('blackjackRefund', async ({ availablePlayers, bet, messageId }, noDele
             },
             { upsert: true }
         )
-
+        Database.refreshUsersData(availablePlayers)
+    }
     return
 })

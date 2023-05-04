@@ -72,7 +72,7 @@ export default async ({ interaction, values: keys }) => {
         { $set: toUpdate },
         { upsert: true, new: true }
     ).then(doc => {
-        Database.saveCacheData(doc.id, doc)
+        Database.saveGuildCache(doc.id, doc)
         return doc
     })
 

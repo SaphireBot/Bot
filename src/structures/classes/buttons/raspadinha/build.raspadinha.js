@@ -44,7 +44,12 @@ export default async interaction => {
         components
     })
         .catch(async err => {
-            await Database.User.updateOne({ id: user.id }, { $inc: { Balance: 100 } })
+            await Database.User.findOneAndUpdate(
+                { id: user.id },
+                { $inc: { Balance: 100 } },
+                { upsert: true, new: true }
+            )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
             return await interaction.editReply({
                 content: `${e.Deny} | Não foi possível concluir o ButtonRaspBuilder. O dinheiro foi devolvido.\n${e.bug} | \`${err}\``
             })

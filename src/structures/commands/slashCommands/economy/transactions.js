@@ -26,7 +26,7 @@ export default {
                 ephemeral: true
             })
 
-        const userData = await Database.User.findOne({ id: user?.id }, 'Transactions')
+        const userData = await Database.getUser(user.id)
 
         if (!userData)
             return await interaction.reply({

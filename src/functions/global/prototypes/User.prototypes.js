@@ -24,7 +24,7 @@ User.prototype.getBanner = async function () {
 
 User.prototype.isVip = async function () {
 
-    const userData = await Database.User.findOne({ id: this.id }, 'Vip')
+    const userData = await Database.getUser(this.id)
     if (!userData) return false
 
     if (userData?.Vip?.Permanent) return true
@@ -42,7 +42,7 @@ User.prototype.isMod = async function () {
 
 User.prototype.balance = async function () {
 
-    const userData = await Database.User.findOne({ id: this.id }, 'Balance')
+    const userData = await Database.getUser(this.id)
 
     if (!userData || !userData.Balance) return 0
 
@@ -51,7 +51,7 @@ User.prototype.balance = async function () {
 
 User.prototype.color = async function () {
 
-    const userData = await Database.User.findOne({ id: this.id }, 'Color')
+    const userData = await Database.getUser(this.id)
     if (!userData || !userData?.Color.Perm || !userData?.Color.Set) return client.blue
 
     return client.blue

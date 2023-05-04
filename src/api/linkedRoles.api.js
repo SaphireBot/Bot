@@ -135,7 +135,7 @@ export async function updateMetadata(userId) {
 
     const metadata = {}
     const tokens = await storage.getDiscordTokens(userId);
-    const userData = await Database.User.findOne({ id: userId }, 'Balance Level Likes')
+    const userData = await Database.getUser(userId)
 
     const userAccountData = await fetch(
         `https://discord.com/api/v10/users/${userId}`,

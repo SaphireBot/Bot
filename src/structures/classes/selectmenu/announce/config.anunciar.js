@@ -90,7 +90,7 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
                 { new: true, upsert: true }
             )
                 .then(data => {
-                    Database.saveCacheData(data.id, data)
+                    Database.saveGuildCache(data.id, data)
                     return channelAnunciar({ interaction, guildData: data, toEdit: true })
                 })
                 .catch(async err => {
@@ -201,7 +201,7 @@ export default async ({ interaction, customId = { src: undefined }, values = [],
             { new: true, upsert: true }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 return doc
             })
         return channelAnunciar({ interaction, guildData: resultGuildDatabase, toEdit: false, response })

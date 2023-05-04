@@ -18,7 +18,7 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
 
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     const balance = userData?.Balance || 0
     const { value } = commandData
 
@@ -28,10 +28,12 @@ export default async (interaction, commandData) => {
             ephemeral: true
         })
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: user.id },
-        { $inc: { Balance: -value } }
+        { $inc: { Balance: -value } },
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     await interaction.update({
         content: `${e.Loading} | Beleza, qual é a sua jogada para a aposta global?\n⏱️ | ${time(new Date(Date.now() + 1000 * 30), 'R')}`,
@@ -76,10 +78,12 @@ export default async (interaction, commandData) => {
                 }).catch(() => { })
 
             if (['messageDelete', 'channelDelete'].includes(reason)) {
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: user.id },
-                    { $inc: { Balance: value } }
+                    { $inc: { Balance: value } },
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.saveUserCache(doc?.id, doc))
             }
 
             return

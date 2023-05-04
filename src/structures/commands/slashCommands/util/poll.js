@@ -229,7 +229,7 @@ export default {
             { $push: { Polls: data, $position: 0 } },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         if (endTime > 0 || anonymous) {
             await Database.Cache.Polls.push(`${client.shardId}.${guild.id}`, data)

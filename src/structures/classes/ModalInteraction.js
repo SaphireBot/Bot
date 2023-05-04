@@ -1374,12 +1374,12 @@ export default class ModalInteraction extends Base {
         const newData = await this.Database.User.findOneAndUpdate(
             { id: userId },
             dataMethod.mongoose,
-            {
-                upsert: true,
-                new: true,
-                fields: 'Balance'
-            }
+            { upsert: true, new: true }
         )
+            .then(doc => {
+                this.Database.saveUserCache(doc?.id, doc)
+                return doc
+            })
 
         return await interaction.reply({
             content: `${e.Check} | Você ${dataMethod.response}.\n${e.Info} | Novo valor: **${newData.Balance.currency()} ${moeda}**`
@@ -1389,7 +1389,7 @@ export default class ModalInteraction extends Base {
 
     editProfile = async ({ interaction, fields, user }) => {
 
-        let data = await this.Database.User.findOne({ id: user.id }, 'Perfil')
+        let data = await this.Database.getUser(user.id)
         let title = fields.getTextInputValue('profileTitle') || ''
         let job = fields.getTextInputValue('profileJob') || ''
         let status = fields.getTextInputValue('profileStatus') || ''
@@ -1433,20 +1433,14 @@ export default class ModalInteraction extends Base {
                 ephemeral: true
             })
 
-        return Database.User.updateOne(
+        return Database.User.findOneAndUpdate(
             { id: user.id },
             { $set: saveData },
-            { upsert: true }
+            { upsert: true, new: true }
         )
-            .then(async result => {
-
-                if (result.modifiedCount === 0)
-                    return await interaction.reply({
-                        content: `${e.Deny} | A alteração do seu perfil não foi efetuada com sucesso.`,
-                        ephemeral: true
-                    })
-
-                return await interaction.reply({
+            .then(doc => {
+                Database.saveUserCache(doc?.id, doc)
+                return interaction.reply({
                     content: msg + '\n' + response.join('\n'),
                     ephemeral: true
                 })

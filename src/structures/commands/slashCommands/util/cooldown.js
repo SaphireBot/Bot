@@ -29,7 +29,7 @@ export default {
             fetchReply: true
         })
 
-        const data = await Database.User.findOne({ id: user.id }, 'Timeouts Vip')
+        const data = await Database.getUser(user.id)
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'Timeouts')
         const color = data?.Color?.Set || client.blue
         const timeouts = data?.Timeouts

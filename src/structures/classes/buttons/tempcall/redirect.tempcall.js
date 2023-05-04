@@ -54,7 +54,7 @@ export default async (interaction, commandData) => {
             { new: true, upsert: true, fields: "TempCall" }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 return doc
             })
 
@@ -123,7 +123,7 @@ export default async (interaction, commandData) => {
             { new: true, upsert: true, fields: 'TempCall' }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 return doc
             })
         const data = {
@@ -195,7 +195,7 @@ export default async (interaction, commandData) => {
             { new: true, upsert: true, fields: "TempCall" }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 return doc
             })
 

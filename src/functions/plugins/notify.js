@@ -11,7 +11,7 @@ export default async (logChannelId, type, msg) => {
             { $unset: { "LogSystem.channel": 1 } },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
     return canal?.send(`🛰️ | **Global System Notification** | ${type}\n \n${msg}`).catch(() => { })
 }

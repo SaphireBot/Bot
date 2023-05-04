@@ -50,7 +50,7 @@ export default async userId => {
     async function giveRewards() {
         Experience.add(userId, 1000)
 
-        return await Database.User.updateOne(
+        return await Database.User.findOneAndUpdate(
             { id: userId },
             {
                 $inc: { Balance: 5000 },
@@ -64,8 +64,9 @@ export default async userId => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
             .catch(() => { })
 
     }

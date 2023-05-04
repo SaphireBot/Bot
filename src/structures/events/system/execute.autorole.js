@@ -82,7 +82,7 @@ export default async ({ member, guildData }) => {
                 { $pullAll: { Autorole: rolesToRemove } },
                 { new: true }
             )
-                .then(data => Database.saveCacheData(data.id, data))
+                .then(data => Database.saveGuildCache(data.id, data))
             return client.pushMessage({
                 channelId: guildData?.LogSystem?.channel,
                 method: 'post',
@@ -100,7 +100,7 @@ export default async ({ member, guildData }) => {
                 { $unset: { Autorole: true } },
                 { new: true }
             )
-                .then(data => Database.saveCacheData(data.id, data))
+                .then(data => Database.saveGuildCache(data.id, data))
         }
     }
 }

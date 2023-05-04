@@ -1,4 +1,5 @@
 import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
+import { Database, SaphireClient as client } from "../../../../classes/index.js"
 import removeBet from "./emojibet/remove.bet.js"
 import rescueBet from "./emojibet/rescue.bet.js"
 import viewEmoji from "./emojibet/view.emoji.js"
@@ -112,7 +113,7 @@ export default {
     helpData: {
         description: 'Luta de emojis, legal né?'
     },
-    async execute({ interaction, Database, e, client, guildData }) {
+    async execute({ interaction, e, guildData }) {
 
         const { options, user } = interaction
 
@@ -130,7 +131,7 @@ export default {
         const buttons = getButtons()
         const participants = []
         const value = parseInt(options.getInteger('value'))
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+        const userData = await Database.getUser(user.id)
         const userBalance = userData?.Balance || 0
         const moeda = guildData?.Moeda || `${e.Coin} Safiras`
         const alreadyWarned = []
@@ -201,7 +202,7 @@ export default {
                     })
                 }
 
-                const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+                const userData = await Database.getUser(user.id)
                 const authorBalance = userData?.Balance || 0
                 if (!authorBalance || authorBalance < value)
                     return await int.reply({
@@ -439,7 +440,7 @@ export default {
 
                 const cachedValue = await Database.Cache.EmojiBetRescue.get(userId) || 0
 
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: userId },
                     {
                         $inc: {
@@ -455,16 +456,15 @@ export default {
                             }
                         }
                     },
-                    {
-                        upsert: true
-                    }
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.saveUserCache(doc?.id, doc))
 
                 await Database.Cache.EmojiBetRescue.delete(userId)
                 return
             }
 
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: userId },
                 {
                     $inc: {
@@ -480,10 +480,9 @@ export default {
                         }
                     }
                 },
-                {
-                    upsert: true
-                }
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
             await Database.Cache.EmojiBetRescue.add(userId, value)
             total += value

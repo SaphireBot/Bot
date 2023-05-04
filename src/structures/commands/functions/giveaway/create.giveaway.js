@@ -435,7 +435,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             { $push: { Giveaways: giveawayData } },
             { upsert: true, new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         GiveawayManager.selectGiveaways([giveawayData])
 

@@ -21,7 +21,7 @@ export default async (interaction, option, user) => {
     if (option === 'delete') return deleteBalance()
     if (option === 'report') return await interaction.showModal(Modals.reportBalance(author))
 
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     const userMoney = userData?.Balance || 0
 
     return await interaction.showModal(Modals.BalanceModal(option, user, userMoney))
@@ -61,7 +61,7 @@ export default async (interaction, option, user) => {
 
                 if (customId === 'deny') return collector.stop()
 
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: user.id },
                     {
                         $unset: {
@@ -76,8 +76,10 @@ export default async (interaction, option, user) => {
                                 $position: 0
                             }
                         }
-                    }
+                    },
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.saveUserCache(doc?.id, doc))
 
                 return await interaction.editReply({
                     content: `${e.Check} | O dinheiro de ${user.tag} \`${user.id}\` foi deletado com sucesso.`,

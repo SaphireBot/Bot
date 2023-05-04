@@ -409,10 +409,11 @@ export default class AnimeQuizManager {
     }
 
     async savePoint(userId) {
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: userId },
             { $inc: { 'GamingCount.QuizAnime': 1 } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 }

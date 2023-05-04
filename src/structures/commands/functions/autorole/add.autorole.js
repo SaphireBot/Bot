@@ -99,7 +99,7 @@ export default async ({ interaction, guildData, client }) => {
             { new: true, upsert: true }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 for (let roleId of doc.Autorole)
                     if (!rolesFromDB.includes(roleId))
                         rolesFromDB.push(roleId)
@@ -140,7 +140,7 @@ export default async ({ interaction, guildData, client }) => {
             { new: true, upsert: true }
         )
             .then(doc => {
-                Database.saveCacheData(doc.id, doc)
+                Database.saveGuildCache(doc.id, doc)
                 return rolesFromDB.push(...doc.Autorole)
             })
             .catch(err => {

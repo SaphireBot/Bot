@@ -60,6 +60,9 @@ export default new class Experience {
 
         await Database.User.collection.bulkWrite(dataToUpdate, { ordered: true }, () => { })
 
+        for (const data of usersData)
+            Database.saveUserCache(data?.id, data)
+
         return this.users = []
     }
 

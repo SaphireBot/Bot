@@ -52,7 +52,7 @@ export default {
         if (user.bot)
             return interaction.reply({ content: `${e.Deny} | Nada de bots.`, ephemeral: true })
 
-        const authorData = await Database.User.findOne({ id: author.id }, 'id Balance')
+        const authorData = await Database.getUser(author.id)
         const money = authorData?.Balance || 0
 
         if (money <= 0)

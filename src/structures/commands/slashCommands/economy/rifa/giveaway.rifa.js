@@ -24,7 +24,7 @@ export default async ({ Rifa }) => {
 
     async function addAndResetPrize() {
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: winner.id },
             {
                 $inc: {
@@ -40,8 +40,9 @@ export default async ({ Rifa }) => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
         await Database.Economy.updateOne(
             { id: client.user.id },

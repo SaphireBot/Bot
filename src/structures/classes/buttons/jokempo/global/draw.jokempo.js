@@ -53,6 +53,8 @@ export default async (interaction, gameData) => {
         }
     )
 
+    Database.refreshUsersData(usersId)
+
     const webhookUrl = await webhookJokempo(gameData.channelOrigin)
 
     if (webhookUrl)
@@ -61,7 +63,7 @@ export default async (interaction, gameData) => {
                 content: `${e.Notification} | <@${gameData.creatorId}>, tenho resultados da sua **Aposta Global no Jokempo** \`${gameData.id || "0x00x"}\`.\n🏳️ | Os dois jogaram **${emoji} X ${emoji}** e resultou em um **empate**.\n⚔️ | Você jogou contra **${user.tag} \`${user.id}\`** do servidor **${guild.name} \`${guild.id}\`**\n${e.Tax} | O valor da aposta foi de ${value} e você recebeu ${halfValue} pelo **empate**.`,
                 username: 'Saphire Jokempo Global System',
                 avatarURL: Config.WebhookJokempoIcon
-            })  
+            })
             .catch(err => console.log(err))
 
     return;

@@ -156,7 +156,7 @@ export default new class PollManager {
             { $pull: { Polls: { MessageID: messageId } } },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
 
         await Database.Cache.Polls.pull(`${client.shardId}.${guildId}`, p => p?.MessageID === messageId)
         return

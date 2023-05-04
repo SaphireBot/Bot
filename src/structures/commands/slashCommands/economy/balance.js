@@ -38,7 +38,7 @@ export default {
                 ephemeral: hide
             })
 
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance Perfil')
+        const userData = await Database.getUser(user.id)
 
         if (!userData)
             return await interaction.reply({

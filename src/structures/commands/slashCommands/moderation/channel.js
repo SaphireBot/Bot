@@ -167,7 +167,7 @@ export default {
                 { $set: { 'announce.crosspost': !guildData?.announce?.crosspost } },
                 { new: true }
             )
-                .then(data => Database.saveCacheData(data.id, data))
+                .then(data => Database.saveGuildCache(data.id, data))
 
             return await interaction.reply({
                 content: `${e.Check} | ${!guildData?.announce?.crosspost

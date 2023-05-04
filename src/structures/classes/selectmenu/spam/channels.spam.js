@@ -88,7 +88,7 @@ export default async interaction => {
             { $pullAll: channelsToRemove },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
         return
     }
 }

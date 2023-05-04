@@ -8,7 +8,7 @@ export default async (interaction) => {
     })
 
     const { user } = interaction
-    const authorData = await Database.User.findOne({ id: user.id }, 'id Perfil.Parcas Perfil.Family')
+    const authorData = await Database.getUser(user.id)
     const parcas = authorData?.Perfil?.Parcas || []
     const family = authorData?.Perfil?.Family || []
     const queryId = [...parcas, ...family]
@@ -18,7 +18,7 @@ export default async (interaction) => {
             content: `${e.Deny} | Não há nada no seu perfil para ser atualizado.`
         }).catch(() => { })
 
-    const data = await Database.User.find({ id: { $in: queryId } }, 'id Perfil.Parcas Perfil.Family')
+    const data = await Database.getUsers(queryId)
 
     if (parcas.length > 0)
         for (const id of parcas) {

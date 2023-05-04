@@ -16,7 +16,7 @@ export default async (interaction, guildData) => {
             ephemeral: true
         })
 
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     const userBalance = userData?.Balance || 0
     const moeda = guildData?.Moeda || `${e.Coin} Safiras`
 
@@ -77,7 +77,7 @@ export default async (interaction, guildData) => {
 
     async function addPrize() {
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: user.id },
             {
                 $inc: {
@@ -93,8 +93,9 @@ export default async (interaction, guildData) => {
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
         return
     }

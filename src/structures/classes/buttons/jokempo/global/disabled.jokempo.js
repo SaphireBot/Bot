@@ -51,7 +51,7 @@ export default async (interaction, customData) => {
             webhookUrl: jokempo.webhookUrl
         }).save()
 
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: jokempo.userId },
             {
                 $inc: { Balance: jokempo.value },
@@ -64,7 +64,9 @@ export default async (interaction, customData) => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 }

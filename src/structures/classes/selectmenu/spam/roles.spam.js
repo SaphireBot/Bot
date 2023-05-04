@@ -81,6 +81,6 @@ export default async interaction => {
             { $pullAll: rolesToIgnore },
             { new: true }
         )
-            .then(data => Database.saveCacheData(data.id, data))
+            .then(data => Database.saveGuildCache(data.id, data))
     }
 }

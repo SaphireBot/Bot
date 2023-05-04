@@ -6,7 +6,7 @@ export default async ({ interaction, e, client, Moeda: moeda }) => {
 
     const { user } = interaction
 
-    const userData = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userData = await Database.getUser(user.id)
     user.balance = userData?.Balance || 0
     const value = interaction.options.getInteger('value')
 

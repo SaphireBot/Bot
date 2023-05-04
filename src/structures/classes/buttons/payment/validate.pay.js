@@ -14,7 +14,7 @@ export default async (interaction, { confirmated, value }) => {
 
     Database.add(userId, value, `${e.gain} Recebeu um pagamento de ${value} Safiras de ${author.tag} \`${author.id}\``)
 
-    await Database.User.updateOne(
+    await Database.User.findOneAndUpdate(
         { id: author.id },
         {
             Transactions: {
@@ -25,8 +25,10 @@ export default async (interaction, { confirmated, value }) => {
                     }],
                 $position: 0
             }
-        }
+        },
+        { upsert: true, new: true }
     )
+        .then(doc => Database.saveUserCache(doc?.id, doc))
 
     await Database.Cache.Pay.delete(`${author.id}.${message.id}`)
     return await interaction.update({

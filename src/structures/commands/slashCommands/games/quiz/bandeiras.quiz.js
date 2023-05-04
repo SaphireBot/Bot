@@ -52,7 +52,7 @@ export default async interaction => {
 
     if (option === 'points') {
 
-        const userData = await Database.User.findOne({ id: user.id }, 'GamingCount.FlagCount')
+        const userData = await Database.getUser(user.id)
         const points = userData?.GamingCount?.FlagCount || 0
         return await interaction.reply({
             content: `${e.Check} | Você tem exatamente **${points} acertos** no Bandeira Quiz.`

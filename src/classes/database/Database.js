@@ -28,8 +28,9 @@ export default new class Database extends Models {
             Pandinho: "369810325022834688",
             Gorniaky: "395669252121821227",
             Mari: "704023863314350081"
-        },
-            this.guildData = new Collection()
+        }
+        this.guildData = new Collection()
+        this.userData = new Collection()
     }
 
     get BgLevel() {
@@ -83,72 +84,67 @@ export default new class Database extends Models {
         return
     }
 
-    async add(userId, amount, message) {
+    async add(userId, amount, message = undefined) {
 
-        if (!userId || isNaN(amount)) return
+        if (!userId || !amount || isNaN(amount)) return
+
+        const data = {
+            $inc: { Balance: amount }
+        }
 
         if (message)
-            return await this.User.updateOne(
-                { id: userId },
-                {
-                    $inc: {
-                        Balance: amount
-                    },
-                    $push: {
-                        Transactions: {
-                            $each: [{
-                                time: `${Date.format(0, true)}`,
-                                data: message
-                            }],
-                            $position: 0
-                        }
-                    }
-                },
-                { upsert: true }
-            )
+            data.$push = {
+                Transactions: {
+                    $each: [{
+                        time: `${Date.format(0, true)}`,
+                        data: message
+                    }],
+                    $position: 0
+                }
+            }
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
-            { $inc: { Balance: amount } },
-            { upsert: true }
+            data,
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     subtract = async (userId, amount, message = undefined) => {
 
-        if (!userId || isNaN(amount)) return
+        if (!userId || !amount || isNaN(amount)) return
+
+        const data = {
+            $inc: { Balance: -amount }
+        }
 
         if (message)
-            return await this.User.updateOne(
-                { id: userId },
-                {
-                    $inc: { Balance: -amount },
-                    $push: {
-                        Transactions: {
-                            $each: [{
-                                time: `${Date.format(0, true)}`,
-                                data: message
-                            }],
-                            $position: 0
-                        }
-                    }
-                },
-                { upsert: true }
-            )
+            data.$push = {
+                Transactions: {
+                    $each: [{
+                        time: `${Date.format(0, true)}`,
+                        data: message
+                    }],
+                    $position: 0
+                }
+            }
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
-            { $inc: { Balance: -amount } },
-            { upsert: true }
+            data,
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     SetTimeout = async (userId, TimeoutRoute) => {
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { [TimeoutRoute]: Date.now() },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     pushUsersLotery = async (usersArray, clientId) => {
@@ -162,55 +158,60 @@ export default new class Database extends Models {
 
         if (!userId || !ItemDB || isNaN(amount)) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { $inc: { [ItemDB]: amount } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     addGamingPoint = async (userId, type, value = 1) => {
 
         if (!userId || !type || isNaN(value)) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { $inc: { [`GamingCount.${type}`]: value } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     subtractItem = async (userId, ItemDB, amount) => {
 
         if (!userId || !ItemDB || isNaN(amount)) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { $inc: { [ItemDB]: -amount } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     updateUserData = async (userId, keyData, valueData) => {
 
         if (!userId || !keyData || !valueData) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { [keyData]: valueData },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     pushUserData = async (userId, keyData, dataToPush) => {
 
         if (!userId || !keyData || !dataToPush) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { $push: { [keyData]: { $each: [dataToPush] } } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
 
     }
 
@@ -218,16 +219,23 @@ export default new class Database extends Models {
 
         if (!userId || !keyData || !dataToPush) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             { $pull: { [keyData]: dataToPush } },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
-    saveCacheData(guildId, data) {
+    saveGuildCache(guildId, data) {
         if (!guildId || !data) return
         this.guildData.set(guildId, data)
+        return
+    }
+
+    saveUserCache(userId, data) {
+        if (!userId || !data) return
+        this.userData.set(userId, data)
         return
     }
 
@@ -253,14 +261,14 @@ export default new class Database extends Models {
             { $pull: { Giveaways: { MessageID } } },
             { new: true }
         )
-            .then(data => this.saveCacheData(data.id, data))
+            .then(data => this.saveGuildCache(data.id, data))
 
         async function deleteAll(GuildModel) {
             GiveawayManager.giveaways = GiveawayManager.giveaways.filter(gw => gw?.GuildId != GuildId)
             GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.GuildId != GuildId)
             GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.GuildId != GuildId)
             return await GuildModel.findOneAndUpdate({ id: GuildId }, { $unset: { Giveaways: 1 } }, { new: true })
-                .then(data => this.saveCacheData(data.id, data))
+                .then(data => this.saveGuildCache(data.id, data))
         }
 
         async function deleteAllGiveawaysIntoThisChannel(GuildModel) {
@@ -268,28 +276,32 @@ export default new class Database extends Models {
             GiveawayManager.awaiting = GiveawayManager.awaiting.filter(gw => gw?.channelId != byChannelId)
             GiveawayManager.toDelete = GiveawayManager.toDelete.filter(gw => gw?.channelId != byChannelId)
             return await GuildModel.findOneAndUpdate({ id: GuildId }, { $pull: { Giveaways: { ChannelId: byChannelId } } }, { new: true })
-                .then(data => this.saveCacheData(data.id, data))
+                .then(data => this.saveGuildCache(data.id, data))
         }
     }
 
     /**
-     * @user Discord User
-     * @filter Mongoose Filter findOne Query
-     * @returns Database's User Data or null if not found
-     * @example await Database.getUser(interaction.user, 'Balance Transactions')
+     * @param { DiscordUserID } userId
      */
-    getUser = async ({ user, filter = '' }) => {
+    async getUser(userId) {
 
-        if (!user || user.bot) return null
+        if (!userId) return null
 
-        const userData = await this.User.findOne({ id: user.id }, filter)
+        let data = this.userData.get(userId)
 
-        if (!userData) {
-            this.registerUser(user)
-            return null
+        if (!data) {
+            data = await this.User.findOne({ id: userId })
+
+            if (!data) {
+                const user = await client.users.fetch(userId).catch(() => null)
+                if (!user || user?.bot) return null
+                data = await this.registerUser(user)
+                if (!data) return null
+                this.userData.set(userId, data)
+            }
         }
 
-        return userData
+        return data
     }
 
     async getGuild(guildId) {
@@ -322,6 +334,7 @@ export default new class Database extends Models {
     }
 
     async deleteUser(userId) {
+        delete this.userData.delete(userId)
         return await this.User.deleteOne({ id: userId })
     }
 
@@ -341,10 +354,12 @@ export default new class Database extends Models {
 
         if (!userId || !key) return
 
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
-            { $unset: { [key]: 1 } }
+            { $unset: { [key]: 1 } },
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
     guildDelete = async (guildId, key) => {
@@ -356,48 +371,70 @@ export default new class Database extends Models {
             { $unset: { [key]: 1 } },
             { new: true }
         )
-            .then(data => this.saveCacheData(data.id, data))
+            .then(data => this.saveGuildCache(data.id, data))
     }
 
     PushTransaction = async (userId, Frase) => {
 
         if (!userId || !Frase) return
 
-        const userData = await this.User.findOne({ id: userId }, 'Balance')
-        const balance = userData?.Balance || 0
-
-        return await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: userId },
             {
                 $push: {
                     Transactions: {
                         $each: [{
-                            time: `${Date.format(0, true)} - ${balance}`,
+                            time: `${Date.format(0, true)}`,
                             data: `${Frase}`
                         }],
                         $position: 0
                     }
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
+            .then(doc => this.saveUserCache(doc?.id, doc))
     }
 
-    getUsers = async (usersIdInArray, filter) => {
-        const data = await this.User.find({ id: { $in: usersIdInArray } }, filter)
+    async refreshUsersData(usersId) {
+        if (!usersId || !usersId.length) return
+        const usersData = await this.User.find({ id: { $in: usersId } })
+        for (const data of usersData) this.saveUserCache(data?.id, data)
+        return
+    }
+
+    async getUsers(usersIdInArray) {
+
+        if (!usersIdInArray || !usersIdInArray.length) return []
+
+        let data = []
+
+        for (const userId of usersIdInArray) {
+            const cached = this.userData.get(userId)
+            if (cached) data.push(data)
+        }
+
+        if (data.length == usersIdInArray.length)
+            return data
+
+        data = await this.User.find({ id: { $in: usersIdInArray } })
+
+        for (const d of data)
+            this.userData.set(d?.id, d)
+
         return data
     }
 
-    registerUser = async (user) => {
+    async registerUser(user) {
 
-        if (!user || user?.bot) return
+        if (!user || !user?.id || user?.bot) return
 
-        const u = await this.User.exists({ id: user.id })
+        const u = this.userData.has(user.id) || await this.User.exists({ id: user.id })
         if (u || u?.id === user.id) return
 
         new this.User({ id: user.id }).save()
 
-        await this.User.updateOne(
+        return await this.User.findOneAndUpdate(
             { id: user.id },
             {
                 $unset: {
@@ -406,9 +443,12 @@ export default new class Database extends Models {
                     Transactions: 1
                 }
             },
-            { upsert: true }
+            { upsert: true, new: true }
         )
-
+            .then(doc => {
+                this.saveUserCache(user.id, doc)
+                return doc
+            })
         return
     }
 
@@ -436,7 +476,7 @@ export default new class Database extends Models {
             },
             { upsert: true, new: true }
         )
-            .then(data => this.saveCacheData(data.id, data))
+            .then(data => this.saveGuildCache(data.id, data))
 
         return;
     }

@@ -21,7 +21,7 @@ export default async interaction => {
     const selectMenu = { type: 1, components: [{ type: 3, custom_id: 'jkp', placeholder: 'Escolher Uma Aposta Global', options: [] }] }
     const MoedaCustom = await guild.getCoin()
     const jokempos = await Database.Jokempo.find() || []
-    const userBalance = await Database.User.findOne({ id: user.id }, 'Balance')
+    const userBalance = await Database.getUser(user.id)
     const balance = userBalance?.Balance || 0
 
     for (const value of JokempoValues) {

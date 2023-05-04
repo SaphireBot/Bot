@@ -1,3 +1,4 @@
+import { Database, SaphireClient as client } from "../../../../classes/index.js"
 import { Colors } from "../../../../util/Constants.js"
 
 export default {
@@ -26,11 +27,11 @@ export default {
     helpData: {
         description: 'Ao quebrar o porquinho, você ganha todas as moedas dele'
     },
-    async execute({ interaction, client, clientData, e, Database }) {
+    async execute({ interaction, clientData, e }) {
 
         const { options, user, guild } = interaction
         const option = options.getString('options')
-        const authorData = await Database.User.findOne({ id: user.id }, 'Timeouts Balance')
+        const authorData = await Database.getUser(user.id)
         const porquinho = clientData?.Porquinho
         const PorquinhoMoney = porquinho?.Money || 0
         const LastWinner = porquinho?.LastWinner || 'Ninguém por enquanto'
@@ -83,7 +84,7 @@ export default {
 
         async function lose() {
 
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: user.id },
                 {
                     $set: { 'Timeouts.Porquinho': Date.now() },
@@ -98,10 +99,9 @@ export default {
                         }
                     }
                 },
-                {
-                    upsert: true
-                }
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
             return await interaction.reply({
                 content: `${e.Deny} | Não foi dessa vez! Veja o status: \`/pig options:Ver o status atual do pig\`\n-1000 ${moeda}!`
@@ -110,7 +110,7 @@ export default {
 
         async function PigBroken() {
 
-            await Database.User.updateOne(
+            await Database.User.findOneAndUpdate(
                 { id: user.id },
                 {
                     $set: { 'Timeouts.Porquinho': Date.now() },
@@ -125,10 +125,9 @@ export default {
                         }
                     }
                 },
-                {
-                    upsert: true
-                }
+                { upsert: true, new: true }
             )
+                .then(doc => Database.saveUserCache(doc?.id, doc))
 
             await interaction.reply({
                 content: `${e.Check} | ${user} quebrou o porquinho e conseguiu +${PorquinhoMoney} ${moeda}`

@@ -78,7 +78,8 @@ async function local(SlashCommand) {
             ephemeral: true
         })
 
-    const usersData = await Database.User.find({ id: { $in: [user.id, opponent.id] } }, 'Balance id')
+    // const usersData = await Database.User.find({ id: { $in: [user.id, opponent.id] } }, 'Balance id')
+    const usersData = await Database.getUsers([user.id, opponent.id])
     const userBalance = usersData.find(data => data.id == user.id)?.Balance || 0
     const opponentBalance = usersData.find(data => data.id == opponent.id)?.Balance || 0
     const MoedaCustom = await guild.getCoin()
@@ -119,7 +120,7 @@ async function local(SlashCommand) {
         .then(async message => {
 
             if (value > 0)
-                await Database.User.updateOne(
+                await Database.User.findOneAndUpdate(
                     { id: user.id },
                     {
                         $inc: { Balance: -value },
@@ -132,9 +133,10 @@ async function local(SlashCommand) {
                                 $position: 0
                             }
                         }
-                    }
-
+                    },
+                    { upsert: true, new: true }
                 )
+                    .then(doc => Database.userData.set(doc?.id, doc))
 
             Database.Cache.Jokempo.set(
                 message.id,

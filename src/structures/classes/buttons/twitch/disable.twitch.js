@@ -31,7 +31,7 @@ export default async (interaction, commandData) => {
         { new: true }
     )
         .then(data => {
-            Database.saveCacheData(data.id, data)
+            Database.saveGuildCache(data.id, data)
             interaction.update({
                 content: `${e.Check} | Prontinho! Não vou mais notificar nada sobre o/a streamer **${streamer}**.`,
                 components: []

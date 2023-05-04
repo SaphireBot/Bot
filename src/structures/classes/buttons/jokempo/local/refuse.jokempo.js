@@ -24,7 +24,7 @@ export default async interaction => {
         })
 
     if (gameData.value > 0)
-        await Database.User.updateOne(
+        await Database.User.findOneAndUpdate(
             { id: gameData.players[0] },
             {
                 $inc: {
@@ -39,8 +39,10 @@ export default async interaction => {
                         $position: 0
                     }
                 }
-            }
+            },
+            { upsert: true, new: true }
         )
+            .then(doc => Database.saveUserCache(doc?.id, doc))
 
     Database.Cache.Jokempo.delete(message.id)
     return interaction.update({

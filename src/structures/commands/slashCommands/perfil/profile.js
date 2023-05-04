@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import { Emojis as e } from '../../../../util/util.js'
+import { Database } from '../../../../classes/index.js'
 import Modals from '../../../classes/Modals.js'
 import refreshProfile from './perfil/refresh.profile.js'
 import signProfile from './perfil/sign.profile.js'
@@ -52,7 +53,7 @@ export default {
         permissions: [],
         fields: []
     },
-    async execute({ interaction, client, Database, Moeda, clientData, refresh, guildData }) {
+    async execute({ interaction, client, Moeda, clientData, refresh, guildData }) {
 
         const { options, user: author, channel } = interaction
         const query = refresh ? null : options.getString('options')
@@ -117,7 +118,7 @@ export default {
                 ephemeral: true
             })
 
-        const data = await Database.User.findOne({ id: user.id })
+        const data = await Database.getUser(user.id)
 
         if (!data) {
             const res = {
@@ -162,6 +163,7 @@ export default {
                         { id: { $in: [user.id, data.Marry?.Conjugate] } },
                         { $unset: { 'Perfil.Marry': 1 } }
                     )
+                    Database.refreshUsersData([user.id, data.Marry?.Conjugate])
 
                     channel.send(`${e.Database} | DATABASE | Eu não achei o usuário setado como seu cônjuge. Efetuei a separação.`)
                     return `${e.DenyX} Usuário deletado`
@@ -357,7 +359,7 @@ export default {
 
         async function showModal() {
 
-            const data = await Database.User.findOne({ id: author.id }, 'Perfil')
+            const data = await Database.getUser(author.id)
 
             if (!data) {
                 await Database.registerUser(author)

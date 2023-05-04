@@ -1,6 +1,7 @@
-import rankCard from './level/build.level.js'
 import { HexColors, ColorsTranslate, Permissions } from '../../../../util/Constants.js'
+import { Database, SaphireClient as client } from '../../../../classes/index.js'
 import buyBackground from './level/buy.level.js'
+import rankCard from './level/build.level.js'
 
 export default {
     name: 'level',
@@ -45,7 +46,7 @@ export default {
             autocomplete: true
         }
     ],
-    async execute({ interaction, client, Database, clientData, e }) {
+    async execute({ interaction, clientData, e }) {
 
         const { BgLevel: LevelWallpapers } = Database
         const { options, user: author, guild } = interaction
@@ -68,7 +69,7 @@ export default {
         const bgCode = options.getString('buy_background')
         if (bgCode) return buyBackground({ interaction, code: bgCode, clientData })
 
-        const userData = await Database.User.findOne({ id: user.id }, 'Balance Walls Level Xp Color.Set')
+        const userData = await Database.getUser(user.id)
         const data = {}
 
         if (showList) return bgAcess()
@@ -195,23 +196,13 @@ export default {
                     ephemeral: true
                 })
 
-            return await Database.User.updateOne(
+            return await Database.User.findOneAndUpdate(
                 { id: user.id },
                 { $set: { "Color.Set": color } },
-                {
-                    new: true,
-                    upsert: true
-                }
+                { new: true, upsert: true }
             )
                 .then(async result => {
-
-                    const { modifiedCount } = result
-
-                    if (modifiedCount === 0)
-                        return await interaction.reply({
-                            content: `${e.Deny} | Esta cor já está configurada no perfil.`,
-                            ephemeral: true
-                        })
+                    Database.saveUserCache(result?.id, result)
 
                     return await interaction.reply({
                         content: `${e.Check} | A cor \`${ColorsTranslate[colorName]}\` foi definida com sucesso no seu perfil.`
