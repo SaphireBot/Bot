@@ -166,44 +166,34 @@ export default {
                     content: `${e.Deny} | Não foi possível criar a webhook necessária.`
                 })
 
-            return Database.Guild.updateOne(
+            return Database.Guild.findOneAndUpdate(
                 { id: guild.id },
                 {
                     $set: {
                         "LogSystem.channel": configChannel.id,
                         "LogSystem.webhookUrl": webhook.url
                     }
-                }
+                },
+                { upsert: true, new: true }
             )
-                .then(async result => {
+                .then(data => {
 
-                    if (result.modifiedCount > 0) {
-                        const data = Database.guildData.get(guild.id)
-                        if (data) {
-                            data["LogSystem.channel"] = configChannel.id
-                            data["LogSystem.webhookUrl"] = webhook.url
-                            Database.guildData.set(guild.id, data)
+                    Database.saveGuildCache(data?.id, data)
+                    notify(configChannel.id, 'Log System Enabled', `${user} \`${user.id}\` ativou o sistema de logs.`)
+
+                    client.sendWebhook(
+                        webhook.url,
+                        {
+                            username: "Global System Notification | Central Database",
+                            avatarURL: process.env.WEBHOOK_GSN_AVATAR,
+                            content: `${user} \`${user.id}\`, este canal foi registrado e aceito com sucesso no Sistema Global de Notificações da ${client.user.username}.\nTodos os recursos e informações que ligam este servidor ou quaisquer membros com a ${client.user.username} será notificado por está Webhook neste canal.\n \n*Atenciosamente: Equipe Administrativa de Desenvolvimento do Projeto Saphire.*`
                         }
-                        notify(configChannel.id, 'Log System Enabled', `${user} \`${user.id}\` ativou o sistema de logs.`)
+                    )
 
-                        client.sendWebhook(
-                            webhook.url,
-                            {
-                                username: "Global System Notification | Central Database",
-                                avatarURL: process.env.WEBHOOK_GSN_AVATAR,
-                                content: `${user} \`${user.id}\`, este canal foi registrado e aceito com sucesso no Sistema Global de Notificações da ${client.user.username}.\nTodos os recursos e informações que ligam este servidor ou quaisquer membros com a ${client.user.username} será notificado por está Webhook neste canal.\n \n*Atenciosamente: Equipe Administrativa de Desenvolvimento do Projeto Saphire.*`
-                            }
-                        )
-
-                        return await interaction.reply({
-                            content: `${e.Check} | O canal ${configChannel} foi configurado com sucesso como o canal pai do sistema GSN neste servidor.\n${e.Info} | Com um canal configurado, você pode usar o comando </logs:${commandId}> para configurar quais logs você quer receber.`
-                        })
-                    }
-
-                    return await interaction.reply({
-                        content: `${e.Warn} | Não foi possível configurar este canal no banco de dados.`,
-                        ephemeral: true
+                    return interaction.reply({
+                        content: `${e.Check} | O canal ${configChannel} foi configurado com sucesso como o canal pai do sistema GSN neste servidor.\n${e.Info} | Com um canal configurado, você pode usar o comando </logs:${commandId}> para configurar quais logs você quer receber.`
                     })
+
                 })
                 .catch(async err => await interaction.reply({
                     content: `${e.Warn} | Não foi possível configurar este canal no banco de dados.\n${e.bug} | \`${err}\``

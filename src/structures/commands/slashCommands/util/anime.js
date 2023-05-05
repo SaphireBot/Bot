@@ -49,25 +49,25 @@ export default {
                 }
             ]
         },
-        {
-            name: 'wallpaper',
-            type: ApplicationCommandOptionType.Subcommand,
-            description: '[util] Olhe os melhores wallpapers de animes aqui',
-            options: [
-                {
-                    name: 'search',
-                    description: 'Pesquise por um wallpaper',
-                    type: ApplicationCommandOptionType.String,
-                    autocomplete: true
-                },
-                {
-                    name: 'indicate',
-                    description: 'Indique um anime para a Saphire\'s Team adicionar ao pacote.',
-                    max_length: '200',
-                    type: ApplicationCommandOptionType.String
-                }
-            ]
-        },
+        // {
+        //     name: 'wallpaper',
+        //     type: ApplicationCommandOptionType.Subcommand,
+        //     description: '[util] Olhe os melhores wallpapers de animes aqui',
+        //     options: [
+        //         {
+        //             name: 'search',
+        //             description: 'Pesquise por um wallpaper',
+        //             type: ApplicationCommandOptionType.String,
+        //             autocomplete: true
+        //         },
+        //         {
+        //             name: 'indicate',
+        //             description: 'Indique um anime para a Saphire\'s Team adicionar ao pacote.',
+        //             max_length: '200',
+        //             type: ApplicationCommandOptionType.String
+        //         }
+        //     ]
+        // },
         {
             name: 'indications',
             type: ApplicationCommandOptionType.Subcommand,
