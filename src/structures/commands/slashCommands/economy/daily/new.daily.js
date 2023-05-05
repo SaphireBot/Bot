@@ -227,7 +227,7 @@ export default class Daily extends Base {
             },
             { upsert: true, new: true }
         )
-            .then(doc => Database.saveUserCache(doc?.id, doc))
+            .then(doc => this.Database.saveUserCache(doc?.id, doc))
         return
     }
 
