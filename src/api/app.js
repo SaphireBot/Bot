@@ -25,6 +25,10 @@ import usersFromDB from './functions/users.get.js';
 import quizFromDB from './functions/quiz.get.js';
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const hostName = os.hostname()
+const url = {
+  add: 'https://discord.com/oauth2/authorize?client_id=912509487984812043&scope=bot%20applications.commands&permissions=2146958847',
+  server: 'https://discord.gg/saphire-s-home-952214872584749056'
+}
 const system = {
   name: hostName === 'RodrigoPC' ? 'RodrigoPC' : 'Discloud',
   port: hostName === 'RodrigoPC' ? 1000 : 8080
@@ -51,9 +55,8 @@ app.get(`${process.env.ROUTE_LINKED_ROLES}`, (_, res) => {
   return res.redirect(url);
 })
 
-app.get('/add', (_, res) => {
-  return res.redirect('https://discord.com/oauth2/authorize?client_id=912509487984812043&scope=bot%20applications.commands&permissions=2146958847')
-})
+app.get('/add', (_, res) => res.redirect(url.add))
+app.get('/server', (_, res) => res.redirect(url.server))
 
 app.get(`${process.env.ROUTE_LINKED_ROLES_CALLBACK}`, async (req, res) => {
   const code = req.query['code'];
