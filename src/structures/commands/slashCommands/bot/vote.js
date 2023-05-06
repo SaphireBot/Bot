@@ -1,6 +1,5 @@
 import { parseEmoji } from 'discord.js'
 import { Config } from '../../../../util/Constants.js'
-import axios from 'axios'
 
 export default {
     name: 'vote',

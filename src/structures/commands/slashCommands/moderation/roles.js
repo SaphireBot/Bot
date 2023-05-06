@@ -21,8 +21,9 @@ export default {
                 },
                 {
                     name: 'remove',
-                    type: ApplicationCommandOptionType.Role,
-                    description: 'Cargo a ser removido do autorole'
+                    type: ApplicationCommandOptionType.String,
+                    description: 'Cargo a ser removido do autorole',
+                    autocomplete: true
                 }
             ]
         },

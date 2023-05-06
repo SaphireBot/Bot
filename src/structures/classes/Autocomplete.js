@@ -1,11 +1,15 @@
-import { formatString } from '../../functions/plugins/plugins.js'
 import { Colors, ColorsTranslate, Languages, NSFWImagesCategory, TwitchLanguages } from '../../util/Constants.js'
+import { AutocompleteInteraction, PermissionsBitField } from 'discord.js'
 import { GiveawayManager } from '../../classes/index.js'
+import { formatString } from '../../functions/plugins/plugins.js'
+import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 
 export default class Autocomplete extends Base {
+    /**
+     * @param { AutocompleteInteraction } interaction 
+     */
     constructor(interaction) {
         super()
         this.interaction = interaction
@@ -76,13 +80,33 @@ export default class Autocomplete extends Base {
             serverinfo: ['serverId', value],
             streamer: ['disableTwitch', value],
             idioma: ['languageTwitch', value],
-            category: ['nsfw_categories', value]
+            category: ['nsfw_categories', value],
+            remove: ['removeAutorole', value]
         }[name]
 
         if (autocompleteFunctions)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1])
 
         return await this.respond()
+    }
+
+    async removeAutorole(value) {
+        if (!this.member.permissions.has(PermissionsBitField.Flags.ManageRoles, true)) return this.respond()
+        const guildData = await this.Database.getGuild(this.guild.id)
+        const rolesId = guildData?.Autorole || []
+
+        if (!rolesId?.length) return this.respond()
+
+        const roles = rolesId.map(roleId => ({
+            name: `@${this.guild.roles.cache.get(roleId)?.name || 'Cargo Desconhecido'}`,
+            value: roleId
+        }))
+            .filter(
+                data => data?.name?.toLowerCase()?.includes(value?.toLowerCase())
+                    || data?.value?.toLowerCase()?.includes(value?.toLowerCase())
+            )
+
+        return this.respond(roles)
     }
 
     nsfw_categories(value) {

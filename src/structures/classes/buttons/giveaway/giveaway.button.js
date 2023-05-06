@@ -128,7 +128,7 @@ export default async ({ interaction }, commandData) => {
                 return await interaction.editReply({
                     content: `${e.Animated.SaphireDance} | ${phrase}\n${e.SaphireDormindo} | Agora é só esperar o sorteio terminar, boa sorte.`,
                     ephemeral: true
-                })
+                }).catch(() => { })
             })
             .catch(err => interaction.editReply({
                 content: `${e.SaphireDesespero} | Não foi possível te adicionar no sorteio.\n${e.bug} | \`${err}\``,

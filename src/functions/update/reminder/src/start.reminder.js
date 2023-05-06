@@ -11,7 +11,7 @@ export default async ({ user, data }) => {
 
     const RemindMessage = data?.RemindMessage?.slice(0, 3500)
 
-    if (!user || !RemindMessage)
+    if (!user || !user.id || !RemindMessage)
         return managerReminder.remove(data.id)
 
     const isAutomatic = data.isAutomatic

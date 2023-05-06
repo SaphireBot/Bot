@@ -29,10 +29,10 @@ export default {
                     name: 'Ver Fanarts',
                     value: 'fanarts'
                 },
-                {
-                    name: 'Fotos de Perfil',
-                    value: 'profile'
-                }
+                // {
+                //     name: 'Fotos de Perfil',
+                //     value: 'profile'
+                // }
             ]
         }
     ],

@@ -6,7 +6,7 @@ export default async ({ interaction, guildData, client }) => {
 
     const { options, guild } = interaction
     const addRole = options.getRole('add')
-    const removeRole = options.getRole('remove')
+    const removeRole = await guild.roles.fetch(options.getString('remove') || '0').catch(() => null)
     const roleInDatabase = guildData?.Autorole || []
     let content = ""
     const validate = {}

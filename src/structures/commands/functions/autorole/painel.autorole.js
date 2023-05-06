@@ -68,7 +68,7 @@ export default async ({ interaction, guildData, Database, client }) => {
         embeds: [{
             color: client.blue,
             title: `🛠 ${client.user.username}s' Autorole Painel`,
-            description: 'O sistema de autorole é algo sim',
+            description: `${rolesId?.length} cargos registrados no Autorole`,
             fields: [{
                 name: '🎯 Cargos no Autorole',
                 value: guildRoles || 'Nenhum cargo por aqui'
