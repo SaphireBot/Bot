@@ -24,8 +24,9 @@ client.on('messageCreate', async message => {
     AfkManager.check(message)
     SpamManager.check(message)
 
-    if (message.content === `<@${client.user.id}>`)
-        return message.reply({ content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando \`/help\`` }).catch(() => { })
-
+    if (message.content === `<@${client.user.id}>`) {
+        const helpCommandId = client.application.commands.cache.find(c => c.name === "help")?.id;
+        return message.reply({ content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando ${helpCommandId ? `</help:${helpCommandId}>` : "`/help`"}` }).catch(() => { })
+    }
     return
 })
