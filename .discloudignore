@@ -1,0 +1,8 @@
+backup
+.vscode
+*.example
+node_modules
+README.md
+package-lock.json
+.gitattributes
+.gitignore
