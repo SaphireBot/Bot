@@ -141,3 +141,4 @@ discloud/backups
 # Github Commit
 .zip
 discloud
+.discloudignore
