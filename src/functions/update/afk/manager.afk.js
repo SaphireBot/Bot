@@ -150,6 +150,15 @@ export default new class AfkManager {
 
         mentions.forEach(Member => {
 
+            socket?.send({
+                type: "notification",
+                notifyData: {
+                    userId: Member.user?.id,
+                    title:  `${message.author.globalName || message.author.username} mencionou você`,
+                    message: `Confira a menção clicando <a href='${message.url}'>aqui</a>.`
+                }
+            })
+
             const globalMessage = this.global.get(Member.user.id)
             if (globalMessage) {
                 if (!Member?.displayName?.includes('[AFK]'))
