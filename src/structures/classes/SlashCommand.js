@@ -29,7 +29,7 @@ export default class SlashCommandInteraction extends Base {
         Experience.add(this.user.id, 5)
 
         return command.execute(this)
-            .then(() => this.registerCommand(command.name))
+            ?.then(() => this.registerCommand(command.name))
             .catch(err => error(this, err))
     }
 
@@ -43,7 +43,7 @@ export default class SlashCommandInteraction extends Base {
             })
 
         this.client.commandsUsed[command.name]++
-        if (command.admin && !this.client.admins.includes(this.user.id))
+        if (command.admin && ![...this.client.admins, this.config.ownerId].includes(this.user.id))
             return this.interaction.reply({
                 content: `${this.e.Deny} | Este comando é exclusivo para meus administradores.`,
                 ephemeral: true

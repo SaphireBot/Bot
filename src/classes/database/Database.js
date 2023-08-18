@@ -29,8 +29,6 @@ export default new class Database extends Models {
             Gorniaky: "395669252121821227",
             Mari: "704023863314350081"
         }
-        // this.guildData = new Collection()
-        // this.userData = new Collection()
     }
 
     get BgLevel() {
@@ -78,10 +76,10 @@ export default new class Database extends Models {
 
         const guildsData = await this.Guild.find({ id: { $in: [...client.guilds.cache.keys()] } })
 
-        for (const data of guildsData) {
-            // this.guildData.set(data.id, data)
-            socket?.send({ type: "updateCache", id: data.id, to: "guild", data })
-        }
+        // for (const data of guildsData) {
+        //     // this.guildData.set(data.id, data)
+        //     socket?.send({ type: "updateCache", id: data.id, to: "guild", data })
+        // }
 
         return guildsData
     }

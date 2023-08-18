@@ -1,0 +1,802 @@
+[
+    {
+        "id": 1,
+        "phrase": "A raposa marrom rápida pula sobre o cachorro preguiçoso."
+    },
+    {
+        "id": 2,
+        "phrase": "O rato roeu a roupa do rei de Roma."
+    },
+    {
+        "id": 3,
+        "phrase": "Um tigre tigre queimado não é um tigre tigre mesmo."
+    },
+    {
+        "id": 4,
+        "phrase": "A chuva na Espanha cai principalmente na planície."
+    },
+    {
+        "id": 5,
+        "phrase": "O rápido coelho marrom saltou sobre o cercado."
+    },
+    {
+        "id": 6,
+        "phrase": "O sol brilhava no céu azul sem nuvens."
+    },
+    {
+        "id": 7,
+        "phrase": "A vida é o que acontece enquanto fazemos planos."
+    },
+    {
+        "id": 8,
+        "phrase": "O amor é a força mais poderosa do mundo."
+    },
+    {
+        "id": 9,
+        "phrase": "A melhor maneira de prever o futuro é criá-lo."
+    },
+    {
+        "id": 10,
+        "phrase": "A imaginação é mais importante que o conhecimento."
+    },
+    {
+        "id": 11,
+        "phrase": "A jornada de mil milhas começa com um único passo."
+    },
+    {
+        "id": 12,
+        "phrase": "O tempo voa quando você está se divertindo."
+    },
+    {
+        "id": 13,
+        "phrase": "A persistência leva ao sucesso."
+    },
+    {
+        "id": 14,
+        "phrase": "A mudança é a única constante na vida."
+    },
+    {
+        "id": 15,
+        "phrase": "O conhecimento é a chave para a liberdade."
+    },
+    {
+        "id": 16,
+        "phrase": "A sorte favorece os audazes."
+    },
+    {
+        "id": 17,
+        "phrase": "A verdade libertará sua mente."
+    },
+    {
+        "id": 18,
+        "phrase": "A educação é a base do progresso."
+    },
+    {
+        "id": 19,
+        "phrase": "O silêncio fala mais alto que as palavras."
+    },
+    {
+        "id": 20,
+        "phrase": "A mente é como um paraquedas; só funciona se estiver aberta."
+    },
+    {
+        "id": 21,
+        "phrase": "A ação é o fundamento de todo sucesso."
+    },
+    {
+        "id": 22,
+        "phrase": "O amor incondicional é a maior virtude."
+    },
+    {
+        "id": 23,
+        "phrase": "A coragem não é ausência de medo, mas a conquista dele."
+    },
+    {
+        "id": 24,
+        "phrase": "O destino não é uma questão de chance, é uma questão de escolha."
+    },
+    {
+        "id": 25,
+        "phrase": "A mente tranquila conquista tudo."
+    },
+    {
+        "id": 26,
+        "phrase": "A paixão leva ao propósito."
+    },
+    {
+        "id": 27,
+        "phrase": "Aprenda com o passado, viva o presente, sonhe o futuro."
+    },
+    {
+        "id": 28,
+        "phrase": "O respeito é a base de todo relacionamento saudável."
+    },
+    {
+        "id": 29,
+        "phrase": "A simplicidade é a maior sofisticação."
+    },
+    {
+        "id": 30,
+        "phrase": "O que você colhe hoje é o que plantou ontem."
+    },
+    {
+        "id": 31,
+        "phrase": "O perdão é a chave para a paz interior."
+    },
+    {
+        "id": 32,
+        "phrase": "O segredo da felicidade está em encontrar alegria nas coisas simples."
+    },
+    {
+        "id": 33,
+        "phrase": "O sucesso é a soma de pequenos esforços repetidos dia após dia."
+    },
+    {
+        "id": 34,
+        "phrase": "A gratidão transforma o que temos em suficiente."
+    },
+    {
+        "id": 35,
+        "phrase": "O amor-próprio é a fundação da confiança."
+    },
+    {
+        "id": 36,
+        "phrase": "A empatia constrói pontes entre corações."
+    },
+    {
+        "id": 37,
+        "phrase": "O progresso é impossível sem mudança."
+    },
+    {
+        "id": 38,
+        "phrase": "O trabalho árduo é a escada para o sucesso."
+    },
+    {
+        "id": 39,
+        "phrase": "A autodisciplina é a chave para a realização."
+    },
+    {
+        "id": 40,
+        "phrase": "A comunicação é a base de todos os relacionamentos."
+    },
+    {
+        "id": 41,
+        "phrase": "O tempo é o recurso mais valioso que possuímos."
+    },
+    {
+        "id": 42,
+        "phrase": "A paciência é a chave para superar desafios."
+    },
+    {
+        "id": 43,
+        "phrase": "O conhecimento é o combustível da mente."
+    },
+    {
+        "id": 44,
+        "phrase": "A criatividade é a força motriz da inovação."
+    },
+    {
+        "id": 45,
+        "phrase": "A atitude determina a altitude."
+    },
+    {
+        "id": 46,
+        "phrase": "O foco é o que separa o bem do excepcional."
+    },
+    {
+        "id": 47,
+        "phrase": "A perseverança vence onde o talento falha."
+    },
+    {
+        "id": 48,
+        "phrase": "O equilíbrio é a chave para uma vida plena."
+    },
+    {
+        "id": 49,
+        "phrase": "A generosidade alimenta a alma."
+    },
+    {
+        "id": 50,
+        "phrase": "A coragem é agir apesar do medo."
+    },
+    {
+        "id": 51,
+        "phrase": "A confiança é conquistada por ações, não por palavras."
+    },
+    {
+        "id": 52,
+        "phrase": "A cooperação leva a resultados extraordinários."
+    },
+    {
+        "id": 53,
+        "phrase": "O otimismo é o ímã do sucesso."
+    },
+    {
+        "id": 54,
+        "phrase": "A responsabilidade é o preço da liberdade."
+    },
+    {
+        "id": 55,
+        "phrase": "A sabedoria vem da busca contínua do conhecimento."
+    },
+    {
+        "id": 56,
+        "phrase": "O entusiasmo é contagiante e inspirador."
+    },
+    {
+        "id": 57,
+        "phrase": "A curiosidade é a faísca da criatividade."
+    },
+    {
+        "id": 58,
+        "phrase": "A liderança é servir antes de ser servido."
+    },
+    {
+        "id": 59,
+        "phrase": "A humildade é a chave para o aprendizado contínuo."
+    },
+    {
+        "id": 60,
+        "phrase": "A atenção plena traz clareza ao caos."
+    },
+    {
+        "id": 61,
+        "phrase": "A resiliência supera as adversidades."
+    },
+    {
+        "id": 62,
+        "phrase": "A gentileza torna o mundo mais brilhante."
+    },
+    {
+        "id": 63,
+        "phrase": "A motivação começa com um objetivo claro."
+    },
+    {
+        "id": 64,
+        "phrase": "A gratidão é a memória do coração."
+    },
+    {
+        "id": 65,
+        "phrase": "A paz interior é o verdadeiro tesouro."
+    },
+    {
+        "id": 66,
+        "phrase": "A autoaceitação é a base da autoconfiança."
+    },
+    {
+        "id": 67,
+        "phrase": "O contentamento é a riqueza real."
+    },
+    {
+        "id": 68,
+        "phrase": "A autenticidade atrai conexões verdadeiras."
+    },
+    {
+        "id": 69,
+        "phrase": "A serenidade é a força diante das tempestades."
+    },
+    {
+        "id": 70,
+        "phrase": "A humildade é o alicerce da grandeza."
+    },
+    {
+        "id": 71,
+        "phrase": "A esperança é a luz nas horas mais sombrias."
+    },
+    {
+        "id": 72,
+        "phrase": "A paciência é a arte de esperar com graça."
+    },
+    {
+        "id": 73,
+        "phrase": "A verdadeira beleza reside na alma."
+    },
+    {
+        "id": 74,
+        "phrase": "A alegria é encontrada nas coisas simples da vida."
+    },
+    {
+        "id": 75,
+        "phrase": "A honestidade é a base de toda confiança."
+    },
+    {
+        "id": 76,
+        "phrase": "A autossuficiência é um estado de espírito."
+    },
+    {
+        "id": 77,
+        "phrase": "A compaixão cura corações feridos."
+    },
+    {
+        "id": 78,
+        "phrase": "A autenticidade atrai a admiração."
+    },
+    {
+        "id": 79,
+        "phrase": "A determinação conquista o impossível."
+    },
+    {
+        "id": 80,
+        "phrase": "A autoconsciência é o caminho para o autodesenvolvimento."
+    },
+    {
+        "id": 81,
+        "phrase": "A cooperação gera harmonia."
+    },
+    {
+        "id": 82,
+        "phrase": "A fé move montanhas."
+    },
+    {
+        "id": 83,
+        "phrase": "A respeitabilidade é conquistada por ações consistentes."
+    },
+    {
+        "id": 84,
+        "phrase": "A ação é a ponte entre sonhos e realidade."
+    },
+    {
+        "id": 85,
+        "phrase": "A moderação é a chave para a saúde."
+    },
+    {
+        "id": 86,
+        "phrase": "A honestidade é o melhor princípio."
+    },
+    {
+        "id": 87,
+        "phrase": "A gentileza é uma linguagem universal."
+    },
+    {
+        "id": 88,
+        "phrase": "A autoconfiança é o primeiro passo para o sucesso."
+    },
+    {
+        "id": 89,
+        "phrase": "A humildade é a arte de aprender com todos."
+    },
+    {
+        "id": 90,
+        "phrase": "A disciplina é a estrada para a liberdade."
+    },
+    {
+        "id": 91,
+        "phrase": "A autoexpressão é libertadora."
+    },
+    {
+        "id": 92,
+        "phrase": "A alegria está na jornada, não apenas no destino."
+    },
+    {
+        "id": 93,
+        "phrase": "A beleza reside na diversidade."
+    },
+    {
+        "id": 94,
+        "phrase": "A simplicidade é a essência da sofisticação."
+    },
+    {
+        "id": 95,
+        "phrase": "A felicidade é uma escolha diária."
+    },
+    {
+        "id": 96,
+        "phrase": "A gratidão transforma o que temos em suficiente."
+    },
+    {
+        "id": 97,
+        "phrase": "A autenticidade é a chave para conexões genuínas."
+    },
+    {
+        "id": 98,
+        "phrase": "A paciência é uma virtude valiosa."
+    },
+    {
+        "id": 99,
+        "phrase": "A positividade é o combustível da alma."
+    },
+    {
+        "id": 100,
+        "phrase": "A vida é uma aventura, aproveite cada momento."
+    },
+    {
+        "id": 101,
+        "phrase": "A sabedoria começa na reflexão."
+    },
+    {
+        "id": 102,
+        "phrase": "A mudança é a lei da vida."
+    },
+    {
+        "id": 103,
+        "phrase": "A coragem é a força contra o medo."
+    },
+    {
+        "id": 104,
+        "phrase": "A imaginação é o olho da alma."
+    },
+    {
+        "id": 105,
+        "phrase": "O sorriso é o idioma universal."
+    },
+    {
+        "id": 106,
+        "phrase": "A gratidão é um imã para a abundância."
+    },
+    {
+        "id": 107,
+        "phrase": "A liberdade é o oxigênio da alma."
+    },
+    {
+        "id": 108,
+        "phrase": "A paciência é a arte de esperar com serenidade."
+    },
+    {
+        "id": 109,
+        "phrase": "A honestidade é o alicerce do caráter."
+    },
+    {
+        "id": 110,
+        "phrase": "A autenticidade é a chave para conexões reais."
+    },
+    {
+        "id": 111,
+        "phrase": "A empatia cura corações partidos."
+    },
+    {
+        "id": 112,
+        "phrase": "A perseverança leva à realização."
+    },
+    {
+        "id": 113,
+        "phrase": "A ação é a chave para o progresso."
+    },
+    {
+        "id": 114,
+        "phrase": "A moderação é a virtude da vida equilibrada."
+    },
+    {
+        "id": 115,
+        "phrase": "A educação é a herança mais valiosa."
+    },
+    {
+        "id": 116,
+        "phrase": "A esperança é a luz na escuridão."
+    },
+    {
+        "id": 117,
+        "phrase": "A fé move montanhas invisíveis."
+    },
+    {
+        "id": 118,
+        "phrase": "A gentileza é a marca da verdadeira nobreza."
+    },
+    {
+        "id": 119,
+        "phrase": "A responsabilidade é a chave para a autorrealização."
+    },
+    {
+        "id": 120,
+        "phrase": "A generosidade alimenta a alma."
+    },
+    {
+        "id": 121,
+        "phrase": "A autodisciplina é a estrada para o sucesso duradouro."
+    },
+    {
+        "id": 122,
+        "phrase": "A resiliência é o superpoder humano."
+    },
+    {
+        "id": 123,
+        "phrase": "A verdade é um espelho que reflete a realidade."
+    },
+    {
+        "id": 124,
+        "phrase": "A autossuficiência é um estado de espírito."
+    },
+    {
+        "id": 125,
+        "phrase": "A simplicidade é a sofisticação máxima."
+    },
+    {
+        "id": 126,
+        "phrase": "A determinação é a chama que acende realizações."
+    },
+    {
+        "id": 127,
+        "phrase": "A autenticidade brilha como um diamante raro."
+    },
+    {
+        "id": 128,
+        "phrase": "A humildade é a base da evolução pessoal."
+    },
+    {
+        "id": 129,
+        "phrase": "A alegria está presente nos pequenos momentos."
+    },
+    {
+        "id": 130,
+        "phrase": "A beleza nasce da autenticidade."
+    },
+    {
+        "id": 131,
+        "phrase": "A criatividade é a alma da inovação."
+    },
+    {
+        "id": 132,
+        "phrase": "A ação é a poesia da vida."
+    },
+    {
+        "id": 133,
+        "phrase": "A fé é o vento que enche as velas da jornada."
+    },
+    {
+        "id": 134,
+        "phrase": "A confiança é a estrada para conexões profundas."
+    },
+    {
+        "id": 135,
+        "phrase": "A generosidade é um investimento na humanidade."
+    },
+    {
+        "id": 136,
+        "phrase": "A serenidade é a chave para a paz interior."
+    },
+    {
+        "id": 137,
+        "phrase": "A determinação é a estrela guia do sucesso."
+    },
+    {
+        "id": 138,
+        "phrase": "A humildade é a marca dos verdadeiros líderes."
+    },
+    {
+        "id": 139,
+        "phrase": "A respeitabilidade é ganha através de ações consistentes."
+    },
+    {
+        "id": 140,
+        "phrase": "A autenticidade cria laços verdadeiros."
+    },
+    {
+        "id": 141,
+        "phrase": "A gratidão é a memória do coração."
+    },
+    {
+        "id": 142,
+        "phrase": "A vida é uma canção, cante com alegria."
+    },
+    {
+        "id": 143,
+        "phrase": "A simplicidade é a chave para a felicidade."
+    },
+    {
+        "id": 144,
+        "phrase": "A empatia constrói pontes entre corações."
+    },
+    {
+        "id": 145,
+        "phrase": "A paciência é a chave para a sabedoria."
+    },
+    {
+        "id": 146,
+        "phrase": "A ação é a mãe do sucesso."
+    },
+    {
+        "id": 147,
+        "phrase": "A determinação torna o impossível possível."
+    },
+    {
+        "id": 148,
+        "phrase": "A verdadeira beleza vem de dentro."
+    },
+    {
+        "id": 149,
+        "phrase": "A gratidão transforma obstáculos em oportunidades."
+    },
+    {
+        "id": 150,
+        "phrase": "A compaixão aquece os corações frios."
+    },
+    {
+        "id": 151,
+        "phrase": "A simplicidade é a máxima sofisticação."
+    },
+    {
+        "id": 152,
+        "phrase": "A autodisciplina leva à maestria."
+    },
+    {
+        "id": 153,
+        "phrase": "A gentileza é o toque da alma."
+    },
+    {
+        "id": 154,
+        "phrase": "A autenticidade é o ímã das conexões verdadeiras."
+    },
+    {
+        "id": 155,
+        "phrase": "A paciência leva à perfeição."
+    },
+    {
+        "id": 156,
+        "phrase": "A humildade é o tempero da grandeza."
+    },
+    {
+        "id": 157,
+        "phrase": "A alegria é a música do coração."
+    },
+    {
+        "id": 158,
+        "phrase": "A resiliência transforma obstáculos em oportunidades."
+    },
+    {
+        "id": 159,
+        "phrase": "A autossuficiência é um estado mental."
+    },
+    {
+        "id": 160,
+        "phrase": "A fé é a força invisível que move montanhas."
+    },
+    {
+        "id": 161,
+        "phrase": "A verdade é o farol da jornada."
+    },
+    {
+        "id": 162,
+        "phrase": "A generosidade alimenta a alma."
+    },
+    {
+        "id": 163,
+        "phrase": "A coragem é a força para enfrentar desafios."
+    },
+    {
+        "id": 164,
+        "phrase": "A autenticidade é o caminho para a verdadeira conexão."
+    },
+    {
+        "id": 165,
+        "phrase": "A empatia é o elo que nos une."
+    },
+    {
+        "id": 166,
+        "phrase": "A determinação é a chave para superar barreiras."
+    },
+    {
+        "id": 167,
+        "phrase": "A ação é o impulso para a mudança."
+    },
+    {
+        "id": 168,
+        "phrase": "A moderação é o equilíbrio entre extremos."
+    },
+    {
+        "id": 169,
+        "phrase": "A educação é a base do progresso."
+    },
+    {
+        "id": 170,
+        "phrase": "A esperança é a luz no final do túnel."
+    },
+    {
+        "id": 171,
+        "phrase": "A fé é a estrela guia da jornada."
+    },
+    {
+        "id": 172,
+        "phrase": "A gentileza é o idioma universal."
+    },
+    {
+        "id": 173,
+        "phrase": "A responsabilidade é o preço da liberdade."
+    },
+    {
+        "id": 174,
+        "phrase": "A autodisciplina é o caminho para a realização."
+    },
+    {
+        "id": 175,
+        "phrase": "A resiliência é a chave para superar desafios."
+    },
+    {
+        "id": 176,
+        "phrase": "A verdade é um tesouro escondido."
+    },
+    {
+        "id": 177,
+        "phrase": "A alegria está nas pequenas coisas."
+    },
+    {
+        "id": 178,
+        "phrase": "A beleza está nos olhos de quem vê."
+    },
+    {
+        "id": 179,
+        "phrase": "A generosidade é a verdadeira riqueza."
+    },
+    {
+        "id": 180,
+        "phrase": "A sabedoria é a joia da mente."
+    },
+    {
+        "id": 181,
+        "phrase": "A autenticidade brilha como um farol."
+    },
+    {
+        "id": 182,
+        "phrase": "A humildade é a base da grandeza."
+    },
+    {
+        "id": 183,
+        "phrase": "A gratidão transforma o que temos em suficiente."
+    },
+    {
+        "id": 184,
+        "phrase": "A resiliência é o antídoto para a adversidade."
+    },
+    {
+        "id": 185,
+        "phrase": "A paciência é a arte de esperar com serenidade."
+    },
+    {
+        "id": 186,
+        "phrase": "A fé move montanhas invisíveis."
+    },
+    {
+        "id": 187,
+        "phrase": "A autodisciplina é a estrada para o sucesso."
+    },
+    {
+        "id": 188,
+        "phrase": "A esperança é a luz na escuridão."
+    },
+    {
+        "id": 189,
+        "phrase": "A empatia é a chave para conexões genuínas."
+    },
+    {
+        "id": 190,
+        "phrase": "A generosidade é a verdadeira riqueza."
+    },
+    {
+        "id": 191,
+        "phrase": "A sabedoria começa na reflexão."
+    },
+    {
+        "id": 192,
+        "phrase": "A autenticidade é o caminho para conexões verdadeiras."
+    },
+    {
+        "id": 193,
+        "phrase": "A responsabilidade é o preço da liberdade."
+    },
+    {
+        "id": 194,
+        "phrase": "A paciência é a chave para a sabedoria."
+    },
+    {
+        "id": 195,
+        "phrase": "A moderação é a chave para uma vida equilibrada."
+    },
+    {
+        "id": 196,
+        "phrase": "A determinação é o impulso para alcançar objetivos."
+    },
+    {
+        "id": 197,
+        "phrase": "A honestidade é a base de toda confiança."
+    },
+    {
+        "id": 198,
+        "phrase": "A generosidade enriquece a alma."
+    },
+    {
+        "id": 199,
+        "phrase": "A autodisciplina é a chave para o sucesso."
+    },
+    {
+        "id": 200,
+        "phrase": "A alegria é encontrada nas pequenas coisas."
+    }
+]

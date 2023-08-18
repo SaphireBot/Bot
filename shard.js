@@ -3,18 +3,19 @@ import ShardingManager from './src/classes/saphire/manager.shard.js'
 import Statcord from 'statcord.js'
 import { execArgv, env } from 'process'
 import { Database, SaphireClient as client } from './src/classes/index.js'
-const shardList = {
-    discloud: [...new Array(Math.floor(Math.random() * 8) + 2).keys()],
-    localhost: [0, 1]
-}[process.env.MACHINE] || [0]
+// const shardList = {
+//     discloud: [...new Array(Math.floor(Math.random() * 8) + 2).keys()],
+//     localhost: [0, 1]
+// }[process.env.MACHINE] || [0]
 
 const { ShardingClient } = Statcord
 
 const Manager = new ShardingManager('./index.js', {
     execArgv,
     token: env.DISCORD_TOKEN,
-    totalShards: shardList.length,
-    shardList,
+    totalShards: "auto",
+    // totalShards: shardList.length,
+    // shardList,
     respawn: true
 })
 
@@ -36,7 +37,7 @@ Manager.spawn()
 
         shards.forEach(Manager.enableListeners)
         setInterval(() => Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
-        if (client.clusterName == "Antares") return
+        if (client.clusterName == "Antares" || Manager.shardList.length !== shards.last().id + 1) return
         const guildsPerShards = await Manager.fetchClientValues("guilds.cache.size").catch(() => null)
         if (!guildsPerShards?.length) return
         await fetch(
@@ -62,4 +63,7 @@ Manager.spawn()
 
         return
     })
-    .catch(console.error);
+    .catch(err => {
+        console.log(err)
+        console.log(err?.headers?.get('retry-after'))
+    });

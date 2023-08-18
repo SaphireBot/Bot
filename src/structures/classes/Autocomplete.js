@@ -6,6 +6,9 @@ import { socket } from '../../websocket/websocket.js'
 import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+const phrases = require("../commands/slashCommands/games/fasttype/phrases.fasttype.json")
 
 export default class Autocomplete extends Base {
     /**
@@ -91,12 +94,22 @@ export default class Autocomplete extends Base {
             remove: ['removeAutorole', value],
             to: ['translateTo', value],
             stars: ['stars', value],
-        }[name]
+            phrase: ['fasttype', value]
+        }[name] || []
 
         if (autocompleteFunctions[0] && autocompleteFunctions?.length)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1], autocompleteFunctions[2])
 
         return this.respond()
+    }
+
+    fasttype(value = "") {
+
+        const data = value?.length
+            ? phrases.filter(v => v.id == value || v.phrase.toLocaleLowerCase()?.includes(value?.toLocaleLowerCase()))
+            : phrases
+
+        return this.respond(data?.map(v => ({ name: `[${v.id}] ${v.phrase}`, value: v.id })))
     }
 
     async stars(value) {
@@ -120,7 +133,7 @@ export default class Autocomplete extends Base {
         return this.respond(mapped)
     }
 
-    async translateTo(value = "") {
+    translateTo(value = "") {
         return this.respond(
             Object
                 .entries(Languages)

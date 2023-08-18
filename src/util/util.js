@@ -1,4 +1,4 @@
-import { ActivityType, ButtonStyle, GatewayIntentBits, Partials } from 'discord.js'
+import { ButtonStyle, GatewayIntentBits, Partials } from 'discord.js'
 import { SaphireClient as client } from '../classes/index.js'
 import { createRequire } from 'node:module'
 import Byte from './Bytes.js'

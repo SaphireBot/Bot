@@ -90,7 +90,7 @@ export default async (gw, guild, channel, messageFetched) => {
     if (giveaway.LockedRoles?.length)
         winners = winners.filter(member => member.roles.cache.hasAny(...giveaway.LockedRoles))
 
-    winners = Array.from(winners.keys())
+    winners = Array.from(winners.keys()).random(WinnersAmount)
 
     if (RolesToAdd.length)
         for (const winnerId of winners)

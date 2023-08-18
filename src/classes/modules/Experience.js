@@ -3,35 +3,39 @@ import Database from '../database/Database.js'
 export default new class Experience {
     constructor() {
         // [{ id: '1234567', xp: 10 }, { id: '1234568', xp: 7 }]
-        this.users = []
+        // this.users = []
+        this.users = new Map()
     }
 
     add(userId, xpPoints) {
-        const userData = this.users.find(user => user.id === userId)
-
-        userData
-            ? userData.xp += xpPoints
-            : this.users.push({ id: userId, xp: xpPoints })
-
-        return
+        return this.users.set(userId, (xpPoints + (this.users.get(userId) || 0)))
     }
 
     async set() {
 
-        if (!this.users.length) return
+        if (!this.users.size) return
 
-        // const usersData = await Database.User.find({ id: { $in: this.users.map(d => d.id) } })
-        const usersData = await Database.getUsers(this.users.map(d => d.id))
+        // const usersData = await Database.getUsers(this.users.map(d => d.id))
+
+        const usersEntries = Array.from(this.users.entries())
+        const data = []
+
+        for (const [key, value] of usersEntries) {
+            this.users.delete(key)
+            data.push({ key, value })
+        }
+
+        const usersData = await Database.getUsers(data.map(d => d.key))
         if (!usersData || !usersData.length) return
 
         const dataToUpdate = []
 
-        for (let data of this.users) {
+        for (let { key, value } of data) {
 
-            const user = usersData.find(d => d.id === data.id)
+            const user = usersData.find(d => d.id === key)
             let level = user?.Level || 1
             let levelEdited = false
-            let xp = data.xp += (user?.Xp || 0)
+            let xp = value += (user?.Xp || 0)
 
             do {
 
@@ -46,7 +50,7 @@ export default new class Experience {
 
             const dataToPush = {
                 updateOne: {
-                    filter: { id: data.id },
+                    filter: { id: key },
                     update: { $set: { Xp: xp } },
                     upsert: true
                 }
@@ -64,7 +68,7 @@ export default new class Experience {
         for (const data of usersData)
             Database.saveUserCache(data?.id, data)
 
-        return this.users = []
+        return
     }
 
 }

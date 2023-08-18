@@ -15,7 +15,7 @@ export default async () => {
     await Discloud.login()
 
     client.clientData = await Database.Client.findOne({ id: client.user.id })
-    Config.SpotifyAccessToken = client.clientData.SpotifyAccessToken || 'undefined'
+    Config.SpotifyAccessToken = client.clientData?.SpotifyAccessToken || 'undefined'
     Config.TwitchAccessToken = client.clientData?.TwitchAccessToken
 
     Database.Cache.clearTables(`${client.shardId}`)
