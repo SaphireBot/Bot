@@ -1,4 +1,4 @@
-import { ButtonStyle } from "discord.js"
+import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import { Database, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
@@ -21,7 +21,7 @@ export default {
             name: 'quantity',
             name_localizations: { 'pt-BR': 'quantia' },
             description: 'Valor a ser enviado',
-            type: 4,
+            type: ApplicationCommandOptionType.Number,
             min_value: 1,
             required: true
         }
@@ -108,7 +108,7 @@ export default {
             return await interaction.editReply({ content: `${e.Deny} | Erro ao gravar os dados do pagamento.`, components: [] }).catch(() => { })
         }
 
-        await Database.Cache.Pay.set(`${author.id}.${msg.id}`, {
+        return await Database.Cache.Pay.set(`${author.id}.${msg.id}`, {
             confirmated: [],
             total: quantia,
             value: quantia > 1000

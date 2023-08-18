@@ -90,10 +90,10 @@ export default class Autocomplete extends Base {
             category: ['nsfw_categories', value],
             remove: ['removeAutorole', value],
             to: ['translateTo', value],
-            stars: ['stars', value]
+            stars: ['stars', value],
         }[name]
 
-        if (autocompleteFunctions?.length)   
+        if (autocompleteFunctions[0] && autocompleteFunctions?.length)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1], autocompleteFunctions[2])
 
         return this.respond()
