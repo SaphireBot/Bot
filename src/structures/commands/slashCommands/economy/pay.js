@@ -21,7 +21,7 @@ export default {
             name: 'quantity',
             name_localizations: { 'pt-BR': 'quantia' },
             description: 'Valor a ser enviado',
-            type: ApplicationCommandOptionType.Number,
+            type: ApplicationCommandOptionType.Integer,
             min_value: 1,
             required: true
         }

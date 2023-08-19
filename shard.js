@@ -15,7 +15,7 @@ const Manager = new ShardingManager('./index.js', {
     token: env.DISCORD_TOKEN,
     totalShards: "auto",
     // totalShards: shardList.length,
-    // shardList,
+    // shardList: [0],
     respawn: true
 })
 
