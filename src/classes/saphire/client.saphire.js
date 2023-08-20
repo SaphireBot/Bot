@@ -147,8 +147,8 @@ export default new class client extends Client {
         return
     }
 
-    async refreshStaff(initing = false) {
-        if (initing) this.clientData = await Database.Client.findOne({ id: this.user.id })
+    async refreshStaff() {
+        this.clientData = await Database.Client.findOne({ id: this.user.id })
         if (!this.clientData) return
 
         if (this.clientData.Administradores) this.admins = [...this.clientData.Administradores]
@@ -162,46 +162,40 @@ export default new class client extends Client {
 
     async setStaffToApi() {
 
-        const staffData = {
+        const staffDataIds = {
             devs: ["451619591320371213", "395669252121821227", "920496244281970759", "435601052755296256", "648389538703736833"], // Rody, Gorniaky, Space, Lucaix, André
             admins: ["451619591320371213", "351903530161799178"], // Rody, Makol
             boards: ["395669252121821227", "648389538703736833"], // Gorniaky, André
             staff: ["854494598533742622", "611006830411251714", "781137239194468403", "830226550116057149", "327496267007787008", "144943581965189120", "737238491842347098", "435444989695229952"] // Akemy, Alli, Dspofu, Pepy, San, Serginho, Moana, Yafyr
         }
 
-        for (const staffId of [...Array.from(new Set(Object.values(staffData).flat()))]) {
-            fetch(
-                `https://discord.com/api/v10/users/${staffId}`,
-                { headers: { authorization: `Bot ${process.env.BOT_TOKEN_REQUEST}` } }
-            )
-                .then(async res => {
-                    const user = await res.json()
-                    if (!user || !user?.id) return
+        for (const url of [
+            `https://api.saphire.one/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(0, 10).map(id => `id=${id}`).join('&')}`,
+            `https://api.saphire.one/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(10, 50).map(id => `id=${id}`).join('&')}`
+        ])
+            fetch(url)
+                .then(res => res.json())
+                .then(staffData => {
 
-                    const tags = []
+                    for (const staff of staffData) {
 
-                    if (staffData.devs.includes(staffId)) tags.push("developer");
-                    if (staffData.admins.includes(staffId)) tags.push("adminstrator");
-                    if (staffData.boards.includes(staffId)) tags.push("board of directors");
-                    if (staffData.staff.includes(staffId)) tags.push("staff");
+                        staff.avatarUrl = staff?.avatar
+                            ? `https://cdn.discordapp.com/avatars/${staff.id}/${staff?.avatar}.${staff.avatar.includes("a_") ? "gif" : "png"}`
+                            : null
 
-                    if (user && socket?.connected)
-                        socket?.send({
-                            type: "siteStaffData",
-                            staffData: {
-                                id: staffId,
-                                username: user?.username,
-                                avatarUrl: `https://cdn.discordapp.com/avatars/${staffId}/${user?.avatar}.webp`,
-                                tags,
-                                description: null
-                            }
-                        })
+                        staff.tags = []
+                        if (staffDataIds.devs.includes(staff.id)) staff.tags.push("developer");
+                        if (staffDataIds.admins.includes(staff.id)) staff.tags.push("adminstrator");
+                        if (staffDataIds.boards.includes(staff.id)) staff.tags.push("board of directors");
+                        if (staffDataIds.staff.includes(staff.id)) staff.tags.push("staff");
+                        continue
+                    }
+
+                    socket?.send({ type: "siteStaffData", staffData })
                 })
-                .catch(null)
+                .catch(console.log)
 
-            continue;
-        }
-
+        return
     }
 
     async sendWebhook(webhookUrl, data) {

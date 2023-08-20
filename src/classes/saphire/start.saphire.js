@@ -47,6 +47,6 @@ export default async () => {
         client.linkedRolesLoad()
     }
 
-    client.refreshStaff(true)
+    client.refreshStaff()
     return console.log(`Shard ${client.shardId} | Loading Complete.`)
 }

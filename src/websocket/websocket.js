@@ -11,8 +11,6 @@ let socket;
 
 async function initSocket() {
 
-    if (process.env.CANARY_ID == client.user.id) return
-
     let interval;
 
     socket = new io(
@@ -131,13 +129,15 @@ function message(data) {
     if (!data?.type) return
     const { type, message } = data
 
-    if (type == "refreshRanking") return refreshRanking()
-    if (type == "console") return console.log(message)
-    if (type == "topgg") return reward(message)
-    if (type == "errorInPostingMessage") return client.errorInPostingMessage(data.data, data.err)
-    if (type == "globalAfk") return globalAfkData(data.data)
-
-    return console.log(`Shard ${client.shardId} | Unknown Message From Websocket | `, data)
+    switch (type) {
+        case "sendStaffData": client.setStaffToApi(); break;
+        case "refreshRanking": refreshRanking(); break;
+        case "console": console.log(message); break;
+        case "topgg": reward(message); break;
+        case "errorInPostingMessage": client.errorInPostingMessage(data.data, data.err); break;
+        case "globalAfk": globalAfkData(data.data); break;
+        default: console.log(`Shard ${client.shardId} | Unknown Message From Websocket | `, data); break;
+    }
 }
 
 function globalAfkData(data) {

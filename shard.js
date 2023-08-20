@@ -3,19 +3,19 @@ import ShardingManager from './src/classes/saphire/manager.shard.js'
 import Statcord from 'statcord.js'
 import { execArgv, env } from 'process'
 import { Database, SaphireClient as client } from './src/classes/index.js'
-// const shardList = {
-//     discloud: [...new Array(Math.floor(Math.random() * 8) + 2).keys()],
-//     localhost: [0, 1]
-// }[process.env.MACHINE] || [0]
+const shardList = {
+    discloud: [...new Array(Math.floor(Math.random() * 8) + 2).keys()],
+    localhost: [0, 1]
+}[process.env.MACHINE] || [0]
 
 const { ShardingClient } = Statcord
 
 const Manager = new ShardingManager('./index.js', {
     execArgv,
     token: env.DISCORD_TOKEN,
-    totalShards: "auto",
-    // totalShards: shardList.length,
-    // shardList: [0],
+    // totalShards: "auto",
+    totalShards: shardList.length,
+    shardList,
     respawn: true
 })
 
