@@ -1,6 +1,6 @@
-import { Message } from "discord.js"
-import { SaphireClient as client, Database } from "../../../classes/index.js"
-import { Emojis as e } from "../../../util/util.js"
+import { SaphireClient as client, Database } from "../../../classes/index.js";
+import { Emojis as e } from "../../../util/util.js";
+import { Message } from "discord.js";
 
 export default new class SpamManager {
     constructor() {
@@ -10,7 +10,8 @@ export default new class SpamManager {
     }
 
     load(guildsData) {
-        this.guildsEnabled = guildsData.filter(gData => gData.Spam?.enabled === true)?.map(gData => gData.id)
+        if (!guildsData?.length) return
+        this.guildsEnabled = guildsData.filter(gData => gData?.Spam?.enabled === true)?.map(gData => gData.id)
 
         if (!this.guildsEnabled.length) return
 

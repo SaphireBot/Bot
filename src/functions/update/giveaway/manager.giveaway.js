@@ -10,16 +10,15 @@ export default new class GiveawayManager {
         this.retryCooldown = {}
     }
 
-    async setGiveaways(guildsData) {
+    async setGiveaways(guildsData = []) {
 
         if (!guildsData || !guildsData.length) return
 
         this
             .filterAndManager(
                 guildsData
-                    .filter(data => data.Giveaways?.length > 0 && client.guilds.cache.has(data?.id))
-                    .map(data => data.Giveaways)
-                    .flat()
+                    .filter(data => data?.Giveaways?.length > 0)
+                    .flatMap(data => data?.Giveaways)
                     .filter(i => i)
             )
         return

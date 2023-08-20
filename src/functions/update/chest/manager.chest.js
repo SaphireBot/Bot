@@ -10,8 +10,9 @@ export default new class ChestManager {
     }
 
     async load(guildsData) {
+        if (!guildsData?.length) return
         for (const data of guildsData)
-            if (data.Chest !== false) this.guildEnabled[data.id] = true
+            if (data?.Chest !== false) this.guildEnabled[data?.id] = true
 
         return setInterval(() => this.execute(), 1000 * 60 * 60)
     }

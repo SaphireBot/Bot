@@ -10,9 +10,9 @@ export default new class PollManager {
     }
 
     async load(guildsData) {
+        if (!guildsData) return
 
-        const guildsId = [...client.guilds.cache.keys()]
-        const PollsFromGuilds = guildsData.filter(gData => guildsId.includes(gData.id))
+        const PollsFromGuilds = guildsData.filter(g => client.guilds.cache.has(g?.id))
 
         if (!PollsFromGuilds || !PollsFromGuilds.length) return
 
