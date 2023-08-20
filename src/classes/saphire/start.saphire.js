@@ -19,7 +19,7 @@ export default async () => {
     Config.TwitchAccessToken = client.clientData?.TwitchAccessToken
 
     Database.Cache.clearTables(`${client.shardId}`)
-    const guildsData = await Database.cacheTheGuilds()
+    const guildsData = await Database.getGuilds(Array.from(client.guilds.cache.keys()))
 
     GiveawayManager.setGiveaways(guildsData)
     ChestManager.load(guildsData)

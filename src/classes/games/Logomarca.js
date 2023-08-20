@@ -240,7 +240,7 @@ export default class Logomarca extends Base {
         const cachedPointsData = await this.Database.Cache.Logomarca.get('Points') || {}
         const usersPointData = Object.entries(cachedPointsData || {}).map(([a, b]) => ({ id: a, points: b }))
 
-        //       [{ id: userId, points: Number }]
+        // [{ id: userId, points: Number }]
         for (let data of usersPointData)
             dataToUpdate.push({
                 updateOne: {

@@ -9,7 +9,7 @@ import { commandsApi } from '../structures/handler/commands.handler.js';
  */
 let socket;
 
-function initSocket() {
+async function initSocket() {
 
     if (process.env.CANARY_ID == client.user.id) return
 

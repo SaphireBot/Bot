@@ -15,12 +15,9 @@ export default new class Experience {
 
         if (!this.users.size) return
 
-        // const usersData = await Database.getUsers(this.users.map(d => d.id))
-
-        const usersEntries = Array.from(this.users.entries())
         const data = []
 
-        for (const [key, value] of usersEntries) {
+        for (const [key, value] of Array.from(this.users.entries())) {
             this.users.delete(key)
             data.push({ key, value })
         }

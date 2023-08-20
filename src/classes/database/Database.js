@@ -72,18 +72,6 @@ export default new class Database extends Models {
             })
     }
 
-    async cacheTheGuilds() {
-
-        const guildsData = await this.Guild.find({ id: { $in: [...client.guilds.cache.keys()] } })
-
-        // for (const data of guildsData) {
-        //     // this.guildData.set(data.id, data)
-        //     socket?.send({ type: "updateCache", id: data.id, to: "guild", data })
-        // }
-
-        return guildsData
-    }
-
     async add(userId, amount, message = undefined) {
 
         if (!userId || !amount || isNaN(amount)) return
@@ -246,16 +234,12 @@ export default new class Database extends Models {
 
     saveGuildCache(guildId, data) {
         if (!guildId || !data) return
-        // this.guildData.set(guildId, data)
-        socket?.send({ type: "updateCache", id: guildId, to: "guild", data })
-        return
+        return socket?.send({ type: "updateCache", to: "guild", data: [data] })
     }
 
     saveUserCache(userId, data) {
         if (!userId || !data) return
-        // this.userData.set(userId, data)
-        socket?.send({ type: "updateCache", id: userId, to: "user", data })
-        return
+        return socket?.send({ type: "updateCache", to: "user", data: [data] })
     }
 
     deleteGiveaway = async (MessageID, GuildId, All = false, byChannelId) => {
@@ -315,7 +299,6 @@ export default new class Database extends Models {
 
         if (!userId) return null
 
-        // let data = this.userData.get(userId)
         let data = await socket?.timeout(1000).emitWithAck("getCache", { id: userId, type: "user" }).catch(() => null)
 
         if (!data) {
@@ -326,10 +309,9 @@ export default new class Database extends Models {
                 if (!user || user?.bot) return null
                 data = await this.registerUser(user)
                 if (!data) return null
-                // this.userData.set(userId, data)
             }
 
-            socket?.send({ type: "updateCache", id: userId, to: "user", data })
+            socket?.send({ type: "updateCache", to: "user", data: [data] })
         }
 
         return data
@@ -344,12 +326,7 @@ export default new class Database extends Models {
         if (!data?.length !== usersIdInArray.length) {
             data = await this.User.find({ id: { $in: usersIdInArray } })
             if (!data?.length) return []
-
-            for (const d of data)
-                if (d?.id) {
-                    // this.userData.set(d.id, d)
-                    socket?.send({ type: "updateCache", id: d.id, to: "user", data: d })
-                }
+            socket?.send({ type: "updateCache", to: "user", data: [data] })
         }
 
         return data
@@ -359,14 +336,12 @@ export default new class Database extends Models {
 
         if (!guildId) return null
 
-        // let data = this.guildData.get(guildId)
         let data = await socket?.timeout(1000).emitWithAck("getCache", { id: guildId, type: "guild" }).catch(() => null)
 
         if (!data) {
             data = await this.Guild.findOne({ id: guildId })
             if (!data) return null
-            // this.guildData.set(data.id, data)
-            socket?.send({ type: "updateCache", id: guildId, to: "guild", data })
+            socket?.send({ type: "updateCache", to: "guild", data: [data] })
         }
 
         return data
@@ -376,30 +351,27 @@ export default new class Database extends Models {
 
         if (!guildsId?.length) return []
 
-        // let data = this.guildData.get(guildId)
-        let data = await socket?.timeout(1500).emitWithAck("getMultipleCache", { ids: guildsId, type: "guild" }).catch(() => [])
+        let data = await socket
+            ?.timeout(1500)
+            .emitWithAck("getMultipleCache", { ids: guildsId, type: "guild" })
+            .catch(() => [])
 
-        if (!data?.length) {
+        if (data?.length !== guildsId.length) {
             data = await this.Guild.find({ id: { $in: guildsId } })
             if (!data) return []
 
-            for (const g of data) {
-                // this.guildData.set(gData.id, gData)
-                socket?.send({ type: "updateCache", id: g.id, to: "guild", data: g })
-            }
+            socket?.send({ type: "updateCache", to: "guild", data: [data] })
         }
 
         return data
     }
 
     async deleteUser(userId) {
-        // this.userData.delete(userId)
         socket?.send({ type: "deleteCache", id: userId, to: "user" })
         return await this.User.deleteMany({ id: userId })
     }
 
     async deleteGuild(guildId) {
-        // this.guildData.delete(guildId)
         socket?.send({ type: "deleteCache", id: guildId, to: "guild" })
         return await this.Guild.deleteMany({ id: guildId })
     }
@@ -471,8 +443,8 @@ export default new class Database extends Models {
 
     async refreshUsersData(usersId) {
         if (!usersId || !usersId.length) return
-        const usersData = await this.User.find({ id: { $in: usersId } })
-        for (const data of usersData) this.saveUserCache(data?.id, data)
+        const data = await this.User.find({ id: { $in: usersId } })
+        socket?.send({ type: "updateCache", to: "user", data: [data] })
         return
     }
 

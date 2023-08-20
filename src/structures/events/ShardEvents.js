@@ -65,7 +65,7 @@ client
             })
         if (client.isReady()) return
 
-        initSocket()
+        await initSocket()
         await saphire()
 
         return client.pushMessage({
