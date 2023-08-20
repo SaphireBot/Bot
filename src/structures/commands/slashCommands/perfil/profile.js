@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
 import { Config as config } from '../../../../util/Constants.js'
 import { Emojis as e } from '../../../../util/util.js'
 import { Database } from '../../../../classes/index.js'
@@ -81,13 +81,13 @@ export default {
         const user = refresh ? author : options.getUser('user') || author
 
         if (!user)
-            await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Nenhum usuário encontrado.`,
                 ephemeral: true
             })
 
         if (user.id === client.user.id)
-            return await interaction.reply({
+            return interaction.reply({
                 embeds: [{
                     color: client.blue,
                     description: `${e.VipStar} **Perfil Pessoal de ${client.user.username}**`,
@@ -154,8 +154,8 @@ export default {
             }
 
             return refresh
-                ? await interaction.update(res).catch(() => { })
-                : await interaction.reply(res)
+                ? interaction.update(res).catch(() => { })
+                : interaction.reply(res)
         }
         const Embed = { color: client.blue, description: `${e.Loading} | Construindo perfil...` }
 
@@ -187,6 +187,7 @@ export default {
                 return `${u} - ${Date.Timestamp(new Date(time), 'R', true)}`
             })()
             : "Ninguém"
+
         const level = data?.Level || 0
         const likes = data?.Likes || 0
         const vip = await user.isVip() ? `${e.VipStar}` : '📃'
@@ -281,42 +282,57 @@ export default {
         if (warns.length > 0)
             Embed.footer = { text: `${warns.length} avisos neste servidor` }
 
-        const selectMenuObject = {
-            type: 1,
-            components: [{
-                type: 3,
-                custom_id: 'profile',
-                placeholder: 'Opções do perfil',
-                options: [
-                    {
-                        label: `${likes} likes`,
-                        emoji: e.Like,
-                        description: `Dar um like para ${user.username}`,
-                        value: JSON.stringify({ c: 'like', src: user.id }),
-                    },
-                    {
-                        label: 'Alterar Signo',
-                        emoji: '🔅',
-                        description: 'Altere o signo do seu perfil',
-                        value: JSON.stringify({ c: 'chooseSign' }),
-                    },
-                    {
-                        label: 'Alterar Sexo',
-                        emoji: '🚻',
-                        description: 'Altere o sexo do seu perfil',
-                        value: JSON.stringify({ c: 'chooseGender' })
-                    },
-                    {
-                        label: 'Editar',
-                        emoji: '📝',
-                        description: 'Alterar os dados do perfil',
-                        value: JSON.stringify({ c: 'editProfile' })
-                    }
-                ]
-            }]
-        }
-
-        return await interaction.editReply({ embeds: [Embed], components: [selectMenuObject] }).catch(() => { })
+        return interaction.editReply({
+            embeds: [Embed],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "Ver perfil no site",
+                            emoji: e.Animated.SaphireReading,
+                            url: `https://saphire.one/profile/${user.id}`,
+                            style: ButtonStyle.Link
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [{
+                        type: 3,
+                        custom_id: 'profile',
+                        placeholder: 'Opções do perfil',
+                        options: [
+                            {
+                                label: `${likes} likes`,
+                                emoji: e.Like,
+                                description: `Dar um like para ${user.username}`,
+                                value: JSON.stringify({ c: 'like', src: user.id }),
+                            },
+                            {
+                                label: 'Alterar Signo',
+                                emoji: '🔅',
+                                description: 'Altere o signo do seu perfil',
+                                value: JSON.stringify({ c: 'chooseSign' }),
+                            },
+                            {
+                                label: 'Alterar Sexo',
+                                emoji: '🚻',
+                                description: 'Altere o sexo do seu perfil',
+                                value: JSON.stringify({ c: 'chooseGender' })
+                            },
+                            {
+                                label: 'Editar',
+                                emoji: '📝',
+                                description: 'Alterar os dados do perfil',
+                                value: JSON.stringify({ c: 'editProfile' })
+                            }
+                        ]
+                    }]
+                }
+            ]
+        }).catch(() => { })
 
         async function showModal() {
 
@@ -324,7 +340,7 @@ export default {
 
             if (!data) {
                 await Database.registerUser(author)
-                return await interaction.reply({
+                return interaction.reply({
                     content: `${e.Database} | DATABASE | Por favor, tente novamente.`,
                     ephemeral: true
                 })
@@ -336,7 +352,7 @@ export default {
             const status = data?.Perfil?.Status || null
             const modal = Modals.editProfileModal(title, job, niver, status)
 
-            return await interaction.showModal(modal)
+            return interaction.showModal(modal)
         }
 
     }

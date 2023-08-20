@@ -32,7 +32,6 @@ export default {
     },
     // async execute({ interaction }) {
     /**
-     * 
      * @param { ChatInputCommandInteraction } interaction 
      * @returns 
      */

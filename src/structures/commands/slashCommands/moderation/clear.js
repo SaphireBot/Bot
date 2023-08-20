@@ -2,6 +2,8 @@ import { ApplicationCommandOptionType, ButtonStyle, PermissionsBitField, Channel
 import { Config, DiscordPermissons, PermissionsTranslate } from '../../../../util/Constants.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js';
+import { Emojis as e } from '../../../../util/util.js';
+
 let tempData = []
 
 export default {
@@ -103,7 +105,7 @@ export default {
             bot: [DiscordPermissons.ReadMessageHistory, DiscordPermissons.ManageMessages]
         }
     },
-    async execute({ interaction, e, guild, client }, commandData) {
+    async execute({ interaction, guild, client }, commandData) {
 
         if (commandData) {
             const index = tempData.findIndex(obj => obj.idCode == commandData.idCode)
@@ -118,35 +120,37 @@ export default {
             !guild.members.me.permissions.has(DiscordPermissons.ManageMessages, true)
             || !guild.members.me.permissions.has(DiscordPermissons.ReadMessageHistory, true)
         )
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Eu preciso da permissão **${PermissionsTranslate.ManageMessages}** & **${PermissionsTranslate.ReadMessageHistory}** para executar este comando.`,
                 ephemeral: true
             })
 
         if (!interaction.member.permissions.has(DiscordPermissons.ManageMessages, true))
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Você precisa da permissão **${PermissionsTranslate.ManageMessages}** para executar este comando.`,
                 ephemeral: true
             })
 
         const amount = commandData?.am || interaction.options.getInteger('amount')
         if (amount <= 0 || amount > 1000)
-            return await interaction.reply({ content: `${e.Deny} | A quantidade de mensagens a ser apagadas tem que estar entre 0 e 1000.`, ephemeral: true })
+            return interaction.reply({ content: `${e.Deny} | A quantidade de mensagens a ser apagadas tem que estar entre 0 e 1000.`, ephemeral: true })
+
+        if (!commandData)
+            await interaction.reply({ content: `${e.Loading} | Carregando...` })
 
         const channel = guild.channels.cache.get(commandData?.ch) || interaction?.options?.getChannel('channel') || interaction.channel
         if (!channel)
-            return await interaction.reply({
+            return interaction.editReply({
                 content: `${e.Deny} | Não foi possível obter o canal selecionado.`,
                 ephemeral: true
-            })
+            }).catch(() => { })
 
         const checkIfExistMessage = await channel.messages.fetch({ limit: 1 }).then(msg => msg.size).catch(err => err)
         if (checkIfExistMessage == 0) {
-            const data = {
+            return interaction.editReply({
                 content: `${e.Deny} | Não existe nenhuma mensagem ${channel.id == interaction.channel.id ? 'neste canal' : `no canal ${channel}`}.`,
                 ephemeral: true
-            }
-            return commandData ? interaction.update(data).catch(() => { }) : interaction.reply(data)
+            }).catch(() => { })
         }
 
         if (checkIfExistMessage instanceof Error) {
@@ -158,7 +162,7 @@ export default {
                 50035: `${e.Warn} | Um valor acima do limite foi repassado.`
             }[checkIfExistMessage.code]
                 || `${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, peça ajuda no meu servidor: ${Config.MoonServerLink}.\n${e.bug} | (${checkIfExistMessage.code}) \`${checkIfExistMessage}\``
-            return commandData ? interaction.update({ content, ephemeral: true }).catch(() => { }) : interaction.reply({ content, ephemeral: true })
+            return interaction.editReply({ content, ephemeral: true }).catch(() => { })
         }
 
         const member = commandData?.m ? await guild.members.fetch(commandData?.m).catch(() => null) : interaction?.options?.getMember('member')
@@ -172,28 +176,28 @@ export default {
         const isFilter = () => bots || attachments || webhooks || ignoreBots || ignoreBots || ignoreWebhooks || member
 
         if (!guild.members.me.permissions.has(DiscordPermissons.AttachFiles, true) && script)
-            return await interaction.reply({
+            return interaction.editReply({
                 content: `${e.Deny} | Eu preciso da permissão **\`${PermissionsTranslate.AttachFiles}\`** para executar o recurso de Script.`,
                 ephemeral: true
-            })
+            }).catch(() => { })
 
         if (!channel)
-            return await interaction.reply({
+            return interaction.editReply({
                 content: `${e.Deny} | Huuuum... Não achei canal nenhum...`,
                 ephemeral: true
-            })
+            }).catch(() => { })
 
         if (!channel.viewable)
-            return await interaction.reply({
+            return interaction.editReply({
                 content: `${e.Deny} | Epa! Não tenho permissão para acessar esse canal.`,
                 ephemeral: true
-            })
+            }).catch(() => { })
 
         if (commandData?.m && !member)
-            return await interaction.update({
+            return interaction.editReply({
                 content: `${e.Animated.SaphirePanic} | Oshhh... Eu vi que você marcou um membro, mas eu não achei ele no servidor...`,
                 components: []
-            })
+            }).catch(() => { })
 
         if (commandData)
             return interaction.message.delete()
@@ -224,7 +228,7 @@ export default {
             m: member?.id || '', a: attachments, w: webhooks, script
         })
 
-        return await interaction.reply({
+        return await interaction.editReply({
             content: `${e.QuestionMark} | Você está solicitando a exclusão de **${amount} mensagens** ${channel.id == interaction.channel.id ? '**neste canal**.' : `no canal ${channel}.`}\n${filters}\n📝 | *Eu não vou apagar alguns tipos de mensagens:\n**Mensagens fixadas, mais velhas que 14 dias, do sistema, notificações de boosters e mensagens com threads abertas***.`,
             components: [
                 {
@@ -247,7 +251,7 @@ export default {
                     ]
                 }
             ]
-        })
+        }).catch(() => { })
 
         async function deleteMessages() {
 

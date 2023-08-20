@@ -11,6 +11,8 @@ let socket;
 
 function initSocket() {
 
+    if (process.env.CANARY_ID == client.user.id) return
+
     let interval;
 
     socket = new io(
