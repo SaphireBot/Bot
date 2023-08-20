@@ -1,4 +1,4 @@
-import { Database, Experience, SaphireClient as client } from '../../classes/index.js'
+import { Database, Experience, SaphireClient as client } from '../../classes/index.js';
 
 export default () => {
 

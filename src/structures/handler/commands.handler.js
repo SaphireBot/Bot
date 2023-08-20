@@ -4,13 +4,15 @@ import { readdirSync } from 'fs';
 import { Routes } from 'discord.js';
 import 'dotenv/config';
 import { socket } from '../../websocket/websocket.js';
+import { Emojis as e } from '../../util/util.js';
+export const commands = []
+export const adminCommands = [] // Ideia dada por Gorniaky - 395669252121821227
 export const commandsApi = []
 
 export default async () => {
 
-    const commands = []
-    const adminCommands = [] // Ideia dada por Gorniaky - 395669252121821227
     const folders = readdirSync('./src/structures/commands/slashCommands/')
+    const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").then(c => c).catch(() => [])
 
     for (const dir of folders) {
 
@@ -20,6 +22,7 @@ export default async () => {
 
             const query = await import(`../commands/slashCommands/${dir}/${file}`)
             const cmd = query.default
+            const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
 
             if (cmd?.name) {
                 client.commandsUsed[cmd.name] = 0
@@ -28,6 +31,7 @@ export default async () => {
                     category: cmd.category || "Não possui",
                     description: cmd.description || "Não possui"
                 });
+                if (applicationCommandData) cmd.id = applicationCommandData?.id
                 client.slashCommands.set(cmd.name, cmd);
                 (cmd.admin || cmd.staff) ? adminCommands.push(cmd) : commands.push(cmd);
             }
@@ -35,12 +39,6 @@ export default async () => {
         }
         continue
     }
-
-    for (const guild of config.guildsToPrivateCommands || [])
-        if (client.guilds.cache.has(guild))
-            client.rest.put(Routes.applicationGuildCommands(client.user.id, guild), { body: adminCommands })
-
-    if (client.shardId !== 0) return
 
     for (const cmd of [...commands, ...adminCommands]) {
         if (!cmd?.apiData) continue
@@ -52,15 +50,36 @@ export default async () => {
         delete cmd.apiData
     }
 
+    if (client.shardId == 0) {
+        const interval = setInterval(() => {
+            if (socket?.connected) {
+                socket?.send({ type: "apiCommandsData", commandsApi })
+                clearInterval(interval)
+            }
+        }, 1000 * 5)
+    }
+
+    return
+}
+
+export async function registerCommands() {
+
+    for (const guildId of config.guildsToPrivateCommands || [])
+        client.rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: adminCommands })
+            .catch(() => { })
+
     return await client.rest.put(Routes.applicationCommands(client.user.id), { body: commands })
-        .then(() => {
-            console.log(`${client.slashCommands.size} Slash Commands Loaded`)
-            const interval = setInterval(() => {
-                if (socket?.connected) {
-                    socket?.send({ type: "apiCommandsData", commandsApi })
-                    clearInterval(interval)
-                }
-            }, 1000 * 5)
+        .then(data => {
+            for (const cmd of data) {
+                const cmdData = client.slashCommands.get(cmd.name)
+                cmdData.id = cmd.id
+                client.slashCommands.set(cmd.name, cmdData)
+            }
+
+            return `${e.CheckV} | ${client.slashCommands.size} Slash Commands Globais foram registrados.`
         })
-        .catch(err => console.log('Command Register Failed', err))
+        .catch(err => {
+            console.log(err)
+            return `${e.DenyX} | Erro ao registrar os Slash Commands Globais. Erro escrito no console.`
+        })
 }

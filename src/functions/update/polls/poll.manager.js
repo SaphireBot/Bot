@@ -1,7 +1,7 @@
-import { ButtonStyle } from 'discord.js'
-import { SaphireClient as client, Database, } from '../../../classes/index.js'
-import { Emojis as e } from '../../../util/util.js'
-import { pollInterval } from '../../global/setIntervals.js'
+import { SaphireClient as client, Database, } from '../../../classes/index.js';
+import { pollInterval } from '../../global/setIntervals.js';
+import { ButtonStyle } from 'discord.js';
+import { Emojis as e } from '../../../util/util.js';
 
 export default new class PollManager {
     constructor() {

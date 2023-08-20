@@ -34,7 +34,6 @@ async function initSocket() {
     socket.on("getGiveaway", async (data, callback) => callback(await GiveawayManager.fetchGiveaway(data?.guildId, data?.giveawayId)))
     socket.on("getGuilds", (_, callback) => callback(client.guilds.cache.map(guild => ({ id: guild.id, name: guild.name }))))
     socket.on("message", message)
-    socket.on("getGuild", fetchGuild)
     socket.on("commands", (_, callback) => callback(commandsApi))
 
     socket.on("shardsping", async (_, callback) => {
@@ -115,15 +114,6 @@ async function initSocket() {
 }
 
 export { socket, initSocket };
-
-async function fetchGuild(guildId, callback) {
-    return callback(null)
-    try {
-        return await client.fetchGuild(guildId)
-    } catch (r) {
-        return callback(null)
-    }
-}
 
 function message(data) {
     if (!data?.type) return

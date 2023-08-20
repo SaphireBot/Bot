@@ -1,5 +1,5 @@
-import { SaphireClient as client, Database } from '../../../classes/index.js'
-import { Routes } from 'discord.js'
+import { SaphireClient as client, Database } from '../../../classes/index.js';
+import { Routes } from 'discord.js';
 
 export default new class GiveawayManager {
     constructor() {
@@ -10,7 +10,7 @@ export default new class GiveawayManager {
         this.retryCooldown = {}
     }
 
-    async setGiveaways(guildsData = []) {
+    async load(guildsData = []) {
 
         if (!guildsData || !guildsData.length) return
 

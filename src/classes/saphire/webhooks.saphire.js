@@ -1,8 +1,8 @@
-import { REST, Routes, WebhookClient } from "discord.js"
-import { Config } from "../../util/Constants.js"
-import fs from 'fs'
-const avatar = fs.readFileSync('./src/images/webhooks/anime_reporter.png', { encoding: 'base64' })
-const res = new REST().setToken(process.env.BOT_TOKEN_REQUEST)
+import { REST, Routes, WebhookClient } from "discord.js";
+import { Config } from "../../util/Constants.js";
+import fs from 'fs';
+const avatar = fs.readFileSync('./src/images/webhooks/anime_reporter.png', { encoding: 'base64' });
+const res = new REST().setToken(process.env.BOT_TOKEN_REQUEST);
 
 export default async channelId => {
 

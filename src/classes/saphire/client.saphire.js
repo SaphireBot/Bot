@@ -1,4 +1,4 @@
-import { ApplicationRoleConnectionMetadataType, Client, Collection, Guild, Routes, messageLink } from 'discord.js'
+import { ApplicationRoleConnectionMetadataType, Client, Collection, Guild, Message, Routes, messageLink } from 'discord.js'
 import { Database, Discloud } from '../index.js'
 import { ClientOptions, Emojis as e } from '../../util/util.js'
 import { Config as config } from '../../util/Constants.js'
@@ -14,10 +14,6 @@ export default new class client extends Client {
 
         this.animes = []
         this.slashCommands = new Collection()
-        /**
-         * @returns Client Secret
-         */
-        this.secretId = ""
 
         /**
          * @returns BLUE - Hexadecimal
@@ -147,8 +143,8 @@ export default new class client extends Client {
         return
     }
 
-    async refreshStaff() {
-        this.clientData = await Database.Client.findOne({ id: this.user.id })
+    async refreshStaff(starting) {
+        if (!starting) this.clientData = await Database.Client.findOne({ id: this.user.id })
         if (!this.clientData) return
 
         if (this.clientData.Administradores) this.admins = [...this.clientData.Administradores]
@@ -229,7 +225,13 @@ export default new class client extends Client {
         return
     }
 
-    async linkedRolesLoad() {
+    /**
+     * @param { Message } message 
+     * @returns 
+     */
+    async linkedRolesLoad(message) {
+
+        const msg = await message.reply({ content: `${e.Loading} | Registering Linked Roles...` })
 
         const bodyContent = [
             {
@@ -270,12 +272,20 @@ export default new class client extends Client {
             }
         )
 
+        let content = `${e.DenyX} | No response was given.`
+
         if (response.ok) {
             const data = await response.json();
-            return console.log(`${data.length} Linked Roles Setted`);
+            content = `${e.CheckV} | ${data?.length || 0} Linked Roles have been setted.`
         }
 
-        return console.log('Erro ao configurar os Linked Roles', await response.text());
+        if (!response.ok) {
+            content = `${e.DenyX} | error to configuring payloads linked to Discord API. Logs wrote to console.`
+            console.log(await response.text())
+        }
+
+        return msg.edit({ content })
+            .catch(() => message.channel.send({ content }).catch(() => { }))
     }
 
     async getUser(userId) {

@@ -1,7 +1,7 @@
-import { ButtonStyle } from "discord.js"
-import { SaphireClient as client, Database } from "../../../classes/index.js"
-import { Emojis as e } from "../../../util/util.js"
-import { socket } from "../../../websocket/websocket.js"
+import { SaphireClient as client, Database } from "../../../classes/index.js";
+import { ButtonStyle } from "discord.js";
+import { Emojis as e } from "../../../util/util.js";
+import { socket } from "../../../websocket/websocket.js";
 
 export default new class ChestManager {
     constructor() {
