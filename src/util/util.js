@@ -39,6 +39,7 @@ const SaphireClientOptions = {
         GatewayIntentBits.GuildScheduledEvents,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessageTyping
         // GatewayIntentBits.GuildPresences
     ],
     waitGuildTimeout: 20000,

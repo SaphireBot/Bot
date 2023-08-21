@@ -122,7 +122,8 @@ export default class ButtonInteraction extends Base {
             spam: [redirectSpam, this.interaction, commandData?.src],
             commands: [commands, this.interaction, true],
             hangman: [buttonHangman, this.interaction, commandData],
-            vip: [vipButtons, this.interaction, commandData]
+            vip: [vipButtons, this.interaction, commandData],
+            fasttype: [this.fasttype, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return result[0](...result?.slice(1))
@@ -143,6 +144,23 @@ export default class ButtonInteraction extends Base {
             return this[byThis]()
 
         return
+    }
+
+    fasttype(interaction, commandData) {
+        const command = client.slashCommands.get("fasttype")
+
+        if (!command)
+            return interaction?.update({
+                content: `${e.DenyX} | Comando não encontrado.`,
+                components: []
+            })
+                .catch(() => interaction.reply({
+                    content: `${e.DenyX} | Comando não encontrado.`,
+                    components: []
+                })
+                    .catch(() => { }))
+
+        return command.execute({ interaction }, commandData)
     }
 
     clear(interaction, customData) {

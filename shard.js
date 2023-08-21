@@ -5,7 +5,7 @@ import { execArgv, env } from 'process'
 import { Database, SaphireClient as client } from './src/classes/index.js'
 const shardList = {
     discloud: [...new Array(Math.floor(Math.random() * 8) + 2).keys()],
-    localhost: [0, 1]
+    localhost: [0]
 }[process.env.MACHINE] || [0]
 
 const { ShardingClient } = Statcord
