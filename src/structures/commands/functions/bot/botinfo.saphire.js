@@ -187,7 +187,7 @@ export default async (interaction, commandData) => {
                     name: `${e.twitch} Twitch System`,
                     value: `\`\`\`txt\nStreamers: ${twitchData?.streamersOffline?.length + twitchData?.streamersOnline?.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${twitchData?.streamersOnline?.length}\nStreamers Offline: ${twitchData?.streamersOffline?.length}\nServidores Registrados: ${twitchData?.allGuildsID?.length || 0}\nRequisições em Espera: ${twitchData?.awaitingRequests}\n\`\`\``,
                     inline: true
-                },
+                }
             ],
             footer: {
                 text: `💚 Powered by discloud.app | From Cluster ${client.clusterName}`

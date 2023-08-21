@@ -31,9 +31,9 @@ export default async () => {
                     category: cmd.category || "Não possui",
                     description: cmd.description || "Não possui"
                 });
+                (cmd.admin || cmd.staff) ? adminCommands.push(cmd) : commands.push(cmd);
                 if (applicationCommandData) cmd.id = applicationCommandData?.id
                 client.slashCommands.set(cmd.name, cmd);
-                (cmd.admin || cmd.staff) ? adminCommands.push(cmd) : commands.push(cmd);
             }
             continue
         }
@@ -68,7 +68,14 @@ export async function registerCommands() {
         client.rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: adminCommands })
             .catch(() => { })
 
-    return await client.rest.put(Routes.applicationCommands(client.user.id), { body: commands })
+    return await client.rest.put(
+        Routes.applicationCommands(client.user.id), {
+        body: commands
+            .map(cmd => {
+                delete cmd.id
+                return cmd
+            })
+    })
         .then(data => {
             for (const cmd of data) {
                 const cmdData = client.slashCommands.get(cmd.name)
