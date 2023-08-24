@@ -8,11 +8,11 @@ client.on('messageDelete', async message => {
     if (!message || !message.id) return
 
     if (GiveawayManager.getGiveaway(message.id))
-        Database.deleteGiveaway(message.id, message.guildId)
+        await Database.deleteGiveaway(message.id, message.guildId)
 
-    Database.Cache.Connect.delete(message.id)
-    Database.Cache.WordleGame.delete(message.id)
-    Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
+    await Database.Cache.Connect.delete(message.id)
+    await Database.Cache.WordleGame.delete(message.id)
+    await Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
 
     const multiplier = await Database.Cache.Multiplier.all() || []
     if (multiplier.length)
