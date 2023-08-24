@@ -54,7 +54,7 @@ client.on('messageDelete', async message => {
 
     const pay = await Database.Cache.Pay.get(`${message.interaction?.user?.id}.${message.id}`)
     if (pay?.value) {
-        Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
+        await Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
 
         const transaction = {
             time: `${Date.format(0, true)}`,
@@ -189,7 +189,7 @@ client.on('messageDelete', async message => {
             value: jokempoGameGlobal.value,
             webhookUrl: jokempoGameGlobal.webhookUrl
         }).save()
-        Database.Cache.Jokempo.delete(`Global.${message.id}`)
+        await Database.Cache.Jokempo.delete(`Global.${message.id}`)
 
         const transaction = {
             time: `${Date.format(0, true)}`,
