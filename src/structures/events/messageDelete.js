@@ -8,11 +8,11 @@ client.on('messageDelete', async message => {
     if (!message || !message.id) return
 
     if (GiveawayManager.getGiveaway(message.id))
-        Database.deleteGiveaway(message.id, message.guildId)
+        await Database.deleteGiveaway(message.id, message.guildId)
 
-    Database.Cache.Connect.delete(message.id)
-    Database.Cache.WordleGame.delete(message.id)
-    Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
+    await Database.Cache.Connect.delete(message.id)
+    await Database.Cache.WordleGame.delete(message.id)
+    await Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
 
     const multiplier = await Database.Cache.Multiplier.all() || []
     if (multiplier.length)
@@ -54,7 +54,7 @@ client.on('messageDelete', async message => {
 
     const pay = await Database.Cache.Pay.get(`${message.interaction?.user?.id}.${message.id}`)
     if (pay?.value) {
-        Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
+        await Database.Cache.Pay.delete(`${message.interaction?.user?.id}.${message.id}`)
 
         const transaction = {
             time: `${Date.format(0, true)}`,
@@ -189,7 +189,7 @@ client.on('messageDelete', async message => {
             value: jokempoGameGlobal.value,
             webhookUrl: jokempoGameGlobal.webhookUrl
         }).save()
-        Database.Cache.Jokempo.delete(`Global.${message.id}`)
+        await Database.Cache.Jokempo.delete(`Global.${message.id}`)
 
         const transaction = {
             time: `${Date.format(0, true)}`,
