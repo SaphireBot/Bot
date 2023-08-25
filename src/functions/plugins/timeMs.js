@@ -114,7 +114,7 @@ export default Time => {
     function calculateWeek() {
 
         const date = new Date()
-        date.setDate(date.getDate() + (week - 1 - date.getDay() + 7) % 7 + 1);
+        date.setDate(date.getDate() + ((week || 0) - 1 - date.getDay() + 7) % 7 + 1);
         Args = `${date.toLocaleDateString("pt-BR")} ${Args.slice(1).join(' ') || '12:00'}`.split(/ +/g)
         return withDay()
     }

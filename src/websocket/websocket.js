@@ -3,6 +3,7 @@ import { AfkManager, Database, GiveawayManager, SaphireClient as client } from '
 import reward from './functions/topgg.reward.js';
 import refreshRanking from '../functions/update/ranking/index.ranking.js';
 import { commandsApi } from '../structures/handler/commands.handler.js';
+// import emitReminder from './functions/emit.reminder.js';
 
 /**
  * @type { SocketType }
@@ -24,6 +25,7 @@ async function initSocket() {
         }
     )
 
+    socket.on("error", console.log)
     socket.on("connect", () => initRefreshInterval())
     socket.on("disconnect", () => {
         if (interval) clearInterval(interval)
@@ -88,6 +90,21 @@ async function initSocket() {
         })
     })
 
+    socket.on("reminderGuild", async ({ guildId, memberId, channelId }, callback) => {
+
+        if (!client.guilds.cache.has(guildId)) return callback(null)
+
+        const guild = client.guilds.cache.get(guildId)
+
+        const channel = await guild?.channels?.fetch(channelId).then(() => true).catch(() => false)
+        if (!channel) return callback(null)
+
+        const member = await guild?.members?.fetch(memberId).then(() => true).catch(() => false)
+        if (!member) return callback(null)
+
+        return callback(member && channel)
+    })
+
     function initRefreshInterval() {
         if (interval) clearInterval(interval)
         send()
@@ -126,8 +143,10 @@ function message(data) {
         case "topgg": reward(message); break;
         case "errorInPostingMessage": client.errorInPostingMessage(data.data, data.err); break;
         case "globalAfk": globalAfkData(data.data); break;
+        case "notifyUser": client.users.send(data.userId, data.content).catch(() => { }); break;
         default: console.log(`Shard ${client.shardId} | Unknown Message From Websocket | `, data); break;
     }
+    return;
 }
 
 function globalAfkData(data) {

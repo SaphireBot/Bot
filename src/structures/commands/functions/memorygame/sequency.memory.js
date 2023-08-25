@@ -11,7 +11,7 @@ export default async (interaction, Database, client, e) => {
             ephemeral: true
         })
 
-    Database.Cache.General.push(`${client.shardId}.sequencyGame`, channel.id)
+        await Database.Cache.General.push(`${client.shardId}.sequencyGame`, channel.id)
 
     const numbers = options.getInteger('numbers')
     const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']

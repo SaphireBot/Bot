@@ -3,7 +3,7 @@ import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 import { Experience } from '../../../../../classes/index.js'
 import Base from '../../../../classes/Base.js'
 import revalidateReminder from './reminder.daily.js'
-import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 import { Emojis as e } from '../../../../../util/util.js'
 import { socket } from '../../../../../websocket/websocket.js'
 
@@ -140,18 +140,33 @@ export default class Daily extends Base {
 
         const dateNow = Date.now()
 
-        if (isReminder)
-            managerReminder.save(this.user, {
-                id: CodeGenerator(7).toUpperCase(),
-                userId: this.user.id,
-                guildId: this.guild.id,
-                RemindMessage: 'Daily Disponível',
-                Time: 86400000,
-                DateNow: dateNow,
-                isAutomatic: true,
-                ChannelId: this.channel.id,
-                privateOrChannel: option == 'reminderPrivate'
+        if (isReminder) {
+            // managerReminder.save(this.user, {
+            //     id: CodeGenerator(7).toUpperCase(),
+            //     userId: this.user.id,
+            //     guildId: this.guild.id,
+            //     RemindMessage: 'Daily Disponível',
+            //     Time: 86400000,
+            //     DateNow: dateNow,
+            //     isAutomatic: true,
+            //     ChannelId: this.channel.id,
+            //     privateOrChannel: option == 'reminderPrivate'
+            // })
+            socket?.send({
+                type: "postReminder",
+                reminderData: {
+                    id: CodeGenerator(7).toUpperCase(),
+                    userId: this.user.id,
+                    guildId: this.guild.id,
+                    RemindMessage: 'Daily Disponível',
+                    Time: 86400000,
+                    DateNow: dateNow,
+                    isAutomatic: true,
+                    ChannelId: this.channel.id,
+                    privateOrChannel: option == 'reminderPrivate'
+                }
             })
+        }
 
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },

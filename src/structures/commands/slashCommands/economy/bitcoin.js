@@ -1,7 +1,7 @@
 import { Colors } from '../../../../util/Constants.js'
 import { ApplicationCommandOptionType } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
-import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
 import { Database } from '../../../../classes/index.js'
 import { socket } from '../../../../websocket/websocket.js'
 
@@ -152,15 +152,28 @@ export default {
             let returnContent = `${e.BitCoin} | Mais 1 fragmento de Bitcoin pra sua conta \`${Bits + 1}/1000\`\n⏱ | Próximo reset ${Date.Timestamp(new Date(Date.now() + 7200000), 'R', true)}`
 
             if (isReminder) {
-                managerReminder.save(user, {
-                    id: CodeGenerator(7).toUpperCase(),
-                    userId: author.id,
-                    guildId: guild.id,
-                    RemindMessage: 'Bitcoin Farming Disponível',
-                    Time: 7200000,
-                    DateNow: Date.now(),
-                    isAutomatic: true,
-                    ChannelId: interaction.channel.id
+                // managerReminder.save(user, {
+                //     id: CodeGenerator(7).toUpperCase(),
+                //     userId: author.id,
+                //     guildId: guild.id,
+                //     RemindMessage: 'Bitcoin Farming Disponível',
+                //     Time: 7200000,
+                //     DateNow: Date.now(),
+                //     isAutomatic: true,
+                //     ChannelId: interaction.channel.id
+                // })
+                socket?.send({
+                    type: "postReminder",
+                    reminderData: {
+                        id: CodeGenerator(7).toUpperCase(),
+                        userId: author.id,
+                        guildId: guild.id,
+                        RemindMessage: 'Bitcoin Farming Disponível',
+                        Time: 7200000,
+                        DateNow: Date.now(),
+                        isAutomatic: true,
+                        ChannelId: interaction.channel.id
+                    }
                 })
                 returnContent += '\n⏰ | Lembrete Automático Ativado.'
             }

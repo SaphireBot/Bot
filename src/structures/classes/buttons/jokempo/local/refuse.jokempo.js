@@ -54,7 +54,7 @@ export default async interaction => {
             .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 
-    Database.Cache.Jokempo.delete(message.id)
+    await Database.Cache.Jokempo.delete(message.id)
     return interaction.update({
         content: `${e.DenyX} | ${user} recusou esta partida de jokempo.`,
         components: []

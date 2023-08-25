@@ -2,7 +2,9 @@ import { ApplicationCommandOptionType } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../../../util/util.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
-import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
+import { socket } from '../../../../websocket/websocket.js'
+import showReminder from '../../../../functions/update/reminder/src/show.reminder.js'
 
 export default {
     name: 'reminder',
@@ -82,13 +84,14 @@ export default {
             bot: []
         }
     },
-    execute({ interaction, client }) {
+    async execute({ interaction, client }) {
 
         const { options, user, channel, guild } = interaction
         const subCommand = options.getSubcommand()
 
         if (subCommand === 'ver')
-            return managerReminder.show(interaction, options.getString('itens'))
+            // return managerReminder.show(interaction, options.getString('itens'))
+            return showReminder(interaction, options.getString('itens'))
 
         const timeData = options.getString('quando')
         const message = options.getString('mensagem')
@@ -140,14 +143,31 @@ export default {
             interval: options.getInteger('intervalo') || 0
         }
 
-        return managerReminder.save(user, data)
-            .then(() => interaction.reply({
+        await interaction.reply({ content: `${e.Loading} | Salvando seu lembrete...`, ephemeral: true })
+
+        const response = await socket
+            ?.timeout(1000)
+            .emitWithAck("postReminder", data)
+            .catch(() => false)
+
+        if (response === true)
+            return interaction.editReply({
                 content: `${e.Check} | Lembrete criado com sucesso! Vou te lembrar${message.length <= 250 ? ` de \`${message}\` ` : ' '}${data.Time > 86400000 ? `no dia ${Date.GetTimeout(data.Time + 1000, data.DateNow, 'F')} (${Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')})` : Date.GetTimeout(data.Time + 1000, data.DateNow, 'R')}`,
-                ephemeral: true
-            }))
-            .catch(err => interaction.reply({
-                content: `${e.Animated.SaphireCry} | Não foi possível criar o lembrete.\n${e.bug} | \`${err}\``
-            }))
+            }).catch(() => { })
+
+        if (response === false)
+            return interaction.editReply({
+                content: `${e.Animated.SaphireReading} | Algo de errado não está certo...`
+            }).catch(() => { })
+
+        if (response.includes("error"))
+            return interaction.editReply({
+                content: `${e.Animated.SaphirePanic} | HOOO MY GOSH!.\n${e.bug} | \`${response}\``
+            }).catch(() => { })
+
+        return interaction.editReply({
+            content: `${e.QuestionMark} | Hum... Eu não recebi nenhuma resposta que era para eu ter recebido...`
+        }).catch(() => { })
 
     }
 }

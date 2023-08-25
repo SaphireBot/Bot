@@ -78,7 +78,7 @@ export default {
                 ephemeral: true
             })
 
-        Database.Cache.General.push(`${client.shardId}.lastClick`, channel.id)
+            await Database.Cache.General.push(`${client.shardId}.lastClick`, channel.id)
 
         if (isBet) {
 
@@ -86,7 +86,7 @@ export default {
             const opponentData = await Database.getUser(opponent.id)
 
             if (!userData) {
-                Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
 
                 Database.registerUser(user)
                 return await interaction.reply({
@@ -96,7 +96,7 @@ export default {
             }
 
             if (!opponentData) {
-                Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
 
                 Database.registerUser(opponent)
                 return await interaction.reply({
@@ -109,7 +109,7 @@ export default {
             let opponentMoney = opponentData.Balance || 0
 
             if (!opponentMoney || opponentMoney < amount) {
-                Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
 
                 return await interaction.reply({
                     content: `${e.Deny} | ${opponent} não tem todo esse dinheiro.`,
@@ -118,7 +118,7 @@ export default {
             }
 
             if (!userMoney || userMoney < amount) {
-                Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
 
                 return await interaction.reply({
                     content: `${e.Deny} | Você não tem todo esse dinheiro.`,
@@ -158,13 +158,13 @@ export default {
             time: 60000,
             max: 1
         })
-            .on('collect', int => {
+            .on('collect', async int => {
 
                 const { customId } = int
 
                 if (customId === 'refuse') {
                     collector.stop()
-                    Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                    await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
                     return msg.edit({
                         content: `${e.Deny} | Desafio recusado`,
                         components: []
@@ -181,9 +181,9 @@ export default {
 
                 return initGame()
             })
-            .on('end', (i, reason) => {
+            .on('end', async (_, reason) => {
                 if (['user', 'limit'].includes(reason)) return
-                Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
+                await Database.Cache.General.pull(`${client.shardId}.lastClick`, channel.id)
                 return msg.edit({
                     content: `${e.Deny} | Desafio cancelado`,
                     components: []

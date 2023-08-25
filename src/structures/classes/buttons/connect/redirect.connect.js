@@ -18,7 +18,7 @@ export default ({ interaction, user, message }, commandData) => {
 
     return execute(interaction, commandData)
 
-    function cancel() {
+    async function cancel() {
 
         if (![userId, message.interaction.user.id].includes(user.id))
             return interaction.reply({
@@ -26,7 +26,7 @@ export default ({ interaction, user, message }, commandData) => {
                 ephemeral: true
             })
 
-        Database.Cache.Connect.delete(message.id)
+        await Database.Cache.Connect.delete(message.id)
         return interaction.update({
             content: `${e.Deny} | ${interaction.user} cancelou o desafio Connect4.`,
             components: []
@@ -105,9 +105,9 @@ export default ({ interaction, user, message }, commandData) => {
             components,
             ephemeral: true
         })
-            .catch(err => {
+            .catch(async err => {
                 if (err.code == 10062) return interaction.channel.send({ connect: `${e.Animated.SaphireCry} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
-                Database.Cache.Connect.delete(message.id)
+                await Database.Cache.Connect.delete(message.id)
                 message.delete().catch(() => { })
                 return interaction.channel.send({ content: `${e.Animated.SaphireCry} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
             })

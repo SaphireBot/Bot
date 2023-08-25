@@ -3,7 +3,10 @@ import { Permissions, PermissionsTranslate } from '../../util/Constants.js'
 import { StringSelectMenuInteraction } from 'discord.js'
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../util/util.js'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+import editReminder from '../../functions/update/reminder/src/edit.reminder.js'
+import moveReminder from '../../functions/update/reminder/src/move.reminder.js'
+import removeReminder from '../../functions/update/reminder/src/remove.reminder.js'
 import searchAnime from '../commands/functions/anime/search.anime.js'
 import deleteGiveaway from '../commands/functions/giveaway/delete.giveaway.js'
 import finishGiveaway from '../commands/functions/giveaway/finish.giveaway.js'
@@ -31,6 +34,7 @@ import messagesSeconds from './selectmenu/spam/messagesSeconds.spam.js'
 import setImuneChannels from './selectmenu/spam/setImuneChannels.spam.js'
 import minday from './selectmenu/minday/interaction.minday.js'
 import indexBet from './buttons/bet/index.bet.js'
+import { socket } from '../../websocket/websocket.js'
 
 export default class SelectMenuInteraction extends Base {
     /**
@@ -234,32 +238,27 @@ export default class SelectMenuInteraction extends Base {
     async reminder({ interaction, value, user }) {
 
         const data = JSON.parse(value)
-        const reminderData = managerReminder.allReminders.get(data?.reminderId)
-
-        if (user.id !== reminderData?.userId) return
+        const reminderData = await socket?.timeout(1000)?.emitWithAck("getReminder", data?.reminderId).catch(() => null)
 
         if (!reminderData)
-            return await interaction.update({
+            return interaction.update({
                 content: `${e.Deny} | Lembrete não encontrado.`,
                 embeds: [], components: []
             }).catch(() => { })
 
+        if (user.id !== reminderData?.userId) return
+
         if (data.c === 'edit')
-            return managerReminder.requestEdit(interaction, data.reminderId)
+            return editReminder(interaction, data.reminderId)
 
         if (data.c === 'move')
-            return managerReminder.move(interaction, data.reminderId)
+            return moveReminder(interaction, data.reminderId)
 
         if (data.c === 'delete') {
-            managerReminder.remove(data.reminderId)
-            return await interaction.update({
-                content: `${e.Check} | Prontinho! O lembrete \`${data.reminderId}\` foi deletado e não existe mais.`,
-                embeds: [],
-                components: []
-            }).catch(() => { })
+            return removeReminder(interaction, data.reminderId)
         }
 
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.Deny} | Sub-comando não encontrado.`,
             ephemeral: true
         })

@@ -1,12 +1,13 @@
-import { SaphireClient as client, Database, GiveawayManager } from '../../classes/index.js'
-import { AuditLogEvent, GuildChannel } from 'discord.js'
-import { Emojis as e } from '../../util/util.js'
-import { socket } from '../../websocket/websocket.js'
+import { SaphireClient as client, Database, GiveawayManager } from '../../classes/index.js';
+import { AuditLogEvent, GuildChannel } from 'discord.js';
+import { Emojis as e } from '../../util/util.js';
+import { socket } from '../../websocket/websocket.js';
 
 /**
  * @param { GuildChannel } channel
  */
 client.on('channelDelete', async channel => {
+    client.channels.cache.delete(channel?.id)
 
     const { guild } = channel
 

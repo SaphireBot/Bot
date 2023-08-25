@@ -14,7 +14,7 @@ export default async (interaction, gameData) => {
     const { message, guild } = interaction
     const winner = check(clicks)
     const MoedaCustom = await guild.getCoin()
-    Database.Cache.Jokempo.delete(message.id)
+    await Database.Cache.Jokempo.delete(message.id)
 
     if (winner == 'draw') return draw()
 

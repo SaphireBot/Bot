@@ -146,17 +146,17 @@ export default {
                 : await interaction.reply(res)
         }
 
-        if (!data.Perfil) {
-            const res = {
-                content: `${e.Deny} | Nenhuma informação do perfil foi encontrada.`,
-                ephemeral,
-                components: []
-            }
+        // if (!data.Perfil) {
+        //     const res = {
+        //         content: `${e.Deny} | Nenhuma informação do perfil foi encontrada.`,
+        //         ephemeral,
+        //         components: []
+        //     }
 
-            return refresh
-                ? interaction.update(res).catch(() => { })
-                : interaction.reply(res)
-        }
+        //     return refresh
+        //         ? interaction.update(res).catch(() => { })
+        //         : interaction.reply(res)
+        // }
         const Embed = { color: client.blue, description: `${e.Loading} | Construindo perfil...` }
 
         refresh

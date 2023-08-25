@@ -37,5 +37,5 @@ client.on('jokempoRefund', async (data) => {
         Database.refreshUsersData(players)
     }
 
-    return Database.Cache.Jokempo.delete(messageId)
+    return await Database.Cache.Jokempo.delete(messageId)
 })

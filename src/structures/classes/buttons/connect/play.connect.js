@@ -84,9 +84,9 @@ export default async (interaction, commandData) => {
             components,
             ephemeral: true
         })
-            .catch(err => {
+            .catch(async err => {
                 if (err.code == 10062) return interaction.channel.send({ connect: `${e.Animated.SaphireCry} | ${interaction.user}, o Discord não entregou todos os dados necessário. Pode clicar no botão mais uma vez?` })
-                Database.Cache.Connect.delete(message.id)
+                await Database.Cache.Connect.delete(message.id)
                 return interaction.channel.send({ content: `${e.Animated.SaphireCry} | Erro ao iniciar o jogo\n${e.bug} | \`${err}\`` })
             })
     }
@@ -124,9 +124,9 @@ export default async (interaction, commandData) => {
         return components
     }
 
-    function newWinner() {
+    async function newWinner() {
 
-        Database.Cache.Connect.delete(message.id)
+        await Database.Cache.Connect.delete(message.id)
         const emojiData = Object.entries(emojiPlayer)
         const winnerId = emojiData.find(data => data[1] == emojiWinner)[0]
         const embed = interaction.message.embeds[0]?.data
@@ -148,9 +148,9 @@ export default async (interaction, commandData) => {
 
     }
 
-    function draw() {
+    async function draw() {
 
-        Database.Cache.Connect.delete(message.id)
+        await Database.Cache.Connect.delete(message.id)
         const embed = interaction.message.embeds[0]?.data
 
         if (!embed)

@@ -59,7 +59,7 @@ export default async (interaction) => {
     )
         .then(doc => Database.saveUserCache(doc?.id, doc))
 
-    Database.Cache.Jokempo.push(`${message.id}.players`, userId)
+    await Database.Cache.Jokempo.push(`${message.id}.players`, userId)
 
     return interaction.update({
         content: null,

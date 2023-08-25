@@ -4,10 +4,11 @@ import { Config as config } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import moment from 'moment'
 import cantadasModal from './modals/cantadas/cantadas.modal.js'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import analiseHangman from './modals/hangman/analise.hangman.js'
 import { socket } from '../../websocket/websocket.js'
+import changeReminder from '../../functions/update/reminder/src/change.reminder.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -58,7 +59,8 @@ export default class ModalInteraction extends Base {
             this.customId = JSON.parse(this.customId)
 
             switch (this.customId?.c) {
-                case 'reminder': return managerReminder.edit(this.interaction, this.customId?.reminderId);
+                // case 'reminder': return managerReminder.edit(this.interaction, this.customId?.reminderId);
+                case 'reminder': return changeReminder(this.interaction, this.customId?.reminderId);
                 case 'anime': return this.editAnime(this);
                 case 'hangman': return analiseHangman(this.interaction)
             }

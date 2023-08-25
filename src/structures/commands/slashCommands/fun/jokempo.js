@@ -157,7 +157,7 @@ async function local(SlashCommand) {
                     .then(doc => Database.saveUserCache(doc?.id, doc))
             }
 
-            Database.Cache.Jokempo.set(
+            await Database.Cache.Jokempo.set(
                 message.id,
                 {
                     players: [user.id],

@@ -3,7 +3,7 @@ import { AutocompleteInteraction, PermissionsBitField } from 'discord.js'
 import { formatString } from '../../functions/plugins/plugins.js'
 import { Database } from '../../classes/index.js'
 import { socket } from '../../websocket/websocket.js'
-import managerReminder from '../../functions/update/reminder/manager.reminder.js'
+// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
 import { createRequire } from 'node:module'
@@ -312,14 +312,14 @@ export default class Autocomplete extends Base {
     }
 
     async reminders(value) {
-        const reminders = managerReminder.allReminders.toJSON()
-            .filter(r => r.userId === this.user.id)
-        if (!reminders.length) return this.respond()
+        const reminders = await socket?.timeout(1000)?.emitWithAck("getReminders", this.user.id).catch(() => [])
+        if (!reminders?.length) return this.respond()
 
-        const filAndMap = reminders.filter(r =>
-            r.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase())
-            || r.id?.toLowerCase()?.includes(value?.toLowerCase())
-        )
+        const filAndMap = reminders
+            .filter(r =>
+                r.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase())
+                || r.id?.toLowerCase()?.includes(value?.toLowerCase())
+            )
             .map(r => ({ name: `${r?.id} - ${r?.RemindMessage}`, value: r?.id }))
         return this.respond(filAndMap)
     }

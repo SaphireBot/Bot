@@ -36,7 +36,7 @@ Manager.spawn()
     .then(async shards => {
 
         shards.forEach(Manager.enableListeners)
-        setInterval(() => Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
+        setInterval(async () => await Database.Cache.Chat.delete("Global"), 1000 * 60 * 60)
         if (client.clusterName == "Antares" || Manager.shardList.length !== shards.last().id + 1) return
         const guildsPerShards = await Manager.fetchClientValues("guilds.cache.size").catch(() => null)
         if (!guildsPerShards?.length) return

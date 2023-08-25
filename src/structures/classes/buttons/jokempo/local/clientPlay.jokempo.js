@@ -13,7 +13,7 @@ export default async (interaction, click) => {
         return { stone: '👊', scissors: '✌️', paper: '🤚' }[choice]
     }
 
-    Database.Cache.Jokempo.delete(interaction.message.id)
+    await Database.Cache.Jokempo.delete(interaction.message.id)
 
     return interaction.update({
         content: null,

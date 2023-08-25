@@ -41,7 +41,7 @@ export default async interaction => {
             }
         ]
     })
-        .then(message => Database.Cache.Jokempo.set(message.id, {
+        .then(async message => await Database.Cache.Jokempo.set(message.id, {
             players: [interaction.user.id, client.user.id],
             type: 'bot'
         }))

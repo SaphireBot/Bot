@@ -320,13 +320,13 @@ export default class ButtonInteraction extends Base {
         })
     }
 
-    deleteMessage({ message, user, channel }, commandData) {
+    deleteMessage({ message, user }, commandData) {
 
         if (user.id === commandData.userId)
-            return client.pushMessage({ method: 'delete', channelId: channel.id, messageId: message.id })
+            return message?.delete().catch(() => { })
 
         if (user.id !== message.interaction?.user?.id) return
-        return client.pushMessage({ method: 'delete', channelId: channel.id, messageId: message.id })
+        return message?.delete().catch(() => { })
 
     }
 

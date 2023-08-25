@@ -97,7 +97,7 @@ client.on('messageDeleteBulk', async (messages) => {
                 webhookUrl: gameData.webhookUrl
             }).save()
             Database.add(gameData.userId, gameData.value, `${e.gain} Recebeu ${gameData.value || 0} Safiras atráves do *Bet Delete System (Jokempo)*`)
-            Database.Cache.Jokempo.delete(`Global.${messageId}`)
+            await Database.Cache.Jokempo.delete(`Global.${messageId}`)
         }
         return
     }
@@ -118,30 +118,30 @@ client.on('messageDeleteBulk', async (messages) => {
             }
 
             Database.add(game.value.userId, game.value.bet, `${e.gain} Recebeu ${game.value.bet} Safiras via *Blackjack Refund*`)
-            Database.Cache.Blackjack.delete(game.id)
+            await Database.Cache.Blackjack.delete(game.id)
             continue
         }
 
         for await (let game of multiplayer) {
             client.emit(game, true)
-            Database.Cache.Blackjack.delete(game.id)
+            await Database.Cache.Blackjack.delete(game.id)
         }
         return
     }
 
     async function deleteSingleData() {
 
-        for (const messageId of messagesId) {
-            Database.Cache.Connect.delete(messageId)
-            Database.Cache.WordleGame.delete(messageId)
+        for await (const messageId of messagesId) {
+            await Database.Cache.Connect.delete(messageId)
+            await Database.Cache.WordleGame.delete(messageId)
         }
 
         const topGGData = await Database.Cache.General.get('TopGG')
 
         if (topGGData)
-            for (const data of Object.values(topGGData))
+            for await (const data of Object.values(topGGData))
                 if (messagesId.includes(data.messageId))
-                    Database.Cache.General.delete(`TopGG.${data.userId}`)
+                    await Database.Cache.General.delete(`TopGG.${data.userId}`)
         return
     }
 

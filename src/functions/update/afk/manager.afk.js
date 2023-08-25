@@ -37,8 +37,8 @@ export default new class AfkManager {
             continue
         }
 
-        for (const id of toDelete) Database.Cache.AfkSystem.delete(id)
-        for (const id of toDeleteGlobal) Database.Cache.AfkSystem.delete(`Global.${id}`)
+        for (const id of toDelete) await Database.Cache.AfkSystem.delete(id)
+        for (const id of toDeleteGlobal) await Database.Cache.AfkSystem.delete(`Global.${id}`)
 
         return setTimeout(() => this.load(), 1000 * 60 * 3)
     }
