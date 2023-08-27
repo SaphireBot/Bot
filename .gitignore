@@ -142,3 +142,4 @@ discloud/backups
 .zip
 discloud
 .discloudignore
+*.sqlite

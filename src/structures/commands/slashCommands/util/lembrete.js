@@ -2,7 +2,6 @@ import { ApplicationCommandOptionType } from 'discord.js'
 import { CodeGenerator } from '../../../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../../../util/util.js'
 import timeMs from '../../../../functions/plugins/timeMs.js'
-// import managerReminder from '../../../../functions/update/reminder/manager.reminder.js'
 import { socket } from '../../../../websocket/websocket.js'
 import showReminder from '../../../../functions/update/reminder/src/show.reminder.js'
 
@@ -90,7 +89,6 @@ export default {
         const subCommand = options.getSubcommand()
 
         if (subCommand === 'ver')
-            // return managerReminder.show(interaction, options.getString('itens'))
             return showReminder(interaction, options.getString('itens'))
 
         const timeData = options.getString('quando')
@@ -131,7 +129,7 @@ export default {
             })
 
         const data = {
-            id: CodeGenerator(7).toUpperCase(),
+            id: CodeGenerator(5).toUpperCase(),
             userId: user.id,
             RemindMessage: message,
             guildId: guild.id,

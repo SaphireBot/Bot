@@ -1,6 +1,6 @@
 import { SaphireClient as client, Database } from "../../classes/index.js";
 
-client.on("webhookUpdate", async channel => {
+client.on("webhooksUpdate", async channel => {
 
     const { guild } = channel
     const guildData = await Database.getGuild(guild.id)

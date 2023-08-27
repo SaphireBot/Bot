@@ -2,7 +2,6 @@ import { Database, Discloud, SaphireClient as client, AfkManager, TempCallManage
 import { Config } from '../../util/Constants.js'
 import automaticSystems from '../../functions/update/index.js'
 import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
-// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import slashCommand from '../../structures/handler/commands.handler.js'
 import PollManager from '../../functions/update/polls/poll.manager.js'
 import QuizManager from '../games/QuizManager.js'
@@ -37,7 +36,6 @@ export default async () => {
     TempCallManager.load(guildsData)
     SpamManager.load(guildsData)
     AfkManager.load()
-    // managerReminder.load()
 
     automaticSystems()
 

@@ -397,6 +397,7 @@ export default new class client extends Client {
             || typeof type !== 'string'
         ) return
 
+        await Database.Cache.Commands.push(`${userId}.${commandName}`, Date.now())
         await Database.Commands.updateOne(
             { id: commandName },
             {
@@ -414,37 +415,10 @@ export default new class client extends Client {
 
     async TwitchFetcher(url) {
         return await socket
-            ?.timeout(4000)
+            ?.timeout(1000 * 10)
             .emitWithAck("twitchFetcher", url)
             .then(res => res)
             .catch(() => null)
     }
 
-    async fetchGuild(guildId) {
-        return null
-        try {
-            const data = await this.shard.broadcastEval(async (client, guildId) => {
-                if (client.guilds.cache.has(guildId)) {
-                    const guild = await client.guilds.fetch(guildId).catch(() => null)
-                    if (!guild) return
-                    await Promise.all([
-                        guild.roles?.fetch()?.then(res => guild.roles = res?.toJSON() || []).catch(() => []),
-                        guild.channels?.fetch()?.then(res => guild.channels = res?.toJSON() || []).catch(() => []),
-                        guild.bans?.fetch()?.then(res => guild.bans = res?.toJSON() || []).catch(() => []),
-                        guild.emojis?.fetch()?.then(res => guild.emojis = res?.toJSON() || []).catch(() => []),
-                        guild.invites?.fetch()?.then(res => guild.invites = res?.toJSON() || []).catch(() => []),
-                        guild.members?.fetch()?.then(res => guild.members = res?.toJSON() || []).catch(() => []),
-                    ])
-                    return guild
-                } else return null
-            }, { context: guildId })
-                .then(res => res.find(g => g?.id == guildId))
-                .catch(() => null)
-
-            return data
-        } catch (er) {
-            return null
-        }
-
-    }
 }

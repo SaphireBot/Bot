@@ -1,14 +1,14 @@
-import { ButtonStyle, ChannelType, PermissionFlagsBits, parseEmoji } from 'discord.js'
+import { ButtonStyle, ChannelType, ModalSubmitInteraction, PermissionFlagsBits, parseEmoji } from 'discord.js'
 import { Base, SaphireClient as client, Database } from '../../classes/index.js'
 import { Config as config } from '../../util/Constants.js'
 import { Emojis as e } from '../../util/util.js'
 import moment from 'moment'
 import cantadasModal from './modals/cantadas/cantadas.modal.js'
-// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import checkerQuiz from './buttons/quiz/checker.quiz.js'
 import analiseHangman from './modals/hangman/analise.hangman.js'
 import { socket } from '../../websocket/websocket.js'
 import changeReminder from '../../functions/update/reminder/src/change.reminder.js'
+import timeMs from '../../functions/plugins/timeMs.js'
 
 export default class ModalInteraction extends Base {
     constructor(interaction) {
@@ -59,20 +59,99 @@ export default class ModalInteraction extends Base {
             this.customId = JSON.parse(this.customId)
 
             switch (this.customId?.c) {
-                // case 'reminder': return managerReminder.edit(this.interaction, this.customId?.reminderId);
-                case 'reminder': return changeReminder(this.interaction, this.customId?.reminderId);
-                case 'anime': return this.editAnime(this);
-                case 'hangman': return analiseHangman(this.interaction)
+                case 'reminder': changeReminder(this.interaction, this.customId?.reminderId); break;
+                case 'anime': this.editAnime(this); break;
+                case 'hangman': analiseHangman(this.interaction); break;
+                case 'reminderTime': this.reminderRevalide(this.interaction, this.customId); break;
             }
 
             if (this.customId.c.startsWith('newQuiz'))
                 return checkerQuiz(this.interaction, { src: this.customId.c })
+
+            return
         }
 
         return this.interaction.reply({
             content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,
             ephemeral: true
         })
+    }
+
+    /**
+     * @param { ModalSubmitInteraction } interaction 
+     * @param { { userId: string, messageId: string } } customId 
+     * @returns 
+     */
+    async reminderRevalide(interaction, { messageId, userId }) {
+
+        const { fields, user, message } = interaction
+
+        if (user.id !== userId)
+            return interaction.reply({
+                content: `${e.DenyX} | Hey, você não pode usar isso aqui, ok?`,
+                ephemeral: true
+            })
+
+        const time = fields.getTextInputValue('time')
+
+        if (['cancel', 'cancelar', 'fechar', 'close'].includes(time)) {
+            message.edit({ components: [] }).catch(() => { })
+            return interaction.reply({ content: `${e.CheckV} | Beleza, tudo cancelado.` })
+        }
+
+        const DefinedTime = timeMs(time)
+        const messageContent = message.content
+        message.delete().catch(() => { })
+
+        if (!DefinedTime) return deleteReminder(`${e.Deny} | O tempo que você passou não é válido. Por favor, crie outro lembrete.`)
+        if (DefinedTime < 3000) return deleteReminder(`${e.Deny} | O tempo mínimo é de 3 segundos. Lembrete deletado.`)
+        if (DefinedTime > 31536000000) return deleteReminder(`${e.Deny} | O tempo limite é de 1 ano. Lembrete deletado.`)
+
+        await interaction.reply({ content: messageContent + `\n${e.Loading} | Reconfigurando seu lembrete...`, components: [] })//.catch(() => { })
+
+        return await Database.Reminder.findOneAndUpdate(
+            { messageId },
+            {
+                $set: {
+                    Time: DefinedTime,
+                    DateNow: Date.now(),
+                    Alerted: false,
+                    snoozed: false
+                },
+                $unset: {
+                    deleteAt: true,
+                    messageId: true
+                }
+            },
+            { new: true }
+        )
+            .then(async doc => {
+                if (!doc)
+                    return interaction.editReply({ content: messageContent + `\n${e.DenyX} | Nenhum lembrete foi encontrado no banco de dados.` }).catch(() => { })
+
+                const res = await socket
+                    ?.timeout(5000)
+                    .emitWithAck("refreshReminder", doc.toObject())
+                    .catch(() => "timeout")
+
+                const content = {
+                    timeout: `${e.DenyX} | A resposta demorou muito, não sei se deu certo a configuração da sua nova data pro lembrete.`,
+                    "Not Found": `${e.DenyX} | A minha API não encontrou este lembrete no banco de dados.`,
+                    "Success": `${e.Check} | Tudo bem! Lembrete redefinido! Novo disparo **${Date.GetTimeout(DefinedTime, Date.now(), 'R')}**`
+                }[res] || `${e.Animated.SaphireReading} | A resposta que eu recebi não condiz com nenhum estado pré definido. Não sei dizer se o seu lembrete foi configurado corretamente.`
+
+                return interaction.editReply({ content: messageContent + "\n" + content }).catch(() => { })
+
+            })
+            .catch(err => interaction.editReply({
+                content: messageContent + "\n" + `${e.bug} | Erro ao reconfigurar seu lembrete. \`${err}\``
+            }).catch(() => { }))
+
+        async function deleteReminder(aditionalContent) {
+            interaction.reply({ content: messageContent + "\n" +  aditionalContent, components: [] }).catch(() => { })
+            const reminder = await Database.Reminder.findOneAndDelete({ messageId })
+            return socket?.send({ type: "removeReminder", id: reminder.id })
+        }
     }
 
     async globalChat({ interaction, user, guild, fields }) {

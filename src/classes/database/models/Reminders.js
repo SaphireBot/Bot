@@ -14,5 +14,7 @@ export default model("Reminders", new Schema({
     ChannelId: { type: String, default: "" },
     Alerted: { type: Boolean, default: false },
     privateOrChannel: { type: Boolean, default: false },
-    interval: { type: Number, default: 0 }
+    interval: { type: Number, default: 0 },
+    messageId: { type: String, default: "" },
+    deleteAt: { type: Number, default: 0 }
 }))

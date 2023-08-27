@@ -45,6 +45,8 @@ import buttonHangman from './buttons/hangman/button.hangman.js';
 import admin from './buttons/admin/redirect.admin.js';
 import vipButtons from './buttons/vip/vip.buttons.js';
 import marry from './buttons/marry/marry.buttons.js';
+import reminderButtons from './buttons/reminder/redirect.js';
+import { socket } from '../../websocket/websocket.js';
 
 export default class ButtonInteraction extends Base {
     /**
@@ -123,7 +125,8 @@ export default class ButtonInteraction extends Base {
             commands: [commands, this.interaction, true],
             hangman: [buttonHangman, this.interaction, commandData],
             vip: [vipButtons, this.interaction, commandData],
-            fasttype: [this.fasttype, this.interaction, commandData]
+            fasttype: [this.fasttype, this.interaction, commandData],
+            "rmd": [reminderButtons, this.interaction, commandData]
         }[commandData.c]
 
         if (result) return result[0](...result?.slice(1))
@@ -322,8 +325,14 @@ export default class ButtonInteraction extends Base {
 
     deleteMessage({ message, user }, commandData) {
 
-        if (user.id === commandData.userId)
-            return message?.delete().catch(() => { })
+        if (user.id === commandData.userId) {
+            message?.delete().catch(() => { })
+
+            if (commandData.reminderId)
+                socket?.send({ type: "removeReminder", id: commandData.reminderId })
+
+            return
+        }
 
         if (user.id !== message.interaction?.user?.id) return
         return message?.delete().catch(() => { })

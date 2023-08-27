@@ -4,6 +4,28 @@ export default new class Modals {
         return { ...this }
     }
 
+    reconfigureReminder = (messageId, userId) => {
+        return {
+            title: "Lembrete",
+            custom_id: JSON.stringify({ messageId, userId, c: "reminderTime" }),
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: "time",
+                            label: "Nova tempo/data",
+                            style: 1,
+                            placeholder: "20m | amanhã 17:00 | 30m 10s | 26/06/2024 12:00 | ...",
+                            required: true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     newHangman = {
         title: `Jogo da Forca | New Game`,
         custom_id: JSON.stringify({ c: "hangman", src: 'new' }),

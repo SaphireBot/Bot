@@ -3,7 +3,6 @@ import { Database } from '../../../../../classes/index.js'
 import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../../../../util/util.js'
 import { socket } from '../../../../../websocket/websocket.js'
-// import managerReminder from '../../../../../functions/update/reminder/manager.reminder.js'
 
 export default async (interaction, dateNow, oneDayMiliseconds, privateOrChannel) => {
 
@@ -73,17 +72,6 @@ export default async (interaction, dateNow, oneDayMiliseconds, privateOrChannel)
         })
 
     async function revalidadeDailyReminder() {
-        // managerReminder.save(user, {
-        //     id: CodeGenerator(7).toUpperCase(),
-        //     userId: user.id,
-        //     guildId: guild.id,
-        //     RemindMessage: 'Daily Disponível',
-        //     Time: 86400000,
-        //     DateNow: dateNow,
-        //     isAutomatic: true,
-        //     ChannelId: channel.id,
-        //     privateOrChannel: privateOrChannel == 'reminderPrivate'
-        // })
 
         socket?.send({
             type: "postReminder",

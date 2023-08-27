@@ -2,7 +2,6 @@ import { SaphireClient as client, Database, Experience } from '../../classes/ind
 import { CodeGenerator } from '../../functions/plugins/plugins.js'
 import { Emojis as e } from '../../util/util.js'
 import { Routes } from 'discord.js'
-// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import { socket } from '../websocket.js'
 
 export default async userId => {
@@ -25,16 +24,6 @@ export default async userId => {
     }
 
     if (data.isReminder) {
-        // managerReminder.save(user, {
-        //     id: CodeGenerator(7).toUpperCase(),
-        //     userId: userId,
-        //     guildId: data.guildId,
-        //     RemindMessage: `Voto disponível no ${e.topgg} Top GG.`,
-        //     Time: 43200000,
-        //     DateNow: Date.now(),
-        //     isAutomatic: true,
-        //     ChannelId: data.channelId
-        // })
         socket?.send({
             type: "postReminder",
             reminderData: {

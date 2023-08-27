@@ -3,7 +3,6 @@ import { AutocompleteInteraction, PermissionsBitField } from 'discord.js'
 import { formatString } from '../../functions/plugins/plugins.js'
 import { Database } from '../../classes/index.js'
 import { socket } from '../../websocket/websocket.js'
-// import managerReminder from '../../functions/update/reminder/manager.reminder.js'
 import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
 import { createRequire } from 'node:module'
@@ -315,33 +314,25 @@ export default class Autocomplete extends Base {
         const reminders = await socket?.timeout(1000)?.emitWithAck("getReminders", this.user.id).catch(() => [])
         if (!reminders?.length) return this.respond()
 
+        const dateNow = Date.now()
+
         const filAndMap = reminders
             .filter(r =>
                 r.RemindMessage?.toLowerCase()?.includes(value?.toLowerCase())
                 || r.id?.toLowerCase()?.includes(value?.toLowerCase())
             )
             .map(r => ({ name: `${r?.id} - ${r?.RemindMessage}`, value: r?.id }))
-        return this.respond(filAndMap)
+        await this.respond(filAndMap)
+
+        const oldReminders = reminders.filter(r => r?.deleteAt && (dateNow >= r?.deleteAt))
+
+        if (oldReminders?.length)
+            socket?.send({
+                type: "removeReminders",
+                remindersToRemove: oldReminders.map(r => r.id)
+            })
+
     }
-
-    // async memesViewer() {
-
-    //     const data = [
-    //         {
-    //             name: 'Visualizar memes',
-    //             value: 'view'
-    //         },
-    //         {
-    //             name: 'visualizar MEUS memes',
-    //             value: 'viewmymemes'
-    //         }
-    //     ]
-
-    //     if (this.client.staff.includes(this.user.id))
-    //         data.push({ name: `${this.client.MemesNotApproved.length} memes a serem analisados`, value: 'analise' })
-
-    //     return this.respond(data)
-    // }
 
     async showCantadas(value) {
         const cantadas = this.client.cantadas || []
