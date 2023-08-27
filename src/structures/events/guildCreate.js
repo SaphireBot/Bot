@@ -1,13 +1,23 @@
-import { SaphireClient as client, Database } from '../../classes/index.js'
-import { Config, Config as config } from '../../util/Constants.js'
-import { ButtonStyle, parseEmoji } from 'discord.js'
-import { Emojis as e } from '../../util/util.js'
-import { socket } from '../../websocket/websocket.js'
+import { SaphireClient as client, Database } from '../../classes/index.js';
+import { Config, Config as config } from '../../util/Constants.js';
+import { ButtonStyle, parseEmoji } from 'discord.js';
+import { Emojis as e } from '../../util/util.js';
+import { socket } from '../../websocket/websocket.js';
 
 client.on("guildCreate", async guild => {
 
     if (socket?.connected)
-        socket?.send({ type: "guildCreate", guildId: guild.id, guildName: guild.name })
+        socket?.send({
+            type: "guildCreate",
+            guilds: {
+                id: guild.id,
+                name: guild.name,
+                icon: guild.icon,
+                owner: guild.ownerId == client.user.id,
+                permissions: guild.members.me.permissions,
+                features: guild.features
+            }
+        })
 
     const clientData = await Database.Client.findOne({ id: client.user.id }, 'Blacklist')
     const blacklistServers = clientData?.Blacklist?.Guilds || []

@@ -8,7 +8,7 @@ client.on('guildDelete', async guild => {
     if (!guild.id) return
 
     if (socket?.connected)
-        socket?.send({ type: "guildDelete", guildId: guild.id })
+        socket?.send({ type: "guildDelete", id: guild.id })
 
     Database.deleteGuild(guild.id)
     await Database.deleteAllGiveawayFromThisGuild(guild.id)

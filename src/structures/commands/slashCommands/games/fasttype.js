@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ButtonStyle, ChatInputCommandInteraction, Collection, parseEmoji } from 'discord.js';
+import { ApplicationCommandOptionType, ButtonStyle, ChatInputCommandInteraction, Collection } from 'discord.js';
 import { Emojis as e } from '../../../../util/util.js';
 import { createRequire } from 'node:module';
 export const FastTypesGames = {};
