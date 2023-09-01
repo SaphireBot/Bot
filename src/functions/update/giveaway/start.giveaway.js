@@ -1,7 +1,7 @@
-import { SaphireClient as client, Database, GiveawayManager } from '../../../classes/index.js'
-import { time, Guild, TextChannel, ButtonStyle, parseEmoji } from 'discord.js'
-import { setTimeout as sleep } from "node:timers/promises"
-import { Emojis as e } from '../../../util/util.js'
+import { SaphireClient as client, Database, GiveawayManager } from '../../../classes/index.js';
+import { time, Guild, TextChannel, ButtonStyle, parseEmoji } from 'discord.js';
+import { setTimeout as sleep } from "node:timers/promises";
+import { Emojis as e } from '../../../util/util.js';
 
 /**
  * @param { Guild } guild
@@ -79,18 +79,39 @@ export default async (gw, guild, channel, messageFetched) => {
 
     const dateNow = Date.now()
     await guild.members.fetch()
-    // let winners = Participantes.filter(id => guild.members.cache.has(id)).random(WinnersAmount)
     let winners = guild.members.cache.filter(m => Participantes.includes(m.id) && !m.user.bot)
 
     if (giveaway.AllowedRoles?.length)
         winners = giveaway.RequiredAllRoles
-            ? winners.filter(member => member.roles.cache.hasAll(...giveaway.AllowedRoles))
-            : winners.filter(member => member.roles.cache.hasAny(...giveaway.AllowedRoles))
+            ? winners.filter(member => {
+                if (giveaway.AllowedMembers?.includes(member.id)) return true
+                return member.roles.cache.hasAll(...giveaway.AllowedRoles)
+            })
+            : winners.filter(member => {
+                if (giveaway.AllowedMembers?.includes(member.id)) return true
+                return member.roles.cache.hasAny(...giveaway.AllowedRoles)
+            })
 
     if (giveaway.LockedRoles?.length)
         winners = winners.filter(member => member.roles.cache.hasAny(...giveaway.LockedRoles))
 
-    winners = Array.from(winners.keys()).random(WinnersAmount)
+    let allowedParticipants = Array.from(winners.keys())
+
+    if (giveaway.MultipleJoinsRoles?.length)
+        for (const role of giveaway.MultipleJoinsRoles)
+            winners.forEach(user => {
+                if (user.roles.cache.has(role?.id))
+                    for (let i = 0; i < role.joins; i++)
+                        allowedParticipants.push(user.id)
+            })
+
+    winners = []
+
+    for (let i = 0; i < WinnersAmount; i++) {
+        if (!allowedParticipants.length) break;
+        winners.push(allowedParticipants.random())
+        allowedParticipants = allowedParticipants.filter(id => !winners.includes(id))
+    }
 
     if (RolesToAdd.length)
         for (const winnerId of winners)

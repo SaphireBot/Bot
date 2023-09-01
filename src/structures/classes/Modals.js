@@ -4,6 +4,31 @@ export default new class Modals {
         return { ...this }
     }
 
+    giveawayDefineMultJoins = roles => {
+        if (!roles?.length) return
+
+        return {
+            title: "GIVEAWAY | Multiplas Entradas",
+            custom_id: 'ModalMultipleJoins',
+            components: roles
+                .map(role => ({
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: role?.id,
+                            label: role.name,
+                            style: 1,
+                            placeholder: "1, 2, 3, 4, 5... Max: 100",
+                            required: true,
+                            value: role.joins || "1"
+                        }
+                    ]
+                }
+                ))
+        }
+    }
+
     reconfigureReminder = (messageId, userId) => {
         return {
             title: "Lembrete",

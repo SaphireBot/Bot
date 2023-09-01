@@ -1,8 +1,8 @@
-import { ButtonStyle, ChatInputCommandInteraction, StringSelectMenuInteraction, PermissionFlagsBits } from 'discord.js'
-import { Database, GiveawayManager, SaphireClient as client } from '../../../../classes/index.js'
-import { Colors, PermissionsTranslate } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
-import timeMs from '../../../../functions/plugins/timeMs.js'
+import { ButtonStyle, ChatInputCommandInteraction, StringSelectMenuInteraction, PermissionFlagsBits, ModalSubmitInteraction, Message } from 'discord.js';
+import { Database, GiveawayManager, Modals, SaphireClient as client } from '../../../../classes/index.js';
+import { Colors, PermissionsTranslate } from '../../../../util/Constants.js';
+import { Emojis as e } from '../../../../util/util.js';
+import timeMs from '../../../../functions/plugins/timeMs.js';
 
 /**
  * @param { ChatInputCommandInteraction } interaction
@@ -48,7 +48,16 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
     const color = bySelectMenuInteraction ? giveawayResetedData?.color : Colors[options.getString('color')] || giveawayResetedData?.color || client.blue
     const WinnersAmount = bySelectMenuInteraction ? giveawayResetedData?.Winners || 1 : options.getInteger('winners') || giveawayResetedData?.Winners || 1
-    const collectorData = { reaction: '🎉', AllowedRoles: [], LockedRoles: [], AllowedMembers: [], LockedMembers: [], AddRoles: [], RequiredAllRoles: true }
+    const collectorData = {
+        reaction: '🎉',
+        AllowedRoles: [],
+        LockedRoles: [],
+        AllowedMembers: [],
+        LockedMembers: [],
+        AddRoles: [],
+        MultJoinsRoles: new Map(),
+        RequiredAllRoles: true
+    }
     let components = []
     let TimeMs = giveawayResetedData?.TimeMs || timeMs(Time)
 
@@ -107,7 +116,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
         ]
     }
 
-    return await interaction.reply({ content: null, embeds: [embed], fetchReply: true })
+    return interaction.reply({ content: null, embeds: [embed], fetchReply: true })
         .then(msg => msg?.react('🎉').then(() => collectors(msg)))
         .catch(() => {
             msg.delete().catch(() => { })
@@ -158,7 +167,10 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 return
             })
 
-        function enableButtonCollector(Message) {
+        /**
+         * @param { Message } Message
+         */
+        async function enableButtonCollector(Message) {
             editContent()
 
             components = [
@@ -215,32 +227,39 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     components: [
                         {
                             type: 2,
-                            label: 'Lançar Sorteio',
+                            label: 'Lançar',
                             emoji: '📨',
                             custom_id: 'lauch',
                             style: ButtonStyle.Success
                         },
                         {
                             type: 2,
-                            label: 'Cancelar Sorteio',
+                            label: 'Cancelar',
                             emoji: '✖️',
                             custom_id: 'cancel',
                             style: ButtonStyle.Danger
                         },
                         {
                             type: 2,
-                            label: 'Todos os Cargos São Obrigatórios',
+                            label: 'Todos os cargos são obrigatórios',
                             emoji: '🔄',
                             custom_id: 'switchRoles',
                             style: ButtonStyle.Primary
                         },
                         {
                             type: 2,
-                            label: 'Adicionar Cargos Aos Vencedores',
+                            label: 'Adicionar cargos aos vencedores',
                             emoji: '👑',
                             custom_id: 'addRoles',
                             style: ButtonStyle.Primary
                         },
+                        {
+                            type: 2,
+                            label: 'Cargos com multiplas entradas',
+                            emoji: '✨',
+                            custom_id: 'multiJoins',
+                            style: ButtonStyle.Primary
+                        }
                     ]
                 }
             ]
@@ -250,8 +269,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
 
             const buttonCollector = Message.createMessageComponentCollector({
                 filter: int => int.user.id === user.id,
-                idle: 1000 * 60 * 5,
-                errors: ['time']
+                idle: 1000 * 60 * 5
             })
                 .on('collect', async int => {
 
@@ -274,13 +292,13 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         const message = int.message.toJSON()
 
                         embed.fields[1].name = collectorData.RequiredAllRoles
-                            ? '🔰 Todos os Cargos São Obrigatórios'
-                            : '🔰 Apenas Um Cargo é Obrigatório'
+                            ? '🔰 Todos os cargos são obrigatórios'
+                            : '🔰 Apenas um cargo é obrigatório'
 
                         const components = message.components
                         components[4].components[2].label = collectorData.RequiredAllRoles
-                            ? 'Todos os Cargos São Obrigatórios'
-                            : 'Apenas Um Cargo é Obrigatório'
+                            ? 'Todos os cargos são obrigatórios'
+                            : 'Apenas um cargo é obrigatório'
 
                         return int.update({ components, embeds: [embed] }).catch(() => { })
                     }
@@ -313,6 +331,23 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                             }
 
                         collectorData.AddRoles = int.values
+                        editContent()
+                        return int.update({ content: null, embeds: [embed] }).catch(() => { })
+                    }
+
+                    if (customId == 'addMultiJoinsRolesSelect') {
+                        const roles = collectorData.MultJoinsRoles
+                        collectorData.MultJoinsRoles.clear()
+
+                        for (const roleId of int.values) {
+                            const role = guild.roles.cache.get(roleId)
+                            if (role && !role.managed) {
+                                const setted = roles.get(roleId) || role
+                                setted.joins = setted.joins || 1
+                                collectorData.MultJoinsRoles.set(roleId, setted)
+                            }
+                        }
+
                         editContent()
                         return int.update({ content: null, embeds: [embed] }).catch(() => { })
                     }
@@ -394,32 +429,119 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                                     components: [
                                         {
                                             type: 2,
-                                            label: 'Lançar Sorteio',
+                                            label: 'Lançar',
                                             emoji: '📨',
                                             custom_id: 'lauch',
                                             style: ButtonStyle.Success
                                         },
                                         {
                                             type: 2,
-                                            label: 'Cancelar Sorteio',
+                                            label: 'Cancelar',
                                             emoji: '✖️',
                                             custom_id: 'cancel',
                                             style: ButtonStyle.Danger
                                         },
                                         {
                                             type: 2,
-                                            label: 'Selecionar Cargos e Membros',
+                                            label: 'Voltar',
                                             emoji: '👥',
-                                            custom_id: 'BackToaddRoles',
+                                            custom_id: 'BackToAddRoles',
                                             style: ButtonStyle.Primary
                                         }
                                     ]
                                 }
                             ]
-                        })
+                        }).catch(() => { })
 
-                    if (customId == 'BackToaddRoles')
+                    if (customId == 'multiJoins')
+                        return int.update({
+                            components: [
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 6,
+                                            custom_id: 'addMultiJoinsRolesSelect',
+                                            placeholder: 'Cargos com multiplas entradas',
+                                            min_values: 0,
+                                            max_values: 5
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 2,
+                                            label: 'Lançar',
+                                            emoji: '📨',
+                                            custom_id: 'lauch',
+                                            style: ButtonStyle.Success
+                                        },
+                                        {
+                                            type: 2,
+                                            label: 'Cancelar',
+                                            emoji: '✖️',
+                                            custom_id: 'cancel',
+                                            style: ButtonStyle.Danger
+                                        },
+                                        {
+                                            type: 2,
+                                            label: 'Voltar',
+                                            emoji: '👥',
+                                            custom_id: 'BackToAddRoles',
+                                            style: ButtonStyle.Primary
+                                        },
+                                        {
+                                            type: 2,
+                                            label: 'Definir entradas',
+                                            emoji: '📝',
+                                            custom_id: 'DefineJoins',
+                                            style: ButtonStyle.Primary
+                                        }
+                                    ]
+                                }
+                            ]
+                        }).catch(() => { })
+
+                    if (customId == 'BackToAddRoles')
                         return int.update({ components }).catch(() => { })
+
+                    if (customId == "DefineJoins") {
+                        const roles = Array.from(collectorData.MultJoinsRoles.values())
+
+                        if (!roles.length)
+                            return int.reply({
+                                content: `${e.Animated.SaphireReading} | Hey, não tem nenhum cargo definido, sabia?`,
+                                ephemeral: true
+                            }).catch(() => { })
+
+                        return int.showModal(Modals.giveawayDefineMultJoins(roles))
+                            .then(() => int.awaitModalSubmit({
+                                filter: i => i.user.id == user.id,
+                                time: 1000 * 60 * 5,
+                            })
+                                .then(async modalSubmit => {
+
+                                    const { fields } = modalSubmit
+
+                                    for (const roleId of Array.from(collectorData.MultJoinsRoles.keys())) {
+                                        const value = Number(fields.getTextInputValue(roleId))
+                                        if (isNaN(value) || value < 1 || value > 100) continue
+
+                                        const role = collectorData.MultJoinsRoles.get(roleId)
+                                        role.joins = value
+                                        collectorData.MultJoinsRoles.set(roleId, role)
+                                    }
+
+                                    editContent()
+                                    await modalSubmit.deferUpdate()
+                                    return modalSubmit.editReply({ content: null, embeds: [embed] }).catch(() => { })
+
+                                })
+                                .catch(() => { }))
+                            .catch(() => { })
+                    }
 
                     return
                 })
@@ -439,7 +561,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         embed.color = client.red
                         embed.fields.push({
                             name: '⏱️ E se passou eternidades',
-                            value: `Após 5 longas eternidades eu cai em um sono profundo ${e.Animated.SaphireSleeping}. Cancelei tudo para eu dormir em paz.`
+                            value: `Após 5 longas eternidades eu cai em um sono profundo ${e.Animated.SaphireSleeping}.\nCancelei tudo para eu dormir em paz.`
                         })
                         embed.footer = { text: 'Tempo Expirado' }
                         return Message.edit({ content: null, embeds: [embed], components: [] }).catch(() => { })
@@ -484,8 +606,15 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                     value: addRolesInvalid
                         ? 'Eu não tenho permissão para gerênciar um dos cargos selecionados.'
                         : collectorData.AddRoles.length > 0
-                            ? `${collectorData.AddRoles.map(userId => `<@&${userId}>`).join(', ') || 'Nenhum cargo foi configurado'}`
+                            ? `${collectorData.AddRoles.map(roleId => `<@&${roleId}>`).join(', ') || 'Nenhum cargo foi configurado'}`
                             : 'Os cargos selecionados neste campo, será entregue aos vencedores do sorteio automaticamente.'
+                }
+
+                embed.fields[6] = {
+                    name: '✨ Cargos de Multiplas Entradas (Max: 5)',
+                    value: collectorData.MultJoinsRoles.size > 0
+                        ? `${Array.from(collectorData.MultJoinsRoles.values()).map(role => `**${role.joins || 1}x** <@&${role.id}>`).join('\n') || 'Nenhum cargo foi configurado'}`
+                        : 'Cargos que tem direito a multiplas entradas'
                 }
 
                 return `${e.Loading} | A reação já foi coletada. Quer configurar mais algo?\n🔰 | \n | `
@@ -519,6 +648,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
             LockedMembers: collectorData.LockedMembers, // Usuários que não podem participar
             RequiredAllRoles: collectorData.RequiredAllRoles, // Todos os cargos AllowedRoles são obrigatórios
             AddRoles: collectorData.AddRoles, // Cargos que serão adicionados ao vencedores
+            MultipleJoinsRoles: Array.from(collectorData.MultJoinsRoles.values()).map(role => ({ id: role.id, joins: role.joins || 1 })) || [], // Cargos com entradas adicionais
             MinAccountDays, // Número mínimo de dias com a conta criada
             MinInServerDays // Número mínimo de dias dentro do servidor
         }
@@ -608,6 +738,12 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 value: collectorData.AddRoles.map(rolesId => `<@&${rolesId}>`).join(', ') || 'Nenhum? Vish...'
             })
 
+        if (collectorData.MultJoinsRoles.size)
+            embed.fields.push({
+                name: `✨ Cargos Multiplicadores`,
+                value: Array.from(collectorData.MultJoinsRoles.values()).map(role => `**${role.joins || 1}x** <@&${role.id}>`).join('\n') || 'Nenhum? Vish...'
+            })
+
         return msg.edit({
             content: null,
             embeds: [embed],
@@ -633,7 +769,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                 }
             ]
         })
-            .then(async () => {
+            .then(() => {
                 Message.reactions.removeAll().catch(() => { })
                 return Message.edit({
                     content: `${e.Check} | ${giveawayResetedData ? 'Sorteio resetado' : 'Sorteio criado'} com sucesso!`,
@@ -674,7 +810,7 @@ export default async (interaction, giveawayResetedData, bySelectMenuInteraction)
                         }]
                     }).catch(() => { }))
             })
-            .catch(async err => {
+            .catch(err => {
                 Database.deleteGiveaway(msg.id, guild.id)
                 msg.delete().catch(() => { })
                 const content = {

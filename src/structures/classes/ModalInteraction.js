@@ -26,6 +26,12 @@ export default class ModalInteraction extends Base {
 
     submitModalFunctions = async () => {
 
+        if (
+            [
+                'ModalMultipleJoins'
+            ].includes(this.customId)
+        ) return
+
         if (this.customId.includes('channel')) return this.ChannelRedirect(this)
         if (this.customId.includes('reportBalance')) return this.reportBalance(this)
         if (this.customId.includes('fanart')) return this.addFanart(this)
@@ -148,7 +154,7 @@ export default class ModalInteraction extends Base {
             }).catch(() => { }))
 
         async function deleteReminder(aditionalContent) {
-            interaction.reply({ content: messageContent + "\n" +  aditionalContent, components: [] }).catch(() => { })
+            interaction.reply({ content: messageContent + "\n" + aditionalContent, components: [] }).catch(() => { })
             const reminder = await Database.Reminder.findOneAndDelete({ messageId })
             return socket?.send({ type: "removeReminder", id: reminder.id })
         }
