@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction } from "discord.js"
-import { SaphireClient as client } from "../../../../../classes/index.js"
-import { Emojis as e } from "../../../../../util/util.js"
+import { ChatInputCommandInteraction } from "discord.js";
+import { SaphireClient as client } from "../../../../../../classes/index.js";
+import { Emojis as e } from "../../../../../util/util.js";
 
 /**
  * @param { ChatInputCommandInteraction } interaction

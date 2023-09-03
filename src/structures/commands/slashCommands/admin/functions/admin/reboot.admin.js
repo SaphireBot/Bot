@@ -1,6 +1,6 @@
-import { Database, SaphireClient as client } from "../../../../../classes/index.js"
-import { Config } from "../../../../../util/Constants.js"
-import { Emojis as e } from "../../../../../util/util.js"
+import { Database, SaphireClient as client } from "../../../../../../classes/index.js";
+import { Emojis as e } from "../../../../../../util/util.js";
+import { Config } from "../../../../../../util/Constants.js";
 
 export default async interaction => {
 

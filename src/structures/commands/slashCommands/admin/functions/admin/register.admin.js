@@ -1,11 +1,12 @@
-import { SaphireClient as client, Database } from "../../../../../classes/index.js"
-import { Emojis as e } from "../../../../../util/util.js"
+import { SaphireClient as client, Database } from "../../../../../../classes/index.js";
+import { Emojis as e } from "../../../../../../util/util.js";
+import { Routes } from "discord.js";
 
 export default async interaction => {
 
     const { options } = interaction
     const userId = options.getString('user')
-    const serverId = options.getString('server')
+    const guildId = options.getString('server')
     let responseMessage = ''
 
     await registerUser()
@@ -40,11 +41,11 @@ export default async interaction => {
         return responseMessage += `\n${e.Check} | O usuário ${user.username} - \`${user.id}\` foi registrado com sucesso no banco de dados.`
     }
 
-    async function registerServer(serverId) {
+    async function registerServer() {
 
-        if (!serverId) return
+        if (!guildId) return
 
-        const guild = await client.guilds.fetch(serverId).catch(() => null)
+        const guild = await client.rest.get(Routes.guild(guildId)).catch(() => null)
 
         if (!guild)
             return responseMessage += `\n${e.Deny} | Servidor não encontrado para registro.`

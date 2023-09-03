@@ -5,7 +5,7 @@ import allCommands from '../../functions/help/allCommands.js'
 
 export default {
     name: 'help',
-    name_localizations: { "en-US": "help", 'pt-BR': 'ajuda' },
+    name_localizations: { 'pt-BR': 'ajuda' },
     description: '[bot] Comando de ajuda',
     category: "bot",
     dm_permission: false,
@@ -24,10 +24,10 @@ export default {
     //     }
     // ],
     apiData: {
-        name: "donate",
-        description: "Doe dinheiro real para os criadores da Saphire mantê-la online e ganhe recompensas",
+        name: "help",
+        description: "Help é só um help, né?",
         category: "Saphire",
-        synonyms: ["doar"],
+        synonyms: ["ajuda"],
         perms: {
             user: [],
             bot: []

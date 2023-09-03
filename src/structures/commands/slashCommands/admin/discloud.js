@@ -1,5 +1,5 @@
-import { ApplicationCommandOptionType } from 'discord.js'
-import * as Discloud from './discloud/functions.discloud.js'
+import { ApplicationCommandOptionType } from 'discord.js';
+import * as Discloud from './functions/discloud/functions.discloud.js';
 
 export default {
     name: 'discloud',

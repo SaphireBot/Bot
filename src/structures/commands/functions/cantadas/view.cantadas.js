@@ -1,10 +1,8 @@
-import { ButtonStyle } from "discord.js"
-import {
-    SaphireClient as client
-} from "../../../../classes/index.js"
-import { Emojis as e } from "../../../../util/util.js"
-import deleteCantada from "../../../classes/buttons/cantadas/delete.cantada.js"
-import cantadaAdmin from "../../slashCommands/admin/admin/cantada.admin.js"
+import { SaphireClient as client } from "../../../../classes/index.js";
+import { ButtonStyle } from "discord.js";
+import { Emojis as e } from "../../../../util/util.js";
+import deleteCantada from "../../../classes/buttons/cantadas/delete.cantada.js";
+import cantadaAdmin from "../../slashCommands/admin/functions/admin/cantada.admin.js";
 
 export default async ({ interaction, buttonInteraction, clientData, commandData, search }) => {
 

@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, Message, MessageType } from "discord.js"
-import { Database, SaphireClient as client } from "../../../classes/index.js"
-import { Emojis as e } from "../../../util/util.js"
-import { socket } from "../../../websocket/websocket.js"
+import { ChatInputCommandInteraction, Message, MessageType } from "discord.js";
+import { Database, SaphireClient as client } from "../../../classes/index.js";
+import { Emojis as e } from "../../../util/util.js";
+import { socket } from "../../../websocket/websocket.js";
 
 export default new class AfkManager {
     constructor() {
@@ -10,9 +10,9 @@ export default new class AfkManager {
     }
 
     async load() {
-        const allData = await Database.Cache.AfkSystem.all() || []
-        const globalData = await Database.Cache.AfkSystem.get('Global') || {}
-        if (!allData.length) return
+        const allData = await Database.Cache.AfkSystem.all().catch(() => []) || []
+        const globalData = await Database.Cache.AfkSystem.get('Global').catch(() => { }) || {}
+        if (!allData.length) return setTimeout(() => this.load(), 1000 * 60 * 3)
 
         const toDelete = []
         const toDeleteGlobal = []
@@ -37,8 +37,10 @@ export default new class AfkManager {
             continue
         }
 
-        for (const id of toDelete) await Database.Cache.AfkSystem.delete(id)
-        for (const id of toDeleteGlobal) await Database.Cache.AfkSystem.delete(`Global.${id}`)
+        if (client.shardId == 0) {
+            for (const id of toDelete) await Database.Cache.AfkSystem.delete(id)
+            for (const id of toDeleteGlobal) await Database.Cache.AfkSystem.delete(`Global.${id}`)
+        }
 
         return setTimeout(() => this.load(), 1000 * 60 * 3)
     }
@@ -154,7 +156,7 @@ export default new class AfkManager {
                 type: "notification",
                 notifyData: {
                     userId: Member.user?.id,
-                    title:  `${message.author.globalName || message.author.username} mencionou você`,
+                    title: `${message.author.globalName || message.author.username} mencionou você`,
                     message: `Confira a menção clicando <a href='${message.url}'>aqui</a>.`
                 }
             })

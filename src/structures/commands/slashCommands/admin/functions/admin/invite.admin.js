@@ -1,7 +1,7 @@
-import axios from "axios"
-import { time } from "discord.js"
-import { SaphireClient as client } from "../../../../../classes/index.js"
-import { Emojis as e } from "../../../../../util/util.js"
+import { SaphireClient as client } from "../../../../../../classes/index.js";
+import { Emojis as e } from "../../../../../../util/util.js";
+import { time } from "discord.js";
+import axios from "axios";
 
 export default async interaction => {
 

@@ -186,7 +186,7 @@ export default {
 
         const subCommand = options.getSubcommand()
 
-        return import('./admin/functions.admin.js').then(functions => functions.default(interaction, subCommand))
+        return import('./functions/admin/functions.admin.js').then(fn => fn.default(interaction, subCommand))
 
     }
 }

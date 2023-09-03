@@ -1,7 +1,7 @@
-import axios from "axios"
-import { Emojis as e } from "../../../../../util/util.js"
 import { readFileSync, createWriteStream, rm } from 'fs'
 import { AttachmentBuilder } from "discord.js"
+import { Emojis as e } from "../../../../../../util/util.js";
+import axios from "axios"
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async interaction => {

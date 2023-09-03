@@ -1,7 +1,7 @@
 import { Modals, SaphireClient as client, } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import viewCantadas from "../../../commands/functions/cantadas/view.cantadas.js"
-import cantadaAdmin from "../../../commands/slashCommands/admin/admin/cantada.admin.js"
+import cantadaAdmin from "../../../commands/slashCommands/admin/functions/admin/cantada.admin.js"
 import accept from "./accept.cantada.js"
 import deleteCantada from "./delete.cantada.js"
 import deny from "./deny.cantada.js"

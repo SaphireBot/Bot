@@ -24,14 +24,21 @@ export default new class CacheManager extends Cache {
         this.Hangman = new Cache({ filePath: "./cache/Hangman.sqlite" })
     }
 
-    async clearTables(shardId) {
-        await this.General.delete(shardId)
-        await this.Polls.delete(shardId)
-        await this.Logomarca.delete(shardId)
-        await this.Running.delete(shardId)
-        await this.General.delete('Looped')
-        await this.General.set(`${shardId}.AudityLogsId`, [])
-        await this.General.set(`${shardId}.lastClick`, [])
+    async clearTables(shardId, count = 0) {
+        try {
+            await this.General.delete(shardId)
+            await this.Polls.delete(shardId)
+            await this.Logomarca.delete(shardId)
+            await this.Running.delete(shardId)
+            await this.General.delete('Looped')
+            await this.General.set(`${shardId}.AudityLogsId`, [])
+            await this.General.set(`${shardId}.lastClick`, [])
+        } catch (err) {
+            ++count
+            if (count > 10) return
+            setTimeout(() => this.clearTables(shardId, count), 1000)
+        }
+
         return true
     }
 

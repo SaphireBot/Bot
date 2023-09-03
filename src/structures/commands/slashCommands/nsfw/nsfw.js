@@ -26,6 +26,16 @@ export default {
             ]
         }
     ],
+    apiData: {
+        name: "nsfw",
+        description: "Não use esse comando",
+        category: "Imagens",
+        synonyms: [],
+        perms: {
+            user: [],
+            bot: []
+        }
+    },
     helpData: {},
     async execute({ interaction }) {
 
