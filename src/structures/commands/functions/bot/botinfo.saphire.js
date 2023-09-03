@@ -67,7 +67,7 @@ export default async (interaction, commandData) => {
         awaiting[interaction.user.id] = true
 
         const twitchData = await socket
-            ?.timeout(1000)
+            ?.timeout(1500)
             .emitWithAck("twitchdata", "get")
             .catch(() => null)
 
@@ -146,7 +146,7 @@ export default async (interaction, commandData) => {
         ].random()
 
         const clientData = await Database.Client.findOne({ id: client.user.id }, 'TwitchNotifications')
-        const TwitchNotifications = (clientData?.TwitchNotifications || 0) + twitchData?.notifications
+        const TwitchNotifications = (clientData?.TwitchNotifications || 0) + (twitchData?.notifications || 0)
 
         const embed = {
             color: client.blue,
@@ -185,7 +185,7 @@ export default async (interaction, commandData) => {
                 },
                 {
                     name: `${e.twitch} Twitch System`,
-                    value: `\`\`\`txt\nStreamers: ${twitchData?.streamersOffline?.length + twitchData?.streamersOnline?.length}\nNotificações Enviadas: ${TwitchNotifications}\nStreamers Online: ${twitchData?.streamersOnline?.length}\nStreamers Offline: ${twitchData?.streamersOffline?.length}\nServidores Registrados: ${twitchData?.allGuildsID?.length || 0}\nRequisições em Espera: ${twitchData?.awaitingRequests}\n\`\`\``,
+                    value: `\`\`\`txt\nStreamers: ${(twitchData?.streamersOffline?.length + twitchData?.streamersOnline?.length) || "??"}\nNotificações Enviadas: ${TwitchNotifications || "??"}\nStreamers Online: ${twitchData?.streamersOnline?.length || "??"}\nStreamers Offline: ${twitchData?.streamersOffline?.length || '??'}\nServidores Registrados: ${twitchData?.allGuildsID?.length || "??"}\nRequisições em Espera: ${twitchData?.awaitingRequests || "??"}\n\`\`\``,
                     inline: true
                 }
             ],

@@ -12,7 +12,6 @@ export default async message => {
     const { guild, author, type } = message
     if (type !== 0 || author?.bot) return
 
-    // const guildData = await Database.Guild.findOne({ id: guild.id }, "LogSystem")
     const guildData = await Database.getGuild(guild.id)
     if (!guildData || !guildData.LogSystem?.channel || !guildData.LogSystem?.messages?.active) return
 

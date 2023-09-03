@@ -1,7 +1,7 @@
-import { Database, GiveawayManager, SaphireClient as client } from '../../classes/index.js'
-import { Emojis as e } from '../../util/util.js'
-import { socket } from '../../websocket/websocket.js'
-import messageDeleteLogs from './system/messageDelete.logs.js'
+import { Database, GiveawayManager, SaphireClient as client } from '../../classes/index.js';
+import { Emojis as e } from '../../util/util.js';
+import { socket } from '../../websocket/websocket.js';
+import messageDeleteLogs from './system/messageDelete.logs.js';
 
 client.on('messageDelete', async message => {
 
@@ -10,9 +10,7 @@ client.on('messageDelete', async message => {
     if (GiveawayManager.getGiveaway(message.id))
         await Database.deleteGiveaway(message.id, message.guildId)
 
-    await Database.Cache.Connect.delete(message.id)
-    await Database.Cache.WordleGame.delete(message.id)
-    await Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
+    deleteContent();
 
     const multiplier = await Database.Cache.Multiplier.all() || []
     if (multiplier.length)
@@ -87,10 +85,7 @@ client.on('messageDelete', async message => {
 
     const blackjack = await Database.Cache.Blackjack.get(message.id)
     if (blackjack) {
-
-        if (blackjack?.players?.length > 0)
-            client.emit('blackjackRefund', blackjack)
-
+        if (blackjack?.players?.length > 0) client.emit('blackjackRefund', blackjack)
         Database.add(blackjack.userId, blackjack.bet, `${e.Admin} Recebeu ${blackjack.bet} Safiras via *Blackjack Refund*`)
         await Database.Cache.Blackjack.delete(message.id)
     }
@@ -225,7 +220,22 @@ client.on('messageDelete', async message => {
         await Database.Cache.Jokempo.delete(message.id)
     }
 
-    messageDeleteLogs(message)
+    async function deleteContent(count = 0) { // GG Gorniaky!
+
+        try {
+            await Database.Cache.Connect.delete(message.id)
+            await Database.Cache.WordleGame.delete(message.id)
+            await Database.Cache.General.delete(`TopGG.${message.interaction?.user?.id}`)
+        } catch (er) {
+            if (count > 10) return
+            count++
+            setTimeout(() => deleteContent(count), 1000)
+        }
+
+        return;
+    }
+
+    messageDeleteLogs(message);
 
     return
 })
