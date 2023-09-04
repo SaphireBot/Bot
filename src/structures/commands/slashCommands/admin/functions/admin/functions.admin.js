@@ -1,14 +1,14 @@
+import fetch_guild_members from './fetch_guild_members.admin.js'
+import roles_server from './roles_server.admin.js'
+import commands from './commandManager.admin.js'
 import register from './register.admin.js'
 import deleteDb from './delete.admin.js'
-import commands from './commandManager.admin.js'
-import test from '../../functions/test.admin.js'
 import fanart from './fanart.admin.js'
 import commit from './commit.admin.js'
 import invite from './invite.admin.js'
 import reboot from './reboot.admin.js'
 import backup from './backup.admin.js'
-import fetch_guild_members from './fetch_guild_members.admin.js'
-import roles_server from '../../functions/roles_server.admin.js'
+import test from './test.admin.js'
 
 export default async (interaction, subCommand) => {
 

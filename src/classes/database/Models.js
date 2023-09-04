@@ -12,6 +12,7 @@ import Anime from './models/Anime.js'
 import Quiz from './models/Quiz.js'
 import Jokempo from './models/Jokempo.js'
 import Commands from './models/Commands.js'
+import Blacklist from './models/Blacklist.js'
 
 /**
  * Unificação de todos os Models para extensão da Classe Database
@@ -33,6 +34,7 @@ class Models {
         this.Quiz = Quiz
         this.Jokempo = Jokempo
         this.Commands = Commands
+        this.Blacklist = Blacklist
     }
 }
 
@@ -51,5 +53,6 @@ export {
     Anime,
     Quiz,
     Jokempo,
-    Commands
+    Commands,
+    Blacklist
 }

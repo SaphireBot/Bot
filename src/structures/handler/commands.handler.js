@@ -12,7 +12,7 @@ export const commandsApi = []
 export default async () => {
 
     const folders = readdirSync('./src/structures/commands/slashCommands/')
-    const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").then(c => c).catch(() => [])
+    const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").catch(() => [])
 
     for (const dir of folders) {
 

@@ -29,6 +29,7 @@ export default class Autocomplete extends Base {
 
         let { name, value } = this.options.getFocused(true)
 
+        if (this.commandName === 'blacklist') return this.blacklistOptions(name, value)
         if (name === 'search' && this.commandName === 'anime') return this.indications(value)
 
         if (
@@ -98,6 +99,41 @@ export default class Autocomplete extends Base {
 
         if (autocompleteFunctions[0] && autocompleteFunctions?.length)
             return this[autocompleteFunctions[0]](autocompleteFunctions[1], autocompleteFunctions[2])
+
+        return this.respond()
+    }
+
+    async blacklistOptions(name, value) {
+
+        const blacklistData = await socket.timeout(2000).emitWithAck("getAllBlacklist", "get").catch(() => [])
+        this.client.setBlacklistData(blacklistData)
+
+        if (name == 'target') {
+            return this.respond(
+                blacklistData
+                    .map(data => ({
+                        name: `[${data.type}] - ${data.id} | ${data.reason}`,
+                        value: data.id
+                    }))
+            )
+        }
+
+        if (name == 'reason') {
+            return this.respond([
+                {
+                    name: 'Quebrando regras da Saphire Moon',
+                    value: 'broke_rules'
+                },
+                {
+                    name: 'Tentativa de bugs propositais',
+                    value: 'bugs_purposeful'
+                },
+                {
+                    name: 'Burlando o sistema de economia',
+                    value: 'mocking_economy'
+                }
+            ].filter(d => d.value.toLowerCase()?.includes(value?.toLowerCase()) || d.name.toLowerCase()?.includes(value?.toLowerCase())))
+        }
 
         return this.respond()
     }

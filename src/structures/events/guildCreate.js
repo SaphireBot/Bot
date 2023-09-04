@@ -1,10 +1,13 @@
 import { SaphireClient as client, Database } from '../../classes/index.js';
-import { Config, Config as config } from '../../util/Constants.js';
 import { ButtonStyle, parseEmoji } from 'discord.js';
 import { Emojis as e } from '../../util/util.js';
 import { socket } from '../../websocket/websocket.js';
+import { Config} from '../../util/Constants.js';
 
 client.on("guildCreate", async guild => {
+
+    if (client.blacklist.has(guild.id))
+        return guild.leave().catch(() => { })
 
     if (socket?.connected)
         socket?.send({
@@ -18,16 +21,6 @@ client.on("guildCreate", async guild => {
                 features: guild.features
             }
         })
-
-    const clientData = await Database.Client.findOne({ id: client.user.id }, 'Blacklist')
-    const blacklistServers = clientData?.Blacklist?.Guilds || []
-
-    if (blacklistServers.some(data => data?.id === guild.id))
-        return guild.leave()
-            .catch(async err => {
-                const owner = await client.users.fetch(config.ownerId).catch(() => null)
-                return owner?.send(`${e.Deny} | Não foi possível sair da ${guild.id} \`${guild.id}\` que está na blacklist.\n> \`${err}\``).catch(() => { })
-            })
 
     const server = await Database.getGuild(guild.id)
     if (!server) await Database.registerServer(guild)

@@ -141,16 +141,17 @@ export { socket, initSocket };
 
 function message(data) {
     if (!data?.type) return
-    const { type, message } = data
 
-    switch (type) {
+    switch (data.type) {
         case "sendStaffData": client.setStaffToApi(); break;
         case "refreshRanking": refreshRanking(); break;
-        case "console": console.log(message); break;
-        case "topgg": reward(message); break;
+        case "console": console.log(data.message); break;
+        case "topgg": reward(data.message); break;
         case "errorInPostingMessage": client.errorInPostingMessage(data.data, data.err); break;
         case "globalAfk": globalAfkData(data.data); break;
         case "notifyUser": client.users.send(data.userId, data.content).catch(() => { }); break;
+        case "blacklistRemove": client.blacklist.delete(data.id); break;
+        case "blacklistSet": client.blacklist.set(data.data.id, data.data); break;
         default: console.log(`Shard ${client.shardId} | Unknown Message From Websocket | `, data); break;
     }
     return;

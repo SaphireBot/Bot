@@ -1,13 +1,13 @@
-import { Database, Discloud, SaphireClient as client, AfkManager, TempCallManager, ChestManager, SpamManager } from '../index.js'
-import { Config } from '../../util/Constants.js'
-import automaticSystems from '../../functions/update/index.js'
-import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js'
-import slashCommand from '../../structures/handler/commands.handler.js'
-import PollManager from '../../functions/update/polls/poll.manager.js'
-import QuizManager from '../games/QuizManager.js'
-import webhook from './webhooks.saphire.js'
-import { Routes } from 'discord.js'
-import { socket } from '../../websocket/websocket.js'
+import { Database, Discloud, SaphireClient as client, AfkManager, TempCallManager, ChestManager, SpamManager } from '../index.js';
+import { Config } from '../../util/Constants.js';
+import { Routes } from 'discord.js';
+import { socket } from '../../websocket/websocket.js';
+import automaticSystems from '../../functions/update/index.js';
+import GiveawayManager from '../../functions/update/giveaway/manager.giveaway.js';
+import slashCommand from '../../structures/handler/commands.handler.js';
+import PollManager from '../../functions/update/polls/poll.manager.js';
+import QuizManager from '../games/QuizManager.js';
+import webhook from './webhooks.saphire.js';
 
 export default async () => {
     console.log(`Shard ${client.shardId} | Starting Loading.`)
@@ -22,6 +22,8 @@ export default async () => {
         const commands = await client.rest.get(Routes.applicationCommands(client.user.id)).catch(() => [])
         socket?.send({ type: "ApplicationCommandData", applicationCommandData: commands })
     }
+
+    client.loadBlackList()
 
     client.clientData = await Database.Client.findOne({ id: client.user.id })
     Config.SpotifyAccessToken = client.clientData?.SpotifyAccessToken || 'undefined'

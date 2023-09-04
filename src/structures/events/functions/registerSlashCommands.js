@@ -7,13 +7,15 @@ import { socket } from "../../../websocket/websocket.js";
 /**
  * @param { Message } message
  */
-export default async (message, admin, commandName) => {
+export default async (message, method, commandName) => {
 
-    if (admin == "put") return putAdminCommands()
-    if (admin == "delete") return deleteAdminCommands()
-    if (admin == "global") return registerGlobal()
-    if (admin == "delete_global") return deleteGlobalCommand()
-    if (admin == "register_global") return registerGlobalCommand()
+    if (method == "put") return putAdminCommands()
+    if (method == "delete") return deleteAdminCommands()
+    if (method == "global") return registerGlobal()
+    if (method == "delete_global") return deleteGlobalCommand()
+    if (method == "register_global") return registerGlobalCommand()
+    if (method == "register_guild") return registerGuildCommand()
+    if (method == "delete_guild") return deleteGuildCommand()
 
     return
     async function registerGlobal() {
@@ -42,7 +44,7 @@ export default async (message, admin, commandName) => {
 
     async function deleteAdminCommands() {
 
-        const msg = await message.reply({ content: `${e.Loading} | Deletetando comandos administrativos...` })
+        const msg = await message.reply({ content: `${e.Loading} | Deletando comandos administrativos...` })
 
         const commands = await client.rest.get(Routes.applicationGuildCommands(client.user.id, message.guildId))
             .then(cmds => cmds.filter(cmd => adminCommands.find(c => c.name == cmd.name)))
@@ -135,6 +137,52 @@ export default async (message, admin, commandName) => {
             .catch(err => {
                 console.log(err)
                 return callback(msg, `${e.DenyX} | Não foi possível registar o comando ${command.name} globalmente. Os dados do erro foram logados no console.`)
+            })
+
+    }
+
+    async function registerGuildCommand() {
+
+        if (!commandName || !client.slashCommands.get(commandName))
+            return message.reply({ content: `${e.DenyX} | Nenhum comando foi encontrado para registro.` })
+
+        const msg = await message.reply({ content: `${e.Loading} | Registrando o comando \`/${commandName}\` neste servidor.` })
+
+        const commandData = client.slashCommands.get(commandName)
+        delete commandData.id
+        client.rest.put(Routes.applicationGuildCommands(client.user.id, message.guild.id), { body: [commandData] })
+            .then(data => callback(
+                msg,
+                data?.length
+                    ? `${e.CheckV} | O comando \`/${commandName}\` foi adicionado neste servidor.`
+                    : `${e.DenyX} | O comando \`/${commandName}\` não foi registrado. Tente novamente.`
+            ))
+            .catch(err => {
+                console.log(err)
+                return callback(msg, `${e.DenyX} | Erro ao registrar o comando \`/${commandName}\` neste servidor. Erro escrito no console.`)
+            })
+
+    }
+
+    async function deleteGuildCommand() {
+
+        if (!client.slashCommands.get(commandName))
+            return message.reply({ content: `${e.DenyX} | Nenhum comando foi encontrado na collection principal.` })
+
+        const msg = await message.reply({ content: `${e.Loading} | Deletando o comando \`/${commandName}\` neste servidor...` })
+
+        const command = await client.rest.get(Routes.applicationGuildCommands(client.user.id, message.guildId))
+            .then(cmds => cmds.find(cmd => cmd.name == commandName))
+            .catch(() => undefined)
+
+        if (!command?.id)
+            return callback(msg, `${e.Info} | O comando \`/${commandName}\` foi encontrado neste servidor.`)
+
+        return client.rest.delete(Routes.applicationGuildCommand(client.user.id, message.guild.id, command.id))
+            .then(() => callback(msg, `${e.CheckV} | O comando \`/${commandName}\` foi deletado deste servidor.`))
+            .catch(err => {
+                console.log(err)
+                return callback(msg, `${e.DenyX} | Erro ao deletar o comando \`/${commandName}\` neste servidor. Erro escrito no console.`)
             })
 
     }

@@ -1,15 +1,23 @@
+import { SlashCommandInteraction, Autocomplete, ButtonInteraction, ModalInteraction, SelectMenuInteraction, SaphireClient as client } from '../../classes/index.js'
+import { PermissionFlagsBits, time } from 'discord.js'
 import { PermissionsTranslate } from '../../util/Constants.js'
-import { PermissionFlagsBits } from 'discord.js'
 import { Emojis as e } from '../../util/util.js'
 import { socket } from '../../websocket/websocket.js'
 import unhandledRejection from '../../classes/modules/errors/process/unhandledRejection.js'
-import { SlashCommandInteraction, Autocomplete, ButtonInteraction, ModalInteraction, SelectMenuInteraction, SaphireClient as client } from '../../classes/index.js'
 
 client.on('interactionCreate', async interaction => {
     client.interactions++
 
     if (!interaction || (interaction.guild && !interaction.guild?.available)) return
     if (socket?.connected) socket?.send({ type: "addInteraction" })
+
+    if (client.blacklist.has(interaction.user?.id) && !client.staff.includes(interaction.user?.id)) {
+        const removeIn = client.blacklist.get(interaction.user?.id)?.removeIn
+        return interaction.reply({
+            content: `${e.Animated.SaphireReading} | Você está na blacklist${removeIn ? ` até ${time(new Date(removeIn), 'D') + ' ás ' + time(new Date(removeIn), 'T') + ' ' + time(new Date(removeIn), "R")}` : ' permanentemente'}.`,
+            ephemeral: true
+        })
+    }
 
     if (client.restart) {
 

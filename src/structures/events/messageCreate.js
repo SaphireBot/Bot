@@ -11,35 +11,17 @@ client.on('messageCreate', async message => {
 
     if (!message || !message.id || !message.channel) return
 
-    if (
-        message.content == `<@${client.user.id}> register global slash commands`
-        && client.admins.includes(message.author.id)
-    ) return registerSlashCommandsRequest(message, "global")
+    if (client.admins.includes(message.author.id)) {
+        if (message.content == `<@${client.user.id}> register global slash commands`) return registerSlashCommandsRequest(message, "global")
+        if (message.content.includes(`<@${client.user.id}> delete global slash commands`)) return registerSlashCommandsRequest(message, "delete_global", message.content.split(" ")[5])
+        if (message.content.includes(`<@${client.user.id}> register global slash commands`)) return registerSlashCommandsRequest(message, "register_global", message.content.split(" ")[5])
+        if (message.content.includes(`<@${client.user.id}> register guild slash commands`)) return registerSlashCommandsRequest(message, "register_guild", message.content.split(" ")[5])
+        if (message.content.includes(`<@${client.user.id}> delete guild slash commands`)) return registerSlashCommandsRequest(message, "delete_guild", message.content.split(" ")[5])
+        if (message.content == `<@${client.user.id}> register admin slash commands`) return registerSlashCommandsRequest(message, "put", message.content.split(" ")[5])
+        if (message.content == `<@${client.user.id}> delete admin slash commands`) return registerSlashCommandsRequest(message, "delete", message.content.split(" ")[5])
+        if (message.content == `<@${client.user.id}> register linked roles`) return client.linkedRolesLoad(message)
 
-    if (
-        message.content.includes(`<@${client.user.id}> delete global slash commands`)
-        && client.admins.includes(message.author.id)
-    ) return registerSlashCommandsRequest(message, "delete_global", message.content.split(" ")[5])
-
-    if (
-        message.content.includes(`<@${client.user.id}> register global slash commands`)
-        && client.admins.includes(message.author.id)
-    ) return registerSlashCommandsRequest(message, "register_global", message.content.split(" ")[5])
-
-    if (
-        message.content == `<@${client.user.id}> register admin slash commands`
-        && client.admins.includes(message.author.id)
-    ) return registerSlashCommandsRequest(message, "put")
-
-    if (
-        message.content == `<@${client.user.id}> delete admin slash commands`
-        && client.admins.includes(message.author.id)
-    ) return registerSlashCommandsRequest(message, "delete")
-
-    if (
-        message.content == `<@${client.user.id}> register linked roles`
-        && client.admins.includes(message.author.id)
-    ) return client.linkedRolesLoad(message)
+    }
 
     // Ideia original dada por André - 648389538703736833
     if (message.channel.type === ChannelType.GuildAnnouncement) {

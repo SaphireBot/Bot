@@ -24,13 +24,14 @@ export default class SlashCommandInteraction extends Base {
         this.Moeda = ""
     }
 
-    execute(command) {
+    async execute(command) {
 
         Experience.add(this.user.id, 5)
 
-        return command.execute(this)
-            ?.then(() => this.registerCommand(command.name))
-            .catch(err => error(this, err))
+        try {
+            await command.execute(this)
+            return this.registerCommand(command.name)
+        } catch (err) { error(this, err) }
     }
 
     CheckBeforeExecute() {

@@ -15,6 +15,8 @@ export default new class client extends Client {
         this.animes = []
         this.slashCommands = new Collection()
 
+        this.blacklist = new Map()
+
         /**
          * @returns BLUE - Hexadecimal
          */
@@ -398,6 +400,14 @@ export default new class client extends Client {
         ) return
 
         await Database.Cache.Commands.push(`${userId}.${commandName}`, Date.now())
+
+        await Database.Client.findOneAndUpdate(
+            { id: this.user.id },
+            { $inc: { ComandosUsados: 1 } },
+            { new: true, upsert: true }
+        )
+            .then(doc => this.clientData = doc?.toObject())
+
         await Database.Commands.updateOne(
             { id: commandName },
             {
@@ -419,6 +429,24 @@ export default new class client extends Client {
             .emitWithAck("twitchFetcher", url)
             .then(res => res)
             .catch(() => null)
+    }
+
+    async loadBlackList() {
+
+        if (!socket?.connected)
+            return setTimeout(() => this.loadBlackList(), 1000 * 5)
+
+        const data = await socket.timeout(2000).emitWithAck("getAllBlacklist", "get").catch(() => [])
+        this.setBlacklistData(data)
+        return
+    }
+
+    setBlacklistData(data) {
+        if (!data?.length) return
+        for (const value of data)
+            if (value?.id)
+                this.blacklist.set(value.id, value)
+        return
     }
 
 }
