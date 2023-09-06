@@ -67,10 +67,11 @@ client.on('messageCreate', async message => {
 
         if (!cmd?.length) return
 
-        const command = client.prefixCommands.get(args.shift().toLowerCase())
+        const command = client.prefixCommands.get(cmd)
         if (command) return command.execute(message, args)
             .catch(console.log)
 
+        return
         return message.reply({ content: `${e.Animated.SaphireReading} | Não tenho nenhum comando com este nome.` })
             .then(msg => setTimeout(() => msg.delete().catch(() => { }), 4000))
     }
