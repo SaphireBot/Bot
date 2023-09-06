@@ -1,7 +1,7 @@
 import { ButtonInteraction } from "discord.js";
 import { Database, SaphireClient as client } from "../../../../../classes/index.js";
 import { Emojis as e } from "../../../../../util/util.js";
-import buttonGenerator from "../../../../commands/slashCommands/economy/bet/functions/button.multiplier.js"
+import buttonGenerator from "../../../../commands/slash/economy/bet/functions/button.multiplier.js"
 
 /**
  * @param { ButtonInteraction } interaction

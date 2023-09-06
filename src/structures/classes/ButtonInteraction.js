@@ -31,7 +31,7 @@ import checkerQuiz from './buttons/quiz/checker.quiz.js';
 import giveaway from './buttons/giveaway/giveaway.button.js';
 import botinfoSaphire from '../commands/functions/bot/botinfo.saphire.js';
 import commands from '../commands/functions/bot/commands.saphire.js';
-import mydata from '../commands/slashCommands/bot/mydata.js';
+import mydata from '../commands/slash/bot/mydata.js';
 import pagesServerinfo from '../commands/functions/serverinfo/pages.serverinfo.js';
 import connect from './buttons/connect/redirect.connect.js';
 import checkJokempo from './buttons/jokempo/redirect.jokempo.js';
@@ -339,15 +339,20 @@ export default class ButtonInteraction extends Base {
 
     }
 
+    /**
+     * @param { ButtonInteraction } interaction 
+     * @param {*} commandData 
+     * @returns 
+     */
     refeshPing(interaction, commandData) {
 
-        if (interaction.user.id !== interaction.message.interaction.user.id)
+        if (![interaction.message.interaction?.user?.id, commandData?.userId].includes(interaction.user.id))
             return interaction.reply({
-                content: `${e.Deny} | Hey! Só <@${interaction.message.interaction.user.id}> pode mandar um ping pra eu mandar um pong, ok? 🏓`,
+                content: `${e.Deny} | Hey! Só <@${commandData?.userId}> pode mandar um ping pra eu mandar um pong, ok? 🏓`,
                 ephemeral: true
             })
 
-        const pingCommand = client.slashCommands.find(cmd => cmd.name === 'ping')
+        const pingCommand = client.slashCommands.get('ping')
 
         if (!pingCommand)
             return interaction.update({

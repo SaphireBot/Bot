@@ -1,5 +1,5 @@
 import { SaphireClient as client } from "../../classes/index.js";
-import { FastTypesGames } from "../commands/slashCommands/games/fasttype.js";
+import { FastTypesGames } from "../commands/slash/games/fasttype.js";
 
 client.on("typingStart", typing => {
     const { channel, user, startedTimestamp } = typing

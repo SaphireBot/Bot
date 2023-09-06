@@ -6,10 +6,10 @@ export default async (interaction, options = []) => {
 
     try {
 
-        registerFont('./src/structures/commands/slashCommands/perfil/level/Poppins-SemiBold.ttf', {
+        registerFont('./src/structures/commands/slash/perfil/level/Poppins-SemiBold.ttf', {
             family: "Poppins-Regular"
         });
-        registerFont('./src/structures/commands/slashCommands/perfil/level/Poppins-SemiBold.ttf', {
+        registerFont('./src/structures/commands/slash/perfil/level/Poppins-SemiBold.ttf', {
             family: "Poppins-Bold"
         });
 

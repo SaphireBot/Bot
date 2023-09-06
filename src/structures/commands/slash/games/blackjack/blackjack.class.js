@@ -31,6 +31,6 @@ export default class Blackjack extends Base {
     }
 
     get BlackJackEmojis() {
-        return JSON.parse(fs.readFileSync('./src/structures/commands/slashCommands/games/blackjack/emojis.json'))
+        return JSON.parse(fs.readFileSync('./src/structures/commands/slash/games/blackjack/emojis.json'))
     }
 }

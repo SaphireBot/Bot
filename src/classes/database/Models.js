@@ -7,7 +7,6 @@ import ModelUser from './models/User.js'
 import Rather from './models/Rather.js'
 import Indications from './models/Indications.js'
 import Cantadas from './models/Cantadas.js'
-import Memes from './models/Memes.js'
 import Anime from './models/Anime.js'
 import Quiz from './models/Quiz.js'
 import Jokempo from './models/Jokempo.js'
@@ -29,7 +28,6 @@ class Models {
         this.Rather = Rather
         this.Indications = Indications
         this.Cantadas = Cantadas
-        this.Memes = Memes
         this.Anime = Anime
         this.Quiz = Quiz
         this.Jokempo = Jokempo
@@ -49,7 +47,6 @@ export {
     Rather,
     Indications,
     Cantadas,
-    Memes,
     Anime,
     Quiz,
     Jokempo,

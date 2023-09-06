@@ -13,7 +13,14 @@ export default new class client extends Client {
         super(ClientOptions)
 
         this.animes = []
+
+        // Commands
         this.slashCommands = new Collection()
+        this.prefixCommands = new Collection()
+        /**
+         * @returns Command name and your id [array]
+         */
+        this.slashCommandsData = []
 
         this.blacklist = new Map()
 
@@ -31,11 +38,6 @@ export default new class client extends Client {
          * @returns GREEN - Hexadecimal
          */
         this.green = 0x57F287
-
-        /**
-         * @returns Command name and your id [array]
-         */
-        this.slashCommandsData = []
 
         /**
          * @returns Uma string com dados da atualização
@@ -95,11 +97,6 @@ export default new class client extends Client {
          * @returns Conteúdo do client no banco de dados
          */
         this.clientData = {}
-
-        /**
-         * @returns Array com todos os memes não aprovados do banco de dados
-         */
-        this.MemesNotApproved = []
 
         /**
          * @returns Array com todos os canais em jogo

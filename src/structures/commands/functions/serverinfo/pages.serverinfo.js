@@ -1,6 +1,6 @@
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
-import serverinfo from "../../slashCommands/util/serverinfo.js"
+import serverinfo from "../../slash/util/serverinfo.js"
 import emojis from "./emojis.serverinfo.js"
 import numbers from "./numbers.serverinfo.js"
 import roles from "./roles.serverinfo.js"

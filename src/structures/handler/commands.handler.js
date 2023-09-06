@@ -11,16 +11,16 @@ export const commandsApi = []
 
 export default async () => {
 
-    const folders = readdirSync('./src/structures/commands/slashCommands/')
+    const folders = readdirSync('./src/structures/commands/slash/')
     const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").catch(() => [])
 
     for (const dir of folders) {
 
-        const commandsData = readdirSync(`./src/structures/commands/slashCommands/${dir}/`).filter(file => file.endsWith('.js'))
+        const commandsData = readdirSync(`./src/structures/commands/slash/${dir}/`).filter(file => file.endsWith('.js'))
 
         for await (const file of commandsData) {
 
-            const query = await import(`../commands/slashCommands/${dir}/${file}`)
+            const query = await import(`../commands/slash/${dir}/${file}`)
             const cmd = query.default
             const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
 
@@ -57,6 +57,26 @@ export default async () => {
                 clearInterval(interval)
             }
         }, 1000 * 5)
+    }
+
+    const prefixFolders = readdirSync('./src/structures/commands/prefix/')
+
+    for (const dir of prefixFolders) {
+        
+        const prefixCommands = readdirSync(`./src/structures/commands/prefix/${dir}/`).filter(file => file.endsWith('.js'))
+
+        for await (const file of prefixCommands) {
+
+            const query = await import(`../commands/prefix/${dir}/${file}`)
+            const cmd = query.default
+
+            if (cmd?.name) {
+                client.commandsUsed[cmd.name] = 0
+                client.prefixCommands.set(cmd.name, cmd)
+            }
+            continue
+        }
+        continue
     }
 
     return

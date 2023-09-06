@@ -7,7 +7,7 @@ import Quiz from '../../classes/games/QuizManager.js'
 import Base from './Base.js'
 import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
-const phrases = require("../commands/slashCommands/games/fasttype/phrases.fasttype.json")
+const phrases = require("../commands/slash/games/fasttype/phrases.fasttype.json")
 
 export default class Autocomplete extends Base {
     /**
@@ -84,7 +84,6 @@ export default class Autocomplete extends Base {
             editar_imagem_com_censura: ['editImageLogoMarca'],
             comprar: ['rifaNumero', value],
             id: ['giveaway_id', value],
-            funcao: ['memesViewer'],
             itens: ['reminders', value],
             selecionar: ['quiz_selecionar', value],
             serverinfo: ['serverId', value],

@@ -106,7 +106,7 @@ export default {
                             type: 2,
                             label: 'Atualizar',
                             emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'ping' }),
+                            custom_id: JSON.stringify({ c: 'ping', userId: interaction.user.id }),
                             style: ButtonStyle.Primary
                         },
                         {
@@ -120,7 +120,7 @@ export default {
                             type: 2,
                             label: 'Shards',
                             emoji: '🧩',
-                            custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
+                            custom_id: JSON.stringify({ c: 'ping', src: 'shard', userId: interaction.user.id }),
                             style: ButtonStyle.Primary
                         },
                         {
@@ -152,7 +152,7 @@ export default {
                             type: 2,
                             label: 'Atualizar',
                             emoji: '🔄',
-                            custom_id: JSON.stringify({ c: 'ping', src: 'shard' }),
+                            custom_id: JSON.stringify({ c: 'ping', src: 'shard', userId: interaction.user.id }),
                             style: ButtonStyle.Primary
                         },
                         {
@@ -166,7 +166,7 @@ export default {
                             type: 2,
                             label: 'Ping',
                             emoji: '🏓',
-                            custom_id: JSON.stringify({ c: 'ping' }),
+                            custom_id: JSON.stringify({ c: 'ping', userId: interaction.user.id }),
                             style: ButtonStyle.Primary
                         },
                         {

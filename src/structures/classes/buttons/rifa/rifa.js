@@ -1,7 +1,7 @@
 import { SaphireClient as client, Database } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { socket } from "../../../../websocket/websocket.js"
-import verifyRifa from "../../../commands/slashCommands/economy/rifa/verify.rifa.js"
+import verifyRifa from "../../../commands/slash/economy/rifa/verify.rifa.js"
 
 export default async (interaction, { src: customId }) => {
 
