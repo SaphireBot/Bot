@@ -1,11 +1,11 @@
-import { StringSelectMenuInteraction, Guild, ButtonStyle } from "discord.js";
+import { StringSelectMenuInteraction, ButtonStyle } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { GuildFeaturesTranslate } from "../../../../util/Constants.js";
 import { Emojis as e } from "../../../../util/util.js";
 
 /**
  * @param { StringSelectMenuInteraction } interaction
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } guild
  */
 export default async (interaction, guild) => {
 
@@ -26,8 +26,7 @@ export default async (interaction, guild) => {
         }]
     }).catch(() => { })
 
-    await guild.fetch()
-    const guildFeatures = guild.features || []
+    const guildFeatures = guild.features
     const features =  guild.features.map(feature => GuildFeaturesTranslate[feature] || feature).join('\n') || 'Nenhum Recurso Disponível'
 
     const embed = {
@@ -42,7 +41,9 @@ export default async (interaction, guild) => {
         ],
         footer: {
             text: `Server ID: ${guild.id}`,
-            iconURL: guild.iconURL() || null
+            iconURL: guild.icon
+                ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.includes('a_') ? 'gif' : 'png'}`
+                : null
         }
     }
 

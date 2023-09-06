@@ -1,6 +1,6 @@
-import { StringSelectMenuInteraction, ButtonStyle, PermissionsBitField } from "discord.js"
-import { Emojis as e } from "../../../../util/util.js"
-import { Database, SpamManager, SaphireClient as client } from "../../../../classes/index.js"
+import { StringSelectMenuInteraction, ButtonStyle, PermissionsBitField } from "discord.js";
+import { Database, SpamManager, SaphireClient as client } from "../../../../classes/index.js";
+import { Emojis as e } from "../../../../util/util.js";
 
 /**
  * @param { StringSelectMenuInteraction } interaction

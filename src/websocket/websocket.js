@@ -3,7 +3,6 @@ import { AfkManager, Database, GiveawayManager, SaphireClient as client } from '
 import reward from './functions/topgg.reward.js';
 import refreshRanking from '../functions/update/ranking/index.ranking.js';
 import { commandsApi } from '../structures/handler/commands.handler.js';
-// import emitReminder from './functions/emit.reminder.js';
 
 /**
  * @type { SocketType }

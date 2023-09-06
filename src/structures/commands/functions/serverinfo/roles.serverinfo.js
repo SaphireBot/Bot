@@ -1,11 +1,11 @@
-import { ButtonStyle, StringSelectMenuInteraction, Guild, PermissionFlagsBits } from "discord.js";
+import { ButtonStyle, StringSelectMenuInteraction, PermissionFlagsBits, PermissionsBitField } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
-const paginationData = {}
+const paginationData = {};
 
 /**
  * @param { StringSelectMenuInteraction } interaction
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } guild
  */
 export default async (interaction, guild, commandData) => {
 
@@ -29,10 +29,10 @@ export default async (interaction, guild, commandData) => {
             }]
         }).catch(() => { })
 
-        const roles = await guild.roles.fetch(undefined, { force: true }).catch(() => null)
+        const roles = guild.roles
 
-        if (!roles)
-            return await interaction.message.edit({
+        if (!roles?.length)
+            return interaction.message.edit({
                 embeds: [{ color: client.blue, description: `${e.Animated.SaphireCry} Nenhum cargo foi encontrado.` }]
             }).catch(() => { })
 
@@ -68,7 +68,9 @@ export default async (interaction, guild, commandData) => {
             ],
             footer: {
                 text: `Server ID: ${guild.id}`,
-                iconURL: guild.iconURL() || null
+                iconURL: guild.icon
+                    ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.includes('a_') ? 'gif' : 'png'}`
+                    : null
             }
         }
 
@@ -114,7 +116,7 @@ export default async (interaction, guild, commandData) => {
                 ]
             })
 
-        return await interaction.message.edit({ embeds: [embed], components }).catch(() => { })
+        return interaction.message.edit({ embeds: [embed], components }).catch(() => { })
 
     }
 
@@ -141,7 +143,9 @@ export default async (interaction, guild, commandData) => {
             ],
             footer: {
                 text: `Server ID: ${guild.id}`,
-                iconURL: guild.iconURL() || null
+                iconURL: guild.icon
+                    ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.includes('a_') ? 'gif' : 'png'}`
+                    : null
             }
         }
 
@@ -192,10 +196,10 @@ export default async (interaction, guild, commandData) => {
 
     function mapRole(roles) {
         const mapped = roles.map(role => ({
-            role: role.guild.id == interaction.guild.id ? `<@&${role.id}>` : role.name,
-            admin: role.permissions.has(PermissionFlagsBits.Administrator),
+            role: guild.id == interaction.guild.id ? `<@&${role.id}>` : role.name,
+            admin: new PermissionsBitField(role.permissions).has(PermissionFlagsBits.Administrator),
             id: `\`${role.id}\``,
-            position: role.rawPosition,
+            position: role.position,
             managed: role.managed
         }))
             .filter(role => role.role)

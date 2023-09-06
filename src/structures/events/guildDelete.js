@@ -2,11 +2,12 @@ import { SaphireClient as client, Database } from '../../classes/index.js';
 import { Emojis as e } from '../../util/util.js';
 import { Config } from '../../util/Constants.js';
 import { socket } from '../../websocket/websocket.js';
+import { ServerinfoCachedData } from '../commands/functions/serverinfo/pages.serverinfo.js';
 
 client.on('guildDelete', async guild => {
-
     if (!guild.id) return
-
+    
+    ServerinfoCachedData.delete(guild.id)
     if (socket?.connected)
         socket?.send({ type: "guildDelete", id: guild.id })
 

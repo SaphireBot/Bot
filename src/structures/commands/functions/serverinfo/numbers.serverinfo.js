@@ -1,10 +1,10 @@
-import { ButtonStyle, ChannelType, codeBlock, Guild, StringSelectMenuInteraction } from "discord.js"
-import { SaphireClient as client } from "../../../../classes/index.js"
-import { DiscordPermissons } from "../../../../util/Constants.js"
-import { Emojis as e } from "../../../../util/util.js"
+import { ButtonStyle, ChannelType, codeBlock, PermissionsBitField, Routes, StringSelectMenuInteraction } from "discord.js";
+import { SaphireClient as client } from "../../../../classes/index.js";
+import { DiscordPermissons } from "../../../../util/Constants.js";
+import { Emojis as e } from "../../../../util/util.js";
 
 /**
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } guild
  * @param { StringSelectMenuInteraction } interaction
  */
 export default async (interaction, guild) => {
@@ -26,15 +26,12 @@ export default async (interaction, guild) => {
         }]
     }).catch(() => { })
 
-    await Promise.all([
-        guild.fetch().catch(() => null),
-        guild.members.fetch().catch(() => null),
-        guild.roles.fetch().catch(() => null),
-        guild.bans.fetch().catch(() => null),
-        guild.invites.fetch().catch(() => null),
-    ])
+    const channels = await client.guilds.fetch(guild.id).then(g => g.channels?.cache?.toJSON()).catch(() => null)
+        || await client.rest.get(Routes.guildChannels(guild.id)).catch(() => [])
 
-    const channels = guild.channels.cache.toJSON()
+    const integrations = await client.rest.get(Routes.guildIntegrations(guild.id)).catch(() => [])
+    const bans = await client.rest.get(Routes.guildBans(guild.id)).then(b => b.length).catch(() => 0)
+    const invites = await client.rest.get(Routes.guildInvites(guild.id)).catch(() => [])
 
     const data = {
         texts: channels.filter(ch => [ChannelType.GuildText, ChannelType.GuildAnnouncement].includes(ch.type)).length || 0,
@@ -43,57 +40,47 @@ export default async (interaction, guild) => {
         stages: channels.filter(ch => ch.type == ChannelType.GuildStageVoice).length || 0,
         forums: channels.filter(ch => ch.type == ChannelType.GuildForum).length || 0,
         emojis: {
-            animated: guild.emojis.cache.filter(emoji => emoji.animated).size || 0,
-            normal: guild.emojis.cache.filter(emoji => !emoji.animated).size || 0
+            animated: guild.emojis.filter(emoji => emoji.animated).length || 0,
+            normal: guild.emojis.filter(emoji => !emoji.animated).length || 0,
+            available: guild.emojis.filter(emoji => emoji.available).length || 0,
+            unavailable: guild.emojis.filter(emoji => !emoji.available).length || 0
         },
-        stickers: guild.stickers.cache.size || 0,
+        stickers: guild.stickers.length || 0,
         members: {
-            // online: guild.members.cache.filter(member => member.presence?.status == 'online').size || 0,
-            // idle: guild.members.cache.filter(member => member.presence?.status == 'idle').size || 0,
-            // dnd: guild.members.cache.filter(member => member.presence?.status == 'dnd').size || 0,
-            // offline: guild.members.cache.filter(member => member.presence?.status == 'offline').size || 0,
-            online: 0,
-            idle: 0,
-            dnd: 0,
-            // offline: 0, Tá offline, bruh...
-            bots: guild.members.cache.filter(member => member.user.bot).size || 0,
-            total: guild.members.cache.size || 0
+            online: guild?.approximate_presence_count || 0,
+            max: guild.max_members || 0,
+            banned: bans,
+            bots: integrations.length || 0,
+            total: `${guild?.approximate_member_count || 0}`
         },
         roles: {
-            administrators: guild.roles.cache.filter(role => role.permissions.has(DiscordPermissons.Administrator)).toJSON(),
-            total: guild.roles.cache.size
+            administrators: guild.roles.filter(role => new PermissionsBitField(role.permissions).has(DiscordPermissons.Administrator)).length || 0,
+            total: guild.roles.length
         },
         boost: {
-            premiumSubscriptionCount: guild.premiumSubscriptionCount || 0,
+            premiumSubscriptionCount: guild.premium_subscription_count || 0,
             premiumTier: {
                 1: "1",
                 2: "2",
                 3: "3 (Max)"
-            }[guild.premiumTier] || "0"
-        },
-        autoMod: {
-            enables: guild.autoModerationRules?.cache?.filter(automod => automod?.enabled).size || 0,
-            disabled: guild.autoModerationRules?.cache?.filter(automod => !automod?.enabled).size || 0
-        },
-        bans: {
-            withReason: guild.bans.cache.filter(ban => ban.reason).size || 0,
-            withoutReason: guild.bans.cache.filter(ban => !ban.reason).size || 0
+            }[guild.premium_tier] || "0"
         },
         invites: {
-            amount: guild.invites.cache.size || 0,
-            uses: guild.invites.cache.reduce((acc, invite) => acc += invite.uses, 0) || 0,
-            permanents: guild.invites.cache.filter(invite => invite.expiresAt === null).size || 0,
-            temporary: guild.invites.cache.filter(invite => invite.expiresAt !== null).size || 0
+            amount: invites.length || 0,
+            uses: invites.reduce((acc, invite) => acc += invite.uses, 0) || 0,
+            permanents: invites.filter(invite => invite.temporary).length || 0,
+            temporary: invites.filter(invite => !invite.temporary).length || 0
         },
         others: {
-            bitrate: `${guild.maximumBitrate || 0}bits`,
-            maximumMembers: guild.maximumMembers || 0,
-            maxVideoChannelUsers: `${guild.maxVideoChannelUsers || 0} per/chat`
-        },
-        scheduledEvents: guild.scheduledEvents.cache.size || 0
+            maxStageChannelUsers: `${guild.max_stage_video_channel_users || 0} per/chat`,
+            maximumMembers: guild.max_members || 0,
+            maxVideoChannelUsers: `${guild.max_video_channel_users || 0} per/chat`,
+            nsfwLevel: guild.nsfw_level,
+            afkTimeout: `${guild.afk_timeout} segundos`
+        }
     }
 
-    return await interaction.message.edit({
+    return interaction.message.edit({
         embeds: [{
             color: client.blue,
             title: '🔎 Informações do Servidor | NÚMEROS',
@@ -105,18 +92,18 @@ export default async (interaction, guild) => {
                     inline: true
                 },
                 {
-                    name: '😀 Emojis/Stickers',
-                    value: codeBlock('txt', `Animados: ${data.emojis.animated}\nNormais: ${data.emojis.normal}\nTotais: ${data.emojis.animated + data.emojis.normal}\nStickers: ${data.stickers}\nTotal: ${data.emojis.animated + data.emojis.normal + data.stickers}`),
+                    name: '👥 Membros',
+                    value: codeBlock('txt', `Online: ${data.members.online}\nMáximo: ${data.members.max}\nBanidos: ${data.members.banned}\nBots: ${data.members.bots}\nTotal: ${data.members.total}`),
                     inline: true
                 },
                 {
-                    name: '👥 Membros*',
-                    value: codeBlock('txt', `Online: ${data.members.online}\nAusente: ${data.members.idle}\nNão Perturbar: ${data.members.idle}\nBots: ${data.members.bots}\nTotal: ${data.members.total}`),
-                    inline: true
+                    name: '😀 Emojis/Stickers',
+                    value: codeBlock('txt', `Animados: ${data.emojis.animated}\nNormais: ${data.emojis.normal}\nTotais: ${data.emojis.animated + data.emojis.normal}\nDisponíveis: ${data.emojis.available}\nIndisponíveis: ${data.emojis.unavailable}\nStickers: ${data.stickers}\nTotal: ${guild.emojis.length + guild.stickers.length}`),
+                    inline: false
                 },
                 {
                     name: '🔰 Os Carguinhos',
-                    value: codeBlock('txt', `Admins: ${data.roles.administrators.length}\nTotal: ${data.roles.total}`),
+                    value: codeBlock('txt', `Admins: ${data.roles.administrators}\nTotal: ${data.roles.total}`),
                     inline: true
                 },
                 {
@@ -125,28 +112,21 @@ export default async (interaction, guild) => {
                     inline: true
                 },
                 {
-                    name: '🔨 Banimentos',
-                    value: codeBlock('txt', `Com Motivo: ${data.bans.withReason}\nSem Motivo: ${data.bans.withoutReason}`),
-                    inline: true
-                },
-                {
-                    name: '📋 Outros*',
-                    value: codeBlock('txt', `Bitrate: ${data.others.bitrate}\nMembros Max: ${data.others.maximumMembers}\nVídeo Voice Max: ${data.others.maxVideoChannelUsers}\nEventos Ativos: ${data.scheduledEvents}`),
-                    inline: true
-                },
-                {
                     name: '📨 Convites',
                     value: codeBlock('txt', `Total: ${data.invites.amount}\nUsos: ${data.invites.uses}\nPermanentes: ${data.invites.permanents}\nTemporários: ${data.invites.temporary}`),
-                    inline: true
+                    inline: false
                 },
                 {
-                    name: '📋 * Observação',
-                    value: codeBlock('txt', `MEMBROS: A contagem de membros por status ainda não é possível. Por causa da Saphire ser verificada, ela precisa de uma Intent que não tem. Já solicitei ao Discord e estou aguardando a liberação.\n \nOUTROS: "Vídeo Voice Max" significa o número máximo de telas transmitidas simuntanamente em um canal de voz\n \n \n~ Rody, Desenvolvedor da Saphire Moon.`),
+                    name: '📋 Outros',
+                    value: codeBlock('txt', `Membros Max: ${data.others.maximumMembers}\nStreams Users Max: ${data.others.maxVideoChannelUsers}\nStage Users Max: ${data.others.maxStageChannelUsers}\nNSFW Level: ${data.others.nsfwLevel}\nAFK Timeout: ${data.others.afkTimeout}`),
+                    inline: false
                 }
             ],
             footer: {
                 text: `Server ID: ${guild.id}`,
-                iconURL: guild.iconURL() || null
+                iconURL: guild.icon
+                    ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.includes('a_') ? 'gif' : 'png'}`
+                    : null
             }
         }],
         components: [components]

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, codeBlock } from 'discord.js'
+import { ApplicationCommandOptionType, Guild, Routes, codeBlock } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 import pagesServerinfo from '../../functions/serverinfo/pages.serverinfo.js'
@@ -37,14 +37,12 @@ export default {
             ? await interaction.update({ content: `${e.Loading} | Voltando para o início...`, embeds: [], components: [], fetchReply: true }).catch(() => { })
             : await interaction.reply({ content: `${e.Loading} | Beleza! Carregando...`, fetchReply: true })
 
-        const guild = await client.guilds.fetch(guildId).catch(async () => await client.getGuild(guildId))
+        const guild = await client.guilds.fetch(guildId).catch(async () => new Guild(client, await client.getGuild(guildId)))
 
         if (!guild)
             return isBack
                 ? await interaction.update({ content: `${e.DenyX} | Nenhum servidor foi encontrado. Talvez eu não esteja nele.`, embeds: [], components: [], fetchReply: true }).catch(() => { })
                 : await interaction.editReply({ content: `${e.DenyX} | Nenhum servidor foi encontrado. Talvez eu não esteja nele.`, fetchReply: true }).catch(() => { })
-
-        await guild.fetch()
 
         const guildData = {
             bannerURL: guild.bannerURL({ size: 512 }) || guild.discoverySplashURL({ size: 512 }) || null,
@@ -64,7 +62,7 @@ export default {
         const fields = [
             {
                 name: '📜 Servidor e Posse',
-                value: `**${guild.name}**\n${e.OwnerCrow} **${guildData.guildOwner} \`${guild.ownerId}\`**..`
+                value: `**${guild.name}**\n${e.OwnerCrow} **${guildData.guildOwner} \`${guild.ownerId}\`**`
             },
             {
                 name: '🌟 A Fundação',
@@ -72,13 +70,9 @@ export default {
             }
         ]
 
-        const whoAddMe = await fetch(
-            `https://discord.com/api/v10/guilds/${guild.id}/integrations`,
-            { headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` } }
-        )
-            .then(res => res.json())
+        const whoAddMe = await client.rest.get(Routes.guildIntegrations(guildId))
             .then(res => {
-                const data = res.find(data => data.account.id == client.user.id)
+                const data = res.find(d => d.account.id == client.user.id)
                 if (!data) return ""
                 return `\nFoi **${data.user.username}** que me adicionou no servidor.`
             })
@@ -158,6 +152,12 @@ export default {
                             emoji: '🔰',
                             description: 'Todos os cargos do servidor',
                             value: 'roles'
+                        },
+                        {
+                            label: 'Atualizar',
+                            emoji: "🔄",
+                            description: 'Atualizar os dados no cache',
+                            value: 'refresh'
                         }
                     ]
                 }]

@@ -6,6 +6,8 @@ import { Config} from '../../util/Constants.js';
 
 client.on("guildCreate", async guild => {
 
+    if (!guild.id) return
+
     if (client.blacklist.has(guild.id))
         return guild.leave().catch(() => { })
 
@@ -84,8 +86,5 @@ client.on("guildCreate", async guild => {
         }
     })
 
-    const FirstMessageChannel = guild.channels.cache.find(channel => channel.isTextBased() && channel.permissionsFor(guild.members.me).has('SendMessages'))
-    if (!FirstMessageChannel) return
-    return FirstMessageChannel.send(`${e.NezukoDance} | Oooie, eu sou a ${client.user.username}.\n${e.Stonks} | Meu prefixo padrão é \`/\`, todos os meus são em Slash Commands.`).catch(() => { })
-
+    return
 })

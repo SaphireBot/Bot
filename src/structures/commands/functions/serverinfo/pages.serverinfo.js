@@ -7,6 +7,8 @@ import roles from "./roles.serverinfo.js"
 import suplement from "./suplement.serverinfo.js"
 import features from "./features.serverinfo.js"
 import images from "./images.serverinfo.js"
+import { Routes } from "discord.js"
+export const ServerinfoCachedData = new Map()
 
 export default async ({ interaction, customId: commandData, value }) => {
 
@@ -14,7 +16,7 @@ export default async ({ interaction, customId: commandData, value }) => {
         return serverinfo.execute({ interaction }, commandData, false, true)
 
     if (commandData.uid !== interaction.user.id)
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.DenyX} | Ueeepa! Não foi você que usou este comando, né?`,
             ephemeral: true
         })
@@ -25,7 +27,30 @@ export default async ({ interaction, customId: commandData, value }) => {
     if (value == 'firstPage')
         return serverinfo.execute({ interaction }, commandData, true)
 
-    const guild = await client.guilds.fetch(commandData.id).catch(async () => await client.getGuild(commandData.id))
+    if (value == "refresh") {
+        interaction.message.edit({ components: interaction.message.components }).catch(() => { })
+
+        await interaction.reply({
+            content: `${e.Loading} | Atualizando servidor no cache...`,
+            ephemeral: true
+        })
+
+        const data = await client.rest.get(Routes.guild(commandData?.id)).catch(() => null)
+
+        if (!data)
+            return interaction.editReply({ content: `${e.DenyX} | Não foi possível atualizar o servidor.` }).catch(() => { })
+
+        ServerinfoCachedData.set(commandData.id, data)
+        return interaction.editReply({ content: `${e.CheckV} | Servidor atualizado com sucesso.` }).catch(() => { })
+
+    }
+
+    const guild = ServerinfoCachedData.get(commandData.id) || await client.getGuild(commandData.id)
+
+    if (!ServerinfoCachedData.has(commandData.id)) {
+        ServerinfoCachedData.set(commandData.id, guild)
+        setTimeout(() => ServerinfoCachedData.delete(), 1000 * 60 * 10)
+    }
 
     if (!guild)
         return interaction.update({
@@ -39,6 +64,6 @@ export default async ({ interaction, customId: commandData, value }) => {
     const execute = { numbers, emojis, roles, suplement, features, images }[value]
     if (execute) return execute(interaction, guild)
 
-    return await interaction.reply({ content: `${e.DenyX} | Nenhuma função foi encontrada. #894156`, ephemeral: true })
+    return interaction.reply({ content: `${e.DenyX} | Nenhuma função foi encontrada. #894156`, ephemeral: true })
 
 }

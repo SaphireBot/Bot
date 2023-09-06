@@ -1,13 +1,14 @@
-import { StringSelectMenuInteraction, Guild, ButtonStyle } from "discord.js";
+import { StringSelectMenuInteraction, ButtonStyle, Guild } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { Emojis as e } from "../../../../util/util.js";
 
 /**
  * @param { StringSelectMenuInteraction } interaction
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } gData
  */
-export default async (interaction, guild) => {
+export default async (interaction, gData) => {
 
+    const guild = new Guild(client, gData)
     const indexComponent = interaction.message.components.length > 1 ? 1 : 0
     const selectMenu = interaction.message.components[indexComponent].toJSON()
 

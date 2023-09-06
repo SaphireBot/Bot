@@ -1,11 +1,11 @@
 
-import { ButtonStyle, Guild, StringSelectMenuInteraction } from "discord.js"
+import { ButtonStyle, StringSelectMenuInteraction } from "discord.js"
 import { SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 /**
  * @param { StringSelectMenuInteraction } interaction
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } guild
  */
 export default async (interaction, guild) => {
 
@@ -27,9 +27,9 @@ export default async (interaction, guild) => {
     }).catch(() => { })
 
     const data = {
-        animated: guild.emojis.cache.filter(emoji => emoji.animated).map(emoji => `${emoji}`),
+        animated: guild.emojis.filter(emoji => emoji.animated).map(emoji => `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`),
         animatedString: [],
-        normal: guild.emojis.cache.filter(emoji => !emoji.animated).map(emoji => `${emoji}`),
+        normal: guild.emojis.filter(emoji => !emoji.animated).map(emoji => `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`),
         normalString: []
     }
 
@@ -84,9 +84,11 @@ export default async (interaction, guild) => {
         ],
         footer: {
             text: `Server ID: ${guild.id}`,
-            iconURL: guild.iconURL() || null
+            iconURL: guild.icon
+                ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${guild.icon.includes('a_') ? 'gif' : 'png'}`
+                : null
         }
     }
 
-    return await interaction.message.edit({ embeds: [embed, embed1], components: [components] }).catch(() => { })
+    return interaction.message.edit({ embeds: [embed, embed1], components: [components] }).catch(() => { })
 }

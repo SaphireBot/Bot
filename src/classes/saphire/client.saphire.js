@@ -216,8 +216,9 @@ export default new class client extends Client {
 
     async getGuild(guildId) {
         if (!guildId) return null
-        return await this.rest.get(Routes.guild(guildId))
-            .then(guild => new Guild(this, guild))
+        const query = new URLSearchParams()
+        query.set("with_counts", "true")
+        return await this.rest.get(Routes.guild(guildId), { query })
             .catch(() => null)
     }
 

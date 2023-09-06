@@ -1,14 +1,15 @@
-import { StringSelectMenuInteraction, Guild, ButtonStyle, codeBlock } from "discord.js";
+import { StringSelectMenuInteraction, Guild, ButtonStyle, codeBlock, Routes } from "discord.js";
 import { SaphireClient as client } from "../../../../classes/index.js";
 import { locales } from "../../../../util/Constants.js";
 import { Emojis as e } from "../../../../util/util.js";
 
 /**
  * @param { StringSelectMenuInteraction } interaction
- * @param { Guild } guild
+ * @param { import("discord.js").APIGuild } gData
  */
-export default async (interaction, guild) => {
+export default async (interaction, gData) => {
 
+    const guild = new Guild(client, gData)
     const indexComponent = interaction.message.components.length > 1 ? 1 : 0
     const selectMenu = interaction.message.components[indexComponent].toJSON()
 
@@ -26,12 +27,14 @@ export default async (interaction, guild) => {
         }]
     }).catch(() => { })
 
-    const sameGuild = guild.id == interaction.guild.id
+    const userInTheGuild = guild.id == interaction.guild.id
         ? true
         : await guild.members.fetch(interaction.user.id).then(() => true).catch(() => false)
 
+    const owner = await client.rest.get(Routes.user(guild.ownerId)).catch(() => null)
+
     const data = {
-        afkChannel: guild.afkChannel ? `${sameGuild ? `${guild.afkChannel} (${Date.stringDate(guild.afkTimeout * 1000)})\n\`${guild.afkChannelId}\`` : codeBlock('txt', `${guild.afkChannel.name}(${Date.stringDate(guild.afkTimeout * 1000)})\n${guild.afkChannelId}`)}` : codeBlock('txt', 'Nenhum Canal\n-----------'),
+        afkChannel: guild.afkChannel ? `${userInTheGuild ? `${guild.afkChannel} (${Date.stringDate(guild.afkTimeout * 1000)})\n\`${guild.afkChannelId}\`` : codeBlock('txt', `${guild.afkChannel.name}(${Date.stringDate(guild.afkTimeout * 1000)})\n${guild.afkChannelId}`)}` : codeBlock('txt', 'Nenhum Canal\n-----------'),
         publicUpdatesChannel: formatChannel(guild.publicUpdatesChannel, guild.publicUpdatesChannelId),
         rulesChannel: formatChannel(guild.rulesChannel, guild.rulesChannelId),
         systemChannel: formatChannel(guild.systemChannel, guild.systemChannelId),
@@ -45,7 +48,7 @@ export default async (interaction, guild) => {
             2: 'Todos os membros'
         }[guild.explicitContentFilter],
         nameAndId: `${guild.name} \n${guild.id} `,
-        ownerAndId: `${(await guild.members.fetch(guild.ownerId)?.then(member => member.user.username).catch(() => 'Not Found'))} \n${guild.ownerId} `,
+        ownerAndId: `${owner?.username || "Not Found"} \n${guild.ownerId} `,
         large: guild.large ? 'Sim' : 'Não',
         mfaLevel: guild.mfaLevel ? 'Ativado' : 'Desativado',
         nameAcronym: guild.nameAcronym ? guild.nameAcronym : 'Não Possui',
@@ -175,7 +178,7 @@ export default async (interaction, guild) => {
 
     function formatChannel(channel, channelId) {
         return channel
-            ? `${sameGuild ? `${channel}\n\`${channel}\`` : codeBlock('txt', `${channel.name}\n${channelId}`)}`
+            ? `${userInTheGuild ? `${channel}\n\`${channel}\`` : codeBlock('txt', `${channel.name}\n${channelId}`)}`
             : codeBlock('txt', 'Nenhum Canal\n-----------')
     }
 
