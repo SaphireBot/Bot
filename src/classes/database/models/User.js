@@ -18,7 +18,6 @@ export default model("User", new Schema({
     DailyCount: Number,
     MixCount: Number,
     QuizCount: Number,
-    TicTacToeCount: Number,
     CompetitiveMemoryCount: Number,
     ForcaCount: Number,
     GamingCount: {

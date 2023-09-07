@@ -101,7 +101,6 @@ export default {
             DailyCount: data.DailyCount || 0,
             MixCount: data.MixCount || 0,
             QuizCount: data.QuizCount || 0,
-            TicTacToeCount: data.TicTacToeCount || 0,
             CompetitiveMemoryCount: data.CompetitiveMemoryCount || 0,
             ForcaCount: data.ForcaCount || 0,
             GamingCount: {
