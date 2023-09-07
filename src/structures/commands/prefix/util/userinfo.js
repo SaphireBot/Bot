@@ -1,66 +1,28 @@
+import { GuildMember, Message } from 'discord.js'
 import { DiscordFlags as flags, PermissionsTranslate, Permissions, DiscordPermissons } from '../../../../util/Constants.js'
-import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
+import { ButtonStyle } from 'discord.js'
 import { SaphireClient as client } from '../../../../classes/index.js'
 import { Emojis as e } from '../../../../util/util.js'
 
+
 export default {
     name: 'userinfo',
-    description: '[util] Obtenha as informações de um usuário',
+    description: '[util] Veja as informações de um usuário',
+    aliases: ['ui'],
     category: "util",
-    dm_permission: false,
-    database: false,
-    type: 1,
-    options: [
-        {
-            name: 'user',
-            description: 'Selecione um membro para ver suas informações',
-            type: ApplicationCommandOptionType.User
-        },
-        {
-            name: 'hide',
-            description: 'Oculte as informações só para você',
-            type: ApplicationCommandOptionType.String,
-            choices: [
-                {
-                    name: 'Esconder só pra mim',
-                    value: 'hide'
-                },
-                {
-                    name: 'Todos podem ver',
-                    value: 'false'
-                }
-            ]
-        }
-    ],
-    helpData: {
-        color: 'Blue',
-        description: 'Clique em alguém e veja suas informações de maneira simples e prática',
-        permissions: [],
-        fields: []
-    },
-    apiData: {
-        name: "userinfo",
-        description: "Veja as informações de um usuário do Discord/Servidor",
-        category: "Utilidades",
-        synonyms: [],
-        perms: {
-            user: [],
-            bot: []
-        }
-    },
-    async execute({ interaction }) {
+    /**
+     * @param { Message } message
+     * @param { string[] } args
+     */
+    async execute(message, args) {
 
-        const { options, guild, user: author } = interaction
-        const user = options.getUser('user') || author
+        const { guild, author } = message
+        const user = await message.getUser(args[0])
 
         if (!user)
-            return await interaction.reply({
-                content: `${e.Deny} | Usuário não encontrado.`,
-                ephemeral: true
-            })
+            return message.reply({ content: `${e.Deny} | Usuário não encontrado.`, })
 
-        const member = guild.members.cache.get(user.id) || null
-        const hide = options.getString('hide') === 'hide'
+        const member = await message.getMember(user.id)
         const components = []
         const embeds = []
         const userData = {}
@@ -97,7 +59,7 @@ export default {
             thumbnail: { url: userData.avatar }
         })
 
-        if (member) {
+        if (member instanceof GuildMember) {
             memberData.joinedAt = Date.Timestamp(member.joinedAt, 'F', true)
             memberData.joinedTimestamp = Date.Timestamp(member.joinedAt, 'R', true)
             memberData.onwer = (guild.ownerId === user.id) ? '\`Sim\`' : '\`Não\`'
@@ -138,7 +100,7 @@ export default {
 
         let application = null
 
-        if (guild.clientHasPermission(Permissions.ManageGuild)) {
+        if (user.bot && guild.clientHasPermission(Permissions.ManageGuild)) {
             const integrations = await guild.fetchIntegrations() || []
             application = integrations.find(data => data?.application?.id === user?.id)?.application
         }
@@ -180,10 +142,8 @@ export default {
             ]
         }]
 
-        const msg = await interaction.reply({
+        const msg = await message.reply({
             embeds: embeds.length > 1 ? [embeds[0]] : embeds,
-            ephemeral: hide,
-            fetchReply: embeds.length > 1,
             components: embeds.length > 1 ? buttons : []
         })
 
@@ -212,16 +172,10 @@ export default {
                 return await ButtonInteraction.update({ embeds: [embeds[index]] }).catch(() => { })
             })
             .on('end', async () => {
-
                 const embed = embeds[index]
-
                 embed.color = client.red
                 embed.footer = { text: 'Tempo esgotado.' }
-
-                return await interaction.editReply({
-                    embeds: [embed],
-                    components: []
-                }).catch(() => { })
+                return msg.edit({ embeds: [embed], components: [] }).catch(() => { })
 
             })
 
