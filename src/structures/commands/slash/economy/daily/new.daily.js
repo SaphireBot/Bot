@@ -1,25 +1,26 @@
-import { Config as config } from '../../../../../util/Constants.js'
-import { CodeGenerator } from '../../../../../functions/plugins/plugins.js'
-import { Experience } from '../../../../../classes/index.js'
-import Base from '../../../../classes/Base.js'
-import revalidateReminder from './reminder.daily.js'
-import { Emojis as e } from '../../../../../util/util.js'
-import { socket } from '../../../../../websocket/websocket.js'
+import { Database, Experience, SaphireClient as client } from '../../../../../classes/index.js';
+import { Config as config } from '../../../../../util/Constants.js';
+import { CodeGenerator } from '../../../../../functions/plugins/plugins.js';
+import { Emojis as e } from '../../../../../util/util.js';
+import { Message } from 'discord.js';
+import { socket } from '../../../../../websocket/websocket.js';
+import Base from '../../../../classes/Base.js';
+import revalidateReminder from './reminder.daily.js';
 
 export default class Daily extends Base {
-    constructor(interaction) {
+    constructor(interaction = {}, message) {
         super()
         this.interaction = interaction
-        this.user = interaction.user
-        this.guild = interaction.guild
-        this.channel = interaction.channel
-        this.member = interaction.member
-        this.options = interaction.options
+        this.user = interaction.user || message.author
+        this.guild = interaction.guild || message.guild
+        this.channel = interaction.channel || message.channel
+        this.member = interaction.member || message.member
+        this.options = interaction.options || {}
     }
 
     async execute() {
 
-        const { interaction, Database, client, guild, options, user } = this
+        const { interaction, guild, options, user } = this
 
         const transferUser = options.getUser('transfer')
         const option = options.getString('options')
@@ -106,7 +107,15 @@ export default class Daily extends Base {
             prize.money += moneyBonus
             prize.xp += xpBonus
             data.fields.push({ name: `${e.Boost} Server Booster`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
-        }
+        };
+
+        (() => {
+            let moneyBonus = this.bonusCalculate(money, 0.2)
+            let xpBonus = this.bonusCalculate(xp, 0.15)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: `${e.slash} Slash Command`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        })();
 
         if (isReminder)
             data.fields.push({ name: '⏰ Lembrete Automático', value: 'Como ativou essa funçao, então eu vou te ajudar. Quando o próximo daily estiver disponível, eu vou te avisar.' })
@@ -135,11 +144,118 @@ export default class Daily extends Base {
 
     }
 
+    /**
+     * @param { Message } message
+     * @param { string[] } args
+     */
+    async executePrefixCommand(message, args) {
+
+        const authorData = await Database.getUser(this.user.id)
+        const clientData = await Database.Client.findOne({ id: client.user.id }, 'Titles.BugHunter PremiumServers')
+        const bugHunters = clientData?.Titles.BugHunter || []
+        const dailyTimeout = authorData?.Timeouts?.Daily || 0
+        const count = authorData?.DailyCount || 0
+
+        if (['sequency', 'status', 'sequência', 'sequencia', 'dais', 'days', 'info'].includes(args[0]))
+            return message.reply({
+                content: count == 0
+                    ? `${e.Animated.SaphireCry} | Você não tem nenhum dia consecutivo contabilizado.`
+                    : `${e.Info} | Atualmente, você resgatou **${count - 1}** prêmios diários consecutivos.`
+            })
+
+        if (count > 0 && dailyTimeout > 0 && !Date.Timeout(172800000, dailyTimeout)) {
+            this.resetSequence()
+            return message.reply({ content: `${e.Animated.SaphireCry} | Você perdeu a sequência do prêmio diário.` })
+        }
+
+        if (Date.Timeout(86400000, dailyTimeout))
+            return message.reply({ content: `⏱️ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.`, })
+
+        let data = { fields: [] }
+        let prize = { ...Daily.dailyPrizes[count] }
+        let over30 = { day: count, money: parseInt(Math.floor(Math.random() * 10000)), xp: parseInt(Math.floor(Math.random() * 10000)) }
+        const isVip = await this.user.isVip()
+        const moeda = await this.guild.getCoin()
+
+        if (count > 30) {
+            if (over30.money < 1000) over30.money = 1000
+            if (over30.xp < 500) over30.xp = 500
+            prize = over30
+        }
+
+        let money = prize.money
+        let xp = prize.xp
+
+        if (this.guild.id === config.guildId) {
+            let moneyBonus = this.bonusCalculate(money, 0.5)
+            let xpBonus = this.bonusCalculate(xp, 0.5)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: '🏡 Servidor Principal', value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        }
+
+        if (bugHunters.includes(this.user.id)) {
+            let moneyBonus = this.bonusCalculate(money, 0.3)
+            let xpBonus = this.bonusCalculate(xp, 0.3)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: `${e.Gear} Bug Hunter`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        }
+
+        if (clientData?.PremiumServers?.includes(this.guild.id)) {
+            let moneyBonus = this.bonusCalculate(money, 0.6)
+            let xpBonus = this.bonusCalculate(xp, 0.6)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: `${e.Star} Servidor Premium`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        }
+
+        if (isVip) {
+            let moneyBonus = this.bonusCalculate(money, 0.7)
+            let xpBonus = this.bonusCalculate(xp, 0.7)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: `${e.VipStar} Adicional Vip`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        }
+
+        if (this.member.premiumSinceTimestamp) {
+            let moneyBonus = this.bonusCalculate(money, 0.35)
+            let xpBonus = this.bonusCalculate(xp, 0.35)
+            prize.money += moneyBonus
+            prize.xp += xpBonus
+            data.fields.push({ name: `${e.Boost} Server Booster`, value: `+${moneyBonus} ${moeda} | +${xpBonus} ${e.RedStar} Experiência` })
+        }
+
+        let days = Daily.dailyPrizes.map(data => data.day)
+        let daysCountFormat = prize.day <= 31 ? days.map((num, i) => this.formatCalendar(prize, num, i)).join('') : 'Um calendário comum não cabe a você.'
+
+        data.fields.unshift({
+            name: `${e.MoneyWings} Dinheiro e Experiências Adquiridas ${isVip || this.guild.id === config.guildId ? '*(total)*' : ''}`,
+            value: `${prize.money} ${moeda} | ${prize.xp} ${e.RedStar} Experiência`
+        })
+
+        data.fields.push({ name: '📆 Calendário', value: `\`\`\`txt\n${daysCountFormat}\n\`\`\`` })
+        this.setNewDaily(prize, false, false, false)
+
+        return message.reply({
+            embeds: [{
+                color: client.green,
+                title: `${e.waku} ${client.user.username} Daily Rewards`,
+                description: `${e.Animated.SaphireDance} | Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
+                fields: data.fields,
+                footer: {
+                    text: "Sabia que o Daily pelo /slashcommand dá mais Safiras?"
+                }
+            }]
+        })
+
+    }
+
     async setNewDaily(prize, isReminder, option, transferUser) {
 
         const dateNow = Date.now()
 
-        if (isReminder) {
+        if (isReminder)
             socket?.send({
                 type: "postReminder",
                 reminderData: {
@@ -154,7 +270,6 @@ export default class Daily extends Base {
                     privateOrChannel: option == 'reminderPrivate'
                 }
             })
-        }
 
         const data = {
             $inc: { DailyCount: 1, Balance: prize.money },
@@ -202,8 +317,8 @@ export default class Daily extends Base {
         }
         Experience.add(this.user.id, prize.xp)
 
-        return await this.Database.User.findOneAndUpdate({ id: this.user.id }, data, { upsert: true, new: true })
-            .then(doc => this.Database.saveUserCache(doc?.id, doc))
+        return await Database.User.findOneAndUpdate({ id: this.user.id }, data, { upsert: true, new: true })
+            .then(doc => Database.saveUserCache(doc?.id, doc))
     }
 
     formatCalendar(prize, num, i) {

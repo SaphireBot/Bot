@@ -57,9 +57,9 @@ export default {
                 const bal = userData?.Balance > 0 ? parseInt(userData?.Balance).currency() || 0 : userData?.Balance || 0
                 const oculto = message.author.id === Config.ownerId ? false : userData?.Perfil?.BalanceOcult
                 const balance = mention.id == client.user.id ? `∞ ${MoedaCustom}` : oculto ? `||oculto ${MoedaCustom}||` : `${bal} ${MoedaCustom}`
-                const NameOrUsername = `${mention.user?.globalName || mention.user?.username || mention?.globalName || mention?.username} possui`
+                const NameOrUsername = `${mention.user?.globalName || mention.user?.username || mention?.globalName || mention?.username} \`${mention.id}\` possui`
 
-                return `👝 | ${NameOrUsername} \`${mention.id}\` **${balance}**`
+                return `👝 | ${NameOrUsername} **${balance}**`
             })
 
             for (let i = 0; i < content.length; i += 25)
