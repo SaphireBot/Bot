@@ -1,17 +1,17 @@
-import { indexButton } from '../../../commands/functions/memorygame/util.js'
-import { ButtonStyle } from 'discord.js'
-import check from './check.tictactoe.js'
-import win from './finish.tictactoe.js'
+import { indexButton } from '../../../commands/functions/memorygame/util.js';
+import { ButtonStyle } from 'discord.js';
+import check from './check.tictactoe.js';
+import win from './finish.tictactoe.js';
 
 export default async (interaction, customIdData) => {
 
     const { user, message, guild } = interaction
-    const { id, opponent: opponentId } = customIdData
-    const commandAuthor = message.interaction.user
+    const { id, opponent: opponentId, authorId } = customIdData
+    const commandAuthor = message.interaction?.user || guild.members.cache.get(authorId)?.user
     const opponentUser = guild.members.cache.get(opponentId)?.user
-    const availablePlayers = [commandAuthor.id, opponentId]
+    const availablePlayers = [commandAuthor?.id, opponentId]
 
-    if (!opponentUser || !availablePlayers.includes(user.id)) return
+    if (!commandAuthor || !opponentUser || !availablePlayers.includes(user.id)) return
 
     const playNow = message.mentions.users.first()
     if (!playNow || playNow.id !== user.id) return

@@ -33,7 +33,7 @@ export default {
         const opponent = options.getUser('oponente')
 
         if (opponent.bot || opponent.id === user.id)
-            return await interaction.reply({
+            return interaction.reply({
                 content: `${e.Deny} | Você não pode jogar contra bots ou você mesmo.`,
                 ephemeral: true
             })

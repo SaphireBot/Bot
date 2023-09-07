@@ -1,6 +1,6 @@
 import { ButtonStyle } from 'discord.js'
 
-export default (opponentId) => {
+export default (opponentId, authorId) => {
 
     /**
      * A1 A2 A3
@@ -17,7 +17,8 @@ export default (opponentId) => {
             c: 'ttt',
             src: {
                 id: id,
-                opponent: opponentId
+                opponent: opponentId,
+                authorId
             }
         }),
         style: ButtonStyle.Secondary

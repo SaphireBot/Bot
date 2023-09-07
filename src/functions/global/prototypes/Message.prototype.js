@@ -19,7 +19,7 @@ Message.prototype.getUser = async function (id = "") {
 
 Message.prototype.getMember = async function (id = "") {
 
-    if (/^\w+$/.test(id))
+    if (id && /^\w+$/.test(id))
         return this.mentions.members.get(id)
             || this.guild.members.cache.get(id)
             || await this.guild.members.fetch(id).catch(() => null)

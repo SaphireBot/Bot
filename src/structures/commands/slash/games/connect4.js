@@ -55,14 +55,14 @@ export default {
                         type: 2,
                         label: 'Aceitar',
                         emoji: e.amongusdance,
-                        custom_id: JSON.stringify({ c: 'connect', src: 'init', userId: member.id }),
+                        custom_id: JSON.stringify({ c: 'connect', src: 'init', userId: member.id, authorId: interaction.user.id }),
                         style: ButtonStyle.Success
                     },
                     {
                         type: 2,
                         label: 'Recusar',
                         emoji: '<a:a_hello:937498373727080480>',
-                        custom_id: JSON.stringify({ c: 'connect', src: 'cancel', userId: member.id }),
+                        custom_id: JSON.stringify({ c: 'connect', src: 'cancel', userId: member.id, authorId: interaction.user.id }),
                         style: ButtonStyle.Danger
                     },
                     {

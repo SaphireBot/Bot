@@ -1,12 +1,12 @@
-import { ButtonStyle } from "discord.js"
-import { SaphireClient as client, Database } from "../../../../classes/index.js"
-import { Emojis as e } from "../../../../util/util.js"
-import play from "./play.connect.js"
+import { SaphireClient as client, Database } from "../../../../classes/index.js";
+import { ButtonStyle } from "discord.js";
+import { Emojis as e } from "../../../../util/util.js";
+import play from "./play.connect.js";
 
 // Button Interaction
 export default ({ interaction, user, message }, commandData) => {
 
-    const { src, userId } = commandData
+    const { src, userId, authorId } = commandData
 
     const execute = { cancel, init, play, info }[src]
 
@@ -20,7 +20,7 @@ export default ({ interaction, user, message }, commandData) => {
 
     async function cancel() {
 
-        if (![userId, message.interaction.user.id].includes(user.id))
+        if (![userId, authorId].includes(user.id))
             return interaction.reply({
                 content: `${e.DenyX} | Eeepa, você não usou o comando e também não foi desafiado, né?`,
                 ephemeral: true
@@ -45,7 +45,7 @@ export default ({ interaction, user, message }, commandData) => {
 
         const lines = new Array(7).fill(new Array(7).fill(e.white))
         const emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
-        const playNow = [message.interaction.user.id, userId].random()
+        const playNow = [authorId, userId].random()
         const components = [{ type: 1, components: [] }, { type: 1, components: [] }]
 
         for (let i = 0; i <= 3; i++)
@@ -65,23 +65,15 @@ export default ({ interaction, user, message }, commandData) => {
             })
 
         const emojiPlayer = {
-            [
-                playNow == message.interaction.user.id
-                    ? userId
-                    : message.interaction.user.id
-            ]: e.red,
-            [
-                playNow == message.interaction.user.id
-                    ? message.interaction.user.id
-                    : userId
-            ]: e.yellow
+            [playNow == authorId ? userId : authorId]: e.red,
+            [playNow == authorId ? authorId : userId]: e.yellow
         }
 
         await Database.Cache.Connect.set(message.id, {
-            players: [message.interaction.user.id, userId],
+            players: [authorId, userId],
             lines: lines, playNow, emojiPlayer,
             history: {
-                [message.interaction.user.id]: [],
+                [authorId]: [],
                 [userId]: []
             }
         })
