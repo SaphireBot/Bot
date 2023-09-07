@@ -82,7 +82,7 @@ export default class ButtonInteraction extends Base {
             ttt: [tictactoe, this.interaction, this.customId],
             bj: [blackjack, this.interaction, this.customId],
             bjm: [blackjackMultiplayer, this.interaction, this.customId],
-            like: [likePerfil, this.interaction, this.customId],
+            like: [likePerfil, this.interaction, commandData],
             pay: [payment, this.interaction, this.customId],
             bg: [bg, this.interaction],
             corrida: [corridaFunctions, this.interaction],

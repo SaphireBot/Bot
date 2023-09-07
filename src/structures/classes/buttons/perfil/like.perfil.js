@@ -1,46 +1,56 @@
-import {
-    Database,
-    SaphireClient as client
-} from "../../../../classes/index.js"
+import { ButtonInteraction } from "discord.js"
+import { Database } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
-export default async (interaction, userId) => {
+/**
+ * @param { ButtonInteraction } interaction
+ * @param { { c: 'like', a: 'authorId', u: userId } } commandData
+ */
+export default async (interaction, commandData) => {
 
+    const { a: authorId, u: userId } = commandData
     const { user: author, message } = interaction
-    const user = await client.users.fetch(userId, { force: true })
-        .catch(() => null)
+
+    if (author.id !== authorId)
+        return interaction.reply({
+            content: `${e.DenyX} | Saaaai daí. Você não pode clicar aqui. Xô xô!!`,
+            ephemeral: true
+        })
+
+    if (userId === authorId)
+        return interaction.update({
+            content: `${e.Deny} | Você não pode dar likes para você mesmo.`,
+            components: []
+        }).catch(() => { })
+
+    const user = await message.getUser(userId)
 
     if (!user)
-        return await interaction.reply({
+        return interaction.update({
             content: `${e.Deny} | Nenhum usuário foi encontrado.`,
-            ephemeral: true
-        })
+            components: []
+        }).catch(() => { })
 
-    if (user.id === author.id)
-        return await interaction.reply({
-            content: `${e.Deny} | Você não pode dar likes para você mesmo.`,
-            ephemeral: true
-        })
 
-    const dbData = await Database.getUsers([author.id, user?.id])
+    const dbData = await Database.getUsers([authorId, userId])
     const data = {}
-    const authorData = dbData.find(d => d.id === author.id)
+    const authorData = dbData.find(d => d.id === authorId)
 
     if (!authorData) {
         Database.registerUser(author)
-        return await interaction.reply({
+        return interaction.update({
             content: `${e.Database} | Nenhum dado seu foi encontrado. Acabei de efetuar o registro. Por favor, tente novamente.`,
-            ephemeral: true
-        })
+            components: []
+        }).catch(() => { })
     }
 
     data.timeout = authorData?.Timeouts?.Rep
 
     if (Date.Timeout(1800000, data.timeout))
-        return await interaction.reply({
+        return interaction.update({
             content: `${e.Deny} | Calminha aí, ok! Outro like só ${Date.Timestamp(new Date(data.timeout + 1800000), 'R', true)}`,
-            ephemeral: true
-        })
+            components: []
+        }).catch(() => { })
 
     const uData = dbData.find(d => d.id === user?.id)
 
@@ -48,10 +58,5 @@ export default async (interaction, userId) => {
     Database.addItem(user.id, 'Likes', 1)
     Database.SetTimeout(author.id, 'Timeouts.Rep')
 
-    const { components } = message
-    const componentsJSON = components[0].toJSON()
-    const objectComponents = componentsJSON.components
-    objectComponents[0].options[0].label = `${data.userLikes + 1} likes`
-
-    return await interaction.update({ components: [componentsJSON] }).catch(() => { })
+    return interaction.update({ content: `${e.Animated.SaphireDance} | Tudo ok, você deu um like para ${user.username}. Agora, ${user.username} possui ${data.userLikes} likes`, components: [] }).catch(() => { })
 }
