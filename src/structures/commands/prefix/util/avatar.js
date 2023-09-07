@@ -5,7 +5,7 @@ import { Emojis as e } from '../../../../util/util.js';
 export default {
     name: 'avatar',
     description: '[util] Veja o avatar das pessoas',
-    aliases: ['pfp', 'banner'],
+    aliases: ['pfp', 'banner', 'icon', 'picture'],
     category: "util",
     /**
      * @param { Message } message
@@ -16,23 +16,8 @@ export default {
         /**
          * @type { User }
          */
-        const user = message.mentions.members.size
-            ? message.mentions.members.first()?.user
-            : args[0]?.length > 0
-                ? client.users.cache.get(args[0])
-                || await message.guild.members.fetch(args[0]).then(m => m.user).catch(() => null)
-                || await client.rest.get(Routes.user(args[0].replace(/([^\d])+/gim, '')))
-                    .then(u => {
-                        client.users.cache.set(u.id, u)
-                        return u
-                    })
-                    .catch(() => message.author)
-                || message.author
-                : message.author
-
-        const member = user?.id == message.author.id
-            ? message.member
-            : message.mentions.members.first() || message.guild.members.cache.get(user?.id) || await message.guild.members.fetch(args[0]).catch(() => null)
+        const user = await message.getUser(args[0])
+        const member = user?.id == message.author.id ? message.member : await message.getMember(user?.id)
 
         if (!user?.id && !member?.id)
             return message.reply({ content: `${e.Animated.SaphireCry} | Eu não achei ninguém em lugar nenhum...` }).catch(() => { })

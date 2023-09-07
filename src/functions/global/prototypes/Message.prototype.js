@@ -3,7 +3,7 @@ import { Message, Routes } from "discord.js";
 
 Message.prototype.getUser = async function (id = "") {
 
-    if (/^\w+$/.test(id))
+    if (id && /^\w+$/.test(id))
         return this.mentions.members.get(id)?.user
             || client.users.cache.get(id)
             || await client.users.fetch(id).catch(() => undefined)
