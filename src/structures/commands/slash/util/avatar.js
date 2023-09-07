@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default {
     name: 'avatar',
@@ -52,32 +52,28 @@ export default {
         })
 
         const user = interaction.options.getUser('user') || interaction.user
-        const member = interaction.options.getMember('user')
+        const member = user.id == interaction.user.id ? interaction.member : interaction.options.getMember('user')
 
-        await user.fetch().catch(() => null)
-        const userAvatarURL = user.avatarURL({ forceStatic: false, size: 1024 })
-        const memberAvatarURL = member ? member?.avatarURL({ forceStatic: false }) : null
+        await user.fetch().catch(() => { })
+        if (member) await member.fetch().catch(() => null)
+        const userAvatarURL = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar?.includes('a_') ? "gif" : "png"}?size=2048` : null
+        const memberAvatarURL = member?.avatar ? `https://cdn.discordapp.com/guilds/${interaction.guild.id}/users/${user.id}/avatars/${member.avatar}.${member.avatar?.includes('a_') ? "gif" : "png"}?size=2048` : null
+        const banner = user.banner ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${user.banner?.includes('a_') ? "gif" : "png"}?size=2048` : null
 
-        const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
-        const memberAvatarImage = member ? member?.displayAvatarURL({ forceStatic: false, size: 1024 }) : null
+        const embeds = []
 
-        const banner = user.bannerURL({ size: 2048 })
+        if (userAvatarURL)
+            embeds.push({
+                color: client.blue,
+                description: `${e.Download} [Clique aqui](${userAvatarURL}) para baixar o avatar original de ${user.username}`,
+                image: { url: userAvatarURL }
+            })
 
-        const embeds = [{
-            color: client.blue,
-            description: `${e.Download} [Clique aqui](${userAvatarURL}) para baixar o avatar original de ${user.username}`,
-            image: { url: userAvatarImage }
-        }]
-
-        if (
-            typeof memberAvatarURL == "string"
-            && typeof memberAvatarImage == "string"
-            && memberAvatarURL !== userAvatarURL
-        )
+        if (memberAvatarURL)
             embeds.push({
                 color: client.blue,
                 description: `${e.Download} [Clique aqui](${memberAvatarURL}) para baixar o avatar no servidor de ${user?.username || 'NomeDesconhecido'}`,
-                image: { url: memberAvatarImage }
+                image: { url: memberAvatarURL }
             })
 
         if (banner)
@@ -86,7 +82,6 @@ export default {
                 description: `${e.Download} [Clique aqui](${banner}) para baixar o banner de ${user?.username || 'NomeDesconhecido'}`,
                 image: { url: banner }
             })
-
         return await interaction.editReply({ content: null, embeds: [...embeds] }).catch(() => { })
 
     }

@@ -13,6 +13,8 @@ export default new class client extends Client {
         super(ClientOptions)
 
         this.animes = []
+        this.url = "https://saphire.one"
+        this.apiUrl = "https://api.saphire.one"
 
         // Commands
         this.slashCommands = new Collection()
@@ -165,8 +167,8 @@ export default new class client extends Client {
         }
 
         for (const url of [
-            `https://api.saphire.one/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(0, 10).map(id => `id=${id}`).join('&')}`,
-            `https://api.saphire.one/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(10, 50).map(id => `id=${id}`).join('&')}`
+            `${this.apiUrl}/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(0, 10).map(id => `id=${id}`).join('&')}`,
+            `${this.apiUrl}/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(10, 50).map(id => `id=${id}`).join('&')}`
         ])
             fetch(url)
                 .then(res => res.json())
@@ -328,7 +330,7 @@ export default new class client extends Client {
 
     async postMessage(data) {
         return await fetch(
-            "https://api.saphire.one/message",
+            `${this.apiUrl}/message`,
             {
                 method: 'POST',
                 body: JSON.stringify({

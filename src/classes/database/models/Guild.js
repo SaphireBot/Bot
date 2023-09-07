@@ -4,6 +4,7 @@ const { Schema, model } = Mongoose
 export default model("Guild", new Schema({
     id: { type: String, unique: true },
     Giveaways: Array,
+    Prefixes: Array,
     TempCall: {
         enable: Boolean,
         muteTime: Boolean,

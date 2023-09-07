@@ -7,6 +7,7 @@ import { ServerinfoCachedData } from '../commands/functions/serverinfo/pages.ser
 client.on('guildDelete', async guild => {
     if (!guild.id) return
     
+    Database.Prefixes.delete(guild.id)
     ServerinfoCachedData.delete(guild.id)
     if (socket?.connected)
         socket?.send({ type: "guildDelete", id: guild.id })

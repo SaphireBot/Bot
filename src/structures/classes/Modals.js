@@ -4,6 +4,98 @@ export default new class Modals {
         return { ...this }
     }
 
+    /**
+     * @param { string[] } prefixes 
+     */
+    setPrefix = prefixes => {
+        return {
+            title: "Configuração de Prefixos",
+            custom_id: 'setPrefix',
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: `prefix1`,
+                            label: `Prefixo 1`,
+                            style: 1,
+                            placeholder: "Digite um prefixo",
+                            required: true,
+                            value: prefixes[0] || undefined,
+                            min_length: 1,
+                            max_length: 3,
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: `prefix2`,
+                            label: `Prefixo 2`,
+                            style: 1,
+                            placeholder: "Digite um prefixo",
+                            required: false,
+                            value: prefixes[1] || undefined,
+                            min_length: 1,
+                            max_length: 3,
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: `prefix3`,
+                            label: `Prefixo 3`,
+                            style: 1,
+                            placeholder: "Digite um prefixo",
+                            required: false,
+                            value: prefixes[2] || undefined,
+                            min_length: 1,
+                            max_length: 3,
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: `prefix4`,
+                            label: `Prefixo 4`,
+                            style: 1,
+                            placeholder: "Digite um prefixo",
+                            required: false,
+                            value: prefixes[3] || undefined,
+                            min_length: 1,
+                            max_length: 3,
+                        }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 4,
+                            custom_id: `prefix5`,
+                            label: `Prefixo 5`,
+                            style: 1,
+                            placeholder: "Digite um prefixo",
+                            required: false,
+                            value: prefixes[4] || undefined,
+                            min_length: 1,
+                            max_length: 3,
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     giveawayDefineMultJoins = roles => {
         if (!roles?.length) return
 

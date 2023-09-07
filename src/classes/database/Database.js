@@ -13,6 +13,7 @@ export default new class Database extends Models {
     constructor() {
         super()
         this.Cache = Cache
+        this.Prefixes = new Map()
         this.Names = {
             Rody: "451619591320371213",
             Gowther: "315297741406339083",
@@ -157,6 +158,10 @@ export default new class Database extends Models {
             { id: clientId },
             { $push: { Users: { $each: [...usersArray] } } }
         )
+    }
+
+    getPrefix(guildId) {
+        return Array.from(this.Prefixes.get(guildId) || ["s!", "-"])
     }
 
     addItem = async (userId, ItemDB, amount) => {

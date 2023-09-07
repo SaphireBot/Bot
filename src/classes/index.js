@@ -1,7 +1,6 @@
 import { Models } from './database/Models.js'
 import Database from './database/Database.js'
 import SaphireClient from './saphire/client.saphire.js'
-import Discloud from './discloud/discloud.js'
 import Autocomplete from '../structures/classes/Autocomplete.js'
 import Base from '../structures/classes/Base.js'
 import Modals from '../structures/classes/Modals.js'
@@ -16,6 +15,7 @@ import AfkManager from '../functions/update/afk/manager.afk.js'
 import TempCallManager from '../functions/update/tempcall/manager.tempcall.js'
 import ChestManager from '../functions/update/chest/manager.chest.js'
 import SpamManager from '../functions/update/spam/manager.spam.js'
+import { discloud } from 'discloud.app'
 
 export {
     Models,
@@ -28,7 +28,7 @@ export {
     Logomarca,
     Database,
     SaphireClient,
-    Discloud,
+    discloud as Discloud,
     Modals,
     GiveawayManager,
     Experience,

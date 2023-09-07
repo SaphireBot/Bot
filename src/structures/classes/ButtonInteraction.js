@@ -74,7 +74,7 @@ export default class ButtonInteraction extends Base {
         this.customId = commandData?.src ? commandData.src : `${commandData}`
 
         if (commandData.src === 'again') return this.interaction.showModal(this.modals.indicateLogomarca)
-        if (/\d{18,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
+        if (/\d{17,}/.test(`${this.customId}`) && this.commandName === commandData.c) return this.wordleGame()
         if (['giveup-ephemeral', 'giveup'].includes(commandData.src) && this.commandName === commandData.c) return this.wordleGame(true)
 
         const result = {
@@ -126,7 +126,8 @@ export default class ButtonInteraction extends Base {
             hangman: [buttonHangman, this.interaction, commandData],
             vip: [vipButtons, this.interaction, commandData],
             fasttype: [this.fasttype, this.interaction, commandData],
-            "rmd": [reminderButtons, this.interaction, commandData]
+            rmd: [reminderButtons, this.interaction, commandData],
+            prefix: [this.setprefix.bind(this), commandData]
         }[commandData.c]
 
         if (result) return result[0](...result?.slice(1))
@@ -147,6 +148,81 @@ export default class ButtonInteraction extends Base {
             return this[byThis]()
 
         return
+    }
+
+    async setprefix(commandData) {
+
+        if (commandData?.src == "refresh") {
+
+            await this.interaction.update({ content: `${e.Loading} | Resetando prefixos...`, embeds: [], components: [] }).catch(() => { })
+
+            Database.Prefixes.delete(this.guild.id)
+            await Database.Guild.findOneAndUpdate(
+                { id: this.guild.id },
+                { $unset: { Prefixes: true } },
+                { new: true, upsert: true }
+            )
+                .then(doc => Database.saveGuildCache(doc?.id, doc?.toObject()))
+                .catch(() => { })
+
+            return this.interaction.editReply({
+                content: null,
+                embeds: [{
+                    color: client.blue,
+                    title: `${e.Animated.SaphireReading} ${this.interaction.guild.name}'s Prefixes`,
+                    description: ['s!', '-'].map((pr, i) => `${i + 1}. **${pr}**`).join('\n'),
+                    fields: [
+                        {
+                            name: `${e.Info} Limites`,
+                            value: "Cada servidor tem direito a 5 prefixos customizados."
+                        }
+                    ]
+                }],
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: 'Configurar',
+                                emoji: e.Commands,
+                                custom_id: JSON.stringify({ c: 'prefix', userId: this.interaction.user.id }),
+                                style: ButtonStyle.Primary
+                            },
+                            {
+                                type: 2,
+                                label: 'Resetar',
+                                emoji: '🧹',
+                                custom_id: JSON.stringify({ c: 'prefix', userId: this.interaction.user.id, src: "refresh" }),
+                                style: ButtonStyle.Primary
+                            },
+                            {
+                                type: 2,
+                                label: 'Cancelar Comando',
+                                emoji: e.Trash,
+                                custom_id: JSON.stringify({ c: 'delete', userId: this.interaction.user.id }),
+                                style: ButtonStyle.Danger
+                            },
+                            {
+                                type: 2,
+                                label: "Ver Comandos",
+                                emoji: '🔎',
+                                url: client.url + "/commands",
+                                style: ButtonStyle.Link
+                            }
+                        ]
+                    }
+                ]
+            }).catch(() => { })
+        }
+
+        if (this.user.id !== commandData?.userId)
+            return this.interaction.reply({
+                content: `${e.Animated.SaphireReading} | Estou vendo aqui e você não pode clicar aqui, sabia?`,
+                ephemeral: true
+            })
+
+        return this.interaction.showModal(Modals.setPrefix(Database.getPrefix(this.guild.id)))
     }
 
     fasttype(interaction, commandData) {

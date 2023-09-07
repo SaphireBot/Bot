@@ -8,7 +8,6 @@ import slashCommand from '../../structures/handler/commands.handler.js';
 import PollManager from '../../functions/update/polls/poll.manager.js';
 import QuizManager from '../games/QuizManager.js';
 import webhook from './webhooks.saphire.js';
-import { prefixes } from '../../structures/events/messageCreate.js';
 
 export default async () => {
     console.log(`Shard ${client.shardId} | Starting Loading.`)
@@ -34,8 +33,8 @@ export default async () => {
     const guildsData = await Database.getGuilds(Array.from(client.guilds.cache.keys()))
 
     for (const data of guildsData)
-        if (data?.prefixes?.length)
-            prefixes.set(data.id, data.prefixes)
+        if (data?.Prefixes?.length)
+            Database.Prefixes.set(data.id, data.Prefixes)
 
     GiveawayManager.load(guildsData)
     ChestManager.load(guildsData)

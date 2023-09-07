@@ -36,7 +36,7 @@ export default {
     async execute({ interaction, client }) {
 
         return interaction.reply({
-            content: `${e.Animated.SaphireReading} | Você pode ver todos os meus comandos no meu site: https://saphire.one/comandos`
+            content: `${e.Animated.SaphireReading} | Você pode ver todos os meus comandos no meu site: ${client.url}/comandos`
         })
 
         const { options, guild } = interaction

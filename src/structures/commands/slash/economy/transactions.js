@@ -67,7 +67,7 @@ export default {
                             type: 2,
                             emoji: "🔎",
                             label: `Ver todas as ${transactions.length} transações`.slice(0, 80),
-                            url: `https://saphire.one/transactions/${user.id}`,
+                            url: client.url + `/transactions/${user.id}`,
                             style: ButtonStyle.Link
                         }
                     ]

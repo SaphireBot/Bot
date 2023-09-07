@@ -1,4 +1,4 @@
-import { Database, GiveawayManager } from "../../../../classes/index.js"
+import { Database, GiveawayManager, SaphireClient as client } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 import { ButtonStyle } from "discord.js"
 const messagesToEditButton = {}
@@ -242,7 +242,7 @@ export default async ({ interaction }, commandData) => {
                             type: 2,
                             label: 'Dados do Sorteio',
                             emoji: e.Animated.SaphireReading,
-                            url: `https://saphire.one/giveaway?id=${giveaway.MessageID}&guildId=${guild.id}`,
+                            url: `${client.url}/giveaway?id=${giveaway.MessageID}&guildId=${guild.id}`,
                             style: ButtonStyle.Link
                         }
                     ]

@@ -4,7 +4,6 @@ import { ChannelType } from 'discord.js';
 import { Emojis as e } from '../../util/util.js';
 import { socket } from '../../websocket/websocket.js';
 import registerSlashCommandsRequest from './functions/registerSlashCommands.js';
-export const prefixes = new Map()
 
 client.on('messageCreate', async message => {
     client.messages++
@@ -41,40 +40,52 @@ client.on('messageCreate', async message => {
             await message.crosspost().then(() => message.react('📨')).catch(() => { })
     }
 
-    if (!message.guild || message.webhookId) return
     Experience.add(message.author.id, 1)
     ChestManager.add(message.guildId, message.channelId)
     AfkManager.check(message)
     SpamManager.check(message)
 
-    if (message.content === `<@${client.user.id}>`) {
-        const helpCommandId = client.application.commands.cache.find(c => c.name === "help")?.id;
-        return message.reply({ content: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand. Veja alguns deles usando ${helpCommandId ? `</help:${helpCommandId}>` : "`/help`"}` }).catch(() => { })
-    }
-
     if (!message.content?.length) return
 
-    for (const prefix of prefixes.get(message.guild.id) || ['s!', '-'])
-        if (message.content.startsWith(prefix))
-            return valideMessageCommand(prefix)
-
-    /**
-     * @param { string } prefix 
-     */
-    function valideMessageCommand(prefix) {
-        const args = message.content.slice(prefix.length).trim().split(/ +/g)
-        const cmd = args.shift().toLowerCase()
-
-        if (!cmd?.length) return
-
-        const command = client.prefixCommands.get(cmd)
-        if (command) return command.execute(message, args)
-            .catch(console.log)
-
-        return
-        return message.reply({ content: `${e.Animated.SaphireReading} | Não tenho nenhum comando com este nome.` })
-            .then(msg => setTimeout(() => msg.delete().catch(() => { }), 4000))
+    if (
+        [`<@&${message.guild.members.me?.roles?.botRole?.id}>`, `<@${client.user.id}>`].includes(message.content)
+    ) {
+        return message.reply({
+            embeds: [{
+                color: client.blue,
+                title: `${e.Animated.SaphireReading} ${message.guild.name}'s Prefixes`,
+                description: `${e.saphirePolicial} | Opa, tudo bem? Meus comandos estão 100% em /slashCommand e alguns estão sendo criados em prefixos.` + '\n \n' + Database.getPrefix(message.guildId).map((pr, i) => `${i + 1}. **${pr}**`).join('\n'),
+                fields: [
+                    {
+                        name: `${e.Info} Limites`,
+                        value: "Cada servidor tem direito a 5 prefixos customizados."
+                    }
+                ]
+            }],
+        }).then(msg => setTimeout(() => msg.delete()?.catch(() => { }), 10000)).catch(() => { })
     }
 
+    const availablePrefix = Database.getPrefix(message.guildId)
+    availablePrefix.push(`<@${client.user.id}>`, `<@&${message.guild.members.me?.roles?.botRole?.id}>`)
+    const prefixRegex = RegExp(`^(${(availablePrefix.map(st => ["+", "*", ".", "!", "?", "^", "~", "&", "|", "[", "]"].includes(st) ? '\\' + `${st}` : st)).join('|')})\\s*([\\w\\W]+)`)
+    const prefix = message.content.match(prefixRegex)
+    if (!prefix) return
+
+    /**
+     * prefix[0] = All Content
+     * prefix[1] = prefix
+     * prefix[2] = All content without prefix
+     * prefix.index | prefix.input | prefix.groups = Just ignore
+     */
+    const args = prefix[2].trim().split(/ +/g)
+    const cmd = args.shift().toLowerCase()
+    if (!cmd?.length) return
+
+    const command = client.prefixCommands.get(cmd)
+    if (command) return command.execute(message, args)
+        .catch(err => {
+            console.log(err)
+            return message.channel.send({ content: `${e.Animated.SaphirePanic} | Deu um erro aqui...\n${e.bug} | \`${err}\`` }).catch(() => { })
+        })
     return
 })

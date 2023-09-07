@@ -36,7 +36,7 @@ export default class ModalInteraction extends Base {
         if (this.customId.includes('reportBalance')) return this.reportBalance(this)
         if (this.customId.includes('fanart')) return this.addFanart(this)
         if (this.customId.includes('rather_')) return this.adminEditRather(this)
-        if (/\d{18,}/.test(this.customId) && !this.customId.startsWith('{')) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
+        if (/\d{17,}/.test(this.customId) && !this.customId.startsWith('{')) return import('./modals/wordleGame/wordleGame.modal.js').then(data => data.default(this))
 
         const ModalInteractionFunctions = {
             BugModalReport: [this.BugModalReport, this],
@@ -56,6 +56,7 @@ export default class ModalInteraction extends Base {
             cantada: [cantadasModal, this],
             anime: [this.editAnime, this],
             saphireGlobalChat: [this.globalChat, this],
+            setPrefix: [this.prefix, this.interaction]
         }[this.customId]
 
         if (ModalInteractionFunctions)
@@ -81,6 +82,84 @@ export default class ModalInteraction extends Base {
             content: `${e.Info} | Este modal não possui uma função correspondente a ele.`,
             ephemeral: true
         })
+    }
+
+    /**
+     * @param { ModalSubmitInteraction } interaction 
+     */
+    async prefix(interaction) {
+
+        const prefixes = new Set()
+
+        for (let i = 1; i <= 5; i++)
+            prefixes.add(interaction.fields.getTextInputValue(`prefix${i}`)?.trim())
+
+        const availablePrefixes = Array.from(prefixes).filter(Boolean)
+        availablePrefixes?.length
+            ? Database.Prefixes.set(interaction.guildId, availablePrefixes)
+            : Database.Prefixes.delete(interaction.guildId)
+
+        await interaction.deferUpdate().catch(() => { })
+
+        return await Database.Guild.findOneAndUpdate(
+            { id: interaction.guildId },
+            { $set: { Prefixes: availablePrefixes } },
+            { new: true, upsert: true }
+        )
+            .then(doc => {
+                Database.saveGuildCache(doc?.id, doc.toObject())
+
+                return interaction.editReply({
+                    embeds: [{
+                        color: client.blue,
+                        title: `${e.Animated.SaphireReading} ${interaction.guild.name}'s Prefixes`,
+                        description: Database.getPrefix(interaction.guildId).map((pr, i) => `${i + 1}. **${pr}**`).join('\n'),
+                        fields: [
+                            {
+                                name: `${e.Info} Limites`,
+                                value: "Cada servidor tem direito a 5 prefixos customizados."
+                            }
+                        ]
+                    }],
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    label: 'Configurar',
+                                    emoji: e.Commands,
+                                    custom_id: JSON.stringify({ c: 'prefix', userId: interaction.user.id }),
+                                    style: ButtonStyle.Primary
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Resetar',
+                                    emoji: '🧹',
+                                    custom_id: JSON.stringify({ c: 'prefix', userId: interaction.user.id, src: "refresh" }),
+                                    style: ButtonStyle.Primary
+                                },
+                                {
+                                    type: 2,
+                                    label: 'Cancelar Comando',
+                                    emoji: e.Trash,
+                                    custom_id: JSON.stringify({ c: 'delete', userId: interaction.user.id }),
+                                    style: ButtonStyle.Danger
+                                },
+                                {
+                                    type: 2,
+                                    label: "Ver Comandos",
+                                    emoji: '🔎',
+                                    url: client.url + "/commands",
+                                    style: ButtonStyle.Link
+                                }
+                            ]
+                        }
+                    ]
+                }).catch(() => { })
+            })
+            .catch(err => interaction.editReply({ content: `${e.DenyX} | Deu ruim aqui... [#86FDDSF4SSA]\n${e.bug} | \`${err}\``, embeds: [], components: [] }).catch(() => { }))
+
     }
 
     /**

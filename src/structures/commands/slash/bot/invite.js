@@ -1,4 +1,5 @@
-import { Colors } from '../../../../util/Constants.js'
+import { Emojis as e } from '../../../../util/util.js';
+import { Colors } from '../../../../util/Constants.js';
 
 export default {
     name: 'invite',
@@ -26,7 +27,7 @@ export default {
         return interaction.reply({
             embeds: [{
                 color: Colors.Green,
-                description: `Você pode me adicionar [clicando aqui](https://discord.com/oauth2/authorize?client_id=${client.user.id}&scope=bot%20applications.commands&permissions=2146958847).`
+                description: `${e.Animated.SaphireDance} Você pode me adicionar [clicando aqui](https://discord.com/oauth2/authorize?client_id=${client.user.id}&scope=bot%20applications.commands&permissions=2146958847).`
             }]
         })
     }

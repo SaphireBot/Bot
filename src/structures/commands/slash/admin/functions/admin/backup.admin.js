@@ -2,6 +2,7 @@ import { readFileSync, createWriteStream, rm } from 'fs'
 import { AttachmentBuilder } from "discord.js"
 import { Emojis as e } from "../../../../../../util/util.js";
 import axios from "axios"
+import { SaphireClient as client } from '../../../../../../classes/index.js';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default async interaction => {
@@ -40,7 +41,7 @@ export default async interaction => {
     async function getBackup() {
 
         const file = await axios({
-            url: "https://api.saphire.one/backup",
+            url: client.apiUrl + "/backup",
             headers: { authorization: password },
             responseType: "stream"
         })

@@ -6,5 +6,3 @@ discloud.login()
         console.log(err)
         return 'Discloud Host Not Connected'
     })
-
-export default discloud

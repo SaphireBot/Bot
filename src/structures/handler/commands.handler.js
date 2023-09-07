@@ -11,6 +11,7 @@ export const commandsApi = []
 
 export default async () => {
 
+    // Slash Commands
     const folders = readdirSync('./src/structures/commands/slash/')
     const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").catch(() => [])
 
@@ -46,6 +47,7 @@ export default async () => {
         if (cmd?.apiData?.perms?.user?.length) cmd.apiData.perms.user = cmd?.apiData.perms.user.map(perm => PermissionsTranslate[perm] || perm)
         if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
+        cmd.type = "slash"
         commandsApi.push(cmd?.apiData)
         delete cmd.apiData
     }
@@ -59,6 +61,7 @@ export default async () => {
         }, 1000 * 5)
     }
 
+    // Prefix
     const prefixFolders = readdirSync('./src/structures/commands/prefix/')
 
     for (const dir of prefixFolders) {
@@ -70,7 +73,13 @@ export default async () => {
             const query = await import(`../commands/prefix/${dir}/${file}`)
             const cmd = query.default
 
-            if (cmd?.name) {
+            if (!cmd?.name || !cmd?.execute) continue
+
+            if (cmd.aliases?.length)
+                for (const alias of cmd.aliases)
+                    client.prefixCommands.set(alias, cmd)
+
+            if (cmd.name) {
                 client.commandsUsed[cmd.name] = 0
                 client.prefixCommands.set(cmd.name, cmd)
             }

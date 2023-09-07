@@ -292,7 +292,7 @@ export default {
                             type: 2,
                             label: "Ver perfil no site",
                             emoji: e.Animated.SaphireReading,
-                            url: `https://saphire.one/profile/${user.id}`,
+                            url: client.url + `/profile/${user.id}`,
                             style: ButtonStyle.Link
                         }
                     ]

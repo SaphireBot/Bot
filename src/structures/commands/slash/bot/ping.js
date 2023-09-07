@@ -61,7 +61,7 @@ export default {
                     type: 2,
                     label: 'Status',
                     emoji: '📊',
-                    url: "https://saphire.one/status",
+                    url: client.url + "/status",
                     style: ButtonStyle.Link
                 }
             ]
@@ -77,8 +77,8 @@ export default {
 
         const timeResponse = await Promise.all([
             Discloud.user.fetch().then(() => calculate()).catch(() => null),
-            axios.get("https://saphire.one", { timeout: 10000 }).then(() => calculate()).catch(() => null),
-            axios.get("https://api.saphire.one/ping", { timeout: 10000 }).then(() => calculate()).catch(() => null),
+            axios.get(client.url, { timeout: 10000 }).then(() => calculate()).catch(() => null),
+            axios.get(client.apiUrl + "/ping", { timeout: 10000 }).then(() => calculate()).catch(() => null),
             socket?.timeout(10000).emitWithAck("ping", "ping").then(() => calculate()).catch(() => null),
             mongoose.connection?.db?.admin()?.ping().then(() => calculate()).catch(() => null),
             axios.get("https://top.gg/api/bots/912509487984812043", { headers: { authorization: process.env.TOP_GG_TOKEN }, timeout: 10000 }).then(() => calculate()).catch(() => null)
@@ -127,7 +127,7 @@ export default {
                             type: 2,
                             label: 'Status',
                             emoji: '📊',
-                            url: "https://saphire.one/status",
+                            url: client.url + "/status",
                             style: ButtonStyle.Link
                         }
                     ]
@@ -173,7 +173,7 @@ export default {
                             type: 2,
                             label: 'Status',
                             emoji: '📊',
-                            url: "https://saphire.one/status",
+                            url: client.url + "/status",
                             style: ButtonStyle.Link
                         }
                     ]

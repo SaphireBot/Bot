@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Emojis as e } from "../../../../../../util/util.js"
+import { SaphireClient as client } from "../../../../../../classes/index.js"
 
 export default async interaction => {
 
@@ -28,7 +29,7 @@ export default async interaction => {
         content: `${e.Loading} | Enviando arquivo de commit para a Saphire API...`
     })
 
-    return await axios.post('https://api.saphire.one/commit', {}, {
+    return await axios.post(client.apiUrl + '/commit', {}, {
         headers: {
             authorization: process.env.COMMIT_AUTHORIZATION,
             discloud: discloudFile?.attachment || null,
