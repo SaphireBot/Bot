@@ -66,8 +66,10 @@ client.on('messageCreate', async message => {
     }
 
     const availablePrefix = Database.getPrefix(message.guildId)
-    availablePrefix.push(`<@${client.user.id}>`, `<@&${message.guild.members.me?.roles?.botRole?.id}>`)
-    const prefixRegex = RegExp(`^(${(availablePrefix.map(st => ["+", "*", ".", "!", "?", "^", "~", "&", "|", "[", "]"].includes(st) ? '\\' + `${st}` : st)).join('|')})\\s*([\\w\\W]+)`)
+    availablePrefix.unshift(`<@${client.user.id}>`, `<@&${message.guild.members.me?.roles?.botRole?.id}>`)
+
+    // Regex by deus do Regex: Gorniaky 395669252121821227 
+    const prefixRegex = RegExp(`^(${(availablePrefix).join('|').replace(/[\\]?([.+~*?!^$(){}[\]])/g, "\\$1")})\\s*([\\w\\W]+)`)
     const prefix = message.content.match(prefixRegex)
     if (!prefix) return
 

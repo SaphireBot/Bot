@@ -34,7 +34,7 @@ export default async () => {
 
     for (const data of guildsData)
         if (data?.Prefixes?.length)
-            Database.Prefixes.set(data.id, data.Prefixes)
+            Database.Prefixes.set(data.id, data.Prefixes.filter(Boolean))
 
     GiveawayManager.load(guildsData)
     ChestManager.load(guildsData)
