@@ -101,7 +101,6 @@ export default {
         'lembrete',
 
         'poll',
-        'votar',
         'votação',
 
         'rank',
