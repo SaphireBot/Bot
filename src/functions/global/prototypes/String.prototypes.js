@@ -90,7 +90,7 @@ String.prototype.limit = function (param) {
         MessageEmbedFieldValue: 1024,
         MessageEmbedFooterText: 2048,
         MessageEmbedAuthorName: 256,
-        MessageContent: 4096,
+        MessageContent: 2000,
         AutocompleteName: 100,
         AutocompleteValue: 100,
         SelectMenuLabel: 100,

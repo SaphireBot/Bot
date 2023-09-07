@@ -1,9 +1,10 @@
 import { SaphireClient as client, Experience, Database, AfkManager, ChestManager, SpamManager } from '../../classes/index.js';
 import { DiscordPermissons } from '../../util/Constants.js';
-import { ChannelType } from 'discord.js';
+import { ChannelType, time } from 'discord.js';
 import { Emojis as e } from '../../util/util.js';
 import { socket } from '../../websocket/websocket.js';
 import registerSlashCommandsRequest from './functions/registerSlashCommands.js';
+const rateLimit = {}
 
 client.on('messageCreate', async message => {
     client.messages++
@@ -73,6 +74,27 @@ client.on('messageCreate', async message => {
     const prefix = message.content.match(prefixRegex)
     if (!prefix) return
 
+    if (Date.now() < rateLimit[message.author.id]?.timeout) {
+        
+        const tries = rateLimit[message.author.id].tries++
+        
+        if (tries == 1) {
+            rateLimit[message.author.id].timeout += 1000
+            return message.reply({ content: `⏱️ | Calminha! Você só pode usar outro comando depois de meio segundo. Se você abusar, o seu tempo só vai aumentar.` })
+        }
+
+        rateLimit[message.author.id].timeout += tries * 500
+        if (tries == 2) {
+            return message.reply({ content: `${e.Animated.SaphireReading} | O seu tempo vai aumentar mais e mais a cada tentativa de comando que você usar dentro do timeout. Pega leve meu jovem. (${time(new Date(rateLimit[message.author.id].timeout), "R")})` })
+        }
+
+        if (!(tries % 10)) {
+            message.reply({ content: `⏱️ | Quanto mais você abusar, mais o seu tempo vai aumentar. (${time(new Date(rateLimit[message.author.id].timeout), "R")})` })
+        }
+
+        return
+    }
+
     /**
      * prefix[0] = All Content
      * prefix[1] = prefix
@@ -84,6 +106,7 @@ client.on('messageCreate', async message => {
     if (!cmd?.length) return
 
     const command = client.prefixCommands.get(cmd)
+    rateLimit[message.author.id] = { timeout: Date.now() + 1000, tries: 0 }
     if (command) return command.execute(message, args)
         .catch(err => {
             console.log(err)

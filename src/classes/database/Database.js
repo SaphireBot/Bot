@@ -467,7 +467,6 @@ export default new class Database extends Models {
             {
                 $unset: {
                     Walls: 1,
-                    Perfil: 1,
                     Transactions: 1
                 }
             },

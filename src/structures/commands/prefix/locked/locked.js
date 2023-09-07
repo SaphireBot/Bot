@@ -122,7 +122,7 @@ export default {
      */
     async execute(message) {
         return message.reply({
-            content: `${e.Animated.SaphireReading} | Comando disponíveis apenas em /slashcommands.`
+            content: `${e.Animated.SaphireReading} | Comando disponível apenas em /slashcommands.`
         }).then(msg => setTimeout(() => msg?.delete().catch(() => { }), 5000)).catch(() => { })
     }
 }
