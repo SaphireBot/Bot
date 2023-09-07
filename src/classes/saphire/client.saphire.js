@@ -19,6 +19,7 @@ export default new class client extends Client {
         // Commands
         this.slashCommands = new Collection()
         this.prefixCommands = new Collection()
+        this.prefixAliasesCommands = new Collection()
         /**
          * @returns Command name and your id [array]
          */

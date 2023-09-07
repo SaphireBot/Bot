@@ -3,7 +3,7 @@ import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'locked',
-    description: '[locked] Comandos disponíveis apenas em Slash Commands',
+    description: 'Comandos disponíveis apenas em Slash Commands',
     aliases: [
         'bug',
         'bugs',

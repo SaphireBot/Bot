@@ -1,13 +1,13 @@
-import { GuildMember, Message } from 'discord.js'
-import { DiscordFlags as flags, PermissionsTranslate, Permissions, DiscordPermissons } from '../../../../util/Constants.js'
-import { ButtonStyle } from 'discord.js'
-import { SaphireClient as client } from '../../../../classes/index.js'
-import { Emojis as e } from '../../../../util/util.js'
+import { DiscordFlags as flags, PermissionsTranslate, Permissions, DiscordPermissons } from '../../../../util/Constants.js';
+import { SaphireClient as client } from '../../../../classes/index.js';
+import { GuildMember, Message } from 'discord.js';
+import { ButtonStyle } from 'discord.js';
+import { Emojis as e } from '../../../../util/util.js';
 
 
 export default {
     name: 'userinfo',
-    description: '[util] Veja as informações de um usuário',
+    description: 'Veja as informações de um usuário',
     aliases: ['ui'],
     category: "util",
     /**

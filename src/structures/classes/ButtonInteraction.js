@@ -152,6 +152,12 @@ export default class ButtonInteraction extends Base {
 
     async setprefix(commandData) {
 
+        if (this.user.id !== commandData?.userId)
+            return this.interaction.reply({
+                content: `${e.Animated.SaphireReading} | Estou vendo aqui e você não pode clicar aqui, sabia?`,
+                ephemeral: true
+            })
+
         if (commandData?.src == "refresh") {
 
             await this.interaction.update({ content: `${e.Loading} | Resetando prefixos...`, embeds: [], components: [] }).catch(() => { })
@@ -216,11 +222,6 @@ export default class ButtonInteraction extends Base {
             }).catch(() => { })
         }
 
-        if (this.user.id !== commandData?.userId)
-            return this.interaction.reply({
-                content: `${e.Animated.SaphireReading} | Estou vendo aqui e você não pode clicar aqui, sabia?`,
-                ephemeral: true
-            })
 
         return this.interaction.showModal(Modals.setPrefix(Database.getPrefix(this.guild.id)))
     }

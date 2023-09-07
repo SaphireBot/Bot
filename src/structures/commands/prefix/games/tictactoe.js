@@ -4,7 +4,7 @@ import TicTacToe from '../../functions/tictactoe/newGame.tictactoe.js'
 
 export default {
     name: 'tictactoe',
-    description: '[games] O famoso jogo da velha',
+    description: 'O famoso jogo da velha',
     aliases: ['jogodavelha', 'jgv', 'ttt'],
     category: "games",
     /**

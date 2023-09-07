@@ -4,7 +4,7 @@ import { Emojis as e } from '../../../../util/util.js';
 
 export default {
     name: 'transactions',
-    description: '[economy] Confira as transações monetárias',
+    description: 'Confira as transações monetárias',
     aliases: ['transações', 'tr', 'transacoes', 'transaction'],
     category: "economy",
     /**

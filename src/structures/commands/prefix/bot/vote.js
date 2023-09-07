@@ -5,7 +5,7 @@ import { Config } from '../../../../util/Constants.js'
 
 export default {
     name: 'vote',
-    description: '[bot] Vote no Top.GG',
+    description: 'Vote no Top.GG',
     aliases: ['topgg', 'votar'],
     category: "bot",
     /**

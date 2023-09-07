@@ -3,7 +3,7 @@ import { Emojis as e } from '../../../../util/util.js'
 
 export default {
     name: 'connect4',
-    description: '[games] O clássico Connect4, só que no Discord',
+    description: 'O clássico Connect4, só que no Discord',
     aliases: [],
     category: "games",
     /**

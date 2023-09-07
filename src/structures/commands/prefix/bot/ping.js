@@ -7,7 +7,7 @@ import mongoose from 'mongoose'
 
 export default {
     name: 'ping',
-    description: '[bot] Comando de ping',
+    description: 'Comando de ping',
     aliases: [],
     category: "bot",
     /**

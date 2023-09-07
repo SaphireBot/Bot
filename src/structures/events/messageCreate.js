@@ -105,7 +105,7 @@ client.on('messageCreate', async message => {
     const cmd = args.shift().toLowerCase()
     if (!cmd?.length) return
 
-    const command = client.prefixCommands.get(cmd)
+    const command = client.prefixCommands.get(cmd) || client.prefixAliasesCommands.get(cmd)
     rateLimit[message.author.id] = { timeout: Date.now() + 1000, tries: 0 }
     if (command) return command.execute(message, args)
         .catch(err => {

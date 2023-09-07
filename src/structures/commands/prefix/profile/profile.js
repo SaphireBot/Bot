@@ -4,7 +4,7 @@ import { ButtonStyle, Message, Routes } from 'discord.js';
 
 export default {
     name: 'perfil',
-    description: '[profile] Confira o seu perfil ou o de alguém',
+    description: 'Confira o seu perfil ou o de alguém',
     aliases: ['profile'],
     category: "profile",
     /**

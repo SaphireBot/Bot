@@ -65,7 +65,7 @@ export default async () => {
     const prefixFolders = readdirSync('./src/structures/commands/prefix/')
 
     for (const dir of prefixFolders) {
-        
+
         const prefixCommands = readdirSync(`./src/structures/commands/prefix/${dir}/`).filter(file => file.endsWith('.js'))
 
         for await (const file of prefixCommands) {
@@ -75,14 +75,15 @@ export default async () => {
 
             if (!cmd?.name || !cmd?.execute) continue
 
-            if (cmd.aliases?.length)
-                for (const alias of cmd.aliases)
-                    client.prefixCommands.set(alias, cmd)
-
             if (cmd.name) {
                 client.commandsUsed[cmd.name] = 0
                 client.prefixCommands.set(cmd.name, cmd)
             }
+
+            if (cmd.aliases?.length)
+                for (const alias of cmd.aliases)
+                    client.prefixAliasesCommands.set(alias, cmd)
+
             continue
         }
         continue

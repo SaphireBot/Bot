@@ -4,7 +4,7 @@ import { Emojis as e } from '../../../../util/util.js';
 
 export default {
     name: 'avatar',
-    description: '[util] Veja o avatar das pessoas',
+    description: 'Veja o avatar das pessoas',
     aliases: ['pfp', 'banner', 'icon', 'picture'],
     category: "util",
     /**

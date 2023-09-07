@@ -4,7 +4,7 @@ import { Emojis as e } from '../../../../util/util.js';
 
 export default {
     name: 'like',
-    description: '[profile] Curta alguém',
+    description: 'Curta alguém',
     aliases: ['curtir'],
     category: "profile",
     /**

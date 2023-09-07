@@ -3,7 +3,7 @@ import Daily from '../../slash/economy/daily/new.daily.js'
 
 export default {
     name: 'daily',
-    description: '[economy] Pegue uma recompensa diária todos os dias',
+    description: 'Pegue uma recompensa diária todos os dias',
     aliases: ['diário'],
     category: "economy",
     /**

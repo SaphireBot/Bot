@@ -4,7 +4,7 @@ import { Message } from 'discord.js';
 
 export default {
     name: 'invite',
-    description: '[bot] Link de convite da Saphire',
+    description: 'Link de convite da Saphire',
     aliases: ['convite'],
     category: "bot",
     /**

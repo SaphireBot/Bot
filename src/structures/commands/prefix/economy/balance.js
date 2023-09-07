@@ -5,7 +5,7 @@ import { Config } from '../../../../util/Constants.js'
 
 export default {
     name: 'balance',
-    description: '[economy] Comando para ver o saldo',
+    description: 'Comando para ver o saldo',
     aliases: ['bal', 'saldo', 'atm', 'carteira  '],
     category: "economy",
     /**

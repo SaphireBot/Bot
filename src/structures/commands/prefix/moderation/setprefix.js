@@ -4,7 +4,7 @@ import { Emojis as e } from '../../../../util/util.js';
 
 export default {
     name: 'setprefix',
-    description: '[moderation] Configure os prefixos do servidor',
+    description: 'Configure os prefixos do servidor',
     aliases: ['prefix', 'prefixes', 'setprefixes'],
     category: "moderation",
     /**
