@@ -285,7 +285,7 @@ export default class SelectMenuInteraction extends Base {
     }
 
     newLike({ interaction }) {
-        return likePerfil(interaction, this.customId.src)
+        return likePerfil(interaction, this.customId)
     }
 
     sendSelectMenuSign({ interaction }) {

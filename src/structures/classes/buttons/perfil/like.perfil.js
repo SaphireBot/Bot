@@ -1,9 +1,9 @@
-import { ButtonInteraction } from "discord.js"
+import { ButtonInteraction, StringSelectMenuInteraction } from "discord.js"
 import { Database } from "../../../../classes/index.js"
 import { Emojis as e } from "../../../../util/util.js"
 
 /**
- * @param { ButtonInteraction } interaction
+ * @param { ButtonInteraction | StringSelectMenuInteraction } interaction
  * @param { { c: 'like', a: 'authorId', u: userId } } commandData
  */
 export default async (interaction, commandData) => {
@@ -20,7 +20,7 @@ export default async (interaction, commandData) => {
     if (userId === authorId)
         return interaction.update({
             content: `${e.Deny} | Você não pode dar likes para você mesmo.`,
-            components: []
+            components: [], embeds: []
         }).catch(() => { })
 
     const user = await message.getUser(userId)
@@ -28,7 +28,7 @@ export default async (interaction, commandData) => {
     if (!user)
         return interaction.update({
             content: `${e.Deny} | Nenhum usuário foi encontrado.`,
-            components: []
+            components: [], embeds: []
         }).catch(() => { })
 
 
@@ -40,7 +40,7 @@ export default async (interaction, commandData) => {
         Database.registerUser(author)
         return interaction.update({
             content: `${e.Database} | Nenhum dado seu foi encontrado. Acabei de efetuar o registro. Por favor, tente novamente.`,
-            components: []
+            components: [], embeds: []
         }).catch(() => { })
     }
 
@@ -49,7 +49,7 @@ export default async (interaction, commandData) => {
     if (Date.Timeout(1800000, data.timeout))
         return interaction.update({
             content: `${e.Deny} | Calminha aí, ok! Outro like só ${Date.Timestamp(new Date(data.timeout + 1800000), 'R', true)}`,
-            components: []
+            components: [], embeds: []
         }).catch(() => { })
 
     const uData = dbData.find(d => d.id === user?.id)
@@ -58,5 +58,5 @@ export default async (interaction, commandData) => {
     Database.addItem(user.id, 'Likes', 1)
     Database.SetTimeout(author.id, 'Timeouts.Rep')
 
-    return interaction.update({ content: `${e.Animated.SaphireDance} | Tudo ok, você deu um like para ${user.username}. Agora, ${user.username} possui ${data.userLikes} likes`, components: [] }).catch(() => { })
+    return interaction.update({ content: `${e.Animated.SaphireDance} | Tudo ok, você deu um like para ${user.username}. Agora, ${user.username} possui ${data.userLikes} likes`, components: [], embeds: [] }).catch(() => { })
 }
