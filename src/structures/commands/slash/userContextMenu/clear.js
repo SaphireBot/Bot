@@ -12,7 +12,8 @@ export default {
         description: "Limpe 50 mensagens rapidamente clicando em Mensagens -> Apps",
         category: "Moderação",
         synonyms: ["Limpar 50 Mensagens"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ManageMessages]
         }

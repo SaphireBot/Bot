@@ -19,7 +19,8 @@ export default {
         description: "O jogo Connect4 também é possível aqui! Que tal você tentar?",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

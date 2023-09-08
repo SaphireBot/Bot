@@ -22,7 +22,8 @@ export default {
         description: "Pesquise e escute um trecho de uma música no Spotify",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

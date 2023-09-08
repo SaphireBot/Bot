@@ -25,7 +25,8 @@ export default {
         description: "Confira o clima de alguma cidade",
         category: "Utilidades",
         synonyms: ["clima"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

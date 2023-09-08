@@ -54,7 +54,8 @@ export default {
         description: "Um comando/sistema poderoso que conta o tempo em call de todos os membros (Com direito a ranking e tempo mutado)",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.Administrator],
             bot: []
         }

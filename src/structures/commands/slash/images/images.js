@@ -84,7 +84,8 @@ export default {
         description: "Edite diretamente o avatar de alguém de uma forma criativa.",
         category: "Imagens",
         synonyms: ["imagens"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

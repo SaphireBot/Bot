@@ -85,7 +85,8 @@ export default {
         description: "Gerencie os canais do servidor facilmente através deste comando.",
         category: "Moderação",
         synonyms: ["canal"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageChannels],
             bot: [DiscordPermissons.ManageChannels]
         }

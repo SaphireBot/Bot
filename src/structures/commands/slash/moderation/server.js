@@ -46,7 +46,8 @@ export default {
         description: "Um super comando para gerênciar e automatizar o seu servidor.",
         category: "Moderação",
         synonyms: ["servidor"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageGuild],
             bot: [DiscordPermissons.ManageGuild]
         }

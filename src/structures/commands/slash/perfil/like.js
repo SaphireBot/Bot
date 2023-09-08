@@ -26,7 +26,8 @@ export default {
         description: "Dê um like para alguém, é simples, mas aumenta seus status no perfil",
         category: "Perfil",
         synonyms: ["curtir"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

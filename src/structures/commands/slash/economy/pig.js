@@ -33,7 +33,8 @@ export default {
         description: "Tente quebrar o porquinho e ganhe tudo o que tiver nele",
         category: "Economia",
         synonyms: ["porco"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

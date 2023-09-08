@@ -29,7 +29,8 @@ export default {
         description: "Veja as permissões de alguém ou a sua",
         category: "Utilidades",
         synonyms: ["permissões"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

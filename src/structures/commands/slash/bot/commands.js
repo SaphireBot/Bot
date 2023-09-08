@@ -22,7 +22,8 @@ export default {
         description: "Veja os comandos mais usados desde o último reinício",
         category: "Saphire",
         synonyms: ["comandos"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

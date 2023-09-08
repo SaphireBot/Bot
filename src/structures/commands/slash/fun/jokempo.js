@@ -43,7 +43,8 @@ export default {
         description: "Jo.. kem... po!",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

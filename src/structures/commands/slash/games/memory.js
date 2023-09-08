@@ -168,7 +168,8 @@ export default {
         description: "Um SUPER e INCRÍVEL jogo da memória usando os botões do Discord. Você pode jogar só ou com algum amigo. Cooperando ou disputando contra alguém.",
         category: "Diversão",
         synonyms: ["memória"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

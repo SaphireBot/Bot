@@ -26,7 +26,8 @@ export default {
         description: "Um simples comando para você ver quantas Safiras você ou alguém possui.",
         category: "Economia",
         synonyms: ["saldo"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

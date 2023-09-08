@@ -30,7 +30,8 @@ export default {
         description: "Baniu errado? Quer desbanir alguém? Esse comando é perfeito para isso.",
         category: "Moderação",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.BanMembers],
             bot: [DiscordPermissons.BanMembers]
         }

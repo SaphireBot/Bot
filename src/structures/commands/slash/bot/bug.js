@@ -24,7 +24,8 @@ export default {
         description: "Reporte um erro que você achou na Saphire",
         category: "Saphire",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -65,7 +65,8 @@ export default {
         description: "Um grande sistema incluindo todos os rankings de todos os lugares da Saphire",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -64,7 +64,8 @@ export default {
         description: "Compre e confira seu VIP dentro da Saphire.",
         category: "Perfil",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

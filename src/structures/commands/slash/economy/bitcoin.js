@@ -43,7 +43,8 @@ export default {
         description: "Farm bitcoins e receba uma bolada de Safiras.",
         category: "Economia",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

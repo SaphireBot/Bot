@@ -40,7 +40,8 @@ export default {
         description: "O clássico jogo \"termo/wordle\" liberado para você diretamente no Discord.",
         category: "Diversão",
         synonyms: ["termo"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

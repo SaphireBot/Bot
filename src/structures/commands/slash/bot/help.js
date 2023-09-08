@@ -28,7 +28,8 @@ export default {
         description: "Help é só um help, né?",
         category: "Saphire",
         synonyms: ["ajuda"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

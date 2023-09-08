@@ -39,7 +39,8 @@ export default {
         description: "Um simples comando para gerênciar o autorole (Porém em constante construção)",
         category: "Moderação",
         synonyms: ["cargos"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageRoles],
             bot: [DiscordPermissons.ManageRoles]
         }

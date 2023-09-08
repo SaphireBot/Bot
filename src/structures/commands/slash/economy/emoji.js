@@ -119,7 +119,8 @@ export default {
         description: "Um comando só para emojis! Veja e aposte com os emojis. É divertido!",
         category: "Economia",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

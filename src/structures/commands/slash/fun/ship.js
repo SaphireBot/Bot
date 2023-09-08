@@ -32,7 +32,8 @@ export default {
         description: "Veja o amor entre duas pessoas.",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

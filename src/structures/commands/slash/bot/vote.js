@@ -35,7 +35,8 @@ export default {
         description: "Vote no TopGG e ganhe Safiras e Experiência.",
         category: "Saphire",
         synonyms: ["votar"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

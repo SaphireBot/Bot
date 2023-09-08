@@ -31,7 +31,8 @@ export default {
         description: "Você pode pagar/doar Safiras para outras pessoas.",
         category: "Economia",
         synonyms: ["pagar"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

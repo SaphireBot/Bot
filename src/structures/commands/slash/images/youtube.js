@@ -34,7 +34,8 @@ export default {
         description: "Apenas um simples comentário do YouTube.",
         category: "Imagens",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

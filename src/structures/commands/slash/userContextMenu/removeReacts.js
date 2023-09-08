@@ -11,7 +11,8 @@ export default {
         description: "Remova todas as reações de uma mensagem",
         category: "Moderação",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ManageMessages]
         }

@@ -8,7 +8,8 @@ export default {
         description: "Veja o avatar de alguém clicando no Usário -> Apps",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

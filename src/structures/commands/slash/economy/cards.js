@@ -24,7 +24,8 @@ export default {
         description: "Aposte nas cartas! Azul ou Verde? Quem ganha? Ou será que empata?",
         category: "Economia",
         synonyms: ["cartas"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

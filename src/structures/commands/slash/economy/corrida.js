@@ -59,7 +59,8 @@ export default {
         description: "Uma corrida emocionante entre vários animais. Será que o seu irá ganhar?",
         category: "Economia",
         synonyms: ["corrida"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

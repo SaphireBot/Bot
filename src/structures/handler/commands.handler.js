@@ -13,6 +13,7 @@ export default async () => {
 
     // Prefix
     const prefixFolders = readdirSync('./src/structures/commands/prefix/')
+    const blockCommands = client.clientData?.ComandosBloqueadosSlash || []
 
     for await (const dir of prefixFolders) {
 
@@ -57,6 +58,7 @@ export default async () => {
             const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
 
             if (cmd?.name) {
+                cmd.apiData.tags.push("slash")
                 client.commandsUsed[cmd.name] = 0
                 client.slashCommandsData.push({
                     name: cmd.name,
@@ -78,9 +80,11 @@ export default async () => {
         if (cmd?.apiData?.perms?.user?.length) cmd.apiData.perms.user = cmd?.apiData.perms.user.map(perm => PermissionsTranslate[perm] || perm)
         if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
-        cmd.apiData.tags = ["slash"]
-        if (client.prefixCommands.has(cmd.name))
-            cmd.apiData.tags.push("prefix")
+        if (cmd.admin || cmd.staff) cmd.apiData.tags.push("admin")
+        if (client.prefixCommands.has(cmd.name)) cmd.apiData.tags.push("prefix")
+
+        if (blockCommands?.find(Cmd => Cmd.cmd === cmd.name))
+            cmd.apiData.tags.push("bug")
 
         commandsApi.push(cmd?.apiData)
         delete cmd.apiData

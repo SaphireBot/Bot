@@ -65,7 +65,8 @@ export default {
         description: "O que você prefere? Isso ou aquilo, ele ou ela?",
         category: "Diversão",
         synonyms: ["prefere"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

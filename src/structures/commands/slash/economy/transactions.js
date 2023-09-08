@@ -20,7 +20,8 @@ export default {
         description: "Confira as transações bancárias, sua ou de alguém.",
         category: "Economia",
         synonyms: ["transações"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

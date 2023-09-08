@@ -17,7 +17,8 @@ export default {
         description: "Veja rapidamente os dados de um Usuário -> Apps",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

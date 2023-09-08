@@ -169,7 +169,8 @@ export default {
         description: "Comando exclusivo para os Administradores da Saphire Moon",
         category: "Administração",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

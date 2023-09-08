@@ -58,7 +58,8 @@ export default {
         description: "Veja e envie as melhores cantadas do mundo aqui (ou não)",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

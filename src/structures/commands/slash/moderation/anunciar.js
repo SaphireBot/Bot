@@ -70,7 +70,8 @@ export default {
         description: "Faça anúncios no seu servidor com uma embed personalizada.",
         category: "Moderação",
         synonyms: ["anunciar"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.Administrator],
             bot: [DiscordPermissons.SendMessages]
         }

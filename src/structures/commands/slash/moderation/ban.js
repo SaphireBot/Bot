@@ -77,7 +77,8 @@ export default {
         description: "O famoso comando para banir alguém",
         category: "Moderação",
         synonyms: ["banir"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.BanMembers],
             bot: [DiscordPermissons.BanMembers]
         }

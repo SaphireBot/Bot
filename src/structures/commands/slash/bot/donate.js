@@ -48,7 +48,8 @@ export default {
         description: "Doe dinheiro real para os criadores da Saphire mantê-la online e ganhe recompensas",
         category: "Saphire",
         synonyms: ["doar"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

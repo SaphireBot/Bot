@@ -179,7 +179,8 @@ export default {
         description: "Um super e poderoso sistema/comando de sorteios para o seu servidor se destacar dos demais.",
         category: "Moderação",
         synonyms: ["sorteio"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageEvents],
             bot: [DiscordPermissons.SendMessages]
         }

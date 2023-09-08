@@ -14,7 +14,8 @@ export default {
         description: "O fim do casamento é muito ruim... (As vezes)",
         category: "Perfil",
         synonyms: ["divórcio"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

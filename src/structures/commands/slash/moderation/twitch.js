@@ -128,7 +128,8 @@ export default {
         description: "Um poderoso sistema de notificação de streamers da Twitch",
         category: "Moderação",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.Administrator],
             bot: [DiscordPermissons.SendMessages]
         }

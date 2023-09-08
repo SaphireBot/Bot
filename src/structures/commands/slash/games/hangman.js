@@ -61,7 +61,8 @@ export default {
         description: "jogar o jogo da forca é muito legal entre com os amigos.",
         category: "Diversão",
         synonyms: ["jogo_da_forca"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

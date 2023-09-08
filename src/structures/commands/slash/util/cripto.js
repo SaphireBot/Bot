@@ -73,7 +73,8 @@ export default {
         description: "Criptografe frases com uma senha para que outra pessoa descriptografe ela.",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -18,7 +18,8 @@ export default {
         description: "Receba um convite direto para me adicionar no seu servidor.",
         category: "Saphire",
         synonyms: ["convite"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

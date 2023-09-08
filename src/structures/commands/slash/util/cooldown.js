@@ -20,7 +20,8 @@ export default {
         description: "Confira todos os seus timeouts",
         category: "Utilidades",
         synonyms: ["timeout"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

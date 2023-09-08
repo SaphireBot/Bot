@@ -139,7 +139,8 @@ export default {
         description: "Um grande sistema de votação com tempo personalizado",
         category: "Utilidades",
         synonyms: ["votação"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

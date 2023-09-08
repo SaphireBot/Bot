@@ -47,7 +47,8 @@ export default {
         description: "Se você tem sorte, você pode conseguir algo nas raspadinhas.",
         category: "Economia",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

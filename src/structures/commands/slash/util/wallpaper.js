@@ -40,7 +40,8 @@ export default {
         description: "Pesquise rapidamente por wallpapers",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -180,7 +180,8 @@ export default {
         description: "Comando privado para a Staff da Saphire.",
         category: "Saphire",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

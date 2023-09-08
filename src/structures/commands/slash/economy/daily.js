@@ -47,7 +47,8 @@ export default {
         description: "Uma recompensa diária te aguarda todos os dias. Será que você consegue completar um mês?",
         category: "Economia",
         synonyms: ["diário"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

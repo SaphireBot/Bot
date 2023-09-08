@@ -270,7 +270,8 @@ export default {
         description: "Vários quizes, animes, bandeiras, perguntas, etc... Muitos quizes avançados e muito bem construídos para você e seus servidor se divertir.",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

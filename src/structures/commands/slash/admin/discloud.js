@@ -64,6 +64,7 @@ export default {
         description: "Comando exclusivo para os Administradores acessar a Host com mais facilidade.",
         category: "Administração",
         synonyms: ["host"],
+        tags: [],
         perms: {
             user: [],
             bot: []

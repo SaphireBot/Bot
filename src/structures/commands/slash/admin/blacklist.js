@@ -158,6 +158,7 @@ export default {
         description: "Comando para gerênciar a blacklist",
         category: "Administração",
         synonyms: [],
+        tags: [],
         perms: {
             user: [],
             bot: []

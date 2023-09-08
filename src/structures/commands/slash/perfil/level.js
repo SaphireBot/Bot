@@ -52,7 +52,8 @@ export default {
         description: "Confira seu level, altere seu wallpaper e muito mais.",
         category: "Perfil",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -109,7 +109,8 @@ export default {
         description: "Indicações & Pesquisas de animes é aqui!",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

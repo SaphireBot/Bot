@@ -185,7 +185,8 @@ export default {
         description: "Simples e divertido blackjack, o famoso \"21\" em alguns estados do Brasil.",
         category: "Diversão",
         synonyms: ["21"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

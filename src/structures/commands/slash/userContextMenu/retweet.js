@@ -16,7 +16,8 @@ export default {
         description: "Retweet uma mensagem como se você tivesse enviado (Comando Fechado)",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

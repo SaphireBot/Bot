@@ -1,5 +1,7 @@
 import { SaphireClient as client, Database } from "../../../../../../classes/index.js"
+import { commandsApi } from "../../../../../handler/commands.handler.js"
 import { Emojis as e } from "../../../../../../util/util.js"
+import { socket } from "../../../../../../websocket/websocket.js"
 
 export default async interaction => {
 
@@ -40,34 +42,47 @@ export default async interaction => {
         if (!commandBlocked)
             return responseMessage += `\n${e.Deny} | Comando não encontrado.`
 
-        return Database.Client.updateOne(
+        return Database.Client.findOneAndUpdate(
             { id: client.user.id },
-            {
-                $pull: {
-                    ComandosBloqueadosSlash: { cmd: commandToOpen }
-                }
-            }
+            { $pull: { ComandosBloqueadosSlash: { cmd: commandToOpen } } },
+            { new: true, upsert: true }
         )
-            .then(() => {
-                client.clientData.ComandosBloqueadosSlash.splice(
-                    client.clientData.ComandosBloqueadosSlash.findIndex(Cmd => Cmd.cmd === commandToOpen), 1
-                );
+            .then(doc => {
+                client.clientData = doc?.toObject()
                 responseMessage += `\n${e.Check} | O comando \`${commandToOpen}\` foi liberado com sucesso.`
+
+                const cmd = commandsApi.find(c => c.name == commandToBlock)
+                if (cmd.apiData?.tags) cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
+
+                const interval = setInterval(() => {
+                    if (socket?.connected) {
+                        socket?.send({ type: "apiCommandsData", commandsApi })
+                        clearInterval(interval)
+                    }
+                }, 1000 * 5)
             })
             .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar o comando \`${commandToOpen}\`.`)
 
         async function openAll() {
 
-            return Database.Client.updateOne(
+            return Database.Client.findOneAndUpdate(
                 { id: client.user.id },
-                {
-                    $unset: {
-                        ComandosBloqueadosSlash: 1
-                    }
-                }
+                { $unset: { ComandosBloqueadosSlash: 1 } },
+                { new: true, upsert: true }
             )
-                .then(() => {
-                    client.clientData.ComandosBloqueadosSlash = []
+                .then(doc => {
+                    client.clientData = doc?.toObject()
+
+                    for (const cmd of commandsApi)
+                        cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
+
+                    const interval = setInterval(() => {
+                        if (socket?.connected) {
+                            socket?.send({ type: "apiCommandsData", commandsApi })
+                            clearInterval(interval)
+                        }
+                    }, 1000 * 5)
+
                     responseMessage += `\n${e.Check} | Todos os ${bugs.length} comandos foram liberados.`
                 })
                 .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar todos os comandos.`)
@@ -83,7 +98,7 @@ export default async interaction => {
         if (commandBlocked)
             return responseMessage += `\n${e.Deny} | Este comando já está bloqueado.`
 
-        return Database.Client.updateOne(
+        return await Database.Client.findOneAndUpdate(
             { id: client.user.id },
             {
                 $push: {
@@ -92,9 +107,23 @@ export default async interaction => {
                         error: 'Comando bloqueado pela equipe administrativa'
                     }
                 }
-            }
+            },
+            { new: true, upsert: true }
         )
-            .then(() => responseMessage += `\n${e.Check} | O comando \`${commandToBlock}\` foi bloqueado com sucesso.`)
+            .then(doc => {
+                responseMessage += `\n${e.Check} | O comando \`${commandToBlock}\` foi bloqueado com sucesso.`
+                client.clientData = doc?.toObject()
+
+                const cmd = commandsApi.find(c => c.name == commandToBlock)
+                if (cmd.apiData?.tags) cmd.apiData.tags.push("bug")
+
+                const interval = setInterval(() => {
+                    if (socket?.connected) {
+                        socket?.send({ type: "apiCommandsData", commandsApi })
+                        clearInterval(interval)
+                    }
+                }, 1000 * 5)
+            })
             .catch(() => responseMessage += `\n${e.Warn} | Não foi possível bloquear o comando \`${commandToBlock}\`.`)
     }
 

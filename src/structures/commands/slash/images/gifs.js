@@ -113,7 +113,8 @@ export default {
         description: "Vários tipos de interações em formato de gifs para você se expressar no Discord.",
         category: "Imagens",
         synonyms: ["interações"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

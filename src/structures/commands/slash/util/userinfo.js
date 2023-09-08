@@ -43,7 +43,8 @@ export default {
         description: "Veja as informações de um usuário do Discord/Servidor",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

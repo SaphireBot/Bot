@@ -33,7 +33,8 @@ export default {
         description: "Confira palavras no dicionário para ver se está \"serto\"",
         category: "Utilidades",
         synonyms: ["dicionario"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

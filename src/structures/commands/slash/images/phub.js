@@ -29,7 +29,8 @@ export default {
         description: "Não use esse comando",
         category: "Imagens",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

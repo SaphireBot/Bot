@@ -78,7 +78,8 @@ export default {
         description: "Um poderoso sistema de lembrete. Me fale o que e o tempo e deixa o resto comigo.",
         category: "Utilidades",
         synonyms: ["lembrete"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

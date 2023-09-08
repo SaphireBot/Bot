@@ -19,7 +19,8 @@ export default {
         description: "Converse com alguém de outros servidores por este comando",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

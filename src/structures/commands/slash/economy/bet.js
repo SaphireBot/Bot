@@ -134,7 +134,8 @@ export default {
         description: "Um dos comandos de apostas mais poderosos do Discord.",
         category: "Economia",
         synonyms: ["aposta"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

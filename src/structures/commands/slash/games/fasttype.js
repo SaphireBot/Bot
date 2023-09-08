@@ -26,7 +26,8 @@ export default {
         description: "Escreva o mais rápido possível!",
         category: "Diversão",
         synonyms: ["escreva_rápido"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

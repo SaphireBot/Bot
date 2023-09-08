@@ -21,7 +21,8 @@ export default {
         description: "Traduza uma mensagem de qualquer lingua para português.",
         category: "Utilidades",
         synonyms: ["Traduzir"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

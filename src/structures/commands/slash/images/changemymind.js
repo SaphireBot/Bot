@@ -23,7 +23,8 @@ export default {
         description: "Can you change my mind? (meme)",
         category: "Imagens",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

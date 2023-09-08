@@ -39,7 +39,8 @@ export default {
         description: "Confira o avatar/banner/imagem do perfil de alguém",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

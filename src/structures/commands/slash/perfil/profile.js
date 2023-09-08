@@ -61,7 +61,8 @@ export default {
         description: "Veja o seu perfil exclusivo da Saphire",
         category: "Perfil",
         synonyms: ["perfil"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

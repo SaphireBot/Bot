@@ -12,7 +12,8 @@ export default {
         description: "Veja as informações técnicas da Saphire",
         category: "Saphire",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

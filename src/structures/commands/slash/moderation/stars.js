@@ -128,7 +128,8 @@ export default {
         description: "Ative as estrelas e salve as mensagens em um canal para ficar eternizado na história",
         category: "Moderação",
         synonyms: ["estrelas"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageChannels, DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ManageChannels, DiscordPermissons.ManageMessages]
         }

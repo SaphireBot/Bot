@@ -45,7 +45,8 @@ export default {
         description: "Compre suas rifas e boa sorte no sorteio.",
         category: "Economia",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

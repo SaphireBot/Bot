@@ -82,7 +82,8 @@ export default {
         description: "Deixe que eu aviso para todos que você está offline",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

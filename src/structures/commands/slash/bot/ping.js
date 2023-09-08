@@ -33,7 +33,8 @@ export default {
         description: "Veja um resumo de todas as conexões da Saphire",
         category: "Saphire",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -100,7 +100,8 @@ export default {
         description: "Limpe uma quantidade (1~1000) de mensagens em algum canal do seu servidor. Obs: Vários filtros para te ajudar.",
         category: "Moderação",
         synonyms: ["limpar"],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ReadMessageHistory, DiscordPermissons.ManageMessages]
         }

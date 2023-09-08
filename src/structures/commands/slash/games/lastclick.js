@@ -28,7 +28,8 @@ export default {
         description: "Quem der o último clique, perde.",
         category: "Diversão",
         synonyms: ["último-clique"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

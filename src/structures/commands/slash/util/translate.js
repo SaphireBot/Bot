@@ -32,7 +32,8 @@ export default {
         description: "Traduza textos rapidamente dentro do seu servidor",
         category: "Utilidades",
         synonyms: ["traduzir"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

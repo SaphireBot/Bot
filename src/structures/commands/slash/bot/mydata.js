@@ -53,7 +53,8 @@ export default {
         description: "Veja os seus dados presentes no banco de dados",
         category: "Saphire",
         synonyms: ["meus_dados"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

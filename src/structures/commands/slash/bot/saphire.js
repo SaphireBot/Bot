@@ -78,7 +78,8 @@ export default {
         description: "Um resumo de informações da Saphire em um só comando",
         category: "Saphire",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -27,7 +27,8 @@ export default {
         description: "Um grande sistema de logs para você ficar por dentro de tudo o que acontece no seu servidor.",
         category: "Moderação",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.ManageGuild],
             bot: [DiscordPermissons.ViewAuditLog, DiscordPermissons.ManageWebhooks]
         }

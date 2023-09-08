@@ -22,7 +22,8 @@ export default {
         description: "O clássico jogo da velha no Discord",
         category: "Diversão",
         synonyms: ["jogo-da-velha"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

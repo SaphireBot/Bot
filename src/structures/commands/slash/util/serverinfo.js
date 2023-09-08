@@ -21,7 +21,8 @@ export default {
         description: "O comando mais poderoso que mostra todas as informações que é possível dentro de um servidor",
         category: "Utilidades",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -22,7 +22,8 @@ export default {
         description: "Case com alguém que você ama.",
         category: "Perfil",
         synonyms: ["casar"],
-        perms: {
+        tags: [],
+perms: {
             user: [],
             bot: []
         }

@@ -28,7 +28,8 @@ export default {
         description: "Um super controlador de call para quem está jogando Among Us com os amigos",
         category: "Diversão",
         synonyms: [],
-        perms: {
+        tags: [],
+perms: {
             user: [DiscordPermissons.MuteMembers, DiscordPermissons.ManageChannels],
             bot: [DiscordPermissons.MuteMembers]
         }
