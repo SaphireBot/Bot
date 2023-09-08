@@ -1,15 +1,44 @@
 import { PermissionsTranslate, Config as config } from '../../util/Constants.js';
 import { SaphireClient as client } from '../../classes/index.js';
 import { readdirSync } from 'fs';
-import { Routes } from 'discord.js';
-import 'dotenv/config';
-import { socket } from '../../websocket/websocket.js';
 import { Emojis as e } from '../../util/util.js';
+import { Routes } from 'discord.js';
+import { socket } from '../../websocket/websocket.js';
+import 'dotenv/config';
 export const commands = []
 export const adminCommands = [] // Ideia dada por Gorniaky - 395669252121821227
 export const commandsApi = []
 
 export default async () => {
+
+    // Prefix
+    const prefixFolders = readdirSync('./src/structures/commands/prefix/')
+
+    for (const dir of prefixFolders) {
+
+        const prefixCommands = readdirSync(`./src/structures/commands/prefix/${dir}/`).filter(file => file.endsWith('.js'))
+
+        for await (const file of prefixCommands) {
+
+            const query = await import(`../commands/prefix/${dir}/${file}`)
+            const cmd = query.default
+
+            if (!cmd?.name || !cmd?.execute) continue
+            cmd.type = 'prefix'
+
+            if (cmd.name) {
+                client.commandsUsed[cmd.name] = 0
+                client.prefixCommands.set(cmd.name, cmd)
+            }
+
+            if (cmd.aliases?.length)
+                for (const alias of cmd.aliases)
+                    client.prefixAliasesCommands.set(alias, cmd)
+
+            continue
+        }
+        continue
+    }
 
     // Slash Commands
     const folders = readdirSync('./src/structures/commands/slash/')
@@ -34,6 +63,7 @@ export default async () => {
                 });
                 (cmd.admin || cmd.staff) ? adminCommands.push(cmd) : commands.push(cmd);
                 if (applicationCommandData) cmd.id = applicationCommandData?.id
+                cmd.type = "slash"
                 client.slashCommands.set(cmd.name, cmd);
             }
             continue
@@ -47,7 +77,6 @@ export default async () => {
         if (cmd?.apiData?.perms?.user?.length) cmd.apiData.perms.user = cmd?.apiData.perms.user.map(perm => PermissionsTranslate[perm] || perm)
         if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
-        cmd.type = "slash"
         commandsApi.push(cmd?.apiData)
         delete cmd.apiData
     }
@@ -61,41 +90,13 @@ export default async () => {
         }, 1000 * 5)
     }
 
-    // Prefix
-    const prefixFolders = readdirSync('./src/structures/commands/prefix/')
-
-    for (const dir of prefixFolders) {
-
-        const prefixCommands = readdirSync(`./src/structures/commands/prefix/${dir}/`).filter(file => file.endsWith('.js'))
-
-        for await (const file of prefixCommands) {
-
-            const query = await import(`../commands/prefix/${dir}/${file}`)
-            const cmd = query.default
-
-            if (!cmd?.name || !cmd?.execute) continue
-
-            if (cmd.name) {
-                client.commandsUsed[cmd.name] = 0
-                client.prefixCommands.set(cmd.name, cmd)
-            }
-
-            if (cmd.aliases?.length)
-                for (const alias of cmd.aliases)
-                    client.prefixAliasesCommands.set(alias, cmd)
-
-            continue
-        }
-        continue
-    }
-
     return
 }
 
 export async function registerCommands() {
 
-    for (const guildId of config.guildsToPrivateCommands || [])
-        client.rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: adminCommands })
+    for await (const guildId of config.guildsToPrivateCommands || [])
+        await client.rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: adminCommands })
             .catch(() => { })
 
     return await client.rest.put(

@@ -1,16 +1,12 @@
-import { Message } from 'discord.js'
-import { Emojis as e } from '../../../../util/util.js'
+import { Emojis as e } from '../../../../util/util.js';
+import { Message } from 'discord.js';
 
 export default {
     name: 'locked',
-    description: 'Comandos disponíveis apenas em Slash Commands',
+    description: 'Apenas em Slash Commands',
     aliases: [
         'bug',
         'bugs',
-
-        'commands',
-        'comando',
-        'comandos',
 
         'mydata',
 
