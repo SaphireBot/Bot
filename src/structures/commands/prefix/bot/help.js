@@ -80,12 +80,12 @@ export default {
 
         function EmbedGenerator(array) {
 
-            let amount = 5
+            let amount = 10
             let page = 1
             let embeds = []
-            let length = array.length / 5 <= 1 ? 1 : parseInt((array.length / 5))
+            let length = array.length / 10 <= 1 ? 1 : parseInt((array.length / 10))
 
-            for (let i = 0; i < array.length; i += 5) {
+            for (let i = 0; i < array.length; i += 10) {
 
                 let current = array.slice(i, amount)
                 let description = current.map(cmd => `\`${prefix}${cmd.name}\` - ${cmd.description}`).join('\n')
@@ -109,7 +109,7 @@ export default {
                 })
 
                 page++
-                amount += 5
+                amount += 10
 
             }
 

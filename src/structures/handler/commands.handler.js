@@ -14,17 +14,18 @@ export default async () => {
     // Prefix
     const prefixFolders = readdirSync('./src/structures/commands/prefix/')
 
-    for (const dir of prefixFolders) {
+    for await (const dir of prefixFolders) {
 
         const prefixCommands = readdirSync(`./src/structures/commands/prefix/${dir}/`).filter(file => file.endsWith('.js'))
 
         for await (const file of prefixCommands) {
 
+            if (typeof file !== 'string') continue
+
             const query = await import(`../commands/prefix/${dir}/${file}`)
             const cmd = query.default
 
             if (!cmd?.name || !cmd?.execute) continue
-            cmd.type = 'prefix'
 
             if (cmd.name) {
                 client.commandsUsed[cmd.name] = 0
@@ -44,12 +45,13 @@ export default async () => {
     const folders = readdirSync('./src/structures/commands/slash/')
     const applicationCommand = await socket?.timeout(2000).emitWithAck("getApplicationCommands", "get").catch(() => [])
 
-    for (const dir of folders) {
+    for await (const dir of folders) {
 
         const commandsData = readdirSync(`./src/structures/commands/slash/${dir}/`).filter(file => file.endsWith('.js'))
 
         for await (const file of commandsData) {
 
+            if (typeof file !== 'string') continue
             const query = await import(`../commands/slash/${dir}/${file}`)
             const cmd = query.default
             const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
@@ -63,7 +65,6 @@ export default async () => {
                 });
                 (cmd.admin || cmd.staff) ? adminCommands.push(cmd) : commands.push(cmd);
                 if (applicationCommandData) cmd.id = applicationCommandData?.id
-                cmd.type = "slash"
                 client.slashCommands.set(cmd.name, cmd);
             }
             continue
@@ -71,11 +72,15 @@ export default async () => {
         continue
     }
 
-    for (const cmd of [...commands, ...adminCommands]) {
+    for await (const cmd of [...commands, ...adminCommands]) {
         if (!cmd?.apiData) continue
 
         if (cmd?.apiData?.perms?.user?.length) cmd.apiData.perms.user = cmd?.apiData.perms.user.map(perm => PermissionsTranslate[perm] || perm)
         if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
+
+        cmd.apiData.tags = ["slash"]
+        if (client.prefixCommands.has(cmd.name))
+            cmd.apiData.tags.push("prefix")
 
         commandsApi.push(cmd?.apiData)
         delete cmd.apiData
