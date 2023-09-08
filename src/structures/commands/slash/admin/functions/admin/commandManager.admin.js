@@ -1,7 +1,7 @@
-import { SaphireClient as client, Database } from "../../../../../../classes/index.js"
-import { commandsApi } from "../../../../../handler/commands.handler.js"
-import { Emojis as e } from "../../../../../../util/util.js"
-import { socket } from "../../../../../../websocket/websocket.js"
+import { SaphireClient as client, Database } from "../../../../../../classes/index.js";
+import { commandsApi } from "../../../../../handler/commands.handler.js";
+import { Emojis as e } from "../../../../../../util/util.js";
+import { socket } from "../../../../../../websocket/websocket.js";
 
 export default async interaction => {
 
@@ -21,7 +21,7 @@ export default async interaction => {
     await blockCommand()
 
     if (!responseMessage)
-        return await interaction.reply({
+        return interaction.reply({
             content: `${e.Deny} | Nenhum comando foi dado.`,
             ephemeral: true
         })
@@ -49,10 +49,9 @@ export default async interaction => {
         )
             .then(doc => {
                 client.clientData = doc?.toObject()
-                responseMessage += `\n${e.Check} | O comando \`${commandToOpen}\` foi liberado com sucesso.`
 
-                const cmd = commandsApi.find(c => c.name == commandToBlock)
-                if (cmd.apiData?.tags) cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
+                const cmd = commandsApi.find(c => c.name == commandToOpen)
+                if (cmd?.apiData?.tags) cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
 
                 const interval = setInterval(() => {
                     if (socket?.connected) {
@@ -60,8 +59,12 @@ export default async interaction => {
                         clearInterval(interval)
                     }
                 }, 1000 * 5)
+                return responseMessage += `\n${e.Check} | O comando \`${commandToOpen}\` foi liberado com sucesso.`
             })
-            .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar o comando \`${commandToOpen}\`.`)
+            .catch(err => {
+                console.log(err)
+                return responseMessage += `\n${e.Warn} | Não foi possível liberar o comando \`${commandToOpen}\`.`
+            })
 
         async function openAll() {
 
@@ -83,9 +86,12 @@ export default async interaction => {
                         }
                     }, 1000 * 5)
 
-                    responseMessage += `\n${e.Check} | Todos os ${bugs.length} comandos foram liberados.`
+                    return responseMessage += `\n${e.Check} | Todos os ${bugs.length} comandos foram liberados.`
                 })
-                .catch(() => responseMessage += `\n${e.Warn} | Não foi possível liberar todos os comandos.`)
+                .catch(err => {
+                    console.log(err)
+                    return responseMessage += `\n${e.Warn} | Não foi possível liberar todos os comandos.`
+                })
         }
     }
 
@@ -111,11 +117,10 @@ export default async interaction => {
             { new: true, upsert: true }
         )
             .then(doc => {
-                responseMessage += `\n${e.Check} | O comando \`${commandToBlock}\` foi bloqueado com sucesso.`
                 client.clientData = doc?.toObject()
 
                 const cmd = commandsApi.find(c => c.name == commandToBlock)
-                if (cmd.apiData?.tags) cmd.apiData.tags.push("bug")
+                if (cmd?.apiData?.tags) cmd.apiData.tags.push("bug")
 
                 const interval = setInterval(() => {
                     if (socket?.connected) {
@@ -123,8 +128,12 @@ export default async interaction => {
                         clearInterval(interval)
                     }
                 }, 1000 * 5)
+                return responseMessage += `\n${e.Check} | O comando \`${commandToBlock}\` foi bloqueado com sucesso.`
             })
-            .catch(() => responseMessage += `\n${e.Warn} | Não foi possível bloquear o comando \`${commandToBlock}\`.`)
+            .catch(err => {
+                console.log(err)
+                return responseMessage += `\n${e.Warn} | Não foi possível bloquear o comando \`${commandToBlock}\`.`
+            })
     }
 
 }
