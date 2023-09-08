@@ -81,7 +81,11 @@ export default async () => {
         if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
         if (cmd.admin || cmd.staff) cmd.apiData.tags.push("admin")
-        if (client.prefixCommands.has(cmd.name)) cmd.apiData.tags.push("prefix")
+        const prefixCommand = client.prefixCommands.get(cmd.name)
+        if (prefixCommand) {
+            cmd.apiData.tags.push("prefix")
+            cmd.apiData.aliases = prefixCommand.aliases
+        }
 
         if (blockCommands?.find(Cmd => Cmd.cmd === cmd.name))
             cmd.apiData.tags.push("bug")

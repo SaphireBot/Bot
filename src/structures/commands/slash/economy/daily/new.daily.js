@@ -136,8 +136,8 @@ export default class Daily extends Base {
                 color: client.green,
                 title: `${e.waku} ${client.user.username} Daily Rewards`,
                 description: transferUser
-                    ? `${e.Animated.SaphireDance} | Você transferiu o daily **${prize.day}º** para ${transferUser.username}`
-                    : `${e.Animated.SaphireDance} | Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
+                    ? `${e.Animated.SaphireDance} Você transferiu o daily **${prize.day}º** para ${transferUser.username}`
+                    : `${e.Animated.SaphireDance} Parabéns! Você está no **${prize.day}º** dia do daily rewards.`,
                 fields: data.fields
             }]
         })
