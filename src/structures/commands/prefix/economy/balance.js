@@ -66,10 +66,10 @@ export default {
                 return `👝 | ${NameOrUsername} **${balance}**`
             })
 
-            for (let i = 0; i < content.length; i += 25)
+            for (let i = 0; i < content.length; i += 10)
                 i == 0
-                    ? msg.edit({ content: content.slice(0, 25).join('\n') })
-                    : message.channel.send({ content: content.slice(i, i + 25).join('\n') })
+                    ? msg.edit({ content: content.slice(0, 10).join('\n').limit("MessageContent") })
+                    : message.channel.send({ content: content.slice(i, i + 10).join('\n').limit("MessageContent") })
             return
         }
 
