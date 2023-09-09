@@ -40,7 +40,7 @@ export default {
         }
 
     ],
-    apiData: {
+    api_data: {
         name: "rifa",
         description: "Compre suas rifas e boa sorte no sorteio.",
         category: "Economia",

@@ -27,7 +27,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "ship",
         description: "Veja o amor entre duas pessoas.",
         category: "Diversão",

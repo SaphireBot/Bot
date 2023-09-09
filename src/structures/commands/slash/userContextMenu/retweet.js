@@ -11,7 +11,7 @@ export default {
         fields: []
     },
     type: 3,
-    apiData: {
+    api_data: {
         name: "Retweet",
         description: "Retweet uma mensagem como se você tivesse enviado (Comando Fechado)",
         category: "Diversão",

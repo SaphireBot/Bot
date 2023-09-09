@@ -23,7 +23,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "amongus",
         description: "Um super controlador de call para quem está jogando Among Us com os amigos",
         category: "Diversão",

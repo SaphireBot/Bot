@@ -6,7 +6,11 @@ export default {
     name: 'help',
     description: 'Comando de ajuda da Saphire',
     aliases: ['h', 'ajuda', 'commands', 'comandos'],
-    category: "bot",
+    category: "Saphire",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      */

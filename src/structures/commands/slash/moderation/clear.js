@@ -95,7 +95,7 @@ export default {
         description: 'Limpe rapidamente as mensagens',
         permissions: [DiscordPermissons.ManageMessages],
     },
-    apiData: {
+    api_data: {
         name: "clear",
         description: "Limpe uma quantidade (1~1000) de mensagens em algum canal do seu servidor. Obs: Vários filtros para te ajudar.",
         category: "Moderação",

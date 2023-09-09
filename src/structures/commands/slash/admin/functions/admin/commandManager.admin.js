@@ -51,7 +51,7 @@ export default async interaction => {
                 client.clientData = doc?.toObject()
 
                 const cmd = commandsApi.find(c => c.name == commandToOpen)
-                if (cmd?.apiData?.tags) cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
+                if (cmd?.api_data?.tags) cmd.api_data.tags = cmd.api_data.tags.filter(t => t !== "bug")
 
                 const interval = setInterval(() => {
                     if (socket?.connected) {
@@ -77,7 +77,7 @@ export default async interaction => {
                     client.clientData = doc?.toObject()
 
                     for (const cmd of commandsApi)
-                        cmd.apiData.tags = cmd.apiData.tags.filter(t => t !== "bug")
+                        cmd.api_data.tags = cmd.api_data.tags.filter(t => t !== "bug")
 
                     const interval = setInterval(() => {
                         if (socket?.connected) {
@@ -120,7 +120,7 @@ export default async interaction => {
                 client.clientData = doc?.toObject()
 
                 const cmd = commandsApi.find(c => c.name == commandToBlock)
-                if (cmd?.apiData?.tags) cmd.apiData.tags.push("bug")
+                if (cmd?.api_data?.tags) cmd.api_data.tags.push("bug")
 
                 const interval = setInterval(() => {
                     if (socket?.connected) {

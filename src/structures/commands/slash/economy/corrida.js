@@ -54,7 +54,7 @@ export default {
             }
         ]
     },
-    apiData: {
+    api_data: {
         name: "run",
         description: "Uma corrida emocionante entre vários animais. Será que o seu irá ganhar?",
         category: "Economia",

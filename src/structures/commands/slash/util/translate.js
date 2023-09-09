@@ -27,7 +27,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "translate",
         description: "Traduza textos rapidamente dentro do seu servidor",
         category: "Utilidades",

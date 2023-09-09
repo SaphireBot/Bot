@@ -26,7 +26,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "pay",
         description: "Você pode pagar/doar Safiras para outras pessoas.",
         category: "Economia",

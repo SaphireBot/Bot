@@ -19,7 +19,7 @@ export default {
     helpData: {
         description: 'Report bugs em comandos para meus administradores',
     },
-    apiData: {
+    api_data: {
         name: "bug",
         description: "Reporte um erro que você achou na Saphire",
         category: "Saphire",

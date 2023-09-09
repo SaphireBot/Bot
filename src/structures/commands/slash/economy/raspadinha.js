@@ -42,7 +42,7 @@ export default {
         ],
         footer: { text: `Per Emoji Chance: ${((1 / Object.keys(prize).length) * 100).toFixed(2)}%` }
     },
-    apiData: {
+    api_data: {
         name: "raspadinha",
         description: "Se você tem sorte, você pode conseguir algo nas raspadinhas.",
         category: "Economia",

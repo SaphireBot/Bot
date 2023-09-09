@@ -73,7 +73,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "saphire",
         description: "Um resumo de informações da Saphire em um só comando",
         category: "Saphire",

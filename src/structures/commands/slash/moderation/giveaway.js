@@ -174,7 +174,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "giveaway",
         description: "Um super e poderoso sistema/comando de sorteios para o seu servidor se destacar dos demais.",
         category: "Moderação",

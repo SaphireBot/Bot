@@ -6,7 +6,7 @@ export default {
     dm_permission: false,
     category: "context menu",
     type: 3,
-    apiData: {
+    api_data: {
         name: "Remover Reações",
         description: "Remova todas as reações de uma mensagem",
         category: "Moderação",

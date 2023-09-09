@@ -175,7 +175,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "staff",
         description: "Comando privado para a Staff da Saphire.",
         category: "Saphire",

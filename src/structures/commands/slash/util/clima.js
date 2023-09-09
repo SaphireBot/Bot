@@ -20,7 +20,7 @@ export default {
     helpData: {
         description: 'Um simples comando para verificar o clima'
     },
-    apiData: {
+    api_data: {
         name: "weather",
         description: "Confira o clima de alguma cidade",
         category: "Utilidades",

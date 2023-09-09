@@ -153,7 +153,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "blacklist",
         description: "Comando para gerênciar a blacklist",
         category: "Administração",

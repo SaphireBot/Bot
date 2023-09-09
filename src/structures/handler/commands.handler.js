@@ -26,7 +26,7 @@ export default async () => {
             const query = await import(`../commands/prefix/${dir}/${file}`)
             const cmd = query.default
 
-            if (!cmd?.name || !cmd?.execute) continue
+            if (typeof cmd?.name !== 'string' || typeof cmd?.execute !== 'function') continue
 
             if (cmd.name) {
                 client.commandsUsed[cmd.name] = 0
@@ -58,7 +58,7 @@ export default async () => {
             const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
 
             if (cmd?.name) {
-                cmd.apiData.tags.push("slash")
+                cmd.api_data.tags.push("slash")
                 client.commandsUsed[cmd.name] = 0
                 client.slashCommandsData.push({
                     name: cmd.name,
@@ -74,24 +74,35 @@ export default async () => {
         continue
     }
 
-    for await (const cmd of [...commands, ...adminCommands]) {
-        if (!cmd?.apiData) continue
+    for await (const cmd of [commands, adminCommands].flat()) {
+        if (!cmd?.api_data) continue
 
-        if (cmd?.apiData?.perms?.user?.length) cmd.apiData.perms.user = cmd?.apiData.perms.user.map(perm => PermissionsTranslate[perm] || perm)
-        if (cmd?.apiData?.perms?.bot?.length) cmd.apiData.perms.bot = cmd?.apiData.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
+        if (cmd?.api_data?.perms?.user?.length) cmd.api_data.perms.user = cmd?.api_data.perms.user.map(perm => PermissionsTranslate[perm] || perm)
+        if (cmd?.api_data?.perms?.bot?.length) cmd.api_data.perms.bot = cmd?.api_data.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
-        if (cmd.admin || cmd.staff) cmd.apiData.tags.push("admin")
+        if (cmd.admin || cmd.staff) cmd.api_data.tags.push("admin")
         const prefixCommand = client.prefixCommands.get(cmd.name)
         if (prefixCommand) {
-            cmd.apiData.tags.push("prefix")
-            cmd.apiData.aliases = prefixCommand.aliases
+            cmd.api_data.tags.push("prefix")
+            cmd.api_data.aliases = prefixCommand.aliases
         }
 
         if (blockCommands?.find(Cmd => Cmd.cmd === cmd.name))
-            cmd.apiData.tags.push("bug")
+            cmd.api_data.tags.push("bug")
 
-        commandsApi.push(cmd?.apiData)
-        delete cmd.apiData
+        commandsApi.push(cmd?.api_data)
+        delete cmd.api_data
+    }
+
+    for await (const cmd of client.prefixCommands.toJSON()) {
+        if (!commandsApi.some(c => c.name == cmd.name)) {
+            delete cmd.execute
+            commandsApi.push(
+                Object.assign(cmd, {
+                    tags: Array.isArray(cmd.tags) ? cmd.tags.concat("prefix") : ["prefix"],
+                })
+            )
+        }
     }
 
     if (client.shardId == 0) {

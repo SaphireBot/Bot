@@ -9,7 +9,11 @@ export default {
     name: 'userinfo',
     description: 'Veja as informações de um usuário',
     aliases: ['ui'],
-    category: "util",
+    category: "Utilidades",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

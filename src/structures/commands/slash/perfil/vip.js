@@ -59,7 +59,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "vip",
         description: "Compre e confira seu VIP dentro da Saphire.",
         category: "Perfil",

@@ -6,7 +6,11 @@ export default {
     name: 'invite',
     description: 'Link de convite da Saphire',
     aliases: ['convite'],
-    category: "bot",
+    category: "Saphire",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

@@ -42,7 +42,7 @@ export default {
         color: Colors.Blue,
         description: 'Resgate recompensas diárias usando o daily'
     },
-    apiData: {
+    api_data: {
         name: "daily",
         description: "Uma recompensa diária te aguarda todos os dias. Será que você consegue completar um mês?",
         category: "Economia",

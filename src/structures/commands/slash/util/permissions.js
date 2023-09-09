@@ -24,7 +24,7 @@ export default {
             type: ApplicationCommandOptionType.Channel
         }
     ],
-    apiData: {
+    api_data: {
         name: "permissions",
         description: "Veja as permissões de alguém ou a sua",
         category: "Utilidades",

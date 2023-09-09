@@ -7,7 +7,11 @@ export default {
     name: 'balance',
     description: 'Comando para ver o saldo',
     aliases: ['b', 'bal', 'saldo', 'atm', 'carteira  '],
-    category: "economy",
+    category: "Economia",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

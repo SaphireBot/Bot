@@ -104,7 +104,7 @@ export default {
     helpData: {
         description: 'Tudo sobre anime aqui'
     },
-    apiData: {
+    api_data: {
         name: "anime",
         description: "Indicações & Pesquisas de animes é aqui!",
         category: "Utilidades",

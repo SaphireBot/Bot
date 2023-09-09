@@ -5,7 +5,11 @@ export default {
     name: 'daily',
     description: 'Pegue uma recompensa diária todos os dias',
     aliases: ['diário'],
-    category: "economy",
+    category: "Economia",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

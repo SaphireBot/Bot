@@ -48,7 +48,7 @@ export default {
         description: 'Recurso para visualizar os dados no banco de dados',
         permissions: [DiscordPermissons.AttachFiles],
     },
-    apiData: {
+    api_data: {
         name: "mydata",
         description: "Veja os seus dados presentes no banco de dados",
         category: "Saphire",

@@ -123,7 +123,7 @@ export default {
             text: 'O Project Saphire se ausenta de quaisquer responsabilidade pelo uso deste comando.'
         }
     },
-    apiData: {
+    api_data: {
         name: "stars",
         description: "Ative as estrelas e salve as mensagens em um canal para ficar eternizado na história",
         category: "Moderação",

@@ -68,7 +68,7 @@ export default {
             }
         ]
     },
-    apiData: {
+    api_data: {
         name: "cripto",
         description: "Criptografe frases com uma senha para que outra pessoa descriptografe ela.",
         category: "Utilidades",

@@ -12,7 +12,7 @@ export default {
         fields: []
     },
     type: 2,
-    apiData: {
+    api_data: {
         name: "User Info",
         description: "Veja rapidamente os dados de um Usuário -> Apps",
         category: "Utilidades",

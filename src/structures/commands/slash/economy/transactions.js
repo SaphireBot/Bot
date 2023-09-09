@@ -15,7 +15,7 @@ export default {
     helpData: {
         description: 'Com este comando você consegue ver toda a sua movimentação econômica'
     },
-    apiData: {
+    api_data: {
         name: "transactions",
         description: "Confira as transações bancárias, sua ou de alguém.",
         category: "Economia",

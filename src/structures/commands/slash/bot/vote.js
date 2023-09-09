@@ -30,7 +30,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "vote",
         description: "Vote no TopGG e ganhe Safiras e Experiência.",
         category: "Saphire",

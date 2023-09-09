@@ -17,7 +17,7 @@ export default {
             max_length: 50
         }
     ],
-    apiData: {
+    api_data: {
         name: "spotify",
         description: "Pesquise e escute um trecho de uma música no Spotify",
         category: "Utilidades",

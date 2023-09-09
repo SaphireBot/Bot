@@ -59,7 +59,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "discloud",
         description: "Comando exclusivo para os Administradores acessar a Host com mais facilidade.",
         category: "Administração",

@@ -6,7 +6,11 @@ export default {
     name: 'transactions',
     description: 'Confira as transações monetárias',
     aliases: ['transações', 'tr', 'transacoes', 'transaction'],
-    category: "economy",
+    category: "Economia",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

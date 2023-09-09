@@ -6,7 +6,11 @@ export default {
     name: 'tictactoe',
     description: 'O famoso jogo da velha',
     aliases: ['jogodavelha', 'jgv', 'ttt'],
-    category: "games",
+    category: "Diversão",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

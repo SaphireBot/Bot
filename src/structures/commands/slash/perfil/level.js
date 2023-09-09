@@ -47,7 +47,7 @@ export default {
             autocomplete: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "level",
         description: "Confira seu level, altere seu wallpaper e muito mais.",
         category: "Perfil",

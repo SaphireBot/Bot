@@ -35,7 +35,7 @@ export default {
             type: 3
         }
     ],
-    apiData: {
+    api_data: {
         name: "wordle",
         description: "O clássico jogo \"termo/wordle\" liberado para você diretamente no Discord.",
         category: "Diversão",

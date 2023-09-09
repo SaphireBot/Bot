@@ -60,7 +60,7 @@ export default {
     helpData: {
         description: 'Um simples jogo para escolher o que você prefere'
     },
-    apiData: {
+    api_data: {
         name: "rather",
         description: "O que você prefere? Isso ou aquilo, ele ou ela?",
         category: "Diversão",

@@ -80,7 +80,7 @@ export default {
     helpData: {
         description: 'Comando para administrar o canal facilmente'
     },
-    apiData: {
+    api_data: {
         name: "channel",
         description: "Gerencie os canais do servidor facilmente através deste comando.",
         category: "Moderação",

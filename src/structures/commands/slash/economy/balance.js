@@ -21,7 +21,7 @@ export default {
             autocomplete: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "balance",
         description: "Um simples comando para você ver quantas Safiras você ou alguém possui.",
         category: "Economia",

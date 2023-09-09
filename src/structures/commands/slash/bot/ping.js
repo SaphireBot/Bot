@@ -28,7 +28,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "ping",
         description: "Veja um resumo de todas as conexões da Saphire",
         category: "Saphire",

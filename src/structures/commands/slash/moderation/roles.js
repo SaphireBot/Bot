@@ -34,7 +34,7 @@ export default {
             description: '[moderation] (AUTOROLE) Veja como está o estado do autorole'
         }
     ],
-    apiData: {
+    api_data: {
         name: "roles",
         description: "Um simples comando para gerênciar o autorole (Porém em constante construção)",
         category: "Moderação",

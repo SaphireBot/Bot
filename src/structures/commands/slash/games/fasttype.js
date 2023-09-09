@@ -21,7 +21,7 @@ export default {
             autocomplete: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "fasttype",
         description: "Escreva o mais rápido possível!",
         category: "Diversão",

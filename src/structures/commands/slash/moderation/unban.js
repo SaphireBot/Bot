@@ -25,7 +25,7 @@ export default {
     helpData: {
         description: 'Sistema simples de desbanimento'
     },
-    apiData: {
+    api_data: {
         name: "unban",
         description: "Baniu errado? Quer desbanir alguém? Esse comando é perfeito para isso.",
         category: "Moderação",

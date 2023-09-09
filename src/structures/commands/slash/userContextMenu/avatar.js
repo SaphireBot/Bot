@@ -3,7 +3,7 @@ export default {
     dm_permission: false,
     category: "context menu",
     type: 2,
-    apiData: {
+    api_data: {
         name: "Avatar",
         description: "Veja o avatar de alguém clicando no Usário -> Apps",
         category: "Utilidades",

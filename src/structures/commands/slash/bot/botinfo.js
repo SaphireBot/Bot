@@ -7,13 +7,13 @@ export default {
     dm_permission: false,
     database: false,
     type: 1,
-    apiData: {
+    api_data: {
         name: "botinfo",
         description: "Veja as informações técnicas da Saphire",
         category: "Saphire",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

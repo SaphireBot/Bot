@@ -15,7 +15,7 @@ export default {
             type: ApplicationCommandOptionType.User
         }
     ],
-    apiData: {
+    api_data: {
         name: "cooldown",
         description: "Confira todos os seus timeouts",
         category: "Utilidades",

@@ -111,7 +111,11 @@ export default {
         'host',
         'staff'
     ],
-    category: "locked",
+    category: "Saphire",
+    api_data: {
+        tags: ['admin'],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      */

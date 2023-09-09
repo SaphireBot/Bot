@@ -14,7 +14,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "chat",
         description: "Converse com alguém de outros servidores por este comando",
         category: "Utilidades",

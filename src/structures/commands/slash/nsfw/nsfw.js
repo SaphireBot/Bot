@@ -26,7 +26,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "nsfw",
         description: "Não use esse comando",
         category: "Imagens",

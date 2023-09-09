@@ -9,7 +9,7 @@ export default {
     dm_permission: false,
     type: 1,
     options: [],
-    apiData: {
+    api_data: {
         name: "divorce",
         description: "O fim do casamento é muito ruim... (As vezes)",
         category: "Perfil",

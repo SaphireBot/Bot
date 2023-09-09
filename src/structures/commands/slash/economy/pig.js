@@ -28,7 +28,7 @@ export default {
     helpData: {
         description: 'Ao quebrar o porquinho, você ganha todas as moedas dele'
     },
-    apiData: {
+    api_data: {
         name: "pig",
         description: "Tente quebrar o porquinho e ganhe tudo o que tiver nele",
         category: "Economia",

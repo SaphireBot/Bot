@@ -28,7 +28,7 @@ export default {
             }
         ]
     },
-    apiData: {
+    api_data: {
         name: "dictionary",
         description: "Confira palavras no dicionário para ver se está \"serto\"",
         category: "Utilidades",

@@ -72,7 +72,7 @@ export default {
     helpData: {
         description: 'Comando para banir um usuário'
     },
-    apiData: {
+    api_data: {
         name: "ban",
         description: "O famoso comando para banir alguém",
         category: "Moderação",

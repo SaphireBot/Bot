@@ -43,7 +43,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "donate",
         description: "Doe dinheiro real para os criadores da Saphire mantê-la online e ganhe recompensas",
         category: "Saphire",

@@ -7,7 +7,11 @@ export default {
     name: 'vote',
     description: 'Vote no Top.GG',
     aliases: ['topgg', 'votar'],
-    category: "bot",
+    category: "Saphire",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

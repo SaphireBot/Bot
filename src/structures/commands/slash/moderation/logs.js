@@ -22,7 +22,7 @@ export default {
     helpData: {
         description: 'Sistema frontal para gerenciar os logs'
     },
-    apiData: {
+    api_data: {
         name: "logs",
         description: "Um grande sistema de logs para você ficar por dentro de tudo o que acontece no seu servidor.",
         category: "Moderação",

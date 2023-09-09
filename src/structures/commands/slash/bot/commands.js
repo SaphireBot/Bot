@@ -17,13 +17,13 @@ export default {
     helpData: {
         description: 'Comando simples para ver os comandos que alguém usou'
     },
-    apiData: {
+    api_data: {
         name: "commands",
         description: "Veja os comandos mais usados desde o último reinício",
         category: "Saphire",
         synonyms: ["comandos"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

@@ -65,7 +65,7 @@ export default {
     helpData: {
         description: 'Comando de anúncio'
     },
-    apiData: {
+    api_data: {
         name: "announce",
         description: "Faça anúncios no seu servidor com uma embed personalizada.",
         category: "Moderação",

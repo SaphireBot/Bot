@@ -108,7 +108,7 @@ for (let gif of emotionalGifData)
 
 export default {
     ...data,
-    apiData: {
+    api_data: {
         name: "gifs",
         description: "Vários tipos de interações em formato de gifs para você se expressar no Discord.",
         category: "Imagens",

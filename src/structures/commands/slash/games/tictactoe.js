@@ -17,7 +17,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "tictactoe",
         description: "O clássico jogo da velha no Discord",
         category: "Diversão",

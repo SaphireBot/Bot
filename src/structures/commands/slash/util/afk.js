@@ -77,7 +77,7 @@ export default {
             }
         ]
     },
-    apiData: {
+    api_data: {
         name: "afk",
         description: "Deixe que eu aviso para todos que você está offline",
         category: "Utilidades",

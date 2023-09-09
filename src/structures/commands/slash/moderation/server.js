@@ -41,7 +41,7 @@ export default {
         ]
     }],
     helpData: {},
-    apiData: {
+    api_data: {
         name: "server",
         description: "Um super comando para gerênciar e automatizar o seu servidor.",
         category: "Moderação",

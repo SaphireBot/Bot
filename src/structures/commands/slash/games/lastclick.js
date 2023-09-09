@@ -23,7 +23,7 @@ export default {
     helpData: {
         description: 'Quem clicar errado, perde'
     },
-    apiData: {
+    api_data: {
         name: "lastclick",
         description: "Quem der o último clique, perde.",
         category: "Diversão",

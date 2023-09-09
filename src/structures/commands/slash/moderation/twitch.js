@@ -123,7 +123,7 @@ export default {
         }
     ],
     helpData: {},
-    apiData: {
+    api_data: {
         name: "twitch",
         description: "Um poderoso sistema de notificação de streamers da Twitch",
         category: "Moderação",

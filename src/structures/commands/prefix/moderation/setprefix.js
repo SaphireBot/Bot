@@ -6,7 +6,11 @@ export default {
     name: 'setprefix',
     description: 'Configure os prefixos do servidor',
     aliases: ['prefix', 'prefixes', 'setprefixes'],
-    category: "moderation",
+    category: "Moderação",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

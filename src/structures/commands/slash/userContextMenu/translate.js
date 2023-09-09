@@ -16,7 +16,7 @@ export default {
         }]
     },
     type: 3,
-    apiData: {
+    api_data: {
         name: "Translate Message",
         description: "Traduza uma mensagem de qualquer lingua para português.",
         category: "Utilidades",

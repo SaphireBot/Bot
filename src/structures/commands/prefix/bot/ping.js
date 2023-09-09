@@ -9,7 +9,11 @@ export default {
     name: 'ping',
     description: 'Comando de ping',
     aliases: [],
-    category: "bot",
+    category: "Saphire",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message 
      */

@@ -18,7 +18,7 @@ export default {
             required: true
         },
     ],
-    apiData: {
+    api_data: {
         name: "changemymind",
         description: "Can you change my mind? (meme)",
         category: "Imagens",

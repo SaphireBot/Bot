@@ -14,7 +14,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "connect4",
         description: "O jogo Connect4 também é possível aqui! Que tal você tentar?",
         category: "Diversão",

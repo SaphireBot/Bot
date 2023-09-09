@@ -17,7 +17,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "marry",
         description: "Case com alguém que você ama.",
         category: "Perfil",

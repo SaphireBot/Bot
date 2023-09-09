@@ -5,7 +5,11 @@ export default {
     name: 'connect4',
     description: 'O clássico Connect4, só que no Discord',
     aliases: [],
-    category: "games",
+    category: "Diversão",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

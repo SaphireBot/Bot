@@ -60,7 +60,7 @@ export default {
     helpData: {
         description: 'Aqui você pode conferir os diversos rankings inclusos no meu sistema'
     },
-    apiData: {
+    api_data: {
         name: "ranking",
         description: "Um grande sistema incluindo todos os rankings de todos os lugares da Saphire",
         category: "Utilidades",

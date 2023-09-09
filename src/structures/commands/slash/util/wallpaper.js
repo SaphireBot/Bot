@@ -35,7 +35,7 @@ export default {
             }]
         }
     ],
-    apiData: {
+    api_data: {
         name: "wallpaper",
         description: "Pesquise rapidamente por wallpapers",
         category: "Utilidades",

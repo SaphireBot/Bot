@@ -6,7 +6,11 @@ export default {
     name: 'avatar',
     description: 'Veja o avatar das pessoas',
     aliases: ['pfp', 'banner', 'icon', 'picture'],
-    category: "util",
+    category: "Utilidades",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

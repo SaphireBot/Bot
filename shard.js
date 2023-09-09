@@ -13,9 +13,9 @@ const { ShardingClient } = Statcord
 const Manager = new ShardingManager('./index.js', {
     execArgv,
     token: env.DISCORD_TOKEN,
-    // totalShards: "auto",
-    totalShards: shardList.length,
-    shardList,
+    totalShards: "auto",
+    // totalShards: shardList.length,
+    // shardList,
     respawn: true
 })
 

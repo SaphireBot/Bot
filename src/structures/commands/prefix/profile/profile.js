@@ -6,7 +6,11 @@ export default {
     name: 'perfil',
     description: 'Confira o seu perfil ou o de alguém',
     aliases: ['profile'],
-    category: "profile",
+    category: "Perfil",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

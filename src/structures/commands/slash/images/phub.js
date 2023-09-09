@@ -24,7 +24,7 @@ export default {
             required: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "phub",
         description: "Não use esse comando",
         category: "Imagens",

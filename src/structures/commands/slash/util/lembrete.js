@@ -73,7 +73,7 @@ export default {
         description: 'Ative um lembrete e eu vou te lembrar',
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "reminder",
         description: "Um poderoso sistema de lembrete. Me fale o que e o tempo e deixa o resto comigo.",
         category: "Utilidades",

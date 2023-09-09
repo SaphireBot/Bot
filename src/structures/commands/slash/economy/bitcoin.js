@@ -38,7 +38,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "bitcoin",
         description: "Farm bitcoins e receba uma bolada de Safiras.",
         category: "Economia",

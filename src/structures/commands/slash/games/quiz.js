@@ -265,7 +265,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "quiz",
         description: "Vários quizes, animes, bandeiras, perguntas, etc... Muitos quizes avançados e muito bem construídos para você e seus servidor se divertir.",
         category: "Diversão",

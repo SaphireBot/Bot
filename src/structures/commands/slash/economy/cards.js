@@ -19,7 +19,7 @@ export default {
             type: ApplicationCommandOptionType.Integer
         }
     ],
-    apiData: {
+    api_data: {
         name: "cards",
         description: "Aposte nas cartas! Azul ou Verde? Quem ganha? Ou será que empata?",
         category: "Economia",

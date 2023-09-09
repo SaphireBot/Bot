@@ -53,7 +53,7 @@ export default {
             }
         ]
     },
-    apiData: {
+    api_data: {
         name: "cantada",
         description: "Veja e envie as melhores cantadas do mundo aqui (ou não)",
         category: "Utilidades",

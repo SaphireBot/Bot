@@ -21,7 +21,7 @@ export default {
             autocomplete: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "like",
         description: "Dê um like para alguém, é simples, mas aumenta seus status no perfil",
         category: "Perfil",

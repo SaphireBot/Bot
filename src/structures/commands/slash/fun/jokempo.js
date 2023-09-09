@@ -38,7 +38,7 @@ export default {
             options: []
         }
     ],
-    apiData: {
+    api_data: {
         name: "jokempo",
         description: "Jo.. kem... po!",
         category: "Diversão",

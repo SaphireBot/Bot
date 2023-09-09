@@ -134,7 +134,7 @@ export default {
             ]
         }
     ],
-    apiData: {
+    api_data: {
         name: "poll",
         description: "Um grande sistema de votação com tempo personalizado",
         category: "Utilidades",

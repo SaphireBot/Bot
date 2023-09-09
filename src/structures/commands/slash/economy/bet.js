@@ -129,7 +129,7 @@ export default {
             },
         ]
     },
-    apiData: {
+    api_data: {
         name: "bet",
         description: "Um dos comandos de apostas mais poderosos do Discord.",
         category: "Economia",

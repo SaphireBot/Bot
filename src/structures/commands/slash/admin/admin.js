@@ -164,7 +164,7 @@ export default {
     helpData: {
         description: 'Comandos exclusivos para a equipe de administração'
     },
-    apiData: {
+    api_data: {
         name: "admin",
         description: "Comando exclusivo para os Administradores da Saphire Moon",
         category: "Administração",

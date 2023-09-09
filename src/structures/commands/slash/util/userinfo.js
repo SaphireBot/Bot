@@ -38,7 +38,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "userinfo",
         description: "Veja as informações de um usuário do Discord/Servidor",
         category: "Utilidades",

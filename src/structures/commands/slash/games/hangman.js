@@ -56,7 +56,7 @@ export default {
             options: []
         }
     ],
-    apiData: {
+    api_data: {
         name: "hangman",
         description: "jogar o jogo da forca é muito legal entre com os amigos.",
         category: "Diversão",

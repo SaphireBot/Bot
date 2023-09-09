@@ -180,7 +180,7 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
+    api_data: {
         name: "blackjack",
         description: "Simples e divertido blackjack, o famoso \"21\" em alguns estados do Brasil.",
         category: "Diversão",

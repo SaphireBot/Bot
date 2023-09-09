@@ -163,7 +163,7 @@ export default {
             }]
         }
     ],
-    apiData: {
+    api_data: {
         name: "memory",
         description: "Um SUPER e INCRÍVEL jogo da memória usando os botões do Discord. Você pode jogar só ou com algum amigo. Cooperando ou disputando contra alguém.",
         category: "Diversão",

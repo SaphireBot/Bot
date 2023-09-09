@@ -16,7 +16,7 @@ export default {
             autocomplete: true
         }
     ],
-    apiData: {
+    api_data: {
         name: "serverinfo",
         description: "O comando mais poderoso que mostra todas as informações que é possível dentro de um servidor",
         category: "Utilidades",

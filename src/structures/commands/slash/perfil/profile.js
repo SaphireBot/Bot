@@ -1,17 +1,17 @@
-import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js'
-import { Config as config } from '../../../../util/Constants.js'
-import { Emojis as e } from '../../../../util/util.js'
-import { Database } from '../../../../classes/index.js'
-import Modals from '../../../classes/Modals.js'
-import signProfile from './perfil/sign.profile.js'
-import genderProfile from './perfil/gender.profile.js'
-import buyStar from './perfil/star.profile.js'
+import { ApplicationCommandOptionType, ButtonStyle } from 'discord.js';
+import { Config as config } from '../../../../util/Constants.js';
+import { Emojis as e } from '../../../../util/util.js';
+import { Database } from '../../../../classes/index.js';
+import Modals from '../../../classes/Modals.js';
+import signProfile from './perfil/sign.profile.js';
+import genderProfile from './perfil/gender.profile.js';
+import buyStar from './perfil/star.profile.js';
 
 export default {
-    name: 'profile',
+    name: 'perfil',
     description: '[perfil] Configura o seu perfil ou o de alguém',
     category: "perfil",
-    name_localizations: { "en-US": "profile", 'pt-BR': 'perfil' },
+    name_localizations: { "en-US": "profile" },
     dm_permission: false,
     type: 1,
     options: [
@@ -56,13 +56,13 @@ export default {
         permissions: [],
         fields: []
     },
-    apiData: {
-        name: "profile",
+    api_data: {
+        name: "perfil",
         description: "Veja o seu perfil exclusivo da Saphire",
         category: "Perfil",
-        synonyms: ["perfil"],
+        synonyms: ["profile"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

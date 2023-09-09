@@ -6,7 +6,11 @@ export default {
     name: 'like',
     description: 'Curta alguém',
     aliases: ['curtir'],
-    category: "profile",
+    category: "Perfil",
+    api_data: {
+        tags: [],
+        perms: { user: [], bot: [] }
+    },
     /**
      * @param { Message } message
      * @param { string[] } args

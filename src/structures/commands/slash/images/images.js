@@ -79,7 +79,7 @@ export default {
             ] // TODO: Adicionar o resto
         }
     ],
-    apiData: {
+    api_data: {
         name: "images",
         description: "Edite diretamente o avatar de alguém de uma forma criativa.",
         category: "Imagens",

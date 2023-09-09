@@ -114,7 +114,7 @@ export default {
     helpData: {
         description: 'Luta de emojis, legal né?'
     },
-    apiData: {
+    api_data: {
         name: "emoji",
         description: "Um comando só para emojis! Veja e aposte com os emojis. É divertido!",
         category: "Economia",

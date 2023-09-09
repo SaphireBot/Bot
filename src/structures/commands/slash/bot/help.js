@@ -23,7 +23,7 @@ export default {
     //         autocomplete: true
     //     }
     // ],
-    apiData: {
+    api_data: {
         name: "help",
         description: "Help é só um help, né?",
         category: "Saphire",

@@ -29,7 +29,7 @@ export default {
             type: 5
         }
     ],
-    apiData: {
+    api_data: {
         name: "youtube",
         description: "Apenas um simples comentário do YouTube.",
         category: "Imagens",

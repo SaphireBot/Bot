@@ -34,7 +34,7 @@ export default {
     helpData: {
         description: 'Confira o avatar/banner/imagem customizada do perfil de alguém'
     },
-    apiData: {
+    api_data: {
         name: "avatar",
         description: "Confira o avatar/banner/imagem do perfil de alguém",
         category: "Utilidades",

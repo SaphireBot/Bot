@@ -7,7 +7,7 @@ export default {
     default_member_permissions: Permissions.ManageMessages,
     category: "context menu",
     type: 3,
-    apiData: {
+    api_data: {
         name: "Clear 50 Messages",
         description: "Limpe 50 mensagens rapidamente clicando em Mensagens -> Apps",
         category: "Moderação",
