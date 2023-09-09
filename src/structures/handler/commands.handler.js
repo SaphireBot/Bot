@@ -95,11 +95,13 @@ export default async () => {
     }
 
     for await (const cmd of client.prefixCommands.toJSON()) {
+        const command = Object.assign({}, cmd)
+        delete command.execute
+
         if (!commandsApi.some(c => c.name == cmd.name)) {
-            delete cmd.execute
             commandsApi.push(
-                Object.assign(cmd, {
-                    tags: Array.isArray(cmd.tags) ? cmd.tags.concat("prefix") : ["prefix"],
+                Object.assign(command, {
+                    tags: Array.isArray(cmd.api_data?.tags) ? cmd.api_data?.tags.concat("prefix") : ["prefix"]
                 })
             )
         }
