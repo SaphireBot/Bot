@@ -32,7 +32,7 @@ export default {
         category: "Economia",
         synonyms: ["pagar"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

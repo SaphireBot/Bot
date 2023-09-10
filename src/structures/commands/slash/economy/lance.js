@@ -1,48 +1,61 @@
-import { Database, SaphireClient as client } from '../../../../classes/index.js';
-import { Message, time } from 'discord.js';
+import { ApplicationCommandOptionType, time } from 'discord.js';
+import { SaphireClient as client, Database } from '../../../../classes/index.js';
 import { Emojis as e } from '../../../../util/util.js';
 import timeMs from '../../../../functions/plugins/timeMs.js';
 
 export default {
     name: 'lance',
-    description: 'Lance uma quantidade de Safiras no chat',
-    aliases: ['lançar'],
-    category: "Economia",
+    name_localizations: { 'pt-BR': 'lançar' },
+    description: '[economy] Lance uma quantidade de Safiras no chat',
+    dm_permission: false,
+    type: 1,
+    options: [
+        {
+            name: 'value',
+            description: 'Quantidade de Safiras para jogar no chat',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            min_value: 1
+        },
+        {
+            name: 'time',
+            description: 'Tempo em que o lance ficará ativo (Mix: 3s | Max: 3m)',
+            type: ApplicationCommandOptionType.String
+        }
+    ],
     api_data: {
+        name: "lance",
+        description: "Lance uma quantidade de Safiras no chat",
+        category: "Economia",
+        synonyms: ["lançar"],
         tags: [],
-        perms: { user: [], bot: [] }
+        perms: {
+            user: [],
+            bot: []
+        }
     },
-    /**
-     * @param { Message } message
-     * @param { string[] } args
-     */
-    async execute(message, args) {
+    async execute({ interaction }) {
 
-        const { author, channel } = message
-
-        if (!args[0])
-            return message.reply({
-                content: `${e.MoneyWithWings} | Você pode lançar Safiras na Chat. Dentro de **30 segundos**, outros usuários lutaram para pegar as Safiras que você lançou.`
-            })
-
+        const { user: author, channel, options } = interaction
+        const value = (options.getString("value")).toNumber()
+        const timeGiven = options.getString("time")
         const dateNow = Date.now()
-        const timePersonalize = args[1] ? timeMs(args.slice(1)) || 1000 * 30 : 1000 * 30
+        const timePersonalize = timeGiven ? timeMs(timeGiven) || 1000 * 30 : 1000 * 30
 
         if (
             timePersonalize > (1000 * 60 * 3)
             || timePersonalize < (1000 * 10)
         )
-            return message.reply({ content: `${e.DenyX} | O tempo permitido é de 10 segundos a 3 minutos, ok?` })
-
-        const value = args[0].toNumber()
+            return interaction.reply({ content: `${e.DenyX} | O tempo permitido é de 10 segundos a 3 minutos, ok?` })
 
         if (!value)
-            return message.reply({
+            return interaction.reply({
                 content: `${e.DenyX} | Você precisa me dizer a quantia que você quer lançar no chat.`
             })
 
-        const msg = await message.reply({
-            content: `${e.Loading} | Carregando e lançando Safiras no chat...`
+        const msg = await interaction.reply({
+            content: `${e.Loading} | Carregando e lançando Safiras no chat...`,
+            fetchReply: true
         })
 
         const data = await Database.getUser(author.id)
@@ -80,7 +93,6 @@ export default {
             await Database.Cache.General.set(`Lance.${msg.id}`, { creator: author.id, value })
 
             const players = new Map()
-
             const messageCollector = channel.createMessageCollector({ filter: () => true })
                 .on("collect", () => messages++)
 

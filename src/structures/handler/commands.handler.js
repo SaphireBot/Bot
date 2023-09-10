@@ -84,9 +84,15 @@ export default async () => {
         if (cmd.admin || cmd.staff) cmd.api_data.tags.push(tags['5'])
         const prefixCommand = client.prefixCommands.get(cmd.name)
         if (prefixCommand) {
-            cmd.api_data.tags.includes(tags['2'])
-                ? cmd.api_data.tags.push(tags['2'])
-                : cmd.api_data.tags.push(tags['6'])
+
+            if (prefixCommand?.api_data?.tags?.length)
+                cmd.api_data.tags.push(...prefixCommand?.api_data?.tags)
+
+            if (
+                !cmd.api_data.tags.includes(tags['2'])
+                && !cmd.api_data.tags.includes(tags['1'])
+            )
+                cmd.api_data.tags.push(tags['6'])
             cmd.api_data.aliases = prefixCommand.aliases
         }
 
