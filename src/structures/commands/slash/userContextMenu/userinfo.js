@@ -5,20 +5,20 @@ export default {
     name: 'User Info',
     dm_permission: false,
     category: "context menu",
+    type: 2,
     helpData: {
         color: 'Blue',
         description: 'Clique em alguém e veja suas informações de maneira simples e prática',
         permissions: [],
         fields: []
     },
-    type: 2,
     api_data: {
         name: "User Info",
         description: "Veja rapidamente os dados de um Usuário -> Apps",
         category: "Utilidades",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

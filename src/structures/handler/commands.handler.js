@@ -5,9 +5,10 @@ import { Emojis as e } from '../../util/util.js';
 import { Routes } from 'discord.js';
 import { socket } from '../../websocket/websocket.js';
 import 'dotenv/config';
-export const commands = []
-export const adminCommands = [] // Ideia dada por Gorniaky - 395669252121821227
-export const commandsApi = []
+export const commands = [];
+export const adminCommands = []; // Ideia dada por Gorniaky - 395669252121821227
+export const commandsApi = [];
+const tags = { '1': 'slash', '2': 'apps', '3': 'apps', '4': 'bug', '5': 'admin', '6': 'prefix' }
 
 export default async () => {
 
@@ -58,7 +59,7 @@ export default async () => {
             const applicationCommandData = applicationCommand?.find(c => c?.name == cmd?.name)
 
             if (cmd?.name) {
-                cmd.api_data.tags.push("slash")
+                cmd.api_data.tags.push(tags[`${cmd.type}`])
                 client.commandsUsed[cmd.name] = 0
                 client.slashCommandsData.push({
                     name: cmd.name,
@@ -80,15 +81,17 @@ export default async () => {
         if (cmd?.api_data?.perms?.user?.length) cmd.api_data.perms.user = cmd?.api_data.perms.user.map(perm => PermissionsTranslate[perm] || perm)
         if (cmd?.api_data?.perms?.bot?.length) cmd.api_data.perms.bot = cmd?.api_data.perms.bot.map(perm => PermissionsTranslate[perm] || perm)
 
-        if (cmd.admin || cmd.staff) cmd.api_data.tags.push("admin")
+        if (cmd.admin || cmd.staff) cmd.api_data.tags.push(tags['5'])
         const prefixCommand = client.prefixCommands.get(cmd.name)
         if (prefixCommand) {
-            cmd.api_data.tags.push("prefix")
+            cmd.api_data.tags.includes(tags['2'])
+                ? cmd.api_data.tags.push(tags['2'])
+                : cmd.api_data.tags.push(tags['6'])
             cmd.api_data.aliases = prefixCommand.aliases
         }
 
         if (blockCommands?.find(Cmd => Cmd.cmd === cmd.name))
-            cmd.api_data.tags.push("bug")
+            cmd.api_data.tags.push(tags['4'])
 
         commandsApi.push(cmd?.api_data)
         delete cmd.api_data
@@ -98,13 +101,12 @@ export default async () => {
         const command = Object.assign({}, cmd)
         delete command.execute
 
-        if (!commandsApi.some(c => c.name == cmd.name)) {
+        if (!commandsApi.some(c => c.name == cmd.name))
             commandsApi.push(
                 Object.assign(command, {
-                    tags: Array.isArray(cmd.api_data?.tags) ? cmd.api_data?.tags.concat("prefix") : ["prefix"]
+                    tags: Array.isArray(cmd.api_data?.tags) ? cmd.api_data?.tags.concat(tags['6']) : [tags['6']]
                 })
             )
-        }
     }
 
     if (client.shardId == 0) {

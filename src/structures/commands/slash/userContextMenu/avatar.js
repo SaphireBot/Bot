@@ -9,7 +9,7 @@ export default {
         category: "Utilidades",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }
@@ -22,7 +22,7 @@ perms: {
         const memberAvatarURL = member?.avatarURL({ forceStatic: false, size: 1024 })
         const userAvatarImage = user.displayAvatarURL({ forceStatic: false, size: 1024 })
         const memberAvatarImage = member?.displayAvatarURL({ forceStatic: false, size: 1024 })
-        const banner =  user.bannerURL({ size: 2048 })
+        const banner = user.bannerURL({ size: 2048 })
         const embeds = [
             {
                 color: client.blue,

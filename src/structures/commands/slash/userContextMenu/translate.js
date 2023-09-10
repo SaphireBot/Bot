@@ -6,6 +6,7 @@ export default {
     category: "context menu",
     dm_permission: false,
     name_localizations: { "en-US": "Translate", 'pt-BR': 'Traduzir' },
+    type: 3,
     helpData: {
         color: 'Blue',
         description: 'Clique na mensagem e traduza ela para a língua padrão do seu Discord.',
@@ -15,14 +16,13 @@ export default {
             value: 'Quase todas. Vou detectar a língua da mensagem automaticamente, traduzir para Português e te mostrar o resultado.'.limit('MessageEmbedFieldValue')
         }]
     },
-    type: 3,
     api_data: {
         name: "Translate Message",
         description: "Traduza uma mensagem de qualquer lingua para português.",
         category: "Utilidades",
         synonyms: ["Traduzir"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

@@ -12,7 +12,7 @@ export default {
         category: "Moderação",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ManageMessages]
         }
@@ -43,7 +43,7 @@ perms: {
             })
 
         const allReactionSize = collectionArray.reduce((pre, cur) => pre + cur.count, 0)
-       
+
         return await interaction.reply({
             embeds: [{
                 color: client.blue,

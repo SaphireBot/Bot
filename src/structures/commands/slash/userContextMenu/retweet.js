@@ -17,7 +17,7 @@ export default {
         category: "Diversão",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

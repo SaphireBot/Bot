@@ -5,7 +5,7 @@ import { Message } from 'discord.js';
 export default {
     name: 'invite',
     description: 'Link de convite da Saphire',
-    aliases: ['convite'],
+    aliases: ['convite', 'inv', 'conv'],
     category: "Saphire",
     api_data: {
         tags: [],
