@@ -106,7 +106,7 @@ client.on('messageCreate', async message => {
     const command = client.prefixCommands.get(cmd) || client.prefixAliasesCommands.get(cmd)
     rateLimit[message.author.id] = { timeout: Date.now() + 1000, tries: 0 }
     if (socket?.connected) socket?.send({ type: "addInteraction" })
-    if (!command?.execute) return console.log(command)
+    if (!command?.execute) return console.log("Command Not Found", cmd)
     if (command)
         return command.execute(message, args)
             .catch(err => {

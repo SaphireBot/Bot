@@ -4,6 +4,7 @@ import Cache from './CacheManager.js'
 import 'dotenv/config'
 import { GiveawayManager, Models, SaphireClient as client } from '../index.js'
 import { socket } from '../../websocket/websocket.js'
+import { Emojis as e } from '../../util/util.js'
 const { connect } = Mongoose
 
 /**
@@ -243,7 +244,7 @@ export default new class Database extends Models {
     }
 
     saveUserCache(userId, data) {
-        if (!userId || !data) return
+        if (!userId || !data || !socket?.connected) return
         return socket?.send({ type: "updateCache", to: "user", data: [data] })
     }
 
@@ -417,6 +418,52 @@ export default new class Database extends Models {
             .then(data => this.saveGuildCache(data.id, data))
     }
 
+    /**
+     * @param { string } userId
+     * @param { number } valueToSubtract
+     * @param { string } transactionMessage
+     * @param { 'add' | 'sub' } addOrSub
+     * @returns true | error
+     */
+    async editBalanceWithTransaction(userId, transactionMessage, value, addOrSub) {
+
+        if (
+            typeof userId !== 'string'
+            || typeof transactionMessage !== 'string'
+            || typeof value !== 'number'
+            || !['add', 'sub'].includes(addOrSub)
+        ) return 'editBalanceWithTransaction - Missing or Mistake params'
+
+        const transaction = {
+            time: `${Date.format(0, true)}`,
+            data: `${transactionMessage}`
+        }
+
+        socket?.send({
+            type: "transactions",
+            transactionsData: { value, userId, transaction }
+        })
+
+        return await this.User.findOneAndUpdate(
+            { id: userId },
+            {
+                $inc: { Balance: addOrSub == 'add' ? value : -value },
+                $push: {
+                    Transactions: {
+                        $each: [transaction],
+                        $position: 0
+                    }
+                }
+            },
+            { upsert: true, new: true }
+        )
+            .then(doc => {
+                this.saveUserCache(doc?.id, doc)
+                return 'ok'
+            })
+            .catch(err => err)
+    }
+
     PushTransaction = async (userId, prhase, value) => {
 
         if (!userId || !prhase || !value) return
@@ -511,5 +558,22 @@ export default new class Database extends Models {
         const exists = await this.Client.exists({ id: clientId })
         if (exists) return
         return new this.Client({ id: clientId }).save()
+    }
+
+    async LanceGamesRefund() {
+        const allData = await this.Cache.General.get('Lance')
+        if (!allData) return
+
+        for (const data of Object.values(allData)) {
+            if (!data?.creator || !data?.value) continue
+            this.editBalanceWithTransaction(
+                data.creator,
+                `${e.gain} Recebeu ${data.value} Safiras via *System Refund*`,
+                data.value,
+                "add"
+            )
+        }
+
+        return await this.Cache.General.delete('Lance')
     }
 }

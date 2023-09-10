@@ -4,6 +4,9 @@ export default Time => {
 
     if (Time == "00:00") Time = 'tomorrow 00:00'
 
+    if (Array.isArray(Time))
+        Time = Time.join(' ')
+
     let Args = Time?.toLowerCase()?.trim().split(/ +/g)
     let timeResult = 0
     const today = new Date().getDay()

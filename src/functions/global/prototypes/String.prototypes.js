@@ -80,6 +80,19 @@ String.prototype.captalize = function formatString(withTrace = true) {
     return result.slice(0, -1)
 }
 
+const keys = { k: 1_000, m: 1_000_000, b: 1_000_000_000, t: 1_000_000_000_000 }
+String.prototype.toNumber = function () {
+    const matches = this.match(/^([\d.,_]+)(k{1,3}|m{1,2}|b{1}|t{1})$/i);
+    if (!matches) return 0;
+
+    let num = parseInt(matches[1]);
+    const sufix = matches[2]?.toLowerCase();
+    if (isNaN(num)) return 0;
+    for (const l of sufix) num *= keys[l]
+
+    return num
+}
+
 String.prototype.limit = function (param) {
 
     const limit = {

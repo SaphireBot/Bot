@@ -45,6 +45,7 @@ export default async () => {
 
     automaticSystems()
 
+    Database.LanceGamesRefund()
     client.setCantadas()
     QuizManager.load()
     slashCommand()
