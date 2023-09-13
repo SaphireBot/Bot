@@ -37,7 +37,7 @@ export default new class PollManager {
         const channel = await guild?.channels?.fetch(poll?.ChannelId || '0').catch(() => null)
         if (!guild || !channel) return this.pull(poll?.MessageID)
 
-        const message = await channel.messages?.fetch(poll.MessageID || '0').catch(() => null)
+        let message = await channel.messages?.fetch(poll.MessageID || '0').catch(() => null)
         if (!message) return this.pull(poll.MessageID)
         if (message.partial) message = await message.fetch()
 
