@@ -77,7 +77,8 @@ export default async interaction => {
                     client.clientData = doc?.toObject()
 
                     for (const cmd of commandsApi)
-                        cmd.api_data.tags = cmd.api_data.tags.filter(t => t !== "bug")
+                        if (cmd.api_data)
+                            cmd.api_data.tags = cmd.api_data?.tags.filter(t => t !== "bug") || []
 
                     const interval = setInterval(() => {
                         if (socket?.connected) {

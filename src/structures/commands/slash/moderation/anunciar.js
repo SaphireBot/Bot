@@ -71,7 +71,7 @@ export default {
         category: "Moderação",
         synonyms: ["anunciar"],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.Administrator],
             bot: [DiscordPermissons.SendMessages]
         }

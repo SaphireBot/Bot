@@ -88,10 +88,7 @@ export default async () => {
             if (prefixCommand?.api_data?.tags?.length)
                 cmd.api_data.tags.push(...prefixCommand?.api_data?.tags)
 
-            if (
-                !cmd.api_data.tags.includes(tags['2'])
-                && !cmd.api_data.tags.includes(tags['1'])
-            )
+            if (!cmd.api_data.tags.includes(tags['6']))
                 cmd.api_data.tags.push(tags['6'])
             cmd.api_data.aliases = prefixCommand.aliases
         }

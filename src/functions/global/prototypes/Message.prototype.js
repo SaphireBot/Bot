@@ -22,9 +22,18 @@ Message.prototype.getMember = async function (id = "") {
     if (id && /^\w+$/.test(id))
         return this.mentions.members.get(id)
             || this.guild.members.cache.get(id)
-            || await this.guild.members.fetch(id).catch(() => null)
+            || await this.guild.members.fetch(id).catch(() => undefined)
 
     return this.mentions.members.first() || this.member
+}
+
+Message.prototype.getRole = async function (id = "") {
+
+    if (id && /^\w+$/.test(id))
+        return this.guild.roles.cache.get(id)
+            || await this.guild.roles.fetch(id).catch(() => undefined)
+
+    return this.mentions.roles.first()
 }
 
 Message.prototype.getUsers = async function (ids = []) {
@@ -33,7 +42,7 @@ Message.prototype.getUsers = async function (ids = []) {
     if (ids?.length) {
         for await (const id of ids.filter(i => /^\w+$/.test(i)))
             users.push(await this.getUser(id))
-        return users
+        return users.filter(i => i)
     }
 
     return this.mentions.members.map(member => member.user)
@@ -46,10 +55,36 @@ Message.prototype.getMultipleUsers = async function () {
     if (ids?.length) {
         for await (const id of ids.filter(i => /^\w+$/.test(i)))
             users.push(await this.getUser(id))
-        return users
+        return users.filter(i => i)
     }
 
     return this.mentions.members.map(member => member.user)
+}
+
+Message.prototype.getMultipleMembers = async function () {
+    const ids = this.formatIds()
+
+    const members = new Map()
+    if (ids?.length) {
+        for await (const id of ids.filter(i => /^\w+$/.test(i)))
+            members.set(id, await this.getMember(id))
+        return Array.from(members.values()).filter(v => v?.id)
+    }
+
+    return this.mentions.members
+}
+
+Message.prototype.getMultipleRoles = async function () {
+    const ids = this.formatIds()
+
+    const roles = new Map()
+    if (ids?.length) {
+        for await (const id of ids.filter(i => /^\w+$/.test(i)))
+            roles.set(id, await this.getRole(id))
+        return Array.from(roles.values()).filter(i => i)
+    }
+
+    return this.mentions.roles
 }
 
 Message.prototype.getMembers = async function (ids = []) {
@@ -58,7 +93,7 @@ Message.prototype.getMembers = async function (ids = []) {
     if (ids.length) {
         for await (const id of ids.filter(i => /^\w+$/.test(i)))
             members.push(await this.getMember(id))
-        return members
+        return members.filter(i => i)
     }
 
     return this.mentions.members.toJSON()
@@ -77,5 +112,5 @@ Message.prototype.formatIds = function () {
     )
         ids.add(id)
 
-    return Array.from(ids)
+    return Array.from(ids).filter(i => i)
 }
