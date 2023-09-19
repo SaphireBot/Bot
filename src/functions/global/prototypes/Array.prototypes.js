@@ -3,26 +3,26 @@
  */
 Array.prototype.random = function (times = 0, repeat = false) {
 
-    if (times > 0) {
-        let newArray = []
+    const newArray = [];
 
+    if ((amount || 1) > 1) {
         if (repeat)
-            for (let i = 0; i < times; i++)
-                newArray.push(originalArray[~~(Math.random() * originalArray.length)])
+            for (let i = 0; i < (amount || 1); i++)
+                newArray.push(this[~~(Math.random() * this.length)]);
         else {
-            let originalArray = [...this]
-            for (let i = 0; i < times; i++) {
+            const originalArray = [...this];
+            for (let i = 0; i < (amount || 1); i++) {
                 if (!originalArray.length) break;
-                let value = ~~(Math.random() * originalArray.length)
-                newArray.push(originalArray[value])
-                originalArray.splice(value, 1)
+                const value = ~~(Math.random() * originalArray.length);
+                newArray.push(originalArray[value]);
+                originalArray.splice(value, 1);
             }
         }
 
-        return newArray
+        return newArray;
     }
 
-    return this[~~(Math.random() * this.length)]
+    return this[~~(Math.random() * this.length)];
 }
 
 /**
