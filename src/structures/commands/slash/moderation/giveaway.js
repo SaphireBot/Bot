@@ -180,7 +180,7 @@ export default {
         category: "Moderação",
         synonyms: ["sorteio"],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.ManageEvents],
             bot: [DiscordPermissons.SendMessages]
         }

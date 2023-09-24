@@ -6,7 +6,7 @@ export default new class GiveawayManager {
         this.giveaways = {}
         this.awaiting = {}
         this.toDelete = {}
-        this.onCheck = []
+        this.onCheck = true
         this.retryCooldown = {}
     }
 

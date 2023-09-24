@@ -239,11 +239,13 @@ export default new class Database extends Models {
     }
 
     saveGuildCache(guildId, data) {
+        return;
         if (!guildId || !data) return
         return socket?.send({ type: "updateCache", to: "guild", data: [data] })
     }
 
     saveUserCache(userId, data) {
+        return;
         if (!userId || !data || !socket?.connected) return
         return socket?.send({ type: "updateCache", to: "user", data: [data] })
     }
