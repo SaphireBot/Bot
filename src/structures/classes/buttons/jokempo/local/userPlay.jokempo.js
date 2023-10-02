@@ -6,8 +6,7 @@ import finish from "./finish.jokempo.js"
 /**
  * @param { ButtonInteraction } interaction
  * @param { "stone" | "paper" | "scissors" } click
- * 
- */
+  */
 export default async (interaction, click) => {
 
     const { message, user, guild } = interaction

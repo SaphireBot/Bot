@@ -66,7 +66,7 @@ export default {
         category: "Utilidades",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }
