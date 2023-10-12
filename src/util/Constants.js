@@ -10,7 +10,7 @@ const ConfigurationBase = {
     guildPackageId: "882475447387054081",
     logomarcaIndicateChannelId: "995151748148768839",
     balaceReportChannelId: "1031388957151330344",
-    BugsChannelId: "993893182951673860",
+    BugsChannelId: "1007819488584028180",
     LogChannelId: "993893182951673860",
     PackageInvite: "https://discord.gg/UArp6eyvwu",
     MoonServerLink: "https://discord.gg/2EMVCbJxuC",
