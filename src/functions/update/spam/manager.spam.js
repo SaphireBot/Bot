@@ -16,7 +16,7 @@ export default new class SpamManager {
         if (!this.guildsEnabled.length) return
 
         for (const guildId of this.guildsEnabled) {
-            const data = guildsData.find(gData => gData.id == guildId)
+            const data = guildsData.find(gData => gData?.id == guildId)
             if (data.Spam.enabled !== true) continue
             this.guildData[guildId] = data.Spam
             this.guildData[guildId].GSN = data.LogSystem?.channel

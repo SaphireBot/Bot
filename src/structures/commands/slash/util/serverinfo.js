@@ -30,7 +30,7 @@ perms: {
     async execute({ interaction }, commandData, isBack = false, toSend = false) {
 
         const { options } = interaction
-        const guildId = commandData?.id || options.getString('search') || interaction.guild.id
+        const guildId = commandData?.id || options.getString('search') || interaction.guild?.id
 
         if (commandData && !isBack && !toSend) return pagesServerinfo(interaction, commandData)
 
@@ -73,7 +73,7 @@ perms: {
 
         const whoAddMe = await client.rest.get(Routes.guildIntegrations(guildId))
             .then(res => {
-                const data = res.find(d => d.account.id == client.user.id)
+                const data = res.find(d => d.account?.id == client.user?.id)
                 if (!data) return ""
                 return `\nFoi **${data.user.username}** que me adicionou no servidor.`
             })
@@ -101,7 +101,7 @@ perms: {
                 image: { url: guildData.bannerURL },
                 fields,
                 footer: {
-                    text: `Server ID: ${guild.id}`,
+                    text: `Server ID: ${guild?.id}`,
                     iconURL: guildData.iconURL
                 }
             }],
@@ -109,7 +109,7 @@ perms: {
                 type: 1,
                 components: [{
                     type: 3,
-                    custom_id: JSON.stringify({ c: 'serverinfo', id: guild.id, uid: interaction.user.id }),
+                    custom_id: JSON.stringify({ c: 'serverinfo', id: guild?.id, uid: interaction.user?.id }),
                     placeholder: 'Mais Informações',
                     options: [
                         {
