@@ -82,7 +82,6 @@ perms: {
             fetchReply: true
         })
             .catch(err => {
-                date = null
                 channel.send({
                     content: `${e.Animated.SaphirePanic} | ${user}, não deu bom quando fui enviar a sua mensagem.\n${e.bug} | \`${err}\``
                 }).catch(() => { })
