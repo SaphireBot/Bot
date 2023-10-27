@@ -5,13 +5,13 @@ Array.prototype.random = function (times = 0, repeat = false) {
 
     const newArray = [];
 
-    if ((amount || 1) > 1) {
+    if ((times || 1) > 1) {
         if (repeat)
-            for (let i = 0; i < (amount || 1); i++)
+            for (let i = 0; i < (times || 1); i++)
                 newArray.push(this[~~(Math.random() * this.length)]);
         else {
             const originalArray = [...this];
-            for (let i = 0; i < (amount || 1); i++) {
+            for (let i = 0; i < (times || 1); i++) {
                 if (!originalArray.length) break;
                 const value = ~~(Math.random() * originalArray.length);
                 newArray.push(originalArray[value]);

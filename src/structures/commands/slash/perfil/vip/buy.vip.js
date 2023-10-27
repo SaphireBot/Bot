@@ -63,7 +63,7 @@ export default async interaction => {
                     {
                         type: 2,
                         label: 'Confirmar',
-                        custom_id: JSON.stringify({ c: 'vip', src: 'confirm', type: optionDate, dnt: userDonate.id }),
+                        custom_id: JSON.stringify({ c: 'vip', src: 'confirm', type: optionDate, dnt: userDonate?.id }),
                         style: ButtonStyle.Success
                     },
                     {
