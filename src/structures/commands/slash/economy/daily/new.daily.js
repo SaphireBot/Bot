@@ -169,7 +169,7 @@ export default class Daily extends Base {
         }
 
         if (Date.Timeout(86400000, dailyTimeout))
-            return message.reply({ content: `⏱️ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.`, })
+            return message.reply({ content: `⏱️ | Calma calma, seu próximo daily é ${Date.Timestamp(((authorData?.Timeouts?.Daily || 0) - Date.now()) + 86400000, 'R')}.` })
 
         let data = { fields: [] }
         let prize = { ...Daily.dailyPrizes[count] }

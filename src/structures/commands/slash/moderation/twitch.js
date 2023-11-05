@@ -129,7 +129,7 @@ export default {
         category: "Moderação",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.Administrator],
             bot: [DiscordPermissons.SendMessages]
         }
