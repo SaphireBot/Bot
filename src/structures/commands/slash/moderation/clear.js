@@ -88,8 +88,7 @@ export default {
                     value: 'script'
                 }
             ]
-        },
-
+        }
     ],
     helpData: {
         description: 'Limpe rapidamente as mensagens',
@@ -101,7 +100,7 @@ export default {
         category: "Moderação",
         synonyms: ["limpar"],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.ManageMessages],
             bot: [DiscordPermissons.ReadMessageHistory, DiscordPermissons.ManageMessages]
         }

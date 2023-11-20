@@ -31,7 +31,7 @@ export default {
         category: "Moderação",
         synonyms: [],
         tags: [],
-perms: {
+        perms: {
             user: [DiscordPermissons.BanMembers],
             bot: [DiscordPermissons.BanMembers]
         }
@@ -75,7 +75,7 @@ perms: {
 
             if (result === 'BanResolveId')
                 return await interaction.reply({
-                    content: `${e.Deny} | Nenhum usuário foi desbanido.Ish...`,
+                    content: `${e.Deny} | Nenhum usuário foi desbanido. Ish...`,
                     ephemeral: true
                 })
 

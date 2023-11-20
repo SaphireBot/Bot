@@ -6,7 +6,7 @@ import { ApplicationCommandOptionType, ButtonStyle } from "discord.js"
 import { Colors } from '../../../../util/Constants.js'
 import { Database } from "../../../../classes/index.js"
 import { socket } from "../../../../websocket/websocket.js"
-const emojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
+const emojis = ['🐍', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🙈', '🐵', '🐸', '🐨', '🐒', '🦁', '🐯', '🐮', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🐗', '🐺', '🦇', '🦉', '🦅', '🦤', '🦆', '🐛', '🦋', '🐌', '🐝', '🪳', '🪲', '🦗', '🦂', '🐢']
 
 export default {
     name: 'run',
@@ -297,7 +297,7 @@ perms: {
                 })
             }
 
-            const data = () => usersJoined.map(d => `${d.distance.toFixed(2)} ${d.dots}${d.animal}`).join('\n')
+            const data = () => usersJoined.map(d => `${d.distance.toFixed(2)} ${d.dots}${d.animal}`).join('\n').slice(0, 2000)
 
             let MessageRunning = await channel.send({
                 content: data(),

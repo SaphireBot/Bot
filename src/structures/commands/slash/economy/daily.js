@@ -48,7 +48,7 @@ export default {
         category: "Economia",
         synonyms: ["diário"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

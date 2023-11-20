@@ -14,7 +14,7 @@ export default async ({ interaction }, commandData) => {
     if (!giveaway) {
 
         const gw = await Database.getGuild(guild.id)
-        giveaway = gw?.Giveaways.find(g => g.MessageID == gwId)
+        giveaway = gw?.Giveaways?.find(g => g.MessageID == gwId)
 
         if (!giveaway) {
             disableButton(true)
