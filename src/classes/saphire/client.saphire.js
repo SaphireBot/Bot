@@ -167,31 +167,33 @@ export default new class client extends Client {
             staff: ["854494598533742622", "611006830411251714", "781137239194468403", "830226550116057149", "327496267007787008", "144943581965189120", "737238491842347098", "435444989695229952"] // Akemy, Alli, Dspofu, Pepy, San, Serginho, Moana, Yafyr
         }
 
-        for (const url of [
-            `${this.apiUrl}/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(0, 10).map(id => `id=${id}`).join('&')}`,
-            `${this.apiUrl}/getusers/?${Array.from(new Set(Object.values(staffDataIds).flat())).slice(10, 50).map(id => `id=${id}`).join('&')}`
-        ])
-            fetch(url)
-                .then(res => res.json())
-                .then(staffData => {
+        const ids = Array.from(
+            new Set(
+                Object.values(staffDataIds).flat()
+            )
+        )
 
-                    for (const staff of staffData) {
+        await fetch(`${this.apiUrl}/getusers/?${ids.map(id => `id=${id}`).join("&")}`)
+            .then(res => res.json())
+            .then(staffData => {
 
-                        staff.avatarUrl = staff?.avatar
-                            ? `https://cdn.discordapp.com/avatars/${staff.id}/${staff?.avatar}.${staff.avatar.includes("a_") ? "gif" : "png"}`
-                            : null
+                for (const staff of staffData) {
 
-                        staff.tags = []
-                        if (staffDataIds.devs.includes(staff.id)) staff.tags.push("developer");
-                        if (staffDataIds.admins.includes(staff.id)) staff.tags.push("adminstrator");
-                        if (staffDataIds.boards.includes(staff.id)) staff.tags.push("board of directors");
-                        if (staffDataIds.staff.includes(staff.id)) staff.tags.push("staff");
-                        continue
-                    }
+                    staff.avatarUrl = staff?.avatar
+                        ? `https://cdn.discordapp.com/avatars/${staff.id}/${staff?.avatar}.${staff.avatar.includes("a_") ? "gif" : "png"}`
+                        : null
 
-                    socket?.send({ type: "siteStaffData", staffData })
-                })
-                .catch(console.log)
+                    staff.tags = []
+                    if (staffDataIds.devs.includes(staff.id)) staff.tags.push("developer");
+                    if (staffDataIds.admins.includes(staff.id)) staff.tags.push("adminstrator");
+                    if (staffDataIds.boards.includes(staff.id)) staff.tags.push("board of directors");
+                    if (staffDataIds.staff.includes(staff.id)) staff.tags.push("staff");
+                    continue
+                }
+
+                socket?.send({ type: "siteStaffData", staffData })
+            })
+            .catch(console.log)
 
         return
     }

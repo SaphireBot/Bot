@@ -27,7 +27,7 @@ export default {
         category: "Economia",
         synonyms: ["saldo"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

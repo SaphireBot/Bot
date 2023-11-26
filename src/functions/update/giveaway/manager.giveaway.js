@@ -25,6 +25,7 @@ export default new class GiveawayManager {
     }
 
     async filterAndManager(giveaway = []) {
+
         if (!giveaway || !giveaway.length) return
 
         this.selectGiveaways(giveaway.filter(data => data.Actived))
