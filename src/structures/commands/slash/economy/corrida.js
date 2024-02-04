@@ -60,7 +60,7 @@ export default {
         category: "Economia",
         synonyms: ["corrida"],
         tags: [],
-perms: {
+        perms: {
             user: [],
             bot: []
         }

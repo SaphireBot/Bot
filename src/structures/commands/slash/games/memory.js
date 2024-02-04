@@ -169,7 +169,7 @@ export default {
         category: "Diversão",
         synonyms: ["memória"],
         tags: [],
-perms: {
+    perms: {
             user: [],
             bot: []
         }
